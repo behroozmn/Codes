@@ -1,4 +1,4 @@
-# [masterPage] or [MainPage] or [BasePage] or [LayoutePage]
+# 1. [masterPage] or [MainPage] or [BasePage] or [LayoutePage]
 
 با هدف ایجاد یک صفحه اصلی که بعنوان صفحه پیش‌فرض مد نظر قرار گیرد و بقیه صفحات از آن مشتق شده و هر صفحه بتواند تگ های سفارشی خود را داشته باشد
 
@@ -47,3 +47,87 @@
    def index(request):
        return render(request, 'subPage1.html')
    ```
+
+Note: [URL](https://docs.djangoproject.com/en/5.1/ref/templates/builtins/#block)
+
+# 2.Include
+
+تهیه بخش های متفاوت از تکه‌ها صفحه و استفاده در صفحه اصلی
+
+> note: `include` tag must use in `Content` block\
+> یعنی معمولا در بدنه مورد استفاده قرار میگیرید
+
+در بخش زیر یک تکه کد را خواهید دید که قرار است به بدنه صفحه ای متصل گردد\
+File: `topic.html`
+
+```html
+<header>
+  <nav>
+    <a href="http://itsee.ir">روزهای هفته</a>
+  </nav>
+</header>
+```
+
+صفحه ای که تکه کد بالا باید به آن وصل گردد\
+File: `index.html`
+
+```html
+{% extends 'base.html' %} 
+{% block content %}
+{% include "topic.html"%}✅️
+{% endblock %}
+```
+# 3 Include by `send Parameter`
+
+تهیه بخش های متفاوت از تکه‌ها صفحه و استفاده در صفحه اصلی
+
+
+File: `topic.html`
+
+```html
+<header>
+  <nav>
+    <a href="{% url 'days_list' %}">روزهای هفته</a>
+  </nav>
+  <p>{{ active_page|title }}</p>
+</header>
+```
+
+صفحه ای که تکه کد بالا باید به آن وصل گردد\
+File: `index.html`
+
+```html
+{% extends 'base.html' %} 
+{% block content %}
+{% include "topic.html" with active_page="daysIndex" %}✅️
+<ul>
+  {% for item in days %}
+  <li><a href="{% url 'days-of-week' item %}"> {{item}} </a></li>  <!--  {% url 'days-of-week' day %}: USSING Reverse URL -->
+  {% endfor %}
+</ul>
+{% endblock %}
+```
+File: `page2.html`
+
+```html
+{% extends 'base.html' %}
+
+  {% block page_title %}days info{% endblock  %}
+
+{% block content %}
+  {% include "topic.html" with active_page="dayDetail" %}✅️
+    {% if data is not None %}
+    <h2>{{ data }}</h2> <!-- متغیر دیتا چیزی است که در تابع پایتون استفاده شد است و در آن فایل پایتون به این صفحه اشاره شده است-->
+    {% else %}
+    <p>there is no data</p>
+    {% endif %}
+{% endblock  %}
+```
+# 4. استفاده از جاوااسکریپ در برخی از صفحات
+{% block footer_references %}
+  <script>
+  console.log('hello')
+  </script>
+{% endblock  %}
+```
+> Note: میتوان در تکه صفحه‌ها تگ اسکریپت یعنی جاوا اسکریپت را هم درج نماییم
