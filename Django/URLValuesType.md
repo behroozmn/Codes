@@ -13,7 +13,7 @@ urlpatterns = [
 ]
 
 ```
-```python
+```
 
 def dynamic_id(request, ids):
     # call when  url is integer 
