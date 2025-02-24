@@ -1,6 +1,7 @@
 در «یوآر اِل» می‌توان دیتای از نوع اسلاگ که در نمونه زیر می‌بینید
 
 File: `urls.py`
+
 ```
 from django.urls import path
 from . import views
@@ -15,6 +16,7 @@ urlpatterns = [
 ```
 
 File: `base.html`
+
 ```
 <!DOCTYPE html>
 <html lang="en">
@@ -25,6 +27,7 @@ File: `base.html`
 ```
 
 File: `view.py`
+
 ```
 def single_post(request, slug):
     return render(request, 'base.html')
