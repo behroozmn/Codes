@@ -322,7 +322,8 @@ def posts(request):
 
 def single_post(request, slug):
     # return render(request, 'yazahra/post.html')
-    post = next(post for post in posts_database if post['slug'] == slug)
+    post = next(post for post in posts_database if post['slug'] == slug) # next: اولین آیتم که با شرط مطابقت دارد را برمی‌گرداند
+    # پست را برای من بیاور به ازای تمام پست هایی که درون پست‌دیتابیس هست به شرط اینکه کلید اسلاگ برابر با اسلاگ باشد
     return render(request, 'yazahra/post.html', {'post': post})
 ```
 
