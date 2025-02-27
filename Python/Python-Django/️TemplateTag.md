@@ -1,6 +1,6 @@
 # TemplateTag
 
-## 1. baseic
+## basic
 
 به استفاده از قعطه کد پایتون در داخل صفحات «اچ‌تی‌ام‌ال» که سیتنکس آن مشابه خطوط زیر است
 
@@ -139,3 +139,48 @@ File: `index.html` in Templates Folder
 ```
 
 Note: [URL](https://docs.djangoproject.com/en/5.1/ref/templates/builtins/#url)
+
+# ماژول‌های تمپلیت‌تگ
+## url
+میتوان برای رفرنس و آدرس ها از کانتکس ارسالی به صفحه استفاده کرد به نحو زیر
+```html
+{% load static %}
+... 
+<a href="{% url 'urlPost' slug=post.slug %}"></a>
+<img src="{% static 'yazahra/images/001.jpg' %}" alt="بهروز محمدی نسب">
+<img src="{% static 'yazahra/images'|add:'/'|add:post.image %}" alt="{{ post.title }}">
+...
+```
+
+# for
+```html
+<section id="latestPost">
+    <h2>پست‌های‌آخر</h2>
+    <ul>
+        {% for post in 2latestPosts %}
+        {% include 'yazahra/includes/include_post.html' %} #نکته: اینکلود معمولا در مسیر تمپلیت قرار داده می‌شود(مسیر تمپلیت به پروزه باید افزوده شود)
+        {% endfor %}
+    </ul>
+</section>
+```
+
+# time
+```html
+<time>{{ post.date|date:'d M Y' }}</time>
+```
+# linebreaks
+تبدیل خطوط جدید (\n) در متن post.content به تگ‌های HTML مناسب برای نمایش در مرورگر 
+> نکته« معمولا وقتی از علامت پایت یا «|» استفاده می‌کنیم اصطلاحا کلمه فیلتر شدن معنی پیدا میکند
+```html
+{{ post.content| linebreaks }} #
+```
+
+# محتویات تگ‌ها
+```html
+...
+<div class="post_content">
+    <h3>{{ post.title }}</h3>
+    <p>{{ post.content }}</p>
+</div>
+...
+```
