@@ -1,3 +1,5 @@
+from traceback import print_tb
+
 # 1.Command migration
 
 * `python3 manage.py makemigrations` # جستجوی تغییرات مدل
@@ -54,7 +56,7 @@ class Product(models.Model):
 >>> secondRow=product.objects.all()[1] #حذف ستون دوم
     secondRow.delete()
 >>> product.objects.get(id=4) #برگرداندن ردیف با آی‌دی۴ همچنین توجه شود که این دستورالزاما باید یک ردیف باشد و اگر چند ردیف باشد ارور میدهد 
->>> 
+>>>   
 ```
 
 # 4.در ج مستقیم در دیتابیس 
@@ -76,19 +78,30 @@ class Product(models.Model):
 product.objects.get(id=4)
 product.objects.get(title="متن")
 product.objects.filter(is_active=True)
-product.objects.filter(is_active=True,rating=5)
-product.objects.filter(is_active=True,rating__lt=4) #کوچکتر از ۴
-product.objects.filter(is_active=True,rating__lte=4) #کوچکتر مساوی از ۴
-product.objects.filter(is_active=True,rating__gt=4) #بزرگتر از ۴
-product.objects.filter(is_active=True,rating__gte=4) #بزرگتر مساوی از ۴
-product.objects.get(headline__exact="متن") 
-product.objects.filter(headline__exact="متن") 
-product.objects.get(id__exact=14) 
-product.objects.filter(id__exact=14) 
-product.objects.filter(title__contains='متن') 
-product.objects.filter(title__icontains='متن') #ignore case sensitive
+product.objects.filter(is_active=True, rating=5)
+product.objects.filter(is_active=True, rating__lt=4)  # کوچکتر از ۴
+product.objects.filter(is_active=True, rating__lte=4)  # کوچکتر مساوی از ۴
+product.objects.filter(is_active=True, rating__gt=4)  # بزرگتر از ۴
+product.objects.filter(is_active=True, rating__gte=4)  # بزرگتر مساوی از ۴
+product.objects.get(headline__exact="متن")
+product.objects.filter(headline__exact="متن")
+product.objects.get(id__exact=14)
+product.objects.filter(id__exact=14)
+product.objects.filter(title__contains='متن')
+product.objects.filter(title__icontains='متن')  # ignore case sensitive
+
+# OR
+>>> from django.db.models import Q
+
+    product.objects.filter(Q(is_active=True) | Q(rating__gte=4))
+    product.objects.filter(Q(is_active=True) | Q(rating__gte=4), rating__lt=5)
 
 
-
+# کاهش کانکشن به دیتابیس در فیلترهای متعدد
+>>> active_products= Product.objects.filter(is_active=True) #کوئری ایجاد می‌شود
+>>> active_products= Product.objects.filter(price__gt=50000) #کوئری آپدیت مي‌شود
+>>> active_products= Product.objects.filter(rating__gt=4)  #کوئری آپدیت مي‌شود
+>>> print(active_products) #فقط یک بار کانکشن میزند
+#اگر دوباره پرینت کنیم دیتا کش می‌شود و مجدد کوئری نخواهد زد
 
 ```
