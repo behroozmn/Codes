@@ -177,7 +177,7 @@ File: `index.html`
 ```html
 {% load static %}
 ...
-<a href="{% url 'urlPost' slug=post.slug %}"></a>
+<a href="{% url 'urlPost' slug=post.slug %}"></a>✅️
 <img src="{% static 'yazahra/images/001.jpg' %}" alt="بهروز محمدی نسب">
 <img src="{% static 'yazahra/images'|add:'/'|add:post.image %}" alt="{{ post.title }}">
 ...
@@ -201,7 +201,7 @@ File: `index.html`
 
 ```html
 
-<time>{{ post.date|date:'d M Y' }}</time>
+<time>{{ post.date|date:'d M Y' }}</time>✅️
 ```
 
 #### linebreaks

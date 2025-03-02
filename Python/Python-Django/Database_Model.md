@@ -31,7 +31,7 @@ File: `models.py`
 
 ```python
 from django.db import models
-from django.core.validators import MinValueValidator, maxValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class Product(models.Model):
@@ -39,7 +39,7 @@ class Product(models.Model):
     price = models.IntegerField()
     rating = models.IntegerField(validators=[MinValueValidator(1), maxValueValidator(5)], default=0)
     short_description = models.CharField(max_length=360, null=True)
-    is_active = models.BooleanFiled(default=False)
+    is_active = models.BooleanField(default=False)
 ```
 
 # 3.PythonConsole OR PythonShell
@@ -47,7 +47,7 @@ class Product(models.Model):
 > دستورات زیر در شل پایتون باید زده شود تا تغییرات در دیتابیس لحاظ گردد
 
 ```
->>> from product_module.models(اپلیکیشن جنگو) import Product(کلاس مدل شده از اپلیکیشن)
+>>> from <Appname>.models import Product
 >>> new_product = Product(title='عنوان محصول', price=23000)
     new_product.save()
 >>> new_product.all()

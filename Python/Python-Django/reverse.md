@@ -122,3 +122,90 @@ urlpatterns = [
 ]
 ...
 ```
+
+## reverse(url vs Function)
+
+### 1.By URL
+
+File: `view.py`
+```python
+def device_details(request, product_id):
+    device = get_object_or_404(Product,pk = product_id)
+    return render(request, 'dbehrooz/device_details.html', {'device': device})
+```
+
+File: `device_details.html`
+
+```html
+<ul style="direction: rtl">
+        {% for device in devices %}
+            <li>
+                <a href="{% url 'device_details' product_id=device.id %}">
+                   نام محصول:  {{ device.title }} / قیمت محصول:  {{ device.price }}
+                </a>
+            </li>
+        {% endfor %} 
+    </ul>
+```
+
+File: `url.py`
+
+```python
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('/<int:product_id>', views.device_details, name='device_details'),
+]
+```
+
+### 2.By function(get_absolute_url)
+
+File: `models.py`
+```python
+from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
+from django.urls import reverse
+
+
+class Product(models.Model):
+    title = models.CharField(max_length=300)
+    price = models.IntegerField()
+    rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], default=0)
+    short_description = models.CharField(max_length=360, null=True)
+    is_active = models.BooleanField(default=False)
+
+    def get_absolute_url(self):
+        return reverse('product-detail', args={'pk': self.pk})
+
+    def __str__(self):
+        return f"{self.title}: {self.price}\n"
+
+```
+
+File: `device_details.html`
+
+```html
+<ul style="direction: rtl">
+        {% for device in devices %}
+            <li>
+                <a href="{{ device.get_absolute_url }}">
+                   نام محصول:  {{ device.title }} / قیمت محصول:  {{ device.price }}
+                </a>
+            </li>
+        {% endfor %} 
+    </ul>```
+
+File: `url.py`
+
+```python
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('/<int:product_id>', views.device_details, name='device_details'),
+]
+```
+
+
+
