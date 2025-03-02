@@ -128,24 +128,26 @@ urlpatterns = [
 ### 1.By URL
 
 File: `view.py`
+
 ```python
 def device_details(request, product_id):
-    device = get_object_or_404(Product,pk = product_id)
+    device = get_object_or_404(Product, pk=product_id)
     return render(request, 'dbehrooz/device_details.html', {'device': device})
 ```
 
 File: `device_details.html`
 
 ```html
+
 <ul style="direction: rtl">
-        {% for device in devices %}
-            <li>
-                <a href="{% url 'device_details' product_id=device.id %}">
-                   نام محصول:  {{ device.title }} / قیمت محصول:  {{ device.price }}
-                </a>
-            </li>
-        {% endfor %} 
-    </ul>
+    {% for device in devices %}
+    <li>
+        <a href="{% url 'device_details' product_id=device.id %}">
+            نام محصول: {{ device.title }} / قیمت محصول: {{ device.price }}
+        </a>
+    </li>
+    {% endfor %}
+</ul>
 ```
 
 File: `url.py`
@@ -162,6 +164,7 @@ urlpatterns = [
 ### 2.By function(get_absolute_url)
 
 File: `models.py`
+
 ```python
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -186,15 +189,16 @@ class Product(models.Model):
 File: `device_details.html`
 
 ```html
+
 <ul style="direction: rtl">
-        {% for device in devices %}
-            <li>
-                <a href="{{ device.get_absolute_url }}">
-                   نام محصول:  {{ device.title }} / قیمت محصول:  {{ device.price }}
-                </a>
-            </li>
-        {% endfor %} 
-    </ul>```
+    {% for device in devices %}
+    <li>
+        <a href="{{ device.get_absolute_url }}">
+            نام محصول: {{ device.title }} / قیمت محصول: {{ device.price }}
+        </a>
+    </li>
+    {% endfor %}
+</ul>```
 
 File: `url.py`
 
@@ -203,8 +207,9 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('/<int:product_id>', views.device_details, name='device_details'),
-]
+path('/
+<int:product_id>', views.device_details, name='device_details'),
+    ]
 ```
 
 
