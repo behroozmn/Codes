@@ -48,6 +48,8 @@ class Product(models.Model):
 
 ```
 >>> from <Appname>.models import Product
+>>> from dbehrooz.models import Product
+>>> from product_module.models import Product
 >>> new_product = Product(title='عنوان محصول', price=23000)
     new_product.save()
 >>> new_product.all()
@@ -105,3 +107,6 @@ product.objects.filter(title__icontains='متن')  # ignore case sensitive
 #اگر دوباره پرینت کنیم دیتا کش می‌شود و مجدد کوئری نخواهد زد
 
 ```
+
+
+*  گزینه db_index را وقتی در ورودی تابع قرار می‌دهیم یعین آن مشخصه مورد ایندکس گذاری قرار گیرد
