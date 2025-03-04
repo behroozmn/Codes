@@ -1,6 +1,6 @@
 * `manage.py`
     * فایل اصلی پروژه که برای بالا آمدن پروزه این فایل را استارت می‌کنیم
-    
+
 * `__init__.py`
     * بدون این فایل، پایتون نمی‌تواند دایرکتوری را به‌عنوان یک بسته شناسایی کند(قابلیت استفاده از ماژول‌های داخل آن دایرکتوری وجود نخواهد داشت)
     *
@@ -23,3 +23,12 @@
 * Directory: `migrations`
     * امور دیتابیس
     * تغییرات دیتابیس رو داخل خودش نگهداری میکند
+* `apps.py`
+    * جزییات و اطلاعات هر اپلیکیشن یا ماژول
+      ```python
+      from django.apps import AppConfig
+      class YazahraConfig(AppConfig):
+      default_auto_field = 'django.db.models.BigAutoField'
+      name = 'yazahra'
+      verbose_name = 'ماژول آزماشی که بهروز دارد کار میکند'
+      ```

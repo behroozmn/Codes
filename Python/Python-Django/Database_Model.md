@@ -3,9 +3,9 @@ from traceback import print_tb
 # 1.Command migration
 
 * `python3 manage.py makemigrations` # جستجوی تغییرات مدل
-    + [ ]   نکته: به هیچ عنوان به محتویات پوشه «ماگریشن» دستکاری نکنید و این موارد باید اتوماتیک ساخته شوند
+  + [ ]   نکته: به هیچ عنوان به محتویات پوشه «ماگریشن» دستکاری نکنید و این موارد باید اتوماتیک ساخته شوند
 * `python3 manage.py migrate` # اعمال تغییرات مدل در دیتابیس .
-    + [ ]    تمامی ماگریشن های ایجاد شده را در دیتابیس اعمال نماییم
+  + [ ]    تمامی ماگریشن های ایجاد شده را در دیتابیس اعمال نماییم
 * `python3 manage.py shell` # دسترسی به شل یا همان پایتون کنسول
 
 اگر تغییراتی در مدل داده شد نیاز به بازسازی است و گرنه اگر در بدنه و دستورات پایتون بود نیازی نیست
@@ -21,8 +21,8 @@ from django.db import models
 
 
 class Product(models.Model):
-    title = models.CharField(max_length=300)
-    price = models.IntegerField()
+  title = models.CharField(max_length=300)
+  price = models.IntegerField()
 ```
 
 ## example2
@@ -35,11 +35,11 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class Product(models.Model):
-    title = models.CharField(max_length=300)
-    price = models.IntegerField()
-    rating = models.IntegerField(validators=[MinValueValidator(1), maxValueValidator(5)], default=0)
-    short_description = models.CharField(max_length=360, null=True)
-    is_active = models.BooleanField(default=False)
+  title = models.CharField(max_length=300)
+  price = models.IntegerField()
+  rating = models.IntegerField(validators=[MinValueValidator(1), maxValueValidator(5)], default=0)
+  short_description = models.CharField(max_length=360, null=True)
+  is_active = models.BooleanField(default=False)
 ```
 
 # 3.PythonConsole OR PythonShell
@@ -112,7 +112,7 @@ product.objects.filter(Q(is_active=True) | Q(rating__gte=4), rating__lt=5)
   ```python
   class Product(models.Model):
     ...
-    category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, null=True,related_name='BEHROOOZ') #✅️
+    category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, null=True,related_name='BEHROOOZ') # ✅️
     ...
   ```
   > file:`view.py`
@@ -121,6 +121,25 @@ product.objects.filter(Q(is_active=True) | Q(rating__gte=4), rating__lt=5)
   categoryname=ProductCategory.objects.get(title='دسته‌بندی۱')
   categoryname.BEHROOOZ.all() # در جدول محصولات همه مواردی که دارای نام «دسته‌بندی۱» است را نمایش می‌دهد
   ```
+
+
+8. class meta
+
+> این قابلیت وجود دارد که داخل کلاس مدل یک کلاس دیگر تعریف کنیم تا به بیان خصوصیات در تنظیمات ادمین بپردازد
+
+```python
+class ProductCategory(models.Model):
+  title = models.CharField(max_length=300, verbose_name='عنوان')
+  url_title = models.CharField(max_length=300, verbose_name='عنوان در url')
+
+  def __str__(self):
+    return f'( {self.title} - {self.url_title} )'
+
+  class Meta:
+    verbose_name = 'دسته بندی'
+    verbose_name_plural = 'دسته بندی ها'
+
+```
 
 ## Example1
 
@@ -132,22 +151,22 @@ from django.utils.text import slugify
 
 
 class Product(models.Model):
-    title = models.CharField(max_length=300)
-    price = models.IntegerField()
-    rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], default=0)
-    short_description = models.CharField(max_length=360, null=True)
-    is_active = models.BooleanField(default=False)
-    slug = models.SlugField(default="", null=False, db_index=True, blank=True, editable=False)  # samsung galaxy s10 => samsung-galaxy-s10✅️
+  title = models.CharField(max_length=300)
+  price = models.IntegerField()
+  rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], default=0)
+  short_description = models.CharField(max_length=360, null=True)
+  is_active = models.BooleanField(default=False)
+  slug = models.SlugField(default="", null=False, db_index=True, blank=True, editable=False)  # samsung galaxy s10 => samsung-galaxy-s10✅️
 
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.title)  # حذف فاصله و تبدیل به خط تیره✅️
-        super().save(*args, **kwargs)
+  def save(self, *args, **kwargs):
+    self.slug = slugify(self.title)  # حذف فاصله و تبدیل به خط تیره✅️
+    super().save(*args, **kwargs)
 
-    def get_absolute_url(self):
-        return reverse('device_details', args=[self.slug])  # ✅️
+  def get_absolute_url(self):
+    return reverse('device_details', args=[self.slug])  # ✅️
 
-    def __str__(self):
-        return f"{self.title}: {self.price}\n"
+  def __str__(self):
+    return f"{self.title}: {self.price}\n"
 ```
 
 * گزینه db_index را وقتی در ورودی تابع قرار می‌دهیم یعین آن مشخصه مورد ایندکس گذاری قرار گیرد
