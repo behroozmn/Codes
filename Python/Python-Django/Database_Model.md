@@ -109,7 +109,8 @@ product.objects.filter(title__icontains='متن')  # ignore case sensitive
 ```
 
 
-## 7.Example1
+
+## Example1
 
 ```python
 from django.db import models
@@ -123,7 +124,7 @@ class Product(models.Model):
     rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], default=0)
     short_description = models.CharField(max_length=360, null=True)
     is_active = models.BooleanField(default=False)
-    slug = models.SlugField(default="", null=False, db_index=True)  # samsung galaxy s10 => samsung-galaxy-s10✅️
+    slug = models.SlugField(default="", null=False, db_index=True,blank=True)  # samsung galaxy s10 => samsung-galaxy-s10✅️
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)  # حذف فاصله و تبدیل به خط تیره✅️
