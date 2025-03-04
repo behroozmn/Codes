@@ -107,6 +107,20 @@ product.objects.filter(Q(is_active=True) | Q(rating__gte=4), rating__lt=5)
 7. پارارمترهای داخل مدل
 
 * editable=False سبب می‌شود که پارامتر جدول هنگام افزودن در پنل مدیریت جنگو نمایش داده نشود
+* related_name='product_set' واکشی تمام روابط برعکس درصورتی که از کلید خارجی استفاده نماییم
+  > file:`model.py`
+  ```python
+  class Product(models.Model):
+    ...
+    category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, null=True,related_name='BEHROOOZ') #✅️
+    ...
+  ```
+  > file:`view.py`
+  ```python
+  from [نام‌ماژول].models import Product,ProductCategory
+  categoryname=ProductCategory.objects.get(title='دسته‌بندی۱')
+  categoryname.BEHROOOZ.all() # در جدول محصولات همه مواردی که دارای نام «دسته‌بندی۱» است را نمایش می‌دهد
+  ```
 
 ## Example1
 
@@ -130,7 +144,7 @@ class Product(models.Model):
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse('device_details', args=[self.slug])  #✅️
+        return reverse('device_details', args=[self.slug])  # ✅️
 
     def __str__(self):
         return f"{self.title}: {self.price}\n"
