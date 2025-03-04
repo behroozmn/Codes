@@ -16,9 +16,18 @@ from django.contrib import admin
 from . import models
 
 
-class ProductAdmin(admin.ModelAdmin, ProdctAdmin):     # تنظیمات مدل پروداکت در پنل ادمین جنگو
-    readonly_fields = ['slug', 'rating']  # هیچگاه در پنل ادمین نمی‌توانیم اسلاگ را تغییر بدهیم
+class ProductAdmin(admin.ModelAdmin):  # تنظیمات مدل پروداکت در پنل ادمین جنگو
+    # readonly_fields = ['slug', 'rating'] # هیچگاه در پنل ادمین نمی‌توانیم اسلاگ را تغییر بدهیم
     prepopulated_fields = {
-        'slug' : ['title'] # خودش از نوشته عنوان عبارت اسلاگ را کامل می‌کند(در پنل مدیریت جنگو)
+        'slug': ['title']  # خودش از نوشته عنوان عبارت اسلاگ را کامل می‌کند(در پنل مدیریت جنگو) 
     }
+
+    list_display = ['__str__', 'price', 'rating', 'is_active', 'short_description', 'title']
+    list_filter = ['rating', 'is_active', 'short_description', 'title']
+    list_editable = ['rating', 'is_active', 'short_description', 'title']
+
+
+admin.site.register(models.Product, ProductAdmin)
+
+
 ```
