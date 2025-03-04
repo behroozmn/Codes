@@ -27,6 +27,8 @@
   # تمامی ماگریشن های ایجاد شده را در دیتابیس اعمال نماییم
 
 * `python3 manage.py shell` # دسترسی به شل یا همان پایتون کنسول
+* 
+* `python manage.py createsuperuser` # ایجاد یوزر ادمین جنگو
 ---
 
 # 4.Other Command
