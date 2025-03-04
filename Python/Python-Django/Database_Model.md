@@ -61,18 +61,15 @@ class Product(models.Model):
 >>>   
 ```
 
-# 4.در ج مستقیم در دیتابیس 
+# 4.در ج مستقیم در دیتابیس
 
 ```python
->>>  Product.objects.create(title='عنوان محصول', price=5000)
+>> > Product.objects.create(title='عنوان محصول', price=5000)
 ```
-
 
 # 5.validator
 
 توابعی که صحت‌ستجی می‌نمایند و اگر مقادیر موردنظر از نطر صحت آن صحیح نبود آنگاه ارور برمی‌گردانند
- 
-
 
 # 6. get() و filter()
 
@@ -93,22 +90,23 @@ product.objects.filter(title__contains='متن')
 product.objects.filter(title__icontains='متن')  # ignore case sensitive
 
 # OR
->>> from django.db.models import Q
+>> > from django.db.models import Q
 
-    product.objects.filter(Q(is_active=True) | Q(rating__gte=4))
-    product.objects.filter(Q(is_active=True) | Q(rating__gte=4), rating__lt=5)
-
+product.objects.filter(Q(is_active=True) | Q(rating__gte=4))
+product.objects.filter(Q(is_active=True) | Q(rating__gte=4), rating__lt=5)
 
 # کاهش کانکشن به دیتابیس در فیلترهای متعدد
->>> active_products= Product.objects.filter(is_active=True) #کوئری ایجاد می‌شود
->>> active_products= Product.objects.filter(price__gt=50000) #کوئری آپدیت مي‌شود
->>> active_products= Product.objects.filter(rating__gt=4)  #کوئری آپدیت مي‌شود
->>> print(active_products) #فقط یک بار کانکشن میزند
-#اگر دوباره پرینت کنیم دیتا کش می‌شود و مجدد کوئری نخواهد زد
+>> > active_products = Product.objects.filter(is_active=True)  # کوئری ایجاد می‌شود
+>> > active_products = Product.objects.filter(price__gt=50000)  # کوئری آپدیت مي‌شود
+>> > active_products = Product.objects.filter(rating__gt=4)  # کوئری آپدیت مي‌شود
+>> > print(active_products)  # فقط یک بار کانکشن میزند
+# اگر دوباره پرینت کنیم دیتا کش می‌شود و مجدد کوئری نخواهد زد
 
 ```
 
+7. پارارمترهای داخل مدل
 
+* editable=False سبب می‌شود که پارامتر جدول هنگام افزودن در پنل مدیریت جنگو نمایش داده نشود
 
 ## Example1
 
@@ -118,23 +116,24 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.urls import reverse
 from django.utils.text import slugify
 
+
 class Product(models.Model):
     title = models.CharField(max_length=300)
     price = models.IntegerField()
     rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], default=0)
     short_description = models.CharField(max_length=360, null=True)
     is_active = models.BooleanField(default=False)
-    slug = models.SlugField(default="", null=False, db_index=True,blank=True,editable=False)  # samsung galaxy s10 => samsung-galaxy-s10✅️
+    slug = models.SlugField(default="", null=False, db_index=True, blank=True, editable=False)  # samsung galaxy s10 => samsung-galaxy-s10✅️
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)  # حذف فاصله و تبدیل به خط تیره✅️
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse('device_details', args=[self.slug]) #✅️
-    
+        return reverse('device_details', args=[self.slug])  #✅️
+
     def __str__(self):
         return f"{self.title}: {self.price}\n"
 ```
 
-*  گزینه db_index را وقتی در ورودی تابع قرار می‌دهیم یعین آن مشخصه مورد ایندکس گذاری قرار گیرد
+* گزینه db_index را وقتی در ورودی تابع قرار می‌دهیم یعین آن مشخصه مورد ایندکس گذاری قرار گیرد
