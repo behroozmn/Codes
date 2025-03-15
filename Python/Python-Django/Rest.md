@@ -77,4 +77,5 @@ from audioop import reversefrom flask import redirect
 
 # 2.Error
 
-* CSRF Token:ممنوعیت دسترسی
+* CSRF Token:ممنوعیت دسترسی برای هنگامی که از توکن زیر در خلال فرم استفاده نشده باشد
+  * `{% csrf_token %}`
