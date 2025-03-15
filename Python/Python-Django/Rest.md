@@ -1,11 +1,19 @@
+from audioop import reversefrom flask import redirect
+
 # FORM
 
 * Method: تعیین نوع درخواست که از نوع گت باشد یا پست
     * GET
+        * بصورت پیش‌فرض همه درخواست‌ها گت هست مگر اینکه تغییر داده شود
         * ارسال دیتا در «یوآراِل»
         * استفاده معمول در هنگام فیلتر کردن
     * POST
         * ارسال دیتا در هِدِر
+        * ```python
+          if request.method == 'POST'
+             print(request.POST)
+             return redirect(reverse('URL_NAME'))
+          ```
 
 * Action: ارسال فرم به کدام آدرس از «یوآراِل»ها
     * اگر قرار داده نشود به همان «یوآراِل» که فرم درآن ارسال شده است ارسال می‌شود(هرصفحه که باشیم)
@@ -15,6 +23,7 @@
 * value: مقداری که بصورت پیشفرض ارسال شود
     * `<input type="submit" name="submit" class="" value="ارسـال">`
     * `<button type="submit" class="">ارسال</button`
+* csrf_token: برای اطمینان ازاینکه مبدا ارسال کننده صحیح می‌باشد
 
 ## inputType
 
@@ -48,6 +57,7 @@
         <input type="text" name="name" class="form-control" required="required"
                placeholder="نام">
     </div>
+    {% csrf_token %}
     <div class="form-group col-md-6">
         <input type="email" name="email" class="form-control" required="required"
                placeholder="ایمیـل">
@@ -64,4 +74,7 @@
     </div>
 </form>
 ```
- 
+
+# 2.Error
+
+* CSRF Token:ممنوعیت دسترسی
