@@ -1,5 +1,3 @@
-from audioop import reversefrom flask import redirect
-
 # FORM
 
 * Method: تعیین نوع درخواست که از نوع گت باشد یا پست
