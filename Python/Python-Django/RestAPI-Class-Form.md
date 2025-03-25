@@ -1,3 +1,5 @@
+جنگو قابلیت مدیرت پارامترهای فرم را در قالب کلاس مهیا نموده است تا تمامی موارد را توسط کلاس پارامتردهی نمود
+
 Files: `Forms.py`
 
 ```python
@@ -6,13 +8,13 @@ from django import forms
 
 class ContactUsForm(forms.Form):
     full_name = forms.CharField(label='نام و نام خانوادگی'
-        , max_length=50
-        , error_messages={'required': 'لطفا نام و نام خانوادگی خود را وارد کنید','max_length': 'نام و نام خانوادگی نمی تواند بیشتر از 50 کاراکتر باشد'}
-        , widget=forms.TextInput(attrs={'class': 'form-control','placeholder': 'نام و نام خانوادگی'})
-        )
-    email = forms.EmailField(label='ایمیل ', widget=forms.EmailInput(attrs={'class': 'form-control','placeholder': 'ایمیل'}))
-    subject = forms.CharField(label='عنوان', widget=forms.TextInput (attrs={'class': 'form-control','placeholder': 'عنوان'}))
-    text = forms.CharField(label='متن پیام', widget=forms.Textarea  (attrs={'class': 'form-control','placeholder': 'متن پیام','rows': '5','id': 'message'}))
+                                , max_length=50
+                                , error_messages={'required': 'لطفا نام و نام خانوادگی خود را وارد کنید', 'max_length': 'نام و نام خانوادگی نمی تواند بیشتر از 50 کاراکتر باشد'}
+                                , widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'نام و نام خانوادگی'})
+                                )
+    email = forms.EmailField(label='ایمیل ', widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'ایمیل'}))
+    subject = forms.CharField(label='عنوان', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'عنوان'}))
+    text = forms.CharField(label='متن پیام', widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'متن پیام', 'rows': '5', 'id': 'message'}))
 ```
 
 Files: `views.py`
@@ -40,29 +42,14 @@ Files: `ContactUsage.html`
       method="post">
     {% csrf_token %}
 
-    <div class="col-md-6 form-group">
-        {{ contact_form.email.label_tag }}
-        {{ contact_form.email }}
-        {{ contact_form.email.errors }}
-    </div>
-
-    <div class="col-md-6 form-group {% if contact_form.full_name.errors %} text-danger  {% endif %}">
-        {{ contact_form.full_name.label_tag }}
-        {{ contact_form.full_name }}
-        {{ contact_form.full_name.errors }}
-    </div>
-
+    {% for item in contact_form %}
     <div class="col-md-12 form-group">
-        {{ contact_form.subject.label_tag }}
-        {{ contact_form.subject }}
-        {{ contact_form.subject.errors }}
+        {{ item.label_tag }}
+        {{ item }}
+        {{ item.errors }}
     </div>
-
-    <div class="col-md-12 form-group">
-        {{ contact_form.text.label_tag }}
-        {{ contact_form.text }}
-        {{ contact_form.text.errors }}
-    </div>
+    {% endfor %}
+    <hr>
 
     {% comment %}{{ contact_form }}{% endcomment %}
     {% comment %}
