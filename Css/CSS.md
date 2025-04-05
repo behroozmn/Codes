@@ -44,3 +44,10 @@ header nav {
     display: flex; /*مهم و باید خوانده شود*/
 }
 ```
+
+### اجباری نمودن یک تنظیمات
+```css
+.errorlist {
+    padding-right: 0 !important;
+}
+```
