@@ -8,7 +8,7 @@ from django.views import View
 from django.views.generic.base import TemplateView # ✅️ 
 
 
-# class HomeView(View): # ✅حالت قبل از استفده از تمپلیت‌ویو
+# class HomeView(View): # 📌️ Without TemplateView
 #     def get(self, request):
 #         context = {
 #             'data': 'this is data'
