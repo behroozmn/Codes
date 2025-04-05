@@ -28,12 +28,12 @@ class ContactUsModelForm(forms.ModelForm):
         # fields = '__all__'
         # exclude = ['response']
         widgets = {  # فابلیت کانفیگ روی کلیدهای تعریفی در فیلدز
-            'full_name': forms.TextInput( attrs = {'class': 'form-control'}),
+            'full_name': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.TextInput(attrs={'class': 'form-control'}),
             'title': forms.TextInput(attrs={'class': 'form-control'}),
-            'message': forms.Textarea(attrs={'class': 'form-control','rows': 5,'id': 'message'})
+            'message': forms.Textarea(attrs={'class': 'form-control', 'rows': 5, 'id': 'message'})
         }
-        labels = {'full_name': 'نام و نام خانوادگی شما','email': 'ایمیل شما'}
+        labels = {'full_name': 'نام و نام خانوادگی شما', 'email': 'ایمیل شما'}
         error_messages = {'full_name': {'required': 'نام و نام خانوادگی اجباری می باشد. لطفا وارد کنید'}}
 ```
 
@@ -45,7 +45,7 @@ Files: `ContactUsage.html`
       method="post">
     {% csrf_token %}
 
-       <div class="col-md-6 form-group">
+    <div class="col-md-6 form-group">
         {{ contact_form.email.label_tag }}
         {{ contact_form.email }}
         {{ contact_form.email.errors }}
@@ -107,14 +107,14 @@ from .models import ContactUs
 from django.urls import reverse
 
 
-class ContactUsView(View):
-    def get(self, request):
+class ContactUsView(View):  # ✅️
+    def get(self, request):  # ✅️
         contact_form = ContactUsModelForm()
         return render(request, 'contact_module/contact_us_page.html', {
             'contact_form': contact_form
         })
 
-    def post(self, request):
+    def post(self, request):  # ✅️
         contact_form = ContactUsModelForm(request.POST)
         if contact_form.is_valid():
             contact_form.save()
@@ -123,20 +123,16 @@ class ContactUsView(View):
         return render(request, 'contact_module/contact_us_page.html', {
             'contact_form': contact_form
         })
+```
 
+File: `urls.py`
 
-def contact_us_page(request):
-    if request.method == 'POST':
-        # contact_form = ContactUsForm(request.POST)
-        contact_form = ContactUsModelForm(request.POST)  # ✅️
-        if contact_form.is_valid():
-            contact_form.save()  # ✅️بخاطر استفاده از مدل فُرم و تعریف فیلدها درون آن
-            return redirect('home_page')
-    else:
-        # contact_form = ContactUsForm()
-        contact_form = ContactUsModelForm()  # ✅️
+```python
+from django.urls import path
+from . import views
 
-    return render(request, 'contact_module/contact_us_page.html', {
-        'contact_form': contact_form
-    })
+urlpatterns = [
+    # path('', views.Cotact_us_page , name='cotact_us_page'),
+    path('', views.ContactUsView.as_view() , name='cotact_us_page'),  # ✅️
+]
 ```
