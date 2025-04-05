@@ -10,7 +10,7 @@ class ContactUsForm(forms.Form):
                                 max_length=50,
                                 error_messages={'required': 'لطفا نام و نام خانوادگی خود را وارد کنید',
                                                 'max_length': 'نام و نام خانوادگی نمی تواند بیشتر از 50 کاراکتر باشد'},
-                                widget=forms.TextInput(attrs={'class': 'form-control',
+                                widget=forms.TextInput(attrs={'class': 'form-control', #کلاس سی اس اس می‌شود تخصیص داد
                                                               'placeholder': 'نام و نام خانوادگی'}))
     email = forms.EmailField(label='ایمیل ', widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'ایمیل'}))
     title = forms.CharField(label='عنوان', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'عنوان'}))
@@ -104,7 +104,7 @@ from django.urls import reverse
 def contact_us_page(request):
     if request.method == 'POST':
         # contact_form = ContactUsForm(request.POST)
-        contact_form = ContactUsModelForm(request.POST)
+        contact_form = ContactUsModelForm(request.POST) #✅️
         if contact_form.is_valid():
             print(contact_form.cleaned_data)
             contact = ContactUs(
@@ -118,7 +118,7 @@ def contact_us_page(request):
             return redirect('home_page')
     else:
         # contact_form = ContactUsForm()
-        contact_form = ContactUsModelForm()
+        contact_form = ContactUsModelForm() #✅️
 
     return render(request, 'contact_module/contact_us_page.html', {
         'contact_form': contact_form
