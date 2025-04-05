@@ -255,9 +255,9 @@
 >        verbose_name_plural = 'محصولات'
 >```
 
-## 3.FormView
+## 4.FormView
 
-### 3.1.ClassBaseView
+### 4.1.ClassBaseView
 
 > Files: `Forms.py`
 >
@@ -392,9 +392,9 @@
 >]
 > ```
 
-### 3.2.ClassBaseView by [FormView]
+### 4.2.ClassBaseView by [FormView]
 
->Files: `views.py`
+> Files: `views.py`
 >
 >```python
 >from django.shortcuts import render, redirect
@@ -410,4 +410,22 @@
 >        form.save()# ✅️
 >        return super().form_valid(form) # ✅️
 >```
+
+## 5.CreateView
+
+### 5.1.ClassBaseView by [CreateView]
+
+> Files: `views.py`
 >
+>```python
+>from django.shortcuts import render, redirect
+>from .forms import ContactUsForm, ContactUsModelForm
+>from django.views.generic.edit import FormView, CreateView # ✅️
+>from .models import ContactUs
+>
+>class ContactUsView(CreateView): # ✅️
+>    model = contactUs
+>    form_class = ContactUsModelForm # حتما باید مدل فرم باشد
+>    template_name = 'contact_module/contact_us_page.html'
+>    success_url = '/contact-us/'
+>```
