@@ -10,7 +10,7 @@ class ContactUsForm(forms.Form):
                                 max_length=50,
                                 error_messages={'required': 'لطفا نام و نام خانوادگی خود را وارد کنید',
                                                 'max_length': 'نام و نام خانوادگی نمی تواند بیشتر از 50 کاراکتر باشد'},
-                                widget=forms.TextInput(attrs={'class': 'form-control', #کلاس سی اس اس می‌شود تخصیص داد
+                                widget=forms.TextInput(attrs={'class': 'form-control',  # کلاس سی اس اس می‌شود تخصیص داد
                                                               'placeholder': 'نام و نام خانوادگی'}))
     email = forms.EmailField(label='ایمیل ', widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'ایمیل'}))
     title = forms.CharField(label='عنوان', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'عنوان'}))
@@ -27,6 +27,14 @@ class ContactUsModelForm(forms.ModelForm):
         fields = ['full_name', 'email', 'title', 'message']
         # fields = '__all__'
         # exclude = ['response']
+        widgets = {  # فابلیت کانفیگ روی کلیدهای تعریفی در فیلدز
+            'full_name': forms.TextInput( attrs = {'class': 'form-control'}),
+            'email': forms.TextInput(attrs={'class': 'form-control'}),
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'message': forms.Textarea(attrs={'class': 'form-control','rows': 5,'id': 'message'})
+        }
+        labels = {'full_name': 'نام و نام خانوادگی شما','email': 'ایمیل شما'}
+        error_messages = {'full_name': {'required': 'نام و نام خانوادگی اجباری می باشد. لطفا وارد کنید'}}
 ```
 
 Files: `ContactUsage.html`
@@ -96,29 +104,19 @@ Files: `views.py`
 from django.shortcuts import render, redirect
 from .forms import ContactUsForm, ContactUsModelForm
 from .models import ContactUs
-
-# Create your views here.
 from django.urls import reverse
 
 
 def contact_us_page(request):
     if request.method == 'POST':
         # contact_form = ContactUsForm(request.POST)
-        contact_form = ContactUsModelForm(request.POST) #✅️
+        contact_form = ContactUsModelForm(request.POST)  # ✅️
         if contact_form.is_valid():
-            print(contact_form.cleaned_data)
-            contact = ContactUs(
-                title=contact_form.cleaned_data.get('title'),
-                full_name=contact_form.cleaned_data.get('full_name'),
-                email=contact_form.cleaned_data.get('email'),
-                message=contact_form.cleaned_data.get('message'),
-            )
-
-            contact.save()
+            contact_form.save()  # ✅️بخاطر استفاده از مدل فُرم و تعریف فیلدها درون آن
             return redirect('home_page')
     else:
         # contact_form = ContactUsForm()
-        contact_form = ContactUsModelForm() #✅️
+        contact_form = ContactUsModelForm()  # ✅️
 
     return render(request, 'contact_module/contact_us_page.html', {
         'contact_form': contact_form
