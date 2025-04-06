@@ -32,3 +32,9 @@
       name = 'yazahra'
       verbose_name = 'ماژول آزماشی که بهروز دارد کار میکند'
       ```
+* `setting.py`
+    *  `LANGUAGE_CODE = 'fa-ir'` تغییر زبان داشبورد از انگلیسی به فارسی
+    *  `MEDIA_ROOT = BASE_DIR / 'MyDir'` مدیاهای ارسالی کاربر بصورت پیش‌فرض کجا ذخیره گردد 
+       * must be absolute name =>   
+    
+
