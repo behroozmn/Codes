@@ -138,6 +138,7 @@ class ProductCategory(models.Model):
     class Meta:
         verbose_name = 'دسته بندی'
         verbose_name_plural = 'دسته بندی ها'
+        db_table= 'نام دلحواه برای اسم جدول دردیتابیس' # default: "AppName_ModelName"
 
 ```
 
