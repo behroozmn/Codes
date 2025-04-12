@@ -213,7 +213,16 @@ File: `index.html`
 {{ post.content| linebreaks }} #
 ```
 
-## 5.مثال‌ها
+## 5.نکات
+<div style="direction: rtl">
+*  اگر بخواهیم نوع رکوئست رو مشخص کنیم از روش زیر استفاده میکنیم تا به IntelliSence کمک کرده باشیم
+
+```python
+def FunctionName(request: HTTPRequest):
+    print(request.body)
+```
+</div>
+## 6.مثال‌ها
 
 ### مثال۱
 
@@ -329,3 +338,6 @@ def single_post(request, slug):
 
 > Note: [built-In Templates](https://docs.djangoproject.com/en/5.1/ref/templates/builtins/)
 > Note: [URL]               (https://docs.djangoproject.com/en/5.1/ref/templates/builtins/#url)
+
+
+
