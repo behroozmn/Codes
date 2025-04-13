@@ -96,12 +96,15 @@ product.objects.filter(Q(is_active=True) | Q(rating__gte=4))
 product.objects.filter(Q(is_active=True) | Q(rating__gte=4), rating__lt=5)
 
 # کاهش کانکشن به دیتابیس در فیلترهای متعدد
->> > active_products = Product.objects.filter(is_active=True)  # کوئری ایجاد می‌شود
->> > active_products = Product.objects.filter(price__gt=50000)  # کوئری آپدیت مي‌شود
->> > active_products = Product.objects.filter(rating__gt=4)  # کوئری آپدیت مي‌شود
->> > print(active_products)  # فقط یک بار کانکشن میزند
+>> active_products = Product.objects.filter(is_active=True)  # کوئری ایجاد می‌شود
+>> active_products = Product.objects.filter(price__gt=50000)  # کوئری آپدیت مي‌شود
+>> active_products = Product.objects.filter(rating__gt=4)  # کوئری آپدیت مي‌شود
+>> print(active_products)  # فقط یک بار کانکشن میزند
 # اگر دوباره پرینت کنیم دیتا کش می‌شود و مجدد کوئری نخواهد زد
 
+
+products = list(Product.objects.all().order_by('-price')[:5])
+products = list(Product.objects.order_by('price').allS().values('title','is_active')) #مرتب‌سازی برحسب قیمت و تنها برگردداندن دو ستون
 ```
 
 7. پارارمترهای داخل مدل
