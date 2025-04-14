@@ -2,6 +2,8 @@
 
 * مفهوم Serialize: به فرایند تبدیل Data به فرمت نظیر JSON یا XML یا CSV که در API مورد استفاده قرار بگیرد می‌گویند
 * مفهوم DeSerialize: به فرایند تبدیل Json به دیتا برای استفاده در مدل(یا درچ در دیتابیس)
+* عبارت request.data: مقدار(مثلا)جی‌سان که هم اکنون Serialize است و باید برای ذخیره در دیتابیس Deserialize شود
+* عبارت request.instance: مقدار دیتا(مثلا دیتابیس) که هم اکنون DeSerialize است و باید برای مورد استفاده قرار گرفتن درقالب(مثلا)جی‌سان Serialize شود
 
 </div> 
 
@@ -168,11 +170,19 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 
 
-@api_view(['GET'])
+@api_view(['GET', 'POST'])
 def all_todos(request: Request):
-    todos = Todo.objects.order_by('priority').all()
-    todo_serializer = TodoSerializer(todos, many=True)
-    return Response(todo_serializer.data, status.HTTP_202_ACCEPTED)
+    if request.method == 'GET':
+        todos = Todo.objects.order_by('priority').all()
+        todo_serializer = TodoSerializer(todos, many=True)
+        return Response(todo_serializer.data, status.HTTP_200_OK)
+    elif request.method == 'POST':
+        serializer = TodoSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status.HTTP_201_CREATED)
+
+    return Response(None, status.HTTP_400_BAD_REQUEST)
 ````
 
 File: `/todo/urls.py`
