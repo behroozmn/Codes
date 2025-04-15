@@ -173,17 +173,39 @@ from rest_framework.decorators import api_view
 
 @api_view(['GET', 'POST'])
 def all_todos(request: Request):
-    if request.method == 'GET':
+    if request.method == 'GET': # Ussing for get all items
         todos = Todo.objects.order_by('priority').all()
-        todo_serializer = TodoSerializer(todos, many=True)
+        todo_serializer = TodoSerializer(todos, many=True)# Instance(for serialize)
         return Response(todo_serializer.data, status.HTTP_200_OK)
-    elif request.method == 'POST':
-        serializer = TodoSerializer(data=request.data)
+    elif request.method == 'POST': # Ussing for add one item
+        serializer = TodoSerializer(data=request.data)# Data [NotInstance]
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status.HTTP_201_CREATED)
 
     return Response(None, status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def todo_detail_view(request: Request, todo_id:int):
+    try:
+        todo = Todo.objects.get(pk=todo_id)
+    except Todo.DoesNotExist:
+        return Response(None, status.HTTP_404_NOT_FOUND)
+    
+    if request.method == 'GET': # Ussing for get one item
+        serializer = TodoSerializer(todo) # Instance(for serialize)
+        return Response(serializer.data, status.HTTP_200_OK)
+    
+    elif request.method == 'PUT': # Ussing for Edit one item(ویرایش)
+        serializer = TodoSerializer(todo, data=request.data) # Instance and data(for Deserialize) دیتا را داخل اینستنس میریزد
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status.HTTP_202_ACCEPTED)
+        return Response(None, status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE': # Ussing for delete one item
+        todo.delete()
+        return Response(None, status.HTTP_204_NO_CONTENT)
 ````
 
 File: `/todo/urls.py`
@@ -194,6 +216,7 @@ from . import views
 
 urlpatterns = [
     path('', views.all_todos)
+    path('<int:todo_id>', views.todo_detail_view),
 ]
 ```
 
