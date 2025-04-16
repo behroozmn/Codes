@@ -203,7 +203,7 @@
 >   class ProfilesView(ListView):# ✅️
 >       model = UserProfile
 >       template_name = 'contact_module/profiles_list_page.html'
->       context_object_name = 'profiles'
+>       context_object_name = 'profiles' # change name «object_list» to «products» for use in html files
 >  ```
 > Files: `profiles_list_page.html`
 > ```html

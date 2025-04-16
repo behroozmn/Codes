@@ -155,7 +155,7 @@
 > 
 > class ProductListView(ListView):# ✅️
 >    template_name = 'product_module/product_list.html'
->    model = Product # تعیین این که از کدام جدول دیتا باید استخراج کند
+>    model = Product # تعیین این که از کدام جدول دیتا باید استخراج کند و به صفحه اچ تی ام ال بفرستد 
 >    # همیشه با نام object_list در صفحات اچ تی ام ال شناخته می‌شود 
 >    context_object_name = 'products' # change name «object_list» to «products» for use in html files
 >    # اگر بخش زیر نباشد همه رکوردها نمایش خواهد شد و فیلتر اعمال نمیگردد
@@ -195,7 +195,7 @@
 > 
 > class ProductListView(ListView):
 >    template_name = 'product_module/product_list.html'
->    model = Product
+>    model = Product # تعیین این که از کدام جدول دیتا باید استخراج کند و به صفحه اچ تی ام ال بفرستد 
 >    # همیشه با نام object_list در صفحات اچ تی ام ال شناخته می‌شود 
 >    context_object_name = 'products' # change name «object_list» to «products» for use in html files
 >    # اگر بخش زیر نباشد همه رکوردها نمایش خواهد شد و فیلتر اعمال نمیگردد
