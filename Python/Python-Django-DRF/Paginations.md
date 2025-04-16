@@ -111,6 +111,8 @@ class TodosViewSetApiView(viewsets.ModelViewSet):
 
 ## 2.3.Config by Class
 
+File: `/todo/views.py`
+
 ```python
 from rest_framework import generics
 from rest_framework.pagination import PageNumberPagination
