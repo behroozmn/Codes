@@ -700,7 +700,7 @@ File: `/todo/serializers.py
 ```python
 from rest_framework import serializers
 from .models import Todo
-from django.contrib.auth import get_user_model# ✅️
+from django.contrib.auth import get_user_model  # ✅️
 
 
 class TodoSerializer(serializers.ModelSerializer):
@@ -709,8 +709,9 @@ class TodoSerializer(serializers.ModelSerializer):
         # fields = ['id', 'title', 'content']
         fields = '__all__'
 
-class UserSerialzier(serializers.ModelSerializer):# ✅️
-    todos = TodoSerializer(read_only=True, many=True)# ✅️✅️✅️✅️
+
+class UserSerialzier(serializers.ModelSerializer):  # ✅️
+    todos = TodoSerializer(read_only=True, many=True)  # ✅️✅️✅️✅️
 
     class Meta:
         model = User
