@@ -38,8 +38,22 @@
         * must be absolute name
     * `MEDIA_URL = 'MyDir'` باز کردن یک مسیر خاص در آدرس‌های داخلی جنگو
         * بصورت پیش‌فرض همه مسیرهای جنگو بسته است مگر که مسیر خاصی را باز نمایید که باید در فایل یوآراِل نیز این گزینه را اضافه نمایید
-    * `SESSION_COOKIE_AGE = 120 مقدار زمان عمر سشن را روی ۲دقیقه تنظیم می‌کند
+    * `SESSION_COOKIE_AGE = 120` مقدار زمان عمر سشن را روی ۲دقیقه تنظیم می‌کند
         * بصورت پیش‌فرض مقدار آن دو هفته است
     * `AUTH_USER_MODEL = 'account_module.user'` تعیین نام مدل[جدول دیتابیس] که باید بابت احراز هویت مورد استفاده قرار بگیرد
         * نام مآژول و یک نقطه و نانم کلاس مدل یعنی نیاز به آوردن نام فایل نیست
+    *  `REST_FRAMEWORK = {...}` تنظیمات «دی‌آراِف» و رست را این قسمت قرار می‌دهیم
+       * `'DEFAULT_PAGINATION_CLASS'`
+         * `'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination'` # use «page=۱|۲|۳|......» for pagenumber
+         * `'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination'` # use «limit» for X record in one page and «offset» for begin at X record 
+
+
+
+
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 2
+} 
 
