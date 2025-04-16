@@ -359,3 +359,111 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls'))
 ]
 ```
+
+# 3.3.Mixin
+
+
+```python
+from rest_framework import serializers
+```
+
+File: `/todo/models.py`
+
+```python
+from django.db import models
+
+
+class Todo(models.Model):
+    title = models.CharField(max_length=300)
+    content = models.TextField()
+    priority = models.IntegerField(default=1)
+    is_done = models.BooleanField()
+
+    def __str__(self) -> str:
+        return f'{self.title} / Is Done: {self.is_done}'
+
+    class Meta:
+        db_table = 'todos'
+```
+
+File: `/todo/serializers.py
+
+```python
+from rest_framework import serializers
+from .models import Todo
+
+
+class TodoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Todo
+        # fields = ['id', 'title', 'content']
+        fields = '__all__'
+````
+
+File: `/todo/views.py`
+
+```python
+from django.shortcuts import render
+from rest_framework.request import Request
+from rest_framework.response import Response
+from .models import Todo
+from .serializers import TodoSerializer
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.views import APIView
+from rest_framework import generics, mixins
+
+
+class TodosListMixinApiView(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+    queryset = Todo.objects.order_by('priority').all()
+    serializer_class = TodoSerializer
+
+    def get(self, request: Request):
+        return self.list(request)
+
+    def post(self, request: Request):
+        return self.create(request)
+
+
+class TodosDetailMixinApiView(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, generics.GenericAPIView):
+    queryset = Todo.objects.order_by('priority').all()
+    serializer_class = TodoSerializer
+
+    def get(self, request: Request, pk):
+        return self.retrieve(request, pk)
+
+    def put(self, request: Request, pk):
+        return self.update(request, pk)
+
+    def delete(self, request: Request, pk):
+        return self.destroy(request, pk)
+
+````
+
+File: `/todo/urls.py`
+
+```python
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.all_todos),
+    path('<int:todo_id>', views.todo_detail_view),
+    path('classbaseview/', views.TodosListApiView.as_view()),
+    path('classbaseview/<int:todo_id>', views.TodosDetailApiView.as_view()),
+]
+```
+
+File: `/urls.py` #main urls
+
+```python
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('home.urls')),
+    path('todos/', include('todo.urls')),
+    path('api-auth/', include('rest_framework.urls'))
+]
+```
