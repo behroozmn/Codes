@@ -118,7 +118,9 @@ def todos_json(request: Request):
     return Response({'todos': todos}, status.HTTP_200_OK)
 ```
 
-# 3.Serialize by serializers.ModelSerializer[FunctionBaseView]
+# 3.Serializers.ModelSerializer
+
+# 3.1.FunctionBaseView
 
 > تبدیل دیتای داخل دیتابیس بصورت اتوماتیک به قالب جی‌سان برای ارسال به سمت کلاینت
 
@@ -171,8 +173,8 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 
 
-@api_view(['GET', 'POST'])
-def all_todos(request: Request):
+@api_view(['GET', 'POST']) 
+def all_todos(request: Request): # برای نمایش همه یا ایجاد یک دیتای جدید
     if request.method == 'GET': # Ussing for get all items
         todos = Todo.objects.order_by('priority').all()
         todo_serializer = TodoSerializer(todos, many=True)# Instance(for serialize)
@@ -186,7 +188,7 @@ def all_todos(request: Request):
     return Response(None, status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'PUT', 'DELETE'])
-def todo_detail_view(request: Request, todo_id:int):
+def todo_detail_view(request: Request, todo_id:int): #نیازمند کلید هست تا برمبنای یک کلید اقدام انجام شود
     try:
         todo = Todo.objects.get(pk=todo_id)
     except Todo.DoesNotExist:
@@ -234,7 +236,7 @@ urlpatterns = [
 ]
 ```
 
-# 4.Serialize by serializers.ModelSerializer[ClassBaseView]
+# 3.2.ClassBaseView
 
 ```python
 from rest_framework import serializers
@@ -287,7 +289,7 @@ from rest_framework.views import APIView
 
 
 
-class TodosListApiView(APIView):
+class TodosListApiView(APIView): # برای نمایش همه یا ایجاد یک دیتای جدید
     def get(self, request: Request):
         todos = Todo.objects.order_by('priority').all()
         todo_serializer = TodoSerializer(todos, many=True)
@@ -302,7 +304,7 @@ class TodosListApiView(APIView):
             return Response(None, status.HTTP_400_BAD_REQUEST)
 
 
-class TodosDetailApiView(APIView):
+class TodosDetailApiView(APIView): #نیازمند کلید هست تا برمبنای یک کلید اقدام انجام شود
     def get_object(self, todo_id: int):
         try:
             todo = Todo.objects.get(pk=todo_id)
