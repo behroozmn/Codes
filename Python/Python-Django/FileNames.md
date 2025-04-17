@@ -46,6 +46,10 @@
        * `'DEFAULT_PAGINATION_CLASS'`
          * `'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination'` # use «page=۱|۲|۳|......» for pagenumber
          * `'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination'` # use «limit» for X record in one page and «offset» for begin at X record 
+       * `'DEFAULT_AUTHENTICATION_CLASSES'`
+         * `'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.BasicAuthentication']` # send user and pass for all pages
+       * `'DEFAULT_PERMISSION_CLASSES'`
+         * `'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated']` # execute code when authenticate is valid(when user logedin)
 
 
 
