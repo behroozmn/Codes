@@ -50,14 +50,3 @@
          * `'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.BasicAuthentication']` # send user and pass for all pages
        * `'DEFAULT_PERMISSION_CLASSES'`
          * `'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated']` # execute code when authenticate is valid(when user logedin)
-
-
-
-
-
-
-REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 2
-} 
-
