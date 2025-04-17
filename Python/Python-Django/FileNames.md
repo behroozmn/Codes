@@ -33,6 +33,9 @@
       verbose_name = 'ماژول آزماشی که بهروز دارد کار میکند'
       ```
 * `setting.py`
+    * `INSTALL_APPS`
+        * `INSTALL_APPS=[... , 'rest_framework' ,...]`
+        * `INSTALL_APPS=[... , 'rest_framework.authtoken' ,...]`
     * `LANGUAGE_CODE = 'fa-ir'` تغییر زبان داشبورد از انگلیسی به فارسی
     * `MEDIA_ROOT = BASE_DIR / 'MyDir'` مدیاهای ارسالی کاربر بصورت پیش‌فرض کجا ذخیره گردد
         * must be absolute name
@@ -42,11 +45,12 @@
         * بصورت پیش‌فرض مقدار آن دو هفته است
     * `AUTH_USER_MODEL = 'account_module.user'` تعیین نام مدل[جدول دیتابیس] که باید بابت احراز هویت مورد استفاده قرار بگیرد
         * نام مآژول و یک نقطه و نانم کلاس مدل یعنی نیاز به آوردن نام فایل نیست
-    *  `REST_FRAMEWORK = {...}` تنظیمات «دی‌آراِف» و رست را این قسمت قرار می‌دهیم
-       * `'DEFAULT_PAGINATION_CLASS'`
-         * `'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination'` # use «page=۱|۲|۳|......» for pagenumber
-         * `'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination'` # use «limit» for X record in one page and «offset» for begin at X record 
-       * `'DEFAULT_AUTHENTICATION_CLASSES'`
-         * `'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.BasicAuthentication']` # send user and pass for all pages
-       * `'DEFAULT_PERMISSION_CLASSES'`
-         * `'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated']` # execute code when authenticate is valid(when user logedin)
+    * `REST_FRAMEWORK = {...}` تنظیمات «دی‌آراِف» و رست را این قسمت قرار می‌دهیم
+        * `'DEFAULT_PAGINATION_CLASS'`
+            * `'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination'` # use «page=۱|۲|۳|......» for pagenumber
+            * `'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination'` # use «limit» for X record in one page and «offset» for begin at X record
+        * `'DEFAULT_AUTHENTICATION_CLASSES'`
+            * `'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.BasicAuthentication']` # send user and pass for all pages
+            * `'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.TokenAuthentication']` # Use Token for authenticate
+        * `'DEFAULT_PERMISSION_CLASSES'`
+            * `'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated']` # execute code when authenticate is valid(when user logedin)

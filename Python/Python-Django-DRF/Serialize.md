@@ -9,7 +9,9 @@
 
 # 1.FunctionBase view
 
-File: `/home/url.py`
+## 1.1./home/url.py
+
+File: `url.py`
 
 ```python
 from django.urls import path
@@ -20,6 +22,8 @@ urlpatterns = [
     path('legacy', views.todos_json)
 ]
 ```
+
+## 1.2.models.py
 
 File: `/Todo/models.py`
 
@@ -37,8 +41,10 @@ class Todo(models.Model):
         return f'{self.title} / Is Done: {self.is_done}'
 
     class Meta:
-        db_table = 'todos' # 'نام دلحواه برای اسم جدول دردیتابیس' # default: "AppName_ModelName"
+        db_table = 'todos'  # 'نام دلحواه برای اسم جدول دردیتابیس' # default: "AppName_ModelName"
 ```
+
+## 1.3.view.py
 
 file: `/home/view.py`
 
@@ -62,6 +68,8 @@ def todos_json(request: HttpRequest):
 
 # 2.Legacy Serialize[FunctionBaseView]
 
+## 2.1.url.py
+
 File: `/home/url.py`
 
 ```python
@@ -73,6 +81,8 @@ urlpatterns = [
     path('legacy', views.todos_json)
 ]
 ```
+
+## 2.2.models.py
 
 File: `/Todo/models.py`
 
@@ -90,8 +100,10 @@ class Todo(models.Model):
         return f'{self.title} / Is Done: {self.is_done}'
 
     class Meta:
-        db_table = 'todos' # 'نام دلحواه برای اسم جدول دردیتابیس' # default: "AppName_ModelName"
+        db_table = 'todos'  # 'نام دلحواه برای اسم جدول دردیتابیس' # default: "AppName_ModelName"
 ```
+
+## 2.3.view.py
 
 file: `/home/view.py`
 
@@ -120,13 +132,15 @@ def todos_json(request: Request):
 
 # 3.Serializers.ModelSerializer
 
-# 3.1.FunctionBaseView
+## 3.1.FunctionBaseView
 
 > تبدیل دیتای داخل دیتابیس بصورت اتوماتیک به قالب جی‌سان برای ارسال به سمت کلاینت
 
 ```python
 from rest_framework import serializers
 ```
+
+### 3.1.1.models.py
 
 File: `/todo/models.py`
 
@@ -144,8 +158,10 @@ class Todo(models.Model):
         return f'{self.title} / Is Done: {self.is_done}'
 
     class Meta:
-        db_table = 'todos' # 'نام دلحواه برای اسم جدول دردیتابیس' # default: "AppName_ModelName"
+        db_table = 'todos'  # 'نام دلحواه برای اسم جدول دردیتابیس' # default: "AppName_ModelName"
 ```
+
+### 3.1.2.serializer.py
 
 File: `/todo/serializers.py
 
@@ -160,6 +176,8 @@ class TodoSerializer(serializers.ModelSerializer):
         # fields = ['id', 'title', 'content']
         fields = '__all__'
 ````
+
+### 3.1.3.view.py
 
 File: `/todo/views.py`
 
@@ -211,6 +229,8 @@ def todo_detail_view(request: Request, todo_id: int):  # نیازمند کلید
         return Response(None, status.HTTP_204_NO_CONTENT)
 ````
 
+### 3.1.4.urls.py
+
 File: `/todo/urls.py`
 
 ```python
@@ -222,6 +242,8 @@ urlpatterns = [
     path('<int:todo_id>', views.todo_detail_view),
 ]
 ```
+
+### 3.1.5.url[global]
 
 File: `/urls.py` #main urls
 
@@ -237,11 +259,13 @@ urlpatterns = [
 ]
 ```
 
-# 3.2.ClassBaseView
+## 3.2.ClassBaseView
 
 ```python
 from rest_framework import serializers
 ```
+
+### 3.2.1.models.py
 
 File: `/todo/models.py`
 
@@ -259,8 +283,10 @@ class Todo(models.Model):
         return f'{self.title} / Is Done: {self.is_done}'
 
     class Meta:
-        db_table = 'todos' # 'نام دلحواه برای اسم جدول دردیتابیس' # default: "AppName_ModelName"
+        db_table = 'todos'  # 'نام دلحواه برای اسم جدول دردیتابیس' # default: "AppName_ModelName"
 ```
+
+### 3.2.2.serializer.py
 
 File: `/todo/serializers.py
 
@@ -275,6 +301,8 @@ class TodoSerializer(serializers.ModelSerializer):
         # fields = ['id', 'title', 'content']
         fields = '__all__'
 ````
+
+### 3.2.3.view.py
 
 File: `/todo/views.py`
 
@@ -331,6 +359,8 @@ class TodosDetailApiView(APIView):  # نیازمند کلید هست تا برم
         return Response(None, status.HTTP_204_NO_CONTENT)
 ````
 
+### 3.2.4.url.py
+
 File: `/todo/urls.py`
 
 ```python
@@ -344,6 +374,8 @@ urlpatterns = [
     path('classbaseview/<int:todo_id>', views.TodosDetailApiView.as_view()),  # ✅️
 ]
 ```
+
+### 3.2.5.urls.py[global]
 
 File: `/urls.py` #main urls
 
@@ -359,11 +391,13 @@ urlpatterns = [
 ]
 ```
 
-# 3.3.Mixin
+## 3.3.Mixin
 
 ```python
 from rest_framework import serializers
 ```
+
+### 3.3.1.models.py
 
 File: `/todo/models.py`
 
@@ -381,8 +415,10 @@ class Todo(models.Model):
         return f'{self.title} / Is Done: {self.is_done}'
 
     class Meta:
-        db_table = 'todos' # 'نام دلحواه برای اسم جدول دردیتابیس' # default: "AppName_ModelName"
+        db_table = 'todos'  # 'نام دلحواه برای اسم جدول دردیتابیس' # default: "AppName_ModelName"
 ```
+
+### 3.3.2.serializer.py
 
 File: `/todo/serializers.py
 
@@ -397,6 +433,8 @@ class TodoSerializer(serializers.ModelSerializer):
         # fields = ['id', 'title', 'content']
         fields = '__all__'
 ````
+
+### 3.3.3.view.py
 
 File: `/todo/views.py`
 
@@ -438,6 +476,8 @@ class TodosDetailMixinApiView(mixins.RetrieveModelMixin, mixins.UpdateModelMixin
 
 ````
 
+### 3.3.4.urls.py
+
 File: `/todo/urls.py`
 
 ```python
@@ -454,6 +494,8 @@ urlpatterns = [
 ]
 ```
 
+### 3.3.5.urls.py[global]
+
 File: `/urls.py` #main urls
 
 ```python
@@ -468,11 +510,13 @@ urlpatterns = [
 ]
 ```
 
-# 3.4.GenericView
+## 3.4.GenericView
 
 ```python
 from rest_framework import serializers
 ```
+
+### 3.4.1.models.py
 
 File: `/todo/models.py`
 
@@ -490,8 +534,10 @@ class Todo(models.Model):
         return f'{self.title} / Is Done: {self.is_done}'
 
     class Meta:
-        db_table = 'todos' # 'نام دلحواه برای اسم جدول دردیتابیس' # default: "AppName_ModelName"
+        db_table = 'todos'  # 'نام دلحواه برای اسم جدول دردیتابیس' # default: "AppName_ModelName"
 ```
+
+### 3.4.2.serializer.py
 
 File: `/todo/serializers.py
 
@@ -506,6 +552,8 @@ class TodoSerializer(serializers.ModelSerializer):
         # fields = ['id', 'title', 'content']
         fields = '__all__'
 ````
+
+### 3.4.3.view.py
 
 File: `/todo/views.py`
 
@@ -532,6 +580,8 @@ class TodosGenericDetailView(generics.RetrieveUpdateDestroyAPIView):  # ✅️
 
 ````
 
+### 3.4.4.urls.py
+
 File: `/todo/urls.py`
 
 ```python
@@ -550,6 +600,8 @@ urlpatterns = [
 ]
 ```
 
+### 3.4.5.urls.py[global]
+
 File: `/urls.py` #main urls
 
 ```python
@@ -564,11 +616,13 @@ urlpatterns = [
 ]
 ```
 
-# 3.4.ViewSet
+## 3.4.ViewSet
 
 ```python
 from rest_framework import serializers
 ```
+
+### 3.4.1.models.py
 
 File: `/todo/models.py`
 
@@ -586,8 +640,10 @@ class Todo(models.Model):
         return f'{self.title} / Is Done: {self.is_done}'
 
     class Meta:
-        db_table = 'todos' # 'نام دلحواه برای اسم جدول دردیتابیس' # default: "AppName_ModelName"
+        db_table = 'todos'  # 'نام دلحواه برای اسم جدول دردیتابیس' # default: "AppName_ModelName"
 ```
+
+### 3.4.2.serializer.py
 
 File: `/todo/serializers.py
 
@@ -602,6 +658,8 @@ class TodoSerializer(serializers.ModelSerializer):
         # fields = ['id', 'title', 'content']
         fields = '__all__'
 ````
+
+### 3.4.3.view.py
 
 File: `/todo/views.py`
 
@@ -623,6 +681,8 @@ class TodosViewSetApiView(viewsets.ModelViewSet):  # ✅️
     serializer_class = TodoSerializer
 
 ````
+
+### 3.4.4.urls.py
 
 File: `/todo/urls.py`
 
@@ -647,6 +707,8 @@ urlpatterns = [
 ]
 ```
 
+### 3.4.5.urls.py[global]
+
 File: `/urls.py` #main urls
 
 ```python
@@ -661,7 +723,7 @@ urlpatterns = [
 ]
 ```
 
-# 3.5.NestedSerialize
+## 3.5.NestedSerialize
 
 * اگر دو مدل بخواهند رابطه داشته باشند یعنی یکی از پارامترهای مدل(جدول) اول ارتباط مستقیم با مدل دیگر داشته باشند(یک به یک یا یک به چند یا یک به چند)
 * Nested such as [1, 2, 3, 4, [14, 15, 16, 120 ,5]]
@@ -669,6 +731,8 @@ urlpatterns = [
 ```python
 from rest_framework import serializers
 ```
+
+### 3.5.1.models.py
 
 File: `/todo/models.py`
 
@@ -692,10 +756,12 @@ class Todo(models.Model):
         return f'{self.title} / Is Done: {self.is_done}'
 
     class Meta:
-        db_table = 'todos' # 'نام دلحواه برای اسم جدول دردیتابیس' # default: "AppName_ModelName"
+        db_table = 'todos'  # 'نام دلحواه برای اسم جدول دردیتابیس' # default: "AppName_ModelName"
 ```
 
-File: `/todo/serializers.py
+### 3.5.2.serializzer.py
+
+File: `/todo/serializers.py`
 
 ```python
 from rest_framework import serializers
@@ -718,6 +784,8 @@ class UserSerialzier(serializers.ModelSerializer):  # ✅️
         fields = '__all__'
 ````
 
+### 3.5.3.views.py
+
 File: `/todo/views.py`
 
 ```python
@@ -726,15 +794,15 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from .models import Todo
 from .serializers import TodoSerializer
-from .serializers import UserSerialzier# ✅️
+from .serializers import UserSerialzier  # ✅️
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework import generics, mixins
 from rest_framework import viewsets
-from django.contrib.auth import get_user_model# ✅️
+from django.contrib.auth import get_user_model  # ✅️
 
-User = get_user_model() # ✅️
+User = get_user_model()  # ✅️
 
 
 class UsersGenericApiView(generics.ListAPIView):
@@ -742,6 +810,8 @@ class UsersGenericApiView(generics.ListAPIView):
     serializer_class = UserSerialzier
 
 ````
+
+### 3.5.4.urls.py
 
 File: `/todo/urls.py`
 
@@ -767,6 +837,8 @@ urlpatterns = [
     path('users/', views.UsersGenericApiView.as_view()),
 ]
 ```
+
+### 3.5.5.urls.py[global]
 
 File: `/urls.py` #main urls
 
