@@ -1,26 +1,7 @@
+
 ## 1.TemplateView
 
-### 1.1.FunctionBaseView
-
-> Files: `views.py`
->
->```python
->def HomeView(request)
->    return render(request, 'home_module/index_page.html')
->```
->
->File: `urls.py`
->
->```python
->from django.urls import path
->from . import views
->
->urlpatterns = [
->    path('', views.HomeView, name='home_page'),
->]
->```
-
-### 1.2.ClassBaseView by [TemplateView]
+### 1.1.ClassBaseView by [TemplateView]
 
 > Files: `views.py`
 >
@@ -49,7 +30,7 @@
 >]
 >```
 
-### 1.3.ClassBaseView by [TemplateView] with Context
+### 1.2.ClassBaseView by [TemplateView] with Context
 
 > Files: `views.py`
 >
