@@ -36,6 +36,7 @@
     * `INSTALL_APPS`
         * `INSTALL_APPS=[... , 'rest_framework' ,...]`
         * `INSTALL_APPS=[... , 'rest_framework.authtoken' ,...]`
+        * `INSTALL_APPS=[... , 'drf-spectacular' ,...]` # Swagget
     * `LANGUAGE_CODE = 'fa-ir'` تغییر زبان داشبورد از انگلیسی به فارسی
     * `MEDIA_ROOT = BASE_DIR / 'MyDir'` مدیاهای ارسالی کاربر بصورت پیش‌فرض کجا ذخیره گردد
         * must be absolute name
@@ -54,10 +55,17 @@
             * `'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.TokenAuthentication']` # Use Token for authenticate
         * `'DEFAULT_PERMISSION_CLASSES'`
             * `'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated']` # execute code when authenticate is valid(when user logedin)
-    * `SIMPLE_JWT = {...}` customize JWT authentication's behavior [URL](https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html)
-        * `'ACCESS_TOKEN_LIFETIME'` # عمر توکن اکسس
-            * `"ACCESS_TOKEN_LIFETIME": timedelta(minutes=5)`
-        * `'REFRESH_TOKEN_LIFETIME'` عمر توکن رفرش
-            * `"REFRESH_TOKEN_LIFETIME": timedelta(days=1)`
-        * `'AUTH_HEADER_TYPES'`
-            * `"AUTH_HEADER_TYPES": ("Bearer",)` # نام ارسالی همراه توکن باید چه باشد
+        * `'DEFAULT_SCHEMA_CLASS'` # Swagger
+            * `'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema'`
+  * `SIMPLE_JWT = {...}` customize JWT authentication's behavior [URL](https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html)
+      * `'ACCESS_TOKEN_LIFETIME'` # عمر توکن اکسس
+          * `"ACCESS_TOKEN_LIFETIME": timedelta(minutes=5)`
+      * `'REFRESH_TOKEN_LIFETIME'` عمر توکن رفرش
+          * `"REFRESH_TOKEN_LIFETIME": timedelta(days=1)`
+      * `'AUTH_HEADER_TYPES'`
+          * `"AUTH_HEADER_TYPES": ("Bearer",)` # نام ارسالی همراه توکن باید چه باشد
+  * `SPECTACULAR_SETTINGS = {...}` # SWAGGER  [URL](https://drf-spectacular.readthedocs.io/en/latest/readme.html)
+      * `'TITLE': 'Your Project API'`
+      * `'DESCRIPTION': 'Your project description'`
+      * `'VERSION': '1.0.0'`
+      * `'SERVE_INCLUDE_SCHEMA': False`
