@@ -26,6 +26,7 @@
         * `pip download -r ./requirements.txt`
     * [--upgrade]
         * `pip install --upgrade PyYAML`
+        * `pip install --upgrade pip` بروز رسانی ماژول‌های پیپ
 
 <div style="direction:rtl;">
 
