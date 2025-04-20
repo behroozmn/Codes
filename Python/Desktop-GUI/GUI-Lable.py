@@ -2,7 +2,7 @@ from tkinter import *
 
 root = Tk()
 
-root.title("new python GUI")
+root.title("new python Desktop-GUI")
 
 label = Label(root, text='this is test label')
 label.place(x=10, y=50)
