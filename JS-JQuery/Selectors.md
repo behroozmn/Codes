@@ -32,7 +32,7 @@
 
 # 4.Attribute Selector
 
-## 4.1.Contains Selector[Key*=Value]
+## 4.1.Contains[Key*=Value]
 
 * اجرای عملیات روی هر تگ که نام آن مشخص شده باشد و مقدار آن نیز شامل محتوی مشخص شده باشد
 * مقدار مورد نظر باید مشمول بشود و مهم نیست کجای مقدار خصیصه باشد
@@ -55,7 +55,7 @@ $("#Button_4").click(function () {
 });
 ```
 
-## 4.2.Contains Word Selector[Key~=Value]
+## 4.2.ContainsWord[Key~=Value]
 
 * اجرای عملیات روی هر تگ که نام آن مشخص شده باشد و مقدار آن نیز شامل محتوی مشخص شده بعنوان یک کلمه مستقل باشد
 * اگر کلمه به هم شامل عبارت به هم چسبیده باشد قبول نیست و باید با خط فاصله از هم جدا شود تا تبدیل به یک کلمه مستقل شود
@@ -80,7 +80,7 @@ $("#Button_5").click(function () {
 });
 ```
 
-## 4.3.Ends With Selector[Key$=Value]
+## 4.3.EndsWith[Key$=Value]
 
 * مقدار محتوی خصیصه به چه چیزی ختم شود
 
@@ -100,7 +100,7 @@ $("#Button_6").click(function () {
 });
 ```
 
-## 4.4.Equal Selector[Key=Value]
+## 4.4.Equal[Key=Value]
 
 * مقدار محتوی خصیصه دقیقا برابر چه مقداری شود
 
@@ -121,7 +121,7 @@ $("#Button_7").click(function () {
 });
 ```
 
-## 4.5.Start With Selector[Key^=Value]
+## 4.5.StartWith[Key^=Value]
 
 * مقدار محتوی خصیصه دقیقا با چه مقداری شروع شود
 
