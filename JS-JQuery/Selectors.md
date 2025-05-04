@@ -583,7 +583,170 @@ $("#Button_22").click(function () {
     });
 ```
 
-## 5.13.[:]
+## 5.13.Has[:Has(<TAGNAME>)]
+
+* اگر المانی وجود داشته باشد آن را اتخاب می‌کند
+* بیشتر برای تگ استفاده می‌شود
+
+```html
+
+<div class="well">
+    <div class="col-md-3 pull-left">
+        <a class="btn btn-warning btn-block" id="Button_25">
+            :has() Selector
+        </a>
+    </div>
+    <div class="col-md-9">
+        <div class="MyClass">
+            <p>
+                Hello in a paragraph
+            </p>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>
+```
+
+```jquery
+$("#Button_25").click(function () { 
+    $("div.MyClass:has(p)").fadeOut(500);
+});
+```
+
+## 5.14.last-child[:last-child]
+
+```html
+
+<div class="well">
+    <div class="col-md-3 pull-left">
+        <a class="btn btn-warning btn-block" id="Button_26">
+            last child Selector
+        </a>
+    </div>
+    <div class="col-md-9" id="LastChild">
+        <p>0</p>
+        <p>1</p>
+        <p>2</p>
+        <p>3</p>
+        <p>4</p>
+    </div>
+    <div class="clearfix"></div>
+</div>
+```
+
+```jquery
+$("#Button_26").click(function () { 
+    $("#LastChild p:last-child").fadeOut(500);
+});
+```
+
+## 5.15.last-of-type[:last-of-type]
+
+```html
+
+<div class="well">
+    <div class="col-md-3 pull-left">
+        <a class="btn btn-warning btn-block" id="Button_27">
+            last of type Selector
+        </a>
+    </div>
+    <div class="col-md-9" id="LastOfType">
+        <div>
+            <p>0</p>
+            <p>1</p>
+            <p>2</p>
+            <p>3</p>
+            <p>4</p>
+        </div>
+        <div>
+            <p>0</p>
+            <p>1</p>
+            <p>2</p>
+            <p>3</p>
+            <p>4</p>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>
+```
+
+```jquery
+$("#Button_27").click(function () { 
+    $("#LastOfType p:last-of-type").fadeOut(500);
+});
+```
+
+## 5.16.last[:last]
+
+```html
+
+<div class="well">
+    <div class="col-md-3 pull-left">
+        <a class="btn btn-warning btn-block" id="Button_28">
+            last Selector
+        </a>
+    </div>
+    <div class="col-md-9" id="LastSelector">
+        <div>
+            <p>0</p>
+            <p>1</p>
+            <p>2</p>
+            <p>3</p>
+            <p>4</p>
+        </div>
+        <div>
+            <p>0</p>
+            <p>1</p>
+            <p>2</p>
+            <p>3</p>
+            <p>4</p>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>
+```
+
+```jquery
+$("#Button_28").click(function () { 
+    $("#LastSelector p:last").fadeOut(500);
+});
+```
+
+## 5.17.lessThanSelector()[:lt(X)]
+
+* انتخاب المان‌های با ایندکس کمتر از یک عدد خاص
+
+```html
+
+<div class="well">
+    <div class="col-md-3 pull-left">
+        <a class="btn btn-warning btn-block" id="Button_29">
+            :ls() => Less Than Selector
+        </a>
+    </div>
+    <div class="col-md-9" id="LessThan">
+        <p>0</p>
+        <p>1</p>
+        <p>2</p>
+        <p>3</p>
+        <p>4</p>
+        <p>5</p>
+        <p>6</p>
+        <p>7</p>
+        <p>8</p>
+        <p>9</p>
+    </div>
+    <div class="clearfix"></div>
+</div>
+```
+
+```jquery
+$("#Button_29").click(function () { 
+    $("#LessThan p:lt(4)").fadeOut(500);// میتوان عدد منفی نیز بپذیرد
+});
+```
+
+## 5.18.[:]
 
 ```html
 
@@ -593,7 +756,7 @@ $("#Button_22").click(function () {
 
 ```
 
-## 5.14.[:]
+## 5.19.[:]
 
 ```html
 
@@ -603,7 +766,7 @@ $("#Button_22").click(function () {
 
 ```
 
-## 5.15.[:]
+## 5.20.[:]
 
 ```html
 
@@ -613,7 +776,191 @@ $("#Button_22").click(function () {
 
 ```
 
-## 5.16.[:]
+## 5.21.[:]
+
+```html
+
+```
+
+```jquery
+
+```
+
+## 5.22.[:]
+
+```html
+
+```
+
+```jquery
+
+```
+
+## 5.23.[:]
+
+```html
+
+```
+
+```jquery
+
+```
+
+# 6.Has Attribute
+
+* المان‌هایی که دارای یک خصیصه با کلید تعیین شده باشند را انتخاب نماید
+
+```html
+
+<div class="well">
+    <div class="col-md-3 pull-left">
+        <a class="btn btn-warning btn-block" id="Button_24">
+            Has Attribute Selector
+        </a>
+    </div>
+    <div class="col-md-9">
+        <div class="alert alert-warning" HasAttribute="HasAttribute">test</div>
+    </div>
+    <div class="clearfix"></div>
+</div>
+```
+
+```jquery
+$("#Button_24").click(function () { 
+    $("div[HasAttribute]").fadeOut(500);
+});
+```
+
+# 7.Multiple Attribute Selector
+
+* اگر همزمان از چند خصیصه با نام کلیدواژه خاص استفاده میکرد
+
+```html
+div class="well">
+<div class="col-md-3 pull-left">
+    <a class="btn btn-warning btn-block" id="Button_30">
+        multiple Attribute Selector
+    </a>
+</div>
+<div class="col-md-9">
+    <div class="MultipleAttribute" multipleAttribute="Test">
+        <p>
+            Hello in a paragraph
+        </p>
+    </div>
+</div>
+<div class="clearfix"></div>
+</div>
+```
+
+```jquery
+$("#Button_30").click(function () { 
+    $("div[class][multipleAttribute*='Te']").fadeOut(500); //اگر از کلاس و از مالتیپل‌آتریبیوت استفاده میکرد که شامل عبارت خاص بود
+    //
+});
+```
+
+# 8.Multiple Selector
+
+* انتخاب چند المان بصورت همزمان
+
+```html
+
+<div class="well">
+    <div class="col-md-3 pull-left">
+        <a class="btn btn-warning btn-block" id="Button_31">
+            multiple Selector
+        </a>
+    </div>
+    <div class="col-md-9">
+        <div class="MultipleSelector">
+            division with class
+        </div>
+
+        <p id="MultipleSelector">
+            paragraph with id
+        </p>
+    </div>
+    <div class="clearfix"></div>
+</div>
+```
+
+```jquery
+$("#Button_31").click(function () { 
+    $("div.MultipleSelector , #MultipleSelector").fadeOut(500);
+});
+```
+
+# 9.Next Adjacent Selector یا NextTag
+
+```html
+
+<div class="well">
+    <div class="col-md-3 pull-left">
+        <a class="btn btn-warning btn-block" id="Button_32">
+            next adjacent Selector
+        </a>
+    </div>
+    <div class="col-md-9">
+        <div id="NextAdjacent">
+            main selector
+        </div>
+        <div>
+            division with class
+        </div>
+        <p>
+            paragraph with id
+        </p>
+    </div>
+    <div class="clearfix"></div>
+</div>
+```
+
+```jquery
+$("#Button_32").click(function () { 
+    $("#NextAdjacent + div + p").fadeOut(500); //آی دی رو دیدی برو بعد تگ دایو تگ پی رو انتخاب کن
+});
+```
+
+# 10.Next Siblings Selector
+
+* بعد از یک تگ خاص همه موارد را انتخاب کن
+
+```html
+
+<div class="well">
+    <div class="col-md-3 pull-left">
+        <a class="btn btn-warning btn-block" id="Button_33">
+            next siblings Selector
+        </a>
+    </div>
+    <div class="col-md-9">
+        <div id="NextSiblings"></div>
+        <div>
+            division with class
+        </div>
+        <p>
+            paragraph with id
+        </p>
+        <p>
+            paragraph with id
+        </p>
+        <p>
+            paragraph with id
+        </p>
+        <p>
+            paragraph with id
+        </p>
+    </div>
+    <div class="clearfix"></div>
+</div>
+```
+
+```jquery
+$("#Button_33").click(function () { 
+    $("#NextSiblings ~ p").fadeOut(500); //همه تگ های بعد از آی دی را انتخاب کن
+});
+```
 
 ```html
 
