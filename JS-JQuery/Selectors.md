@@ -290,7 +290,7 @@ $("#Button_10").click(function () {
 });
 ```
 
-## 5.3.Disable
+## 5.3.Disable[:disabled]
 
 * انخاب موارد غیر فعال شده
 
@@ -316,7 +316,7 @@ $("#Button_14").click(function () {
 });
 ```
 
-## 5.4.enable
+## 5.4.enable[:enabled]
 
 * انخاب موارد فعال
 
@@ -342,7 +342,7 @@ $("#Button_15").click(function () {
 });
 ```
 
-## 5.5.Empty
+## 5.5.Empty[:empty]
 
 * انخاب موارد خالی
 
@@ -364,4 +364,261 @@ $("#Button_15").click(function () {
 $("#Button_16").click(function () { 
     $("div:empty").fadeOut(500);
 });
+```
+
+## 5.6.Index Selector[:eq(X)]
+
+* ایندکس ها از صفر شروع می‌شود
+* انتخاب یک المنت بر اساس ترتیب ایندکس استفاده شدن آن
+
+```html
+
+<div class="well">
+    <div class="col-md-3 pull-left">
+        <a class="btn btn-warning btn-block" id="Button_17">
+            eq() => index Selector
+        </a>
+    </div>
+    <div class="col-md-9" id="indexSelector">
+        <p>0</p>
+        <p>1</p>
+        <p>2</p>
+        <p>3</p>
+        <p>4</p>
+    </div>
+
+    <div class="clearfix"></div>
+</div>
+
+```
+
+```jquery
+$("#Button_17").click(function () { 
+    $("#indexSelector p:eq(2)").fadeOut(500);
+});
+```
+
+## 5.7.even Selector[:even]
+
+```html
+
+<div class="well">
+    <div class="col-md-3 pull-left">
+        <a class="btn btn-warning btn-block" id="Button_18">
+            even Selector
+        </a>
+    </div>
+    <div class="col-md-9" id="evenSelector">
+        <p>0</p>
+        <p>1</p>
+        <p>2</p>
+        <p>3</p>
+        <p>4</p>
+    </div>
+
+    <div class="clearfix"></div>
+</div>
+```
+
+```jquery
+$("#Button_18").click(function () { 
+    $("#evenSelector p:even").fadeOut(500);
+});
+```
+
+## 5.8.file Selector[:file]
+
+```html
+
+<div class="well">
+    <div class="col-md-3 pull-left">
+        <a class="btn btn-warning btn-block" id="Button_19">
+            file Selector
+        </a>
+    </div>
+    <div class="col-md-9" id="fileSelector">
+        <input type="file" value="file Selector">
+    </div>
+
+    <div class="clearfix"></div>
+</div>
+```
+
+```jquery
+$("#Button_19").click(function () { 
+    $("#fileSelector :file").fadeOut(500);
+});
+```
+
+## 5.9.first-child[:first-child]
+
+```html
+
+<div class="well">
+    <div class="col-md-3 pull-left">
+        <a class="btn btn-warning btn-block" id="Button_20">
+            first-child Selector
+        </a>
+    </div>
+    <div class="col-md-9" id="childSelector">
+        <p>0</p>
+        <p>1</p>
+        <p>2</p>
+        <p>3</p>
+        <p>4</p>
+    </div>
+
+    <div class="clearfix"></div>
+</div>
+```
+
+```jquery
+$("#Button_20").click(function () { 
+    $("#childSelector p:first-child").fadeOut(500);
+});
+```
+
+## 5.10.first-of-type[:first-of-type]
+
+* اولین تک معرفی شده از هر والد که میتواند مثلا دوتا دایو باشد که اولین از هرکدام از دایو را حذف نماید
+
+```html
+
+<div class="well" id="firstTypeSelector">
+    <div class="col-md-3 pull-left">
+        <a class="btn btn-warning btn-block" id="Button_21">
+            first-of-Type Selector
+        </a>
+    </div>
+    <div class="col-md-9">
+        <p>0</p>
+        <p>1</p>
+        <p>2</p>
+        <p>3</p>
+        <p>4</p>
+    </div>
+    <div class="col-md-9">
+        <p>0</p>
+        <p>1</p>
+        <p>2</p>
+        <p>3</p>
+        <p>4</p>
+    </div>
+
+    <div class="clearfix"></div>
+</div>
+```
+
+```jquery
+$("#Button_21").click(function () { 
+    $("#childSelector p:first-of-type").fadeOut(500);
+});
+```
+
+## 5.11.first[:first]
+
+* اولین المنت رو در نظر میگیرد
+* اگر چیزی انتحاب نشود اولین المنت صفحه را در نظر میگیرد
+
+```html
+
+<div class="well" id="firstSelector">
+    <div class="col-md-3 pull-left">
+        <a class="btn btn-warning btn-block" id="Button_22">
+            first Selector
+        </a>
+    </div>
+    <div class="col-md-9">
+        <p>0</p>
+        <p>1</p>
+        <p>2</p>
+        <p>3</p>
+        <p>4</p>
+    </div>
+    <div class="col-md-9">
+        <p>0</p>
+        <p>1</p>
+        <p>2</p>
+        <p>3</p>
+        <p>4</p>
+    </div>
+
+    <div class="clearfix"></div>
+</div>
+```
+
+```jquery
+$("#Button_22").click(function () { 
+    $("#firstSelector p:first").fadeOut(500);
+});
+```
+
+## 5.12.greaterthanSelector[::gt(X)]
+
+* ایندکس شماره خاص به بعد همه را انتخاب کن
+
+```html
+
+<div class="well" id="greaterthanSelector">
+    <div class="col-md-3 pull-left">
+        <a class="btn btn-warning btn-block" id="Button_23">
+            greater than Selector
+        </a>
+    </div>
+    <div class="col-md-9">
+        <p>0</p>
+        <p>1</p>
+        <p>2</p>
+        <p>3</p>
+        <p>4</p>
+    </div>
+    <div class="clearfix"></div>
+</div>
+</div>
+```
+
+```jquery
+    $("#Button_23").click(function () { 
+        $("#greaterthanSelector p:gt(2)").fadeOut(500);
+    });
+```
+
+## 5.13.[:]
+
+```html
+
+```
+
+```jquery
+
+```
+
+## 5.14.[:]
+
+```html
+
+```
+
+```jquery
+
+```
+
+## 5.15.[:]
+
+```html
+
+```
+
+```jquery
+
+```
+
+## 5.16.[:]
+
+```html
+
+```
+
+```jquery
+
 ```
