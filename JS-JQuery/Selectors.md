@@ -712,7 +712,7 @@ $("#Button_28").click(function () {
 });
 ```
 
-## 5.17.lessThanSelector()[:lt(X)]
+## 5.17.lessThanSelector[:lt(X)]
 
 * انتخاب المان‌های با ایندکس کمتر از یک عدد خاص
 
@@ -746,65 +746,398 @@ $("#Button_29").click(function () {
 });
 ```
 
-## 5.18.[:]
+## 5.18.not[:not]
+
+* حاوی ویژگی نباشد
 
 ```html
 
+<div class="well">
+    <div class="col-md-3 pull-left">
+        <a class="btn btn-warning btn-block" id="Button_34">
+            :not() Selector
+        </a>
+    </div>
+    <div class="col-md-9">
+        <div id="NotSelector">
+            <div>
+                <input type="checkbox" name="a">
+                <span>ایمان</span>
+            </div>
+            <div>
+                <input type="checkbox" name="b">
+                <span>محمد</span>
+            </div>
+            <div>
+                <input type="checkbox" name="c" checked="checked">
+                <span>سهیل</span>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>
 ```
 
 ```jquery
-
+$("#Button_34").click(function () { 
+    $("input:not(:checked) , input:not(:checked) + span").fadeOut(500);
+});
 ```
 
-## 5.19.[:]
+## 5.19.nth_child[:nth_child(X)]
+
+* Not ZeroBase
+* از عدد یک شروع می‌شود
+* در والدهای یکسان فرزند شماره خاص را انتخاب نماید
 
 ```html
 
+<div class="well">
+    <div class="col-md-3 pull-left">
+        <a class="btn btn-warning btn-block" id="Button_35">
+            :nth-child() Selector
+        </a>
+    </div>
+    <div class="col-md-9">
+        <div id="MyChild">
+            <div>
+                <ul>
+                    <li>محمد</li>
+                    <li>میلاد</li>
+                    <li>علی</li>
+                </ul>
+            </div>
+            <div>
+                <ul>
+                    <li>سبحان</li>
+                    <li>مرتضی</li>
+                </ul>
+            </div>
+            <div>
+                <ul>
+                    <li>الناز</li>
+                    <li>سارا</li>
+                    <li>سمیه</li>
+                    <li>فائزه</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>
 ```
 
 ```jquery
-
+$("#Button_35").click(function () { 
+    $("#MyChild ul li:nth-child(3n)").fadeOut(500); // nth-child(even) یا  nth-child(2)
+});
 ```
 
-## 5.20.[:]
+## 5.20.nth-last-child[:nth-last-child(X)]
+
+* Not ZeroBase
+* از عدد یک شروع می‌شود
+* در والدهای یکسان فرزند شماره خاص را انتخاب نماید با این تفاوت که از آخر شروع به اجرا می‌نماید و نه از ابتدا
 
 ```html
 
+<div class="well">
+    <div class="col-md-3 pull-left">
+        <a class="btn btn-warning btn-block" id="Button_36">
+            :nth-last-child() Selector
+        </a>
+    </div>
+    <div class="col-md-9">
+        <div id="ID">
+            <div>
+                <ul>
+                    <li>محمد</li>
+                    <li>میلاد</li>
+                    <li>علی</li>
+                    <li>رضا</li>
+                    <li>عباس</li>
+                    <li>سمیرا</li>
+                </ul>
+            </div>
+            <div>
+                <ul>
+                    <li>سبحان</li>
+                    <li>مرتضی</li>
+                </ul>
+            </div>
+            <div>
+                <ul>
+                    <li>الناز</li>
+                    <li>سارا</li>
+                    <li>سمیه</li>
+                    <li>فائزه</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>
 ```
 
 ```jquery
-
+$("#Button_36").click(function () { 
+    $("#ID ul li:nth-last-child(2)").fadeOut(500); // nth-last-child(even) یا  nth-last-child(2n)
+});
 ```
 
-## 5.21.[:]
+## 5.21.nth_Of_Type[:nth_Of_Type(X)]
+
+* وقتی چند والد(مثلا دیو) داریم آنگاه اگر بخواهیم از بین تگ‌های متفاوت داخل دیو، دومین پی را انتخاب کنیم که در تمام والد ها دومین فرزند انتخاب شود
 
 ```html
 
+<div class="well">
+    <div class="col-md-3 pull-left">
+        <a class="btn btn-warning btn-block" id="Button_37">
+            :nth-of-type() Selector
+        </a>
+    </div>
+    <div class="col-md-9">
+        <div id="ID">
+            <div>
+                <p>paragraph</p>
+                <span>test</span>
+                <p>paragraph</p>
+                <b>bold</b>
+                <span>span</span>
+            </div>
+            <hr>
+            <div>
+                <p>paragraph</p>
+                <span>test</span>
+                <p>paragraph</p>
+                <b>bold</b>
+                <span>span</span>
+            </div>
+            <hr>
+            <div>
+                <p>paragraph</p>
+                <span>test</span>
+                <p>paragraph</p>
+                <b>bold</b>
+                <span>span</span>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>
 ```
 
 ```jquery
-
+$("#Button_37").click(function () { 
+    $("#ID div p:nth-of-type(2)").fadeOut(500);
+});
 ```
 
-## 5.22.[:]
+## 5.22.nth-last-of-type[:nth-last-of-type]
+
+* وقتی چند والد(مثلا دیو) داریم آنگاه اگر بخواهیم از بین تگ‌های متفاوت داخل دیو، دومین پی را انتخاب کنیم که در تمام والد ها دومین فرزند انتخاب شود با این تفاوت که از آخر انتخاب و شمارش میکند ونه از اول
 
 ```html
 
+<div class="well">
+    <div class="col-md-3 pull-left">
+        <a class="btn btn-warning btn-block" id="Button_38">
+            :nth-last-of-type() Selector
+        </a>
+    </div>
+    <div class="col-md-9">
+        <div id="ID">
+            <div>
+                <p>paragraph</p>
+                <span>test</span>
+                <p>paragraph</p>
+                <b>bold</b>
+                <span>span</span>
+            </div>
+            <hr>
+            <div>
+                <p>paragraph</p>
+                <span>test</span>
+                <p>paragraph</p>
+                <b>bold</b>
+                <span>span</span>
+            </div>
+            <hr>
+            <div>
+                <p>paragraph</p>
+                <span>test</span>
+                <p>paragraph</p>
+                <b>bold</b>
+                <span>span</span>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>
 ```
 
 ```jquery
-
+$("#Button_38").click(function () { 
+    $("#ID div p:nth-last-of-type(2)").fadeOut(500);
+});
 ```
 
-## 5.23.[:]
+## 5.23.only-child[:only-child]
+
+* فقط انتخاب تک فرزند ها
 
 ```html
 
+<div class="well">
+    <div class="col-md-3 pull-left">
+        <a class="btn btn-warning btn-block" id="Button_39">
+            :only-child Selector
+        </a>
+    </div>
+    <div class="col-md-9">
+        <div id="ID">
+            <div>
+                <ul>
+                    <li>محمد</li>
+                    <li>میلاد</li>
+                    <li>علی</li>
+                </ul>
+            </div>
+            <hr>
+            <div>
+                <ul>
+                    <li>سبحان</li>
+                </ul>
+            </div>
+            <hr>
+            <div>
+                <ul>
+                    <li>سبحان</li>
+                </ul>
+            </div>
+            <hr>
+            <div>
+                <ul>
+                    <li>سبحان</li>
+                    <li>مرتضی</li>
+                </ul>
+            </div>
+            <hr>
+            <div>
+                <ul>
+                    <li>الناز</li>
+                    <li>سارا</li>
+                    <li>سمیه</li>
+                    <li>فائزه</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>
 ```
 
 ```jquery
-
+$("#Button_39").click(function () { 
+    $("#ID li:only-child").fadeOut(500);
+});
 ```
+
+## 5.24.only-of-type[:only-of-type]
+
+* در انواع مختلف هرکدام که تنهای کی از آن ها در دایره والد موجود است را انتخاب کن
+
+```html
+
+<div class="well">
+    <div class="col-md-3 pull-left">
+        <a class="btn btn-warning btn-block" id="Button_40">
+            :only-of-type Selector
+        </a>
+    </div>
+    <div class="col-md-9">
+        <div id="ID">
+            <div>
+                <p>paragraph</p>
+                <span>test</span>
+                <p>paragraph</p>
+                <b>bold</b>
+                <b>bold 2</b>
+                <span>span</span>
+            </div>
+            <hr>
+            <div>
+                <p>paragraph</p>
+                <span>test</span>
+                <p>paragraph</p>
+                <b>bold</b>
+                <span>span</span>
+            </div>
+            <hr>
+            <div>
+                <p>paragraph</p>
+                <span>test</span>
+                <p>paragraph</p>
+                <b>bold</b>
+                <span>span</span>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>
+```
+
+```jquery
+$("#Button_40").click(function () { 
+    $("#ID b:only-of-type").fadeOut(500);
+});
+```
+
+## 5.25.parent[:parent]
+
+* تگ‌هایی که حدافل یک فرزند داشته باشد یا اینکه بعنوان والد شناخته شده باشد
+
+```html
+
+<style>
+    td {
+        width: 40px;
+        height: 40px;
+        background: green;
+    }
+</style>
+
+<div class="well">
+    <div class="col-md-3 pull-left">
+        <a class="btn btn-warning btn-block" id="Button_41">
+            :parent Selector
+        </a>
+    </div>
+    <div class="col-md-9">
+        <div id="ID">
+            <table border="1">
+                <tr>
+                    <td>mohammad</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Ali</td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>
+```
+
+```jquery
+$("#Button_41").click(function () { 
+    $("#ID td:parent").fadeOut(500);
+});
+```
+
 
 # 6.Has Attribute
 
