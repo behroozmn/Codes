@@ -21,39 +21,8 @@
   });
   ```
 
-## 3.MouserHover
 
-* ورود موس به داخل
-
-  ```jquery
-  $("#Button_3").hover(function () {
-      $("#ID").fadeOut();
-  }, function () {
-      $("#ID").fadeIn();
-  });
-  ```
-
-## 4.MouseDown
-
-* کلیک روی شیء و نگهداشتن آن
-
-  ```jquery
-  $("#Button_4").mousedown(function () {
-      $("#mouseUpAndDown").fadeOut();
-  });
-  ```
-
-## 5.MouseUp
-
-* کلید روی شیء و نگهداشتن و رها کردن کلیک از آن شیء
-
-  ```jquery
-  $("#Button_4").mouseup(function () {
-      $("#mouseUpAndDown").fadeIn();
-  });
-  ```
-
-## 6.MouseEnter
+## 3.MouseEnter
 
 * وقتی وارد محدوده مختصاتی شیء بشویم رخ می‌دهد و تفاوتی در شیء فرزند نمی‌کند
 * وقتی وارد می‌شویم تنها ایونت رخ میدهد و فرزند ها تفاوتی نمیکند
@@ -64,6 +33,39 @@
   });
   ```
 
+## 4.MouseOver[Also Childs]
+
+* اگر وارد فرزند (در داخل همان شیء) بشویم به منزله‌این است که گویی به شیء ورود کرده‌ایم
+* وقتی وارد فرزند های می‌شویم هم بازم ایونت رخ میدهد
+
+  ```jquery
+  var over=0;
+  $("#OverEvent").mouseover(function () { 
+    over++;
+    $("#OverEvent span").text(over);
+  });
+  ```
+
+
+## 5.MouseDown
+
+* کلیک روی شیء و نگهداشتن آن
+
+  ```jquery
+  $("#Button_4").mousedown(function () {
+      $("#mouseUpAndDown").fadeOut();
+  });
+  ```
+
+## 6.MouseUp
+
+* کلید روی شیء و نگهداشتن و رها کردن کلیک از آن شیء
+
+  ```jquery
+  $("#Button_4").mouseup(function () {
+      $("#mouseUpAndDown").fadeIn();
+  });
+  ``
 ## 7.MouseLeave
 
 * فقط باید از محدوده مختصاتی شیء خارج شویم
@@ -88,7 +90,7 @@
   });
   ```
 
-## 9.MouseOut
+## 9.MouseOut[Also Childs]
 
 * اگر وارد فرزند بشویم به منزله‌این است که گویی از محدوده شیء خارج شده‌ایم
 
@@ -100,15 +102,16 @@
   });
   ```
 
-## 10.MouseOver
+## 10.Hover
 
-* اگر وارد فرزند (در داخل همان شیء) بشویم به منزله‌این است که گویی به شیء ورود کرده‌ایم
-* وقتی وارد فرزند های می‌شویم هم بازم ایونت رخ میدهد
+* Only for Jquery
+* conbine [mouseenter] and [mouseleave] from javascript
+* ورود موس به داخل
 
   ```jquery
-  var over=0;
-  $("#OverEvent").mouseover(function () { 
-    over++;
-    $("#OverEvent span").text(over);
+  $("#Button_3").hover(function () {
+      $("#ID").fadeOut();
+  }, function () {
+      $("#ID").fadeIn();
   });
   ```
