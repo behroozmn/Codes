@@ -115,5 +115,39 @@
   });
   ```
 
-## 2.KeboardEvents
+# 2.KeboardEvents
 
+## 1.keydown
+
+* وقتی دکمه فشرده می‌شود، قبل از بالا آوردن کلید این رویداد رخ میدهد
+
+```javascript
+$("#firstInput").keydown(function (e) {
+    var text = $("#firstInput").val(); // مقدار درونی input را برمیگرداند
+    $("#secondInput").val(text);
+});
+```
+
+## 2.keup
+
+* وقتی کلید فشرده شده است و دقیقا هنگامی که دکمه را رهاسازی میکنیم این رویداد رخ می‌دهد
+
+```javascript
+$("#firstInput").keyup(function (e) {
+    var text = $("#firstInput").val(); // مقدار درونی input را برمیگرداند
+    $("#secondInput").val(text);
+});
+```
+
+## 3.keypress
+
+* همانند «کی‌داون» است با این تفاوت که دکمه های غیر کاراکتری عمل نخواهد کرد
+* غیر فعال در دکمه هایی که تاثیر کاراکتری ندارد
+
+```javascript
+$("#firstInput").keydown(function (e) {
+    var text = $("#firstInput").val(); // مقدار درونی input را برمیگرداند
+    $("#secondInput").val(text);
+    console.log(e.type);
+});
+```
