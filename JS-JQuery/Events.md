@@ -21,7 +21,6 @@
   });
   ```
 
-
 ## 3.MouseEnter
 
 * وقتی وارد محدوده مختصاتی شیء بشویم رخ می‌دهد و تفاوتی در شیء فرزند نمی‌کند
@@ -46,7 +45,6 @@
   });
   ```
 
-
 ## 5.MouseDown
 
 * کلیک روی شیء و نگهداشتن آن
@@ -66,6 +64,7 @@
       $("#mouseUpAndDown").fadeIn();
   });
   ``
+
 ## 7.MouseLeave
 
 * فقط باید از محدوده مختصاتی شیء خارج شویم
@@ -77,7 +76,19 @@
   });
   ```
 
-## 8.MouseMove
+## 8.MouseOut[Also Childs]
+
+* اگر وارد فرزند بشویم به منزله‌این است که گویی از محدوده شیء خارج شده‌ایم
+
+  ```jquery
+  var out = 0;
+  $("#OutEvent").mouseout(function () {
+    out++;
+    $("#OutEvent span").text(out);
+  });
+  ```
+
+## 9.MouseMove
 
 * جرکت درداخل شیء
 
@@ -87,18 +98,6 @@
     var pageY = e.pageY;
     var total = "(" + pageX + "," + pageY + ")";
     $("#move span").text(total); // نمایش در داخل اسپنی که داخل شیء دارای آی دی است
-  });
-  ```
-
-## 9.MouseOut[Also Childs]
-
-* اگر وارد فرزند بشویم به منزله‌این است که گویی از محدوده شیء خارج شده‌ایم
-
-  ```jquery
-  var out = 0;
-  $("#OutEvent").mouseout(function () {
-    out++;
-    $("#OutEvent span").text(out);
   });
   ```
 
