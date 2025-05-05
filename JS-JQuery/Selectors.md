@@ -2,12 +2,12 @@
 
 # 1.ID Selector
 
-  ```jquery
+  ```javascript
   $(document).ready(function () {
-      $("#Button_1").click(function () { 
-         $("#IdSelector").fadeOut(3000); // توسط شارپ و نام آی دی آن تگ مربوطه
-      });
-  });
+    $("#Button_1").click(function () {
+        $("#IdSelector").fadeOut(3000); // توسط شارپ و نام آی دی آن تگ مربوطه
+    });
+});
   ``` 
 
 ## 1.1.ParentChile[>]
@@ -39,8 +39,8 @@
 </div
 ```
 
-```jquery
-$("#Button_11").click(function () { 
+```javascript
+$("#Button_11").click(function () {
     $("#Parent > p.test").fadeOut(500);
 });
 ```
@@ -72,8 +72,8 @@ $("#Button_11").click(function () {
 </div>
 ```
 
-```jquery
-$("#Button_13").click(function () { 
+```javascript
+$("#Button_13").click(function () {
     $("#descendantId p").fadeOut(500);
 });
 ```
@@ -97,30 +97,30 @@ $("#Button_13").click(function () {
 </div>
 ```
 
-```jquery
-$("#Button_12").click(function () { 
+```javascript
+$("#Button_12").click(function () {
     $("#ID:contains('test')").fadeOut(500);
 });
 ```
 
 # 2.Class Selector
 
-  ```jquery
+  ```javascript
   $(document).ready(function () {
-      $("#Button_2").click(function () { 
-         $(".ClassName").fadeOut(3000); // توسط نقطه و نام کلاس مربوطه
-      });
-  });
+    $("#Button_2").click(function () {
+        $(".ClassName").fadeOut(3000); // توسط نقطه و نام کلاس مربوطه
+    });
+});
   ```
 
 # 3.All Elements Selector
 
-  ```jquery
+  ```javascript
   $(document).ready(function () {
-      $("#Button_3").click(function () {
-         $("*").fadeOut(3000);
-      });
-  });
+    $("#Button_3").click(function () {
+        $("*").fadeOut(3000);
+    });
+});
   ```
 
 # 4.Attribute Selector
@@ -142,8 +142,8 @@ $("#Button_12").click(function () {
 </div>
 ```
 
-```jquery
-$("#Button_4").click(function () { 
+```javascript
+$("#Button_4").click(function () {
     $("[TestName*='TestValue']").fadeOut(3000);
 });
 ```
@@ -167,8 +167,8 @@ $("#Button_4").click(function () {
 </div>
 ```
 
-```jquery
-$("#Button_5").click(function () { 
+```javascript
+$("#Button_5").click(function () {
     $("[WordName~='WordValue']").fadeOut(3000);
 });
 ```
@@ -187,8 +187,8 @@ $("#Button_5").click(function () {
     </div>
 ```
 
-```jquery
-$("#Button_6").click(function () { 
+```javascript
+$("#Button_6").click(function () {
     $("[EndWith$='ad']").fadeOut(3000);
 });
 ```
@@ -208,8 +208,8 @@ $("#Button_6").click(function () {
 </div>
 ```
 
-```jquery
-$("#Button_7").click(function () { 
+```javascript
+$("#Button_7").click(function () {
     $("[Equal='Hello']").fadeOut(3000);
 });
 ```
@@ -229,8 +229,8 @@ $("#Button_7").click(function () {
 </div>
 ```
 
-```jquery
-$("#Button_8").click(function () { 
+```javascript
+$("#Button_8").click(function () {
     $("[StartWith^='He']").fadeOut(3000);
 });
 ```
@@ -258,8 +258,8 @@ $("#Button_8").click(function () {
 </div>
 ```
 
-```jquery
-$("#Button_9").click(function () { 
+```javascript
+$("#Button_9").click(function () {
     $(":button").fadeOut(3000);
 });
 ```
@@ -284,8 +284,8 @@ $("#Button_9").click(function () {
 </div>
 ```
 
-```jquery
-$("#Button_10").click(function () { 
+```javascript
+$("#Button_10").click(function () {
     $(":checkbox").fadeOut(500);
 });
 ```
@@ -310,8 +310,8 @@ $("#Button_10").click(function () {
 </div>
 ```
 
-```jquery
-$("#Button_14").click(function () { 
+```javascript
+$("#Button_14").click(function () {
     $("input:disabled").fadeOut(500);
 });
 ```
@@ -336,8 +336,8 @@ $("#Button_14").click(function () {
 </div>
 ```
 
-```jquery
-$("#Button_15").click(function () { 
+```javascript
+$("#Button_15").click(function () {
     $("input:enabled").fadeOut(500);
 });
 ```
@@ -360,8 +360,8 @@ $("#Button_15").click(function () {
 </div>
 ```
 
-```jquery
-$("#Button_16").click(function () { 
+```javascript
+$("#Button_16").click(function () {
     $("div:empty").fadeOut(500);
 });
 ```
@@ -392,8 +392,8 @@ $("#Button_16").click(function () {
 
 ```
 
-```jquery
-$("#Button_17").click(function () { 
+```javascript
+$("#Button_17").click(function () {
     $("#indexSelector p:eq(2)").fadeOut(500);
 });
 ```
@@ -420,8 +420,8 @@ $("#Button_17").click(function () {
 </div>
 ```
 
-```jquery
-$("#Button_18").click(function () { 
+```javascript
+$("#Button_18").click(function () {
     $("#evenSelector p:even").fadeOut(500);
 });
 ```
@@ -444,8 +444,8 @@ $("#Button_18").click(function () {
 </div>
 ```
 
-```jquery
-$("#Button_19").click(function () { 
+```javascript
+$("#Button_19").click(function () {
     $("#fileSelector :file").fadeOut(500);
 });
 ```
@@ -472,8 +472,8 @@ $("#Button_19").click(function () {
 </div>
 ```
 
-```jquery
-$("#Button_20").click(function () { 
+```javascript
+$("#Button_20").click(function () {
     $("#childSelector p:first-child").fadeOut(500);
 });
 ```
@@ -509,8 +509,8 @@ $("#Button_20").click(function () {
 </div>
 ```
 
-```jquery
-$("#Button_21").click(function () { 
+```javascript
+$("#Button_21").click(function () {
     $("#childSelector p:first-of-type").fadeOut(500);
 });
 ```
@@ -547,8 +547,8 @@ $("#Button_21").click(function () {
 </div>
 ```
 
-```jquery
-$("#Button_22").click(function () { 
+```javascript
+$("#Button_22").click(function () {
     $("#firstSelector p:first").fadeOut(500);
 });
 ```
@@ -577,10 +577,10 @@ $("#Button_22").click(function () {
 </div>
 ```
 
-```jquery
-    $("#Button_23").click(function () { 
-        $("#greaterthanSelector p:gt(2)").fadeOut(500);
-    });
+```javascript
+    $("#Button_23").click(function () {
+    $("#greaterthanSelector p:gt(2)").fadeOut(500);
+});
 ```
 
 ## 5.13.Has[:Has(<TAGNAME>)]
@@ -607,8 +607,8 @@ $("#Button_22").click(function () {
 </div>
 ```
 
-```jquery
-$("#Button_25").click(function () { 
+```javascript
+$("#Button_25").click(function () {
     $("div.MyClass:has(p)").fadeOut(500);
 });
 ```
@@ -634,8 +634,8 @@ $("#Button_25").click(function () {
 </div>
 ```
 
-```jquery
-$("#Button_26").click(function () { 
+```javascript
+$("#Button_26").click(function () {
     $("#LastChild p:last-child").fadeOut(500);
 });
 ```
@@ -670,8 +670,8 @@ $("#Button_26").click(function () {
 </div>
 ```
 
-```jquery
-$("#Button_27").click(function () { 
+```javascript
+$("#Button_27").click(function () {
     $("#LastOfType p:last-of-type").fadeOut(500);
 });
 ```
@@ -706,8 +706,8 @@ $("#Button_27").click(function () {
 </div>
 ```
 
-```jquery
-$("#Button_28").click(function () { 
+```javascript
+$("#Button_28").click(function () {
     $("#LastSelector p:last").fadeOut(500);
 });
 ```
@@ -740,8 +740,8 @@ $("#Button_28").click(function () {
 </div>
 ```
 
-```jquery
-$("#Button_29").click(function () { 
+```javascript
+$("#Button_29").click(function () {
     $("#LessThan p:lt(4)").fadeOut(500);// میتوان عدد منفی نیز بپذیرد
 });
 ```
@@ -778,8 +778,8 @@ $("#Button_29").click(function () {
 </div>
 ```
 
-```jquery
-$("#Button_34").click(function () { 
+```javascript
+$("#Button_34").click(function () {
     $("input:not(:checked) , input:not(:checked) + span").fadeOut(500);
 });
 ```
@@ -827,8 +827,8 @@ $("#Button_34").click(function () {
 </div>
 ```
 
-```jquery
-$("#Button_35").click(function () { 
+```javascript
+$("#Button_35").click(function () {
     $("#MyChild ul li:nth-child(3n)").fadeOut(500); // nth-child(even) یا  nth-child(2)
 });
 ```
@@ -879,8 +879,8 @@ $("#Button_35").click(function () {
 </div>
 ```
 
-```jquery
-$("#Button_36").click(function () { 
+```javascript
+$("#Button_36").click(function () {
     $("#ID ul li:nth-last-child(2)").fadeOut(500); // nth-last-child(even) یا  nth-last-child(2n)
 });
 ```
@@ -928,8 +928,8 @@ $("#Button_36").click(function () {
 </div>
 ```
 
-```jquery
-$("#Button_37").click(function () { 
+```javascript
+$("#Button_37").click(function () {
     $("#ID div p:nth-of-type(2)").fadeOut(500);
 });
 ```
@@ -977,8 +977,8 @@ $("#Button_37").click(function () {
 </div>
 ```
 
-```jquery
-$("#Button_38").click(function () { 
+```javascript
+$("#Button_38").click(function () {
     $("#ID div p:nth-last-of-type(2)").fadeOut(500);
 });
 ```
@@ -1038,8 +1038,8 @@ $("#Button_38").click(function () {
 </div>
 ```
 
-```jquery
-$("#Button_39").click(function () { 
+```javascript
+$("#Button_39").click(function () {
     $("#ID li:only-child").fadeOut(500);
 });
 ```
@@ -1088,8 +1088,8 @@ $("#Button_39").click(function () {
 </div>
 ```
 
-```jquery
-$("#Button_40").click(function () { 
+```javascript
+$("#Button_40").click(function () {
     $("#ID b:only-of-type").fadeOut(500);
 });
 ```
@@ -1132,11 +1132,56 @@ $("#Button_40").click(function () {
 </div>
 ```
 
-```jquery
-$("#Button_41").click(function () { 
+```javascript
+$("#Button_41").click(function () {
     $("#ID td:parent").fadeOut(500);
 });
 ```
+
+
+## 5.26.selected[:selected]
+
+* selected text in selectBox
+* در المان سلکت‌باکس گزینه ای که انتخاب می‌شود را انتخاب می‌کند
+
+```html
+...
+<div class="panel panel-success">
+    <div class="panel-heading">
+        <h4>form events</h4>
+    </div>
+    <div class="panel-body" id="parent">
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="متن تستی" id="firstInput">
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="نتیجه" id="secondInput">
+        </div>
+        <div class="form-group">
+            <select id="ID" class="form-control">
+                <option>mohammad</option>
+                <option>iman</option>
+                <option>elanz</option>
+                <option>soheil</option>
+            </select>
+        </div>
+        <div class="col-md-12">
+            <p class="text-danger" id="paragraph"></p>
+        </div>
+        <button type="submit" class="btn btn-success btn-block">send</button>
+    </div>
+</div>
+...
+```
+
+```javascript
+$("#ID").change(function (e) {
+    var selected = $("#ID :selected").text();
+    var text = e.type;
+    $("#secondInput").val(selected);
+});
+```
+
 
 # 6.Has Attribute
 
@@ -1157,8 +1202,8 @@ $("#Button_41").click(function () {
 </div>
 ```
 
-```jquery
-$("#Button_24").click(function () { 
+```javascript
+$("#Button_24").click(function () {
     $("div[HasAttribute]").fadeOut(500);
 });
 ```
@@ -1185,8 +1230,8 @@ div class="well">
 </div>
 ```
 
-```jquery
-$("#Button_30").click(function () { 
+```javascript
+$("#Button_30").click(function () {
     $("div[class][multipleAttribute*='Te']").fadeOut(500); //اگر از کلاس و از مالتیپل‌آتریبیوت استفاده میکرد که شامل عبارت خاص بود
     //
 });
@@ -1217,8 +1262,8 @@ $("#Button_30").click(function () {
 </div>
 ```
 
-```jquery
-$("#Button_31").click(function () { 
+```javascript
+$("#Button_31").click(function () {
     $("div.MultipleSelector , #MultipleSelector").fadeOut(500);
 });
 ```
@@ -1248,8 +1293,8 @@ $("#Button_31").click(function () {
 </div>
 ```
 
-```jquery
-$("#Button_32").click(function () { 
+```javascript
+$("#Button_32").click(function () {
     $("#NextAdjacent + div + p").fadeOut(500); //آی دی رو دیدی برو بعد تگ دایو تگ پی رو انتخاب کن
 });
 ```
@@ -1288,8 +1333,8 @@ $("#Button_32").click(function () {
 </div>
 ```
 
-```jquery
-$("#Button_33").click(function () { 
+```javascript
+$("#Button_33").click(function () {
     $("#NextSiblings ~ p").fadeOut(500); //همه تگ های بعد از آی دی را انتخاب کن
 });
 ```
@@ -1298,6 +1343,6 @@ $("#Button_33").click(function () {
 
 ```
 
-```jquery
+```javascript
 
 ```

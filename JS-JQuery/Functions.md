@@ -21,7 +21,7 @@ $("#myTextbox").keyup(function (e) {
 
 * مرئی و نامرئی شدن یک مولفه از صفحه
 
-```jquery
+```javascript
 $("#Button_3").hover(function () {
     $("#ID").fadeOut();
 }, function () {
@@ -29,7 +29,7 @@ $("#Button_3").hover(function () {
 });
 ```
 
-```jquery
+```javascript
 $("#Button_3").mouseenter(function () {
     $("#ID").fadeOut();
 });

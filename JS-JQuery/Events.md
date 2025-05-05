@@ -7,18 +7,18 @@
 
 ## 1.MouseSingleClick
 
-  ```jquery
+  ```javascript
   $("#Button_1").click(function () {
     $("#ID").fadeOut();
-  });
+});
   ```
 
 ## 2.MouseDoubleClick
 
-  ```jquery
+  ```javascript
   $("#Button_2").dblclick(function () {
-      $("#ID").fadeOut();
-  });
+    $("#ID").fadeOut();
+});
   ```
 
 ## 3.MouseEnter
@@ -26,7 +26,7 @@
 * وقتی وارد محدوده مختصاتی شیء بشویم رخ می‌دهد و تفاوتی در شیء فرزند نمی‌کند
 * وقتی وارد می‌شویم تنها ایونت رخ میدهد و فرزند ها تفاوتی نمیکند
 
-  ```jquery
+  ```javascript
   $("#Button_5").mouseenter(function () {
       $("#enterAndLeave").fadeOut();
   });
@@ -37,7 +37,7 @@
 * اگر وارد فرزند (در داخل همان شیء) بشویم به منزله‌این است که گویی به شیء ورود کرده‌ایم
 * وقتی وارد فرزند های می‌شویم هم بازم ایونت رخ میدهد
 
-  ```jquery
+  ```javascript
   var over=0;
   $("#OverEvent").mouseover(function () { 
     over++;
@@ -49,7 +49,7 @@
 
 * کلیک روی شیء و نگهداشتن آن
 
-  ```jquery
+  ```javascript
   $("#Button_4").mousedown(function () {
       $("#mouseUpAndDown").fadeOut();
   });
@@ -59,7 +59,7 @@
 
 * کلید روی شیء و نگهداشتن و رها کردن کلیک از آن شیء
 
-  ```jquery
+  ```javascript
   $("#Button_4").mouseup(function () {
       $("#mouseUpAndDown").fadeIn();
   });
@@ -70,7 +70,7 @@
 * فقط باید از محدوده مختصاتی شیء خارج شویم
 * اگر در داخل شیء وارد فرزند شویم یعنی همچنان داخل شیء هستیم
 
-  ```jquery
+  ```javascript
   $("#Button_5").mouseleave(function () {
       $("#enterAndLeave").fadeIn();
   });
@@ -80,7 +80,7 @@
 
 * اگر وارد فرزند بشویم به منزله‌این است که گویی از محدوده شیء خارج شده‌ایم
 
-  ```jquery
+  ```javascript
   var out = 0;
   $("#OutEvent").mouseout(function () {
     out++;
@@ -92,7 +92,7 @@
 
 * جرکت درداخل شیء
 
-  ```jquery
+  ```javascript
   $("#Button_6").mousemove(function (e) {
     var pageX = e.pageX;
     var pageY = e.pageY;
@@ -107,7 +107,7 @@
 * conbine [mouseenter] and [mouseleave] from javascript
 * ورود موس به داخل
 
-  ```jquery
+  ```javascript
   $("#Button_3").hover(function () {
       $("#ID").fadeOut();
   }, function () {
@@ -128,7 +128,7 @@ $("#firstInput").keydown(function (e) {
 });
 ```
 
-## 2.keup
+## 2.keyup
 
 * وقتی کلید فشرده شده است و دقیقا هنگامی که دکمه را رهاسازی میکنیم این رویداد رخ می‌دهد
 
@@ -149,5 +149,152 @@ $("#firstInput").keydown(function (e) {
     var text = $("#firstInput").val(); // مقدار درونی input را برمیگرداند
     $("#secondInput").val(text);
     console.log(e.type);
+});
+```
+
+# 3.FormEvents
+
+## 0.PreReqirement Codes
+
+```html
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Keyboard Events</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="asset/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="asset/css/bootstrap-rtl.min.css"/>
+    <script src="asset/js/jquery-3.3.1.min.js"></script>
+    <script src="asset/js/Custom.js"></script>
+</head>
+
+<body>
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <form action="javascript:alert('sent');" id="form">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h4>form events</h4>
+                    </div>
+                    <div class="panel-body" id="parent">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="متن تستی" id="firstInput">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="نتیجه" id="secondInput">
+                        </div>
+                        <div class="form-group">
+                            <select id="change" class="form-control">
+                                <option>mohammad</option>
+                                <option>iman</option>
+                                <option>elanz</option>
+                                <option>soheil</option>
+                            </select>
+                        </div>
+                        <div class="col-md-12">
+                            <p class="text-danger" id="paragraph"></p>
+                        </div>
+                        <button type="submit" class="btn btn-success btn-block">send</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>
+```
+
+## 1.blur
+
+* وقتی داخل یک شیء قرار میگیرد و از آن خارج می‌شوید
+* مثلا یک تکس‌باکس که ورود میکنیم در آن و سپس از آن خارج می‌شویم
+* فقط برای یک المان معنی پیدا میکند و کاری با المان‌های دیگر ندارد
+
+```javascript
+$("#firstInput").blur(function (e) {
+    var text = e.type;
+    $("#secondInput").val(text);
+});
+```
+
+## 2.focusout[Parental Elemet]
+
+* same as blur
+* اگر روی والد درنظر بگیریم آنگاه اگر از روی هر فرزند خارج شویم رخداد اجرا می‌شود
+
+```javascript
+$("#parent").focusout(function (e) {
+    var text = e.type;
+    $("#secondInput").val(text);
+});
+```
+
+## 3.focus
+
+* هنگامی که وارد المان می‌شویم
+* فقط برای یک المان معنی پیدا میکند و کاری با المان‌های دیگر ندارد
+
+```javascript
+$("#firstInput").focus(function (e) {
+    var text = e.type;
+    $("#secondInput").val(text);
+});
+```
+
+## 4.focusin[Parental Elemet]
+
+* same as focus
+* اگر روی والد درنظر بگیریم آنگاه اگر از در هر فرزند وارد شویم رخداد اجرا می‌شود
+
+```javascript
+$("#parent").focusin(function (e) {
+    var text = e.type;
+    $("#secondInput").val(text);
+});
+```
+
+## 5.change
+
+* change the element value
+
+```javascript
+$("#change").change(function (e) {
+    var selected = $("#change :selected").text();
+    var text = e.type;
+    $("#secondInput").val(selected);
+});
+```
+
+## 6.select
+
+* وقتی مقداری از متن داخل یک باکس را انتحاب می‌کنیم و به رنگ آبی درمی‌آید و قابلیت کپی و غیره پیدا میکنند
+
+```javascript
+$("#firstInput").select(function (e) {
+    var text = e.type;
+    $("#secondInput").val(text);
+});
+```
+
+## 7.submit
+
+* وقتی فرم سابمیت می‌شود
+* می‌توان برای سابمیت شدن شرایط بگذارید که تحت شرایط خاص فقط سابمیت صورت گیرد
+
+```javascript
+$("#form").submit(function (e) {
+    var text = $("#firstInput").val();
+    if (text === 'Behrooz Mohammadinasab') {
+        return;
+    } else {
+        e.preventDefault(); // فرم سابمیت نشود
+    }
 });
 ```
