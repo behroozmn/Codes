@@ -1,5 +1,5 @@
 class Animal:
-    def makeSound(self): raise NotImplementedError # بدنه کلاس را در زیر کلاس تعریف خواهیم کرد
+    def makeSound(self): raise NotImplementedError # بدنه کلاس را در زیر کلاس باید تعریف کنیم وگرنه به ارور برخورد خواهیم کرد
 
 class Dog(Animal):
     def makeSound(self):
