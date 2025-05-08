@@ -1,14 +1,5 @@
 * `manage.py`
     * فایل اصلی پروژه که برای بالا آمدن پروزه این فایل را استارت می‌کنیم
-
-* `__init__.py`
-    * بدون این فایل، پایتون نمی‌تواند دایرکتوری را به‌عنوان یک بسته شناسایی کند(قابلیت استفاده از ماژول‌های داخل آن دایرکتوری وجود نخواهد داشت)
-    *
-        * هرگاه یک بسته (یا ماژول) وارد شود، کد داخل این فایل اجرا می‌شود
-    * اجرای کدهای خاصی را برای راه‌اندازی یا پیکربندی بسته خود
-    * به شما این امکان را می‌دهد که کدهای خاصی را هنگام وارد کردن بسته اجرا کنید
-    * این فایل به‌ویژه در سازماندهی و مدیریت ماژول‌ها و زیر بسته‌ها بسیار مفید است
-
 * `test.py`
     * انجام کارهای unitTest را مدیریت می‌کند
 * `asgi.py` ,  `wsgi.py`
@@ -57,15 +48,15 @@
             * `'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated']` # execute code when authenticate is valid(when user logedin)
         * `'DEFAULT_SCHEMA_CLASS'` # Swagger
             * `'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema'`
-  * `SIMPLE_JWT = {...}` customize JWT authentication's behavior [URL](https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html)
-      * `'ACCESS_TOKEN_LIFETIME'` # عمر توکن اکسس
-          * `"ACCESS_TOKEN_LIFETIME": timedelta(minutes=5)`
-      * `'REFRESH_TOKEN_LIFETIME'` عمر توکن رفرش
-          * `"REFRESH_TOKEN_LIFETIME": timedelta(days=1)`
-      * `'AUTH_HEADER_TYPES'`
-          * `"AUTH_HEADER_TYPES": ("Bearer",)` # نام ارسالی همراه توکن باید چه باشد
-  * `SPECTACULAR_SETTINGS = {...}` # SWAGGER  [URL](https://drf-spectacular.readthedocs.io/en/latest/readme.html)
-      * `'TITLE': 'Your Project API'`
-      * `'DESCRIPTION': 'Your project description'`
-      * `'VERSION': '1.0.0'`
-      * `'SERVE_INCLUDE_SCHEMA': False`
+    * `SIMPLE_JWT = {...}` customize JWT authentication's behavior [URL](https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html)
+        * `'ACCESS_TOKEN_LIFETIME'` # عمر توکن اکسس
+            * `"ACCESS_TOKEN_LIFETIME": timedelta(minutes=5)`
+        * `'REFRESH_TOKEN_LIFETIME'` عمر توکن رفرش
+            * `"REFRESH_TOKEN_LIFETIME": timedelta(days=1)`
+        * `'AUTH_HEADER_TYPES'`
+            * `"AUTH_HEADER_TYPES": ("Bearer",)` # نام ارسالی همراه توکن باید چه باشد
+    * `SPECTACULAR_SETTINGS = {...}` # SWAGGER  [URL](https://drf-spectacular.readthedocs.io/en/latest/readme.html)
+        * `'TITLE': 'Your Project API'`
+        * `'DESCRIPTION': 'Your project description'`
+        * `'VERSION': '1.0.0'`
+        * `'SERVE_INCLUDE_SCHEMA': False`
