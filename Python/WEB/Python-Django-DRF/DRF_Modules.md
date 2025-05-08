@@ -25,7 +25,3 @@ from rest_framework.response import Response
 * ماژول Response (دربستهrest_framework.request) بصورت عمومی در جنگو مورد استفاده قرار نمیگرد و معمولا در DRF مورد استفاده قرار می‌گیرد
 
 </div>
-
-# Swagger
-
-> Best RestAPI Documention

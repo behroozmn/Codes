@@ -1,39 +1,44 @@
-. Installation
+> Best RestAPI Documention
+
+# 1.Installation
 
 * `pip install drf-spectacular`
 
-2. Setting.py
-    * `INSTALL_APPS=[... , 'drf-spectacular' ,...]` # Swagget
-    * `REST_FRAMEWORK = {... , 'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema' , ...}`
-    * Add this line
-     ```python
-   SPECTACULAR_SETTINGS = {
-      'TITLE': 'Your Project API',
-      'DESCRIPTION': 'Your project description',
-      'VERSION': '1.0.0',
-      'SERVE_INCLUDE_SCHEMA': False,
-      # OTHER SETTINGS
-   }
+## 2. Setting.py
 
-   ```
-3. `urls.py` #global urls.py
-   ```python
-   from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
-   
-   urlpatterns = [
-        path('admin/', admin.site.urls),
-        path('', include('home.urls')),
-        path('todos/', include('todo.urls')),
-        ...
-        # YOUR PATTERNS
-        path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
-        # Optional UI:
-        path('api/schema/swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
-      ]
-   ```
+* `INSTALL_APPS=[... , 'drf-spectacular' ,...]` # Swagget
+* `REST_FRAMEWORK = {... , 'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema' , ...}`
+* Add this line
+  ```python
+  SPECTACULAR_SETTINGS = {
+  'TITLE': 'Your Project API',
+  'DESCRIPTION': 'Your project description',
+  'VERSION': '1.0.0',
+  'SERVE_INCLUDE_SCHEMA': False,
+  # OTHER SETTINGS
+  # }
+  ```
 
-4. اگر بخواهیم مواردی که در صفحه سوئگر هست را تغییر بدهید به روش زیر امکان پذیر خواهد بود
+# 3.chnage  `urls.py` #global urls.py
 
+```python
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('home.urls')),
+    path('todos/', include('todo.urls')),
+    ...
+    # YOUR PATTERNS
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    # Optional UI:
+    path('api/schema/swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+]
+```
+
+# 4.Appendix
+
+> اگر بخواهیم مواردی که در صفحه سوئگر هست را تغییر بدهید به روش زیر امکان پذیر خواهد بود
 
 * File: `/todo/views.py`
    ```python
