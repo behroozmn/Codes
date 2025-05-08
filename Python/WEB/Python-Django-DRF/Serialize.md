@@ -18,8 +18,9 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('index_page', views.index_page)
-    path('legacy', views.todos_json)
+    path('index_page', views.index_page),
+    path('second_page', views.second_page),
+    path('legacy', views.todos_json),
 ]
 ```
 
@@ -64,6 +65,11 @@ def index_page(request):
 def todos_json(request: HttpRequest):
     todos = list(Todo.objects.order_by('priority').all().values('title', 'is_done'))
     return JsonResponse({'todos': todos})
+
+def second_page(request):
+    colors = ["red", "blue", "green", "gray", "yellow", "orange"]
+    return JsonResponse({ 'colors' : colors})
+
 ```
 
 # 2.Legacy Serialize[FunctionBaseView]
