@@ -62,11 +62,11 @@ def index_page(request):
     return render(request, 'home/index.html', context)
 
 
-def todos_json(request: HttpRequest): # module "request" is newer --> def todos_json(request: request)
+def todos_json(myrequest: HttpRequest): # module "request" is newer --> def todos_json(request: request)
     todos = list(Todo.objects.order_by('priority').all().values('title', 'is_done'))
     return JsonResponse({'todos': todos})
 
-def second_page(request):
+def second_page(myrequest):
     colors = ["red", "blue", "green", "gray", "yellow", "orange"]
     return JsonResponse({ 'colors' : colors})
 
