@@ -1339,10 +1339,15 @@ $("#Button_33").click(function () {
 });
 ```
 
+# 11.This
+* این دیس به چیزی که سلکت کردیم برمی‌گردد
 ```html
 
 ```
 
 ```javascript
+$("p").click(function (e) { // هر تگ پی که موجود باشد
+    $(this).css("background-color", "red");
+});
 
 ```

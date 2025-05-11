@@ -298,10 +298,10 @@ $("#form").submit(function (e) {
     }
 });
 ```
+
 # 4.window
 
 ## 1.resize
-
 
 ```javascript
 $(window).resize(function () {
@@ -331,7 +331,7 @@ $(window).scroll(function () {
 
 ```javascript
 $("#myImage").ready(function () {
-  ShowAlert();
+    ShowAlert();
 });
 ```
 
@@ -350,3 +350,103 @@ $(document).ready(function () {
 });
 
 ```
+
+# 5.EventHandlerAttachment
+
+## 1.on
+
+* چند تا رویداد رو به یک سلکتور متصل یا الصاق یا الحاق می‌کنیم
+* در مثال زیر به جای نوشتن دو رویداد اول مستقیما رویداد سوم را می‌نویسیم
+
+```javascript
+// $("#onAttachment").click(function (e) { 
+//    alert('same event');
+// });
+
+// $("#onAttachment").mouseleave(function () { 
+//     alert('same event mouseleave');
+// });
+
+$("#onAttachment").on("click dblclick", function () {
+    alert('bind with on');
+});
+```
+
+* اگر بخواهیم در رویدادهای متفاوت عمل متفاوت داشته باشد
+
+```javascript
+$("#onAttachment").on({
+    click: function () {
+        alert('bind with on for click');
+    },
+    mouseleave: function () {
+        alert('bind with on for mouseleave');
+    }
+});
+```
+
+## 2.of
+
+* غیر فعال کردن یک رویداد از یک مولفه
+
+```javascript
+$("p").click(function (e) {
+    $(this).css("background-color", "red");
+});
+
+$("#ID").click(function (e) {
+    $("p").off("click");
+});
+```
+
+## one
+
+* فقط یک بار رویداد اجرا شود
+
+```javascript
+$("p").click(function (e) {
+    alert('hello');
+});
+
+$("p").one("click", function (e) {
+    alert('hello');
+});
+```
+
+# 6.Trigger
+
+```javascript
+$("#ID1").click(function (e) {
+    alert('hello');
+});
+
+$("#ID2").click(function (e) {
+    $("#ID1").trigger("click");
+});
+```
+
+# 6.TriggerHandler
+
+* انجام کارهای ظاهری و نه همه کارهای رویداد در مولفه اصلی که قرار است آن را اجرا کند
+* اگر شما مثلا کاری انجام دهید و در انتها به صفحه ای ارجاع بدید آنگاه کارهای ظاهری و صفحه را انجام میدهد ولی به صفحه دیگر نمی‌رود
+
+# 7.proxy
+
+* مثلا رویداد وقفه توسط صفحه اجرا می‌شود و نه مولفه پس در هنگام تنظیم مولفه به مشکل می‌خوریم و عملیات انجام نمی‌شود برای همین شکل دوم آورده شده مشکل را حل میکند
+
+```javascript
+// 
+$("p").click(function (e) {
+    setInterval(setInterval(function () {
+        $(this).addClass("bg-red") // this refer to window
+    }), 600);
+});
+
+// ✅️
+$("p").click(function (e) {
+    setInterval($.proxy(function () {
+        $(this).addClass("bg-red"); // this refer to p
+    }, this), 600);
+});
+```
+
