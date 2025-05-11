@@ -298,3 +298,55 @@ $("#form").submit(function (e) {
     }
 });
 ```
+# 4.window
+
+## 1.resize
+
+
+```javascript
+$(window).resize(function () {
+    $("#firstInput").val($(window).width());
+});
+```
+
+## 2.scrol
+
+```javascript
+var scrollTimes = 0;
+$(window).scroll(function () {
+    $("#scrollevent").val(scrollTimes += 1);
+});
+$(window).scroll(function () {
+    if ($(window).scrollTop() > 150) {
+        $("#navbar").addClass("myNavbar");
+    } else {
+        $("#navbar").removeClass("myNavbar");
+    }
+});
+```
+
+## 3.ready
+
+* وقتی یک کامپوننت بصورت کامل لود شود این رویداد رخ می‌دهد
+
+```javascript
+$("#myImage").ready(function () {
+  ShowAlert();
+});
+```
+
+## 4.holdReady
+
+* HoldReady(True # مانع لود شدن کامل صفحه بشو
+* HoldReady(False) # اجازه بده صفحه بصورت کامل لود بشود
+
+```javascript
+$.holdReady(true);
+$.getScript("asset/js/test.js", function () { // یک اسکریپت رو لود کن 
+    $.holdReady(false); // وقتی لود تمام شد اجازه بده صفحه کاملا لود بشه
+});
+$(document).ready(function () {
+    ShowAlert();
+});
+
+```
