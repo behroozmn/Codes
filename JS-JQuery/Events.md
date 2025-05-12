@@ -385,6 +385,14 @@ $("#onAttachment").on({
 });
 ```
 
+```javascript
+// مثال دوم
+
+$("#ID").on("click", "button", function (e) { // برو در مولفه «آی‌دی» در رویداد کلیک آن برروی المنت‌های دکمه آن رویداد فراخوانی شود و کارهای داخل تابع را انجام بده 
+    alert(e.delegateTarget);
+});
+```
+
 ## 2.of
 
 * غیر فعال کردن یک رویداد از یک مولفه
@@ -425,12 +433,12 @@ $("#ID2").click(function (e) {
 });
 ```
 
-# 6.TriggerHandler
+# 7.TriggerHandler
 
 * انجام کارهای ظاهری و نه همه کارهای رویداد در مولفه اصلی که قرار است آن را اجرا کند
 * اگر شما مثلا کاری انجام دهید و در انتها به صفحه ای ارجاع بدید آنگاه کارهای ظاهری و صفحه را انجام میدهد ولی به صفحه دیگر نمی‌رود
 
-# 7.proxy
+# 8.proxy
 
 * مثلا رویداد وقفه توسط صفحه اجرا می‌شود و نه مولفه پس در هنگام تنظیم مولفه به مشکل می‌خوریم و عملیات انجام نمی‌شود برای همین شکل دوم آورده شده مشکل را حل میکند
 
@@ -449,4 +457,111 @@ $("p").click(function (e) {
     }, this), 600);
 });
 ```
+
+# 9.currentTarget
+
+```javascript
+$("#ID").click(function (event) {
+    if (event.currentTarget === this) {
+        alert('true');
+    }
+});
+```
+
+# 10.data
+
+* ارسال دیتا به تابع برای استفاده در بدنه تابع
+
+```javascript
+$("#ID").on("click", {myValue: 'test'}, function (event) {
+    alert(event.data.myValue);
+})
+```
+
+```javascript
+for (var i = 0; i <= 4; i++) {
+    $("#ID button").eq(i).on("click", {myValue: i}, function (event) {
+        alert(event.data.myValue);
+    });
+}
+```
+
+# 11.DelegateTarget
+
+[//]: # (TODO: این گزینه رو باید بعدا مجددا آموزش ببینم)
+
+* باتوجه به مثال دوم کارش این است که برمیگردد به خود المنت اولی که ایونت رو روی آن فراخوانی کردید
+
+```javascript
+$(".mybutton").click(function (e) {
+    alert(e.delegateTarget);
+});
+```
+
+```javascript
+$("#myDeletegate").on("click", "button", function (e) {
+    alert(e.delegateTarget);
+});
+```
+
+# 12.preventDefault
+
+* تابع preventDefault باعث ممانعت در اجرای عمل پیش‌فرض یک رویداد و تگ(که باید به‌صورت عادی کار خود را انجام دهد) می‌گردد
+* تابع isDefaultPrevented بررسی میکند که آیا در یک تگ و رویداد ممانعت به عمل آمده است یا خیر
+
+```javascript
+$("a").click(function (e) {
+    e.preventDefault(); //ممانعت از انجام کلید لینک مورد نظر یعنی لینک نباید عمل کند
+
+    if (e.isDefaultPrevented()) { // آیا کار عادی تگ در وضعیت غیر فعال در آمده است
+        alert('true');
+    }
+});
+```
+
+# 13.stopImmediatePropagation
+
+* اگر از یگ رویداد چندین مورد تعریف کرده باشیم آنگاه وقتی یکی رو اجرا کرد دیگری ها رو نادیده بگیرد و دیگر بقیه انجام نشود از این به بعد رویداد پیش‌فرض این گزینه باشد(از بین چندین مورد یکسان)
+
+```javascript
+$("#ID").click(function (e) {
+    alert('ID #1 clicked');
+    e.stopImmediatePropagation(); // رویداد کلیک را برای بقیه غیر فعال کن و فقط این رویداد قابل اجرا باشد
+
+    if (e.isImmediatePropagationStopped()) {
+        alert('true');
+    }
+});
+
+$("#ID").click(function (e) {
+    alert('ID #2 clicked');
+});
+
+$("#ID").click(function (e) {
+    alert('ID #3 clicked');
+});
+```
+
+# 14.stopPropagation
+
+* اگر برای یک مولفه رویداد تعریف کرده باشید و برای والد آن هم تعریف کرده باشید آنگاه اگر این مورد را برای فرزند انجام دهید دیگر رویداد والد رخ نخواهد داد
+
+```html
+    <p id="IdParent">
+    my name is <span style="color: red">BehroozMohammadiNasab</span>
+</p>
+```
+
+```javascript
+$("#IdParent span").click(function (e) {
+    alert("span");
+    e.stopPropagation();
+});
+
+$("#IdParent").click(function (e) {
+    alert("paragraph");
+});
+```
+
+
 
