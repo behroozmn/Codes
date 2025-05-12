@@ -11,15 +11,7 @@ margin: 2rem auto; #وسط چین می‌کند
 box-shadow: 0 2px 8px rgba(0,0,0,.3)
 ```
 
-### font
 
-```
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,900&display=swap');
-
-html {
-    font-family: 'Roboto', sans-serif;
-}
-```
 
 ### border
 
@@ -31,17 +23,9 @@ li:last-child {
 }  
 ```
 
-### link[a]
-
-با نگه داشتن روی لینک زیر آن خط نیافتد
-
-```
-text-decoration: none
-```
-
 با انیمیشن رفتار انجام شود
 
-```
+```css
 li a {
     transition: all ease .3s;
 }
@@ -51,18 +35,4 @@ li a:active { /*  موس روی لینک  کلیک کند یا کلیک را ن�
 }
 ```
 
-### display
-
-```
-header nav {
-    display: flex; /*مهم و باید خوانده شود*/
-}
-```
-
-### اجباری نمودن یک تنظیمات
-
-```
-.errorlist {
-    padding-right: 0 !important;
-}
 ```
