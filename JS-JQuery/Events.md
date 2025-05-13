@@ -563,5 +563,80 @@ $("#IdParent").click(function (e) {
 });
 ```
 
+# 15.NodeName
+
+* گزینش اِلِمان بر حسب رفتاری که سلکت میکنیم
+* مثال زیر سه مربع دارد که هرکدام کلیک کنیم نام آن المان رو برمیگرداند
+
+```html
+
+<style>
+    p,
+    span,
+    strong {
+        padding: 30px;
+        margin: 20px;
+        border: 1px solid black;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <p>
+            <strong>
+                    <span>
+                        span
+                    </span>
+            </strong>
+        </p>
+    </div>
+</div>
+```
+
+```javascript
+$("body").click(function (e) {
+    debugger;
+    alert(e.target.nodeName);
+});
+```
+
+# 16.EventType
+
+```javascript
+$("#ID").click(function (e) {
+    if (e.type == click) { // click , dblclick, mousemove...
+        alert("Clicked")
+    }
+});
+```
+
+# 17.TimeStamp
+
+* تفاوت زمانی رویداد انجام شده تا اپوخ‌تایم
+* برحسب میلی‌ثانیه است
+* کاربرد آن مثلا در اندازه‌گیری زمان پاسخ‌دهی کاربر یا سیستم
+
+```javascript
+// مثلاً تشخیص اینکه دو کلیک چقدر با هم فاصله زمانی داشته‌اند.
+let lastClickTime = 0;
+
+$('#myButton').on('click', function (e) {
+    if (e.timestamp - lastClickTime < 300) {
+        console.log("Double click شناسایی شد!");
+    }
+    lastClickTime = e.timestamp;
+});
+```
+
+# 18.which
+
+* عدد اسکی را برمیگرداند
+
+```javascript
+$("#ID_Input").on("mousedown keydown", function (e) {
+    $("#ListBox").append("type : " + e.type + " - " + "which :" + e.which + "<br/>");
+});
+```
 
 
