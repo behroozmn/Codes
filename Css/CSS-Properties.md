@@ -7,7 +7,6 @@
     * animation
     * animation-range
     * background
-    * border
     * border-block
     * border-block-end
     * border-block-start
@@ -42,7 +41,6 @@
     * inset-block
     * inset-inline
     * list-style
-    * margin
     * margin-block
     * margin-inline
     * mask
@@ -68,11 +66,30 @@
     * text-box
     * text-emphasis
     * text-wrap
-    * transition
     * view-timeline
     * -webkit-text-stroke
     * -webkit-border-before
     * -webkit-mask-box-image
+
+## border-*
+
+### border-bottom
+
+```css
+li:last-child {
+    border-bottom: none; /* اگر بخواهیم که گزینه آخر بوردر نداشته باشد*/
+}  
+```
+
+## margin-*
+
+### margin
+
+```css
+p {
+    margin: 2rem auto; /*وسط چین می‌کند*/
+}
+```
 
 ## text-*
 
@@ -80,8 +97,36 @@
 
 * مورد none: سبب می‌شود که با نگه داشتن روی لینک زیر آن لینک خط نیافتد
 
+```css
+p {
+    text-decoration: none;
+}
 ```
-text-decoration: none;
+
+## transition-*
+
+### transition[[url]](https://developer.mozilla.org/en-US/docs/Web/CSS/transition)
+
+```css
+li a {
+    transition: all ease .3s; /*با انیمیشن رفتار انجام شود*/
+}
+
+li a:hover, /* موس روی لینک برود*/ /*همچنین ویرگول ب معنی یا هست*/
+li a:active { /*  موس روی لینک  کلیک کند یا کلیک را نگه دارد و مثلا دِرَگ نماید*/
+    color: #006b1b;
+}
+```
+
+```css
+li a {
+    transition: margin-right 2s;
+    transition: margin-right 2s 0.5s;
+    transition: margin-right 2s ease-in-out;
+    transition: margin-right 2s ease-in-out 0.5s;
+    transition: margin-right 2s, color 1s;
+    transition: all 1s ease-out;
+}
 ```
 
 # 2.general
@@ -141,6 +186,42 @@ header nav {
 ```css
 ul {
     list-style-type: none; /* حذف دایره‌های کنار یک بولت */
+}
+```
+
+## font-*
+
+### font-family
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,900&display=swap');
+
+html {
+    font-family: 'Roboto', sans-serif;
+}
+```
+
+```css
+p {
+    font-family: "Gill Sans", sans-serif;
+    /* OR */
+    font-family: "Gill Sans Extrabold", sans-serif;
+}
+```
+
+## box-*
+
+### box-shadow[[url]](https://developer.mozilla.org/en-US/docs/Web/CSS/box-shadow)
+
+```css
+p {
+    box-shadow: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .3);
+    box-shadow: 10px 5px 5px red;
+    box-shadow: 60px -16px teal;
+    box-shadow: 12px 12px 2px 1px rgba(0, 0, 255, 0.2);
+    box-shadow: inset 5em 1em gold;
+    box-shadow: 3px 3px red, -1em 0 0.4em olive;
 }
 ```
 
