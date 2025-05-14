@@ -79,7 +79,7 @@ main.o: main.c
 
 # 4.Variables
 
-متغیرها برای ساده‌سازی مورد استفاده قرار می‌گیرند
+متغیرها برای ساده‌سازی مورد استفاده قرار می‌گیرند(دو نمونه زیر یکسان هستند)
 
 ```makefile
 edit : main.o kbd.o command.o display.o insert.o search.o files.o utils.o
