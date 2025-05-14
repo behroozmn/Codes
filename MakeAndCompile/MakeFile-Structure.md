@@ -3,8 +3,7 @@
 * با کاراکتر دالر شروع می‌شود
 * متغیرهای باید درون پرانتز یا آکولاد قرار بگیرند
 
-
-
+## 1.Automatic variables
 
 * Automatic variables are set by make after a rule is matched.
     * $@: the target filename.
@@ -14,7 +13,7 @@
     * $+: similar to $^, but includes duplicates.
     * $?: the names of all prerequisites that are newer than the target, separated by spaces.
 
-## 1.Makefile sample
+### 1.1.Makefile sample
 
 * در قطعه‌کد زیر شکل عادی و شکل توأم با متغیر را مشاهده می‌کنید(هر دو یکسان هستند ولی با نگارش متفاوت)
 
@@ -44,6 +43,7 @@
 # VirtualPath
 
 **مورد VPATH(باحروف بزرگ)**
+
 * تعیین دایرکتوری جهت جستجوی وابستگی‌ها(Dependencies) و فایل‌های تارگت
 * For example: Search for dependencies and targets from "src" and "include" directories.The directories are separated by space
 
@@ -52,6 +52,7 @@
   ```
 
 **مورد vpath(باحروف کوچک)**
+
 * برای دقت بیشتر پیرامون نوع فایل و مسیر جستجوی فایل
 * For example: Search for .c files in "src" directory; .h files in "include" directory, The pattern matching character '%' matches filename without the extension
 
