@@ -27,20 +27,26 @@ target: dependencies
   * قوانین صریح (Explicit Rules): خودمان بصورت مستقیم نام دقیق target، dependencies و دستورات build را مشخص کنی
     * مثال: فرض کنید یک برنامه C دارید با نام `main.c` و می‌خواهید آن را به یک اجرایی به نام `myprogram` کامپایل کنید.
       ```makefile
-      myprogram: main.c
-      gcc -o myprogram main.c
+         myprogram: main.c
+       gcc -o myprogram main.c
       ```
   * قوانین غیرصریح (Implicit Rules):برنامه Make خودش تشخیص دهد چگونه یک فایل را بسازد، بدون اینکه شما جزئیات دستورات را بنویسید. این قوانین پیش‌فرض هستند و بر اساس پسوندهای فایل‌ها عمل می‌کنند.
-    * مثال:اگر فایل `main.c` موجود باشد و یک target به نام `main.o` تعیین کنید، Make به صورت خودکار می‌داند که باید main.c را با gcc کامپایل کند.یعنی می‌توانید فقط قطعه کد زیر را بنویسید
-      ```shell
-      main.o:
-      ```
-    * دو قطعه کد زیر مشابه هستند
-      ```shell
-main.o: main.c
-gcc -c main.c -o main.o
+    * مثال:اگر فایل `main.c` موجود باشد و یک target به نام `main.o` تعیین کنید، Make به صورت خودکار می‌داند که باید `main.c` را با gcc کامپایل کند.یعنی می‌توانید فقط قطعه کد زیر را بنویسید
+```shell
+main.o:
+```
 
-      ```
+    * دو قطعه کد زیر مشابه هستند
+
+```shell
+#1
+main.o:
+
+#2
+main.o: main.c
+  gcc -c main.c -o main.o
+
+```
 
 ## makefile Structure
 
