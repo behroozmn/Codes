@@ -92,10 +92,15 @@ clean:
     * در ادامه این فایل را میخواند
     * در ادامه دستورات این تارگت(که فایل پیش‌نیاز آن را پیدا کرده است یعنی دستورات تارگت `hello.o`) را اجرا میکند یعنی دستور زیر
 
-      <div style="direction: ltr">`gcc -c hello.c`</div>
+```shell
+gcc -c hello.c
+```
 
     * حال که بادستور بالا فایل `hello.o` ایجاد شد در ادامه دستور تارگت hello.exe را اجرا میکند یعنی دستور زیر
-     <div style="direction: ltr">`gcc -o hello.exe hello.o`</div>
+
+```shell
+`gcc -o hello.exe hello.o`
+```
     
 
 
