@@ -70,9 +70,11 @@ main.o: main.c
     * CPPFLAGS
     * LDFLAGS
 
-  # 📋 جدول کامل متغیرهای رایج در Makefile
-
 <div style="direction: rtl">
+
+### GeneralVariable
+
+جدول کامل متغیرهای رایج در Makefile
 
 | نام متغیر       | نوع      | توضیح کامل                                                  | مثال استفاده                         |
 |-----------------|----------|-------------------------------------------------------------|--------------------------------------|
@@ -188,9 +190,7 @@ main.o: main.c
 | `ID`            | سیستمی   | نمایش شناسه کاربر                                           | `ID = id`                            |
 | `WHOAMI`        | سیستمی   | نمایش نام کاربر فعلی                                        | `WHOAMI = whoami`                    |
 
-
 </div>
-
 
 * با وجود makefile زیر با زدن دستور `make` باید main.c را با دستور `gcc -Wall -Wextra -g -o main main.c` کامپایل کند
 
@@ -310,6 +310,39 @@ clean:
     ```shell
     `gcc -o hello.exe hello.o`
     ```
-    
 
+## 2.2.makefile sample
 
+```makefile
+CC      = gcc
+CFLAGS  = -Wall -Wextra -g
+CPPFLAGS= -Iinclude
+LDFLAGS =
+LDLIBS  = -lm
+
+SRCS    = main.c utils.c
+OBJS    = $(SRCS:.c=.o)
+TARGET  = myprogram
+
+all: $(TARGET)
+
+$(TARGET): $(OBJS)
+    $(CC) $(LDFLAGS) $(OBJS) -o $@ $(LDLIBS)
+
+%.o: %.c
+    $(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
+
+clean:
+    rm -f $(OBJS) $(TARGET)
+```
+
+<div style="direction: rtl">
+
+🔍 توضیح کوتاه برخی قسمت‌ها:
+
+* $(CC) و $(CFLAGS) و غیره: متغیرها را فراخوانی می‌کنند.
+* $(SRCS:.c=.o): تمام .cها را به .o تبدیل می‌کند (مانند main.c → main.o).
+* $@: اسم هدف (target) فعلی است (مانند myprogram).
+* $<: اولین وابستگی (dependency) است (مانند main.c در حین کامپایل main.o).
+     
+</div>
