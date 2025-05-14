@@ -111,7 +111,7 @@ cc -o edit $(objects)
 | `CPP`           | کامپایلر | پیش‌پردازنده C/C++                                          | `CPP = cpp`                                                 |
 | `FC`            | کامپایلر | کامپایلر زبان Fortran                                       | `FC = gfortran`                                             |
 | `PC`            | کامپایلر | کامپایلر Pascal (مانند `fpc`)                               | `PC = fpc`                                                  |
-| `CFLAGS`        | گزینه‌ها | گزینه‌های کامپایلر برای زبان C                              | `CFLAGS = -Wall -Wextra -O2` یا `CFLAGS = -Wall -Wextra -g` |
+| `CFLAGS`        | گزینه‌ها | گزینه‌های کامپایلر برای زبان C                              | `CFLAGS = -Wall -Wextra -O2`<br>`CFLAGS = -Wall -Wextra -g` |
 | `CXXFLAGS`      | گزینه‌ها | گزینه‌های کامپایلر برای زبان C++                            | `CXXFLAGS = -std=c++17 -g`                                  |
 | `FFLAGS`        | گزینه‌ها | گزینه‌های کامپایلر Fortran                                  | `FFLAGS = -O3 -m64`                                         |
 | `PFLAGS`        | گزینه‌ها | گزینه‌های کامپایلر Pascal                                   | `PFLAGS = -Mobjfpc -Criot`                                  |
