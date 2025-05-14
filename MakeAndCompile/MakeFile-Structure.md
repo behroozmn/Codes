@@ -219,12 +219,32 @@ main.o:
 این متغیرها بسیار مفید هستند زیرا به شما اجازه می‌دهند بدون نوشتن دوباره مسیرها و نام فایل‌ها، در دستورات build استفاده کنید.
 
 * Automatic variables are set by make after a rule is matched.
-    * $@: the target filename.
-    * $*: the target filename without the file extension.
-    * $<: the first prerequisite filename.
-    * $^: the filenames of all the prerequisites, separated by spaces, discard duplicates.
-    * $+: similar to $^, but includes duplicates.
-    * $?: the names of all prerequisites that are newer than the target, separated by spaces.
+    * $@: این متغیر حاوی مقدار تارگت است(دقیقا عبارت تارگت)
+    * $*: این متغیر حاوی فقط نام تارگت است(بدون پسوند)
+    * $<: نام اولین پیشنیاز
+    * $^: تمام پیشنیازها(**بدون** تکرار)
+        * اگر بیشتر از یک مورد باشند توسط خط فاصله از هم جدا خواهند شد
+    * $+: تمام پیشنیازها(**با** تکرار)
+        * اگر بیشتر از یک مورد باشند توسط خط فاصله از هم جدا خواهند شد
+    * $?: نام تمام وابستگی‌ها(پیش‌نیازها) که جدیدتر از هدف(تارگت) هستند
+        * اگر بیشتر از یک مورد باشند توسط خط فاصله از هم جدا خواهند شد
+        * وقتی make یک قاعده(rule)را پردازش می‌کند، زمان آخرین تغییر هر فایل را بررسی می‌کند.اگر یکی از وابستگی‌ها بعد از ساختن تارگت تغییر کرده باشد، آن وابستگی "جدیدتر" محسوب می‌شود.
+
+برای فهم بهتر $? به توضیحات زیر توجه نمایید
+```makefile
+main.o: main.c defs.h
+    $(CC) -c $< -o $@
+```
+
+* فرض شود که
+    * فایل `main.c` آخرین بار ۱۰ دقیقه قبل تغییر کرده‌باشد
+    * فایل `defs.h` آخرین بار ۲ ساعت قبل تغییر کرده‌باشد
+    * فایل `main.o` آخرین بار ۳ ساعت قبل تغییر کرده‌باشد
+* آنگاه
+    * فایل main.c جدیدتر از main.o است. پس یعنی باید در $? باشد
+    * فایل defs.h قدیمی‌تر از main.o است. پس یعنی بایددر $? نباشد
+* بنابراین
+    * $? = main.c
 
 ## 4.4.Sample1
 
@@ -233,15 +253,55 @@ main.o: main.c utils.h
     $(CC) -c $< -o $@
 ```
 
-* مورد $@ → main.o
-* مورد $< → main.c
-* مورد $^ → main.c utils.h
-* مورد $* → main
-* مورد $+ → main.c utils.h
-* مورد $? → فقط وابستگی‌هایی که جدیدتر از main.o هستند (مثلاً اگر utils.h تغییر کرده باشد، $? برابر main.c utils.h می‌شود)
- 
+* $@ → `main.o`
+* $< → `main.c`
+* $^ → `main.c` `utils.h`
+* $* → `main`
+* $+ → `main.c` `utils.h`
+* $? → Only the dependencies that are newer than `main.o`
+    * فقط وابستگی‌هایی که جدیدتر از main.o هستند
+    * مثلاً اگر utils.h تغییر کرده باشد، $? برابر main.c utils.h می‌شود
 
 ## 4.4.Sample2
+
+```makefile
+all: program
+program: main.o utils.o
+    $(CC) $^ -o $@
+main.o: main.c defs.h
+    $(CC) -c $< -o $@
+utils.o: utils.c defs.h
+    $(CC) -c $< -o $@
+```
+
+* for `main.o`
+    * $@ = main.o → TargetName
+    * $< = main.c → First Dependency
+    * $^ = main.c defs.h → All dependences, discard duplicates.
+    * $* = main → 'TargetName' without extension
+    * $?
+        * فقط فایل‌هایی که جدیدتر از main.o هستند (مثلاً main.c)
+    * $+ = main.c defs.h → All dependences
+        * در این حالت تکراری نداریم
+* for `utils.o`
+    * $@ = utils.o
+    * $< = utils.c
+    * $^ = utils.c defs.h
+    * $* = utils
+    * $?
+        * فایل‌هایی که جدیدتر از utils.o هستند (مثلاً utils.c)
+    * $+ = utils.c defs.h
+    * =
+* for `program`
+    * $@ = program
+    * $^ = main.o utils.o → All dependences, discard duplicates.
+    * $< = main.o → First Dependency
+    * $* = program → 'TargetName' without extension
+    * $?
+        * فایل‌هایی که جدیدتر از program هستند (مثلاً main.o)
+    * $+ = main.o utils.o
+
+## 4.5.Sample3
 
 در قطعه‌کد زیر شکل عادی و شکل توأم با متغیر را مشاهده می‌کنید(هر دو یکسان هستند ولی با نگارش متفاوت)
 
@@ -266,6 +326,7 @@ main.o: main.c utils.h
   clean:
       rm hello.o hello.exe
   ```
+
 # 5.VirtualPath
 
 **وی‌پَت با حروف کوچک یا VPATH**: تعیین دایرکتوری جهت جستجوی وابستگی‌ها(Dependencies) و فایل‌های تارگت
