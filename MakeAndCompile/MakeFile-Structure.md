@@ -49,7 +49,7 @@
 VPATH = src include
 ```
 
-**وی‌پَت با حروف بزرگ یا vpath(باحروف کوچک)**: برای دقت بیشتر پیرامون نوع فایل و مسیر جستجوی فایل
+**وی‌پَت با حروف بزرگ یا vpath**: برای دقت بیشتر پیرامون نوع فایل و مسیر جستجوی فایل
 
 * For example: Search for .c files in "src" directory; .h files in "include" directory, The pattern matching character '%' matches filename without the extension
 
