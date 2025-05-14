@@ -21,7 +21,7 @@ target: dependencies
 
 * درصورت کافی نبودن یک خط برای ادامه در خط بعدی در انتهای خط پُر شده یک \ قرار بدهید و به خط جدید بروید
 
-## 1.Rules
+# 3.Rules
 
 قوانین  (Rules) به دو دسته کلی تقسیم می‌شوند:
 
@@ -59,7 +59,7 @@ main.o: main.c
 
 ```
 
-## 2.Variables
+# 4.Variables
 
 * با کاراکتر دالر شروع می‌شود
 * متغیرهای باید درون پرانتز یا آکولاد قرار بگیرند
@@ -72,7 +72,7 @@ main.o: main.c
 
 <div style="direction: rtl">
 
-### GeneralVariable
+## 4.1GeneralVariable
 
 جدول کامل متغیرهای رایج در Makefile
 
@@ -213,7 +213,10 @@ all: main.o
 main.o:
 ```
 
-### 2.1.Automatic variables
+## 4.2.Automatic variables[متغیرهای خودکار]
+
+متغیرهایی هستند که توسط make به صورت خودکار وقتی یک قاعده(rule) با یک هدف(target) و وابستگی‌های(prerequisites) آن مطابقت پیدا می‌کند ، تنظیم می‌شوند
+این متغیرها بسیار مفید هستند زیرا به شما اجازه می‌دهند بدون نوشتن دوباره مسیرها و نام فایل‌ها، در دستورات build استفاده کنید.
 
 * Automatic variables are set by make after a rule is matched.
     * $@: the target filename.
@@ -223,7 +226,22 @@ main.o:
     * $+: similar to $^, but includes duplicates.
     * $?: the names of all prerequisites that are newer than the target, separated by spaces.
 
-### 2.2.Sample
+## 4.4.Sample1
+
+```makefile
+main.o: main.c utils.h
+    $(CC) -c $< -o $@
+```
+
+* مورد $@ → main.o
+* مورد $< → main.c
+* مورد $^ → main.c utils.h
+* مورد $* → main
+* مورد $+ → main.c utils.h
+* مورد $? → فقط وابستگی‌هایی که جدیدتر از main.o هستند (مثلاً اگر utils.h تغییر کرده باشد، $? برابر main.c utils.h می‌شود)
+ 
+
+## 4.4.Sample2
 
 در قطعه‌کد زیر شکل عادی و شکل توأم با متغیر را مشاهده می‌کنید(هر دو یکسان هستند ولی با نگارش متفاوت)
 
@@ -248,8 +266,7 @@ main.o:
   clean:
       rm hello.o hello.exe
   ```
-
-## 3.VirtualPath
+# 5.VirtualPath
 
 **وی‌پَت با حروف کوچک یا VPATH**: تعیین دایرکتوری جهت جستجوی وابستگی‌ها(Dependencies) و فایل‌های تارگت
 
@@ -267,80 +284,3 @@ VPATH = src include
 vpath %.c src
 vpath %.h include
 ```
-
-# 2.Samples
-
-## 2.1.Hello World
-
-```shell
-// hello.c
-#include <stdio.h>
-int main() {
-    printf("Hello, world!\n");
-    return 0;
-}
-
-
-//makefile
-all: hello.exe
-hello.exe: hello.o
-	 gcc -o hello.exe hello.o
-hello.o: hello.c
-	 gcc -c hello.c
-clean:
-	 rm hello.o hello.exe
-```
-
-**توضیحات**
-
-* فایل makeFile را باید در مسیر جاری پروژه قرار دهیم
-* بخش all بصورت پیش‌فرض اجرا می‌شود
-* اگر پس از اجرای دستور ALL مجدد این دستور را اجرا نماییم با دستور زیر مواجه می‌شویم
-    * `make: Nothing to be done for 'all'`
-* ترتیب اجرای خط به خط
-    * ابتدا سراغ تارگت `all` رفته و درمیابد که پیش‌نیاز آن `hello.exe` است
-    * میرود سراغ تارگت `hello.exe` و مشاهده میکند که پیش نیاز آن فایل `hello.o` است
-    * میرود سراغ تارگت `hello.o` و مشاهده میکند که پیش‌نیاز آن فایل hello.c است که متوجه می‌شود که این فایل در مسیر جاری وجود دارد
-    * در ادامه این فایل را میخواند
-    * در ادامه دستورات این تارگت(که فایل پیش‌نیاز آن را پیدا کرده است یعنی دستورات تارگت `hello.o`) را اجرا میکند یعنی دستور زیر
-    ```shell
-    gcc -c hello.c
-    ```
-    * حال که بادستور بالا فایل `hello.o` ایجاد شد در ادامه دستور تارگت hello.exe را اجرا میکند یعنی دستور زیر
-    ```shell
-    `gcc -o hello.exe hello.o`
-    ```
-
-## 2.2.makefile sample
-
-```makefile
-CC      = gcc
-CFLAGS  = -Wall -Wextra -g
-CPPFLAGS= -Iinclude
-LDFLAGS =
-LDLIBS  = -lm
-
-SRCS    = main.c utils.c
-OBJS    = $(SRCS:.c=.o)
-TARGET  = myprogram
-
-all: $(TARGET)
-
-$(TARGET): $(OBJS)
-    $(CC) $(LDFLAGS) $(OBJS) -o $@ $(LDLIBS)
-
-%.o: %.c
-    $(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
-
-clean:
-    rm -f $(OBJS) $(TARGET)
-```
-
-
-توضیح کوتاه برخی قسمت‌ها:
-
-* مورد $(CC) و $(CFLAGS) و غیره: متغیرها را فراخوانی می‌کنند.
-* مورد $(SRCS:.c=.o): تمام .cها را به .o تبدیل می‌کند (مانند main.c → main.o).
-* مورد $@: اسم هدف (target) فعلی است (مانند myprogram).
-* مورد $<: اولین وابستگی (dependency) است (مانند main.c در حین کامپایل main.o).
-     
