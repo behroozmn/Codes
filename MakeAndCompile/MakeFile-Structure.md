@@ -18,7 +18,6 @@
 در قطعه‌کد زیر شکل عادی و شکل توأم با متغیر را مشاهده می‌کنید(هر دو یکسان هستند ولی با نگارش متفاوت)
 
   ```shell
-  # شکل عادی فایل
   all: hello.exe
   hello.exe: hello.o
        gcc -o hello.exe hello.o
@@ -29,7 +28,7 @@
   ```
 
   ```shell
-  # شکل متغیرگونه فایل
+  # Ussing variables
   all: hello.exe
   # $@ matches the target; $< matches the first dependent
   hello.exe: hello.o
