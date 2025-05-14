@@ -2,6 +2,7 @@
 
 * با کاراکتر دالر شروع می‌شود
 * متغیرهای باید درون پرانتز یا آکولاد قرار بگیرند
+
 * Automatic variables are set by make after a rule is matched.
     * $@: the target filename.
     * $*: the target filename without the file extension.
