@@ -79,134 +79,144 @@ main.o: main.c
 
 # 4.Variables
 
+متغیرها برای ساده‌سازی مورد استفاده قرار می‌گیرند
+
+```makefile
+edit : main.o kbd.o command.o display.o insert.o search.o files.o utils.o
+cc -o edit main.o kbd.o command.o display.o insert.o search.o files.o utils.o
+```
+
+```makefile
+objects = main.o kbd.o command.o display.o insert.o search.o files.o utils.o
+
+edit : $(objects)
+cc -o edit $(objects)
+```
+
 * با کاراکتر دالر شروع می‌شود
 * متغیرهای باید درون پرانتز یا آکولاد قرار بگیرند
-* در makefile از متغیرهای استاندارد و رایج نظیر موارد زیر استفاده می‌شود
-    * CC:
-        * CC = gcc
-    * CFLAGS = -Wall -Wextra -g
-    * CPPFLAGS
-    * LDFLAGS
+* تقریباً تمام Makefileها متغیری با نامی شبیه به objects یا OBJECTS یا objs یا OBJS یا obj یا OBJ دارند که فهرستی از نام تمام آبجکت‌های مورد نیاز در پروژه را در خود نگه داشته‌است
+* متغیر می‌تواند شامل کاراکتر فاصله باشد. یعنی موارد را توسط فاصله از هم جدا نماید
+
+## 4.1.GeneralVariable
 
 <div style="direction: rtl">
 
-## 4.1GeneralVariable
-
 جدول کامل متغیرهای رایج در Makefile
 
-| نام متغیر       | نوع      | توضیح کامل                                                  | مثال استفاده                         |
-|-----------------|----------|-------------------------------------------------------------|--------------------------------------|
-| `CC`            | کامپایلر | مشخص کننده کامپایلر C (مانند `gcc`, `clang`)                | `CC = gcc`                           |
-| `CXX`           | کامپایلر | مشخص کننده کامپایلر C++ (مانند `g++`, `clang++`)            | `CXX = g++`                          |
-| `CPP`           | کامپایلر | پیش‌پردازنده C/C++                                          | `CPP = cpp`                          |
-| `FC`            | کامپایلر | کامپایلر زبان Fortran                                       | `FC = gfortran`                      |
-| `PC`            | کامپایلر | کامپایلر Pascal (مانند `fpc`)                               | `PC = fpc`                           |
-| `CFLAGS`        | گزینه‌ها | گزینه‌های کامپایلر برای زبان C                              | `CFLAGS = -Wall -Wextra -O2`         |
-| `CXXFLAGS`      | گزینه‌ها | گزینه‌های کامپایلر برای زبان C++                            | `CXXFLAGS = -std=c++17 -g`           |
-| `FFLAGS`        | گزینه‌ها | گزینه‌های کامپایلر Fortran                                  | `FFLAGS = -O3 -m64`                  |
-| `PFLAGS`        | گزینه‌ها | گزینه‌های کامپایلر Pascal                                   | `PFLAGS = -Mobjfpc -Criot`           |
-| `CPPFLAGS`      | گزینه‌ها | گزینه‌های پیش‌پردازنده C/C++ (مثل `-I`, `-D`)               | `CPPFLAGS = -Iinclude -DNDEBUG`      |
-| `LDFLAGS`       | گزینه‌ها | گزینه‌های لینکر (مانند `-L`, `-rpath`)                      | `LDFLAGS = -L/usr/local/lib`         |
-| `LDLIBS`        | لینکاژ   | لیبری‌هایی که باید لینک شوند                                | `LDLIBS = -lm -lpthread`             |
-| `AR`            | کارولیب  | کارولیب (archive tool) برای ساخت static library             | `AR = ar`                            |
-| `ARFLAGS`       | گزینه‌ها | گزینه‌های `ar` (مانند `rcs`)                                | `ARFLAGS = rcs`                      |
-| `RANLIB`        | کارولیب  | ابزاری برای ایجاد فهرست نمادهای قابل لینک در static library | `RANLIB = ranlib`                    |
-| `RM`            | سیستمی   | دستور حذف فایل (معمولاً `rm -f`)                            | `RM = rm -f`                         |
-| `INSTALL`       | سیستمی   | دستور نصب فایل‌ها در سیستم                                  | `INSTALL = install`                  |
-| `prefix`        | مسیر     | پیشوند مسیر اصلی برای نصب (معمولا `/usr/local`)             | `prefix = /usr/local`                |
-| `exec_prefix`   | مسیر     | پیشوند مسیر اجرایی (معمولا `$(prefix)`)                     | `exec_prefix = $(prefix)`            |
-| `bindir`        | مسیر     | مسیر نصب اجرایی‌ها                                          | `bindir = $(exec_prefix)/bin`        |
-| `includedir`    | مسیر     | مسیر نصب header فایل‌ها                                     | `includedir = $(prefix)/include`     |
-| `libdir`        | مسیر     | مسیر نصب لیبری‌ها                                           | `libdir = $(exec_prefix)/lib`        |
-| `datadir`       | مسیر     | مسیر نصب داده‌های مشترک                                     | `datadir = $(prefix)/share`          |
-| `mandir`        | مسیر     | مسیر نصب فایل‌های راهنما (man pages)                        | `mandir = $(datadir)/man`            |
-| `SRCS`          | منبع     | لیست فایل‌های منبع (مانند `.c`, `.cpp`, `.f90`)             | `SRCS = main.c utils.c`              |
-| `OBJS`          | object   | لیست فایل‌های object (مانند `.o`)                           | `OBJS = main.o utils.o`              |
-| `HDRS`          | منبع     | لیست header فایل‌ها (مانند `.h`)                            | `HDRS = utils.h`                     |
-| `TARGET`        | خروجی    | نام برنامه یا لیبری نهایی                                   | `TARGET = myprogram`                 |
-| `PROGS`         | خروجی    | لیست تمام برنامه‌هایی که build می‌شوند                      | `PROGS = app1 app2`                  |
-| `LIBS`          | خروجی    | لیست لیبری‌هایی که build می‌شوند                            | `LIBS = libmylib.a`                  |
-| `TESTS`         | تست      | لیست تست‌های واحد یا تست‌کیس‌ها                             | `TESTS = test_math test_utils`       |
-| `DOCS`          | مستندات  | فایل‌های مستندات تولیدی (مانند HTML, PDF)                   | `DOCS = docs/html/index.html`        |
-| `TAGS`          | ابزار    | فایل‌های تگ (برای vim/emacs)                                | `TAGS = tags`                        |
-| `MAKEDEPEND`    | ابزار    | ابزاری برای تولید وابستگی‌های include                       | `MAKEDEPEND = makedepend`            |
-| `YACC`          | ابزار    | parser generator (مانند `bison`)                            | `YACC = bison`                       |
-| `LEX`           | ابزار    | lexer generator (مانند `flex`)                              | `LEX = flex`                         |
-| `FLEX`          | ابزار    | flex lexer generator                                        | `FLEX = flex`                        |
-| `BISON`         | ابزار    | Bison parser generator                                      | `BISON = bison`                      |
-| `MOC`           | Qt       | Meta-Object Compiler for Qt                                 | `MOC = moc`                          |
-| `UIC`           | Qt       | UI compiler for Qt                                          | `UIC = uic`                          |
-| `QMAKE`         | Qt       | QMake utility                                               | `QMAKE = qmake`                      |
-| `JAVAC`         | Java     | کامپایلر زبان Java                                          | `JAVAC = javac`                      |
-| `JFLAGS`        | گزینه‌ها | گزینه‌های کامپایلر Java                                     | `JFLAGS = -g`                        |
-| `PYTHON`        | Python   | مفسر یا کامپایلر Python                                     | `PYTHON = python3`                   |
-| `SWIG`          | ابزار    | ابزار تولید wrapper بین زبان‌های مختلف                      | `SWIG = swig`                        |
-| `SWIGFLAGS`     | گزینه‌ها | گزینه‌های SWIG                                              | `SWIGFLAGS = -python`                |
-| `SED`           | سیستمی   | جستجو و جایگزینی الگو در فایل‌ها                            | `SED = sed`                          |
-| `AWK`           | سیستمی   | پردازش الگو و داده در فایل‌ها                               | `AWK = awk`                          |
-| `GREP`          | سیستمی   | جستجو در فایل‌ها                                            | `GREP = grep`                        |
-| `CP`            | سیستمی   | کپی کردن فایل‌ها                                            | `CP = cp`                            |
-| `MV`            | سیستمی   | تغییر نام یا انتقال فایل                                    | `MV = mv`                            |
-| `MKDIR`         | سیستمی   | ایجاد پوشه                                                  | `MKDIR = mkdir -p`                   |
-| `TAR`           | سیستمی   | ابزار tar برای فشرده‌سازی                                   | `TAR = tar`                          |
-| `ZIP`           | سیستمی   | ابزار zip برای فشرده‌سازی                                   | `ZIP = zip`                          |
-| `UNZIP`         | سیستمی   | ابزار unzip برای باز کردن فایل‌های zip                      | `UNZIP = unzip`                      |
-| `GIT`           | ابزار    | مدیریت نسخه‌ها                                              | `GIT = git`                          |
-| `VALGRIND`      | تست      | ابزار تست حافظه                                             | `VALGRIND = valgrind`                |
-| `GCOV`          | تست      | ابزار code coverage برای GCC                                | `GCOV = gcov`                        |
-| `PERL`          | سیستمی   | مفسر Perl                                                   | `PERL = perl`                        |
-| `PHP`           | سیستمی   | مفسر PHP                                                    | `PHP = php`                          |
-| `SHELL`         | سیستمی   | shell استفاده شده در Makefile (معمولاً `/bin/sh`)           | `SHELL = /bin/bash`                  |
-| `MAKE`          | ابزار    | خود دستور `make`                                            | `MAKE = make`                        |
-| `DESTDIR`       | مسیر     | مسیر موقت برای نصب (قبل از root)                            | `DESTDIR = /tmp/install`             |
-| `PREFIX`        | مسیر     | معادل `prefix`، برای سازگاری با بعضی پروژه‌ها               | `PREFIX = /opt/myapp`                |
-| `VERSION`       | عمومی    | نسخه نرم‌افزار                                              | `VERSION = 1.0.0`                    |
-| `DEBUG`         | گزینه‌ها | فلگ برای enable کردن debug                                  | `DEBUG = -g`                         |
-| `OPTIMIZE`      | گزینه‌ها | فلگ بهینه‌سازی                                              | `OPTIMIZE = -O3`                     |
-| `PROFILE`       | گزینه‌ها | فلگ برای profiling                                          | `PROFILE = -pg`                      |
-| `STATIC`        | گزینه‌ها | فلگ برای build static                                       | `STATIC = -static`                   |
-| `SHARED`        | گزینه‌ها | فلگ برای build shared library                               | `SHARED = -shared`                   |
-| `PIC`           | گزینه‌ها | Position Independent Code برای لیبری‌های shared             | `PIC = -fPIC`                        |
-| `THREADS`       | گزینه‌ها | فلگ برای پشتیبانی از multi-threading                        | `THREADS = -pthread`                 |
-| `VERBOSE`       | گزینه‌ها | فلگ برای نمایش جزئیات build                                 | `VERBOSE = 1`                        |
-| `CONFIG`        | عمومی    | تنظیمات پیکربندی                                            | `CONFIG = release`                   |
-| `OS`            | عمومی    | سیستم عامل هدف                                              | `OS = Linux`                         |
-| `ARCH`          | عمومی    | معماری CPU هدف                                              | `ARCH = x86_64`                      |
-| `EXEEXT`        | خروجی    | پسوند فایل اجرایی (در ویندوز `.exe`)                        | `EXEEXT = .exe`                      |
-| `OBJEXT`        | object   | پسوند فایل object                                           | `OBJEXT = .o`                        |
-| `LIBEXT`        | خروجی    | پسوند فایل لیبری (`.a`, `.so`, `.dll`)                      | `LIBEXT = .a`                        |
-| `DOCSDIR`       | مسیر     | مسیر ذخیره مستندات                                          | `DOCSDIR = $(prefix)/doc/$(PROJECT)` |
-| `ETCDIR`        | مسیر     | مسیر فایل‌های config                                        | `ETCDIR = $(prefix)/etc`             |
-| `DATADIR`       | مسیر     | مسیر داده‌های برنامه                                        | `DATADIR = $(prefix)/data`           |
-| `LOCALEDIR`     | مسیر     | مسیر فایل‌های ترجمه                                         | `LOCALEDIR = $(DATADIR)/locale`      |
-| `SYSCONFDIR`    | مسیر     | مسیر فایل‌های پیکربندی سیستمی                               | `SYSCONFDIR = /etc`                  |
-| `LOCALSTATEDIR` | مسیر     | مسیر داده‌های محلی سیستم (مانند log, run)                   | `LOCALSTATEDIR = /var`               |
-| `INFODIR`       | مسیر     | مسیر info manuals                                           | `INFODIR = $(prefix)/info`           |
-| `HTMLDIR`       | مسیر     | مسیر مستندات HTML                                           | `HTMLDIR = $(DOCSDIR)/html`          |
-| `PDFDIR`        | مسیر     | مسیر مستندات PDF                                            | `PDFDIR = $(DOCSDIR)/pdf`            |
-| `MANDIR`        | مسیر     | مسیر فایل‌های man page                                      | `MANDIR = $(DATADIR)/man`            |
-| `XSLTPROC`      | ابزار    | XSLT processor                                              | `XSLTPROC = xsltproc`                |
-| `DOXYGEN`       | ابزار    | ابزار تولید مستندات Doxygen                                 | `DOXYGEN = doxygen`                  |
-| `SPHINXBUILD`   | ابزار    | ابزار ساخت مستندات Sphinx                                   | `SPHINXBUILD = sphinx-build`         |
-| `CTEST`         | تست      | تست runner برای CMake                                       | `CTEST = ctest`                      |
-| `AUTOMAKE`      | ابزار    | ابزار Automake                                              | `AUTOMAKE = automake`                |
-| `AUTOCONF`      | ابزار    | ابزار Autoconf                                              | `AUTOCONF = autoconf`                |
-| `LIBTOOL`       | ابزار    | ابزار Libtool                                               | `LIBTOOL = libtool`                  |
-| `PKG_CONFIG`    | ابزار    | ابزار pkg-config برای یافتن لیبری‌ها                        | `PKG_CONFIG = pkg-config`            |
-| `WGET`          | سیستمی   | دانلود فایل از طریق HTTP                                    | `WGET = wget`                        |
-| `CURL`          | سیستمی   | دانلود/آپلود داده از طریق شبکه                              | `CURL = curl`                        |
-| `SSH`           | سیستمی   | اتصال به روت Remote                                         | `SSH = ssh`                          |
-| `SCP`           | سیستمی   | کپی فایل روی SSH                                            | `SCP = scp`                          |
-| `RSYNC`         | سیستمی   | سنکرون کردن فایل‌ها                                         | `RSYNC = rsync`                      |
-| `DATE`          | سیستمی   | نمایش یا تبدیل تاریخ                                        | `DATE = date`                        |
-| `UUIDGEN`       | سیستمی   | تولید UUID                                                  | `UUIDGEN = uuidgen`                  |
-| `BASENAME`      | سیستمی   | نمایش نام فایل بدون مسیر                                    | `BASENAME = basename`                |
-| `DIRNAME`       | سیستمی   | نمایش مسیر فایل بدون نام فایل                               | `DIRNAME = dirname`                  |
-| `REALPATH`      | سیستمی   | نمایش مسیر واقعی فایل                                       | `REALPATH = realpath`                |
-| `HOSTNAME`      | سیستمی   | نمایش نام هاست                                              | `HOSTNAME = hostname`                |
-| `UNAME`         | سیستمی   | نمایش اطلاعات سیستم                                         | `UNAME = uname`                      |
-| `ID`            | سیستمی   | نمایش شناسه کاربر                                           | `ID = id`                            |
-| `WHOAMI`        | سیستمی   | نمایش نام کاربر فعلی                                        | `WHOAMI = whoami`                    |
+| نام متغیر       | نوع      | توضیح کامل                                                  | مثال استفاده                                                |
+|-----------------|----------|-------------------------------------------------------------|-------------------------------------------------------------|
+| `CC`            | کامپایلر | مشخص کننده کامپایلر C (مانند `gcc`, `clang`)                | `CC = gcc`                                                  |
+| `CXX`           | کامپایلر | مشخص کننده کامپایلر C++ (مانند `g++`, `clang++`)            | `CXX = g++`                                                 |
+| `CPP`           | کامپایلر | پیش‌پردازنده C/C++                                          | `CPP = cpp`                                                 |
+| `FC`            | کامپایلر | کامپایلر زبان Fortran                                       | `FC = gfortran`                                             |
+| `PC`            | کامپایلر | کامپایلر Pascal (مانند `fpc`)                               | `PC = fpc`                                                  |
+| `CFLAGS`        | گزینه‌ها | گزینه‌های کامپایلر برای زبان C                              | `CFLAGS = -Wall -Wextra -O2` یا `CFLAGS = -Wall -Wextra -g` |
+| `CXXFLAGS`      | گزینه‌ها | گزینه‌های کامپایلر برای زبان C++                            | `CXXFLAGS = -std=c++17 -g`                                  |
+| `FFLAGS`        | گزینه‌ها | گزینه‌های کامپایلر Fortran                                  | `FFLAGS = -O3 -m64`                                         |
+| `PFLAGS`        | گزینه‌ها | گزینه‌های کامپایلر Pascal                                   | `PFLAGS = -Mobjfpc -Criot`                                  |
+| `CPPFLAGS`      | گزینه‌ها | گزینه‌های پیش‌پردازنده C/C++ (مثل `-I`, `-D`)               | `CPPFLAGS = -Iinclude -DNDEBUG`                             |
+| `LDFLAGS`       | گزینه‌ها | گزینه‌های لینکر (مانند `-L`, `-rpath`)                      | `LDFLAGS = -L/usr/local/lib`                                |
+| `LDLIBS`        | لینکاژ   | لیبری‌هایی که باید لینک شوند                                | `LDLIBS = -lm -lpthread`                                    |
+| `AR`            | کارولیب  | کارولیب (archive tool) برای ساخت static library             | `AR = ar`                                                   |
+| `ARFLAGS`       | گزینه‌ها | گزینه‌های `ar` (مانند `rcs`)                                | `ARFLAGS = rcs`                                             |
+| `RANLIB`        | کارولیب  | ابزاری برای ایجاد فهرست نمادهای قابل لینک در static library | `RANLIB = ranlib`                                           |
+| `RM`            | سیستمی   | دستور حذف فایل (معمولاً `rm -f`)                            | `RM = rm -f`                                                |
+| `INSTALL`       | سیستمی   | دستور نصب فایل‌ها در سیستم                                  | `INSTALL = install`                                         |
+| `prefix`        | مسیر     | پیشوند مسیر اصلی برای نصب (معمولا `/usr/local`)             | `prefix = /usr/local`                                       |
+| `exec_prefix`   | مسیر     | پیشوند مسیر اجرایی (معمولا `$(prefix)`)                     | `exec_prefix = $(prefix)`                                   |
+| `bindir`        | مسیر     | مسیر نصب اجرایی‌ها                                          | `bindir = $(exec_prefix)/bin`                               |
+| `includedir`    | مسیر     | مسیر نصب header فایل‌ها                                     | `includedir = $(prefix)/include`                            |
+| `libdir`        | مسیر     | مسیر نصب لیبری‌ها                                           | `libdir = $(exec_prefix)/lib`                               |
+| `datadir`       | مسیر     | مسیر نصب داده‌های مشترک                                     | `datadir = $(prefix)/share`                                 |
+| `mandir`        | مسیر     | مسیر نصب فایل‌های راهنما (man pages)                        | `mandir = $(datadir)/man`                                   |
+| `SRCS`          | منبع     | لیست فایل‌های منبع (مانند `.c`, `.cpp`, `.f90`)             | `SRCS = main.c utils.c`                                     |
+| `OBJS`          | object   | لیست فایل‌های object (مانند `.o`)                           | `OBJS = main.o utils.o`                                     |
+| `HDRS`          | منبع     | لیست header فایل‌ها (مانند `.h`)                            | `HDRS = utils.h`                                            |
+| `TARGET`        | خروجی    | نام برنامه یا لیبری نهایی                                   | `TARGET = myprogram`                                        |
+| `PROGS`         | خروجی    | لیست تمام برنامه‌هایی که build می‌شوند                      | `PROGS = app1 app2`                                         |
+| `LIBS`          | خروجی    | لیست لیبری‌هایی که build می‌شوند                            | `LIBS = libmylib.a`                                         |
+| `TESTS`         | تست      | لیست تست‌های واحد یا تست‌کیس‌ها                             | `TESTS = test_math test_utils`                              |
+| `DOCS`          | مستندات  | فایل‌های مستندات تولیدی (مانند HTML, PDF)                   | `DOCS = docs/html/index.html`                               |
+| `TAGS`          | ابزار    | فایل‌های تگ (برای vim/emacs)                                | `TAGS = tags`                                               |
+| `MAKEDEPEND`    | ابزار    | ابزاری برای تولید وابستگی‌های include                       | `MAKEDEPEND = makedepend`                                   |
+| `YACC`          | ابزار    | parser generator (مانند `bison`)                            | `YACC = bison`                                              |
+| `LEX`           | ابزار    | lexer generator (مانند `flex`)                              | `LEX = flex`                                                |
+| `FLEX`          | ابزار    | flex lexer generator                                        | `FLEX = flex`                                               |
+| `BISON`         | ابزار    | Bison parser generator                                      | `BISON = bison`                                             |
+| `MOC`           | Qt       | Meta-Object Compiler for Qt                                 | `MOC = moc`                                                 |
+| `UIC`           | Qt       | UI compiler for Qt                                          | `UIC = uic`                                                 |
+| `QMAKE`         | Qt       | QMake utility                                               | `QMAKE = qmake`                                             |
+| `JAVAC`         | Java     | کامپایلر زبان Java                                          | `JAVAC = javac`                                             |
+| `JFLAGS`        | گزینه‌ها | گزینه‌های کامپایلر Java                                     | `JFLAGS = -g`                                               |
+| `PYTHON`        | Python   | مفسر یا کامپایلر Python                                     | `PYTHON = python3`                                          |
+| `SWIG`          | ابزار    | ابزار تولید wrapper بین زبان‌های مختلف                      | `SWIG = swig`                                               |
+| `SWIGFLAGS`     | گزینه‌ها | گزینه‌های SWIG                                              | `SWIGFLAGS = -python`                                       |
+| `SED`           | سیستمی   | جستجو و جایگزینی الگو در فایل‌ها                            | `SED = sed`                                                 |
+| `AWK`           | سیستمی   | پردازش الگو و داده در فایل‌ها                               | `AWK = awk`                                                 |
+| `GREP`          | سیستمی   | جستجو در فایل‌ها                                            | `GREP = grep`                                               |
+| `CP`            | سیستمی   | کپی کردن فایل‌ها                                            | `CP = cp`                                                   |
+| `MV`            | سیستمی   | تغییر نام یا انتقال فایل                                    | `MV = mv`                                                   |
+| `MKDIR`         | سیستمی   | ایجاد پوشه                                                  | `MKDIR = mkdir -p`                                          |
+| `TAR`           | سیستمی   | ابزار tar برای فشرده‌سازی                                   | `TAR = tar`                                                 |
+| `ZIP`           | سیستمی   | ابزار zip برای فشرده‌سازی                                   | `ZIP = zip`                                                 |
+| `UNZIP`         | سیستمی   | ابزار unzip برای باز کردن فایل‌های zip                      | `UNZIP = unzip`                                             |
+| `GIT`           | ابزار    | مدیریت نسخه‌ها                                              | `GIT = git`                                                 |
+| `VALGRIND`      | تست      | ابزار تست حافظه                                             | `VALGRIND = valgrind`                                       |
+| `GCOV`          | تست      | ابزار code coverage برای GCC                                | `GCOV = gcov`                                               |
+| `PERL`          | سیستمی   | مفسر Perl                                                   | `PERL = perl`                                               |
+| `PHP`           | سیستمی   | مفسر PHP                                                    | `PHP = php`                                                 |
+| `SHELL`         | سیستمی   | shell استفاده شده در Makefile (معمولاً `/bin/sh`)           | `SHELL = /bin/bash`                                         |
+| `MAKE`          | ابزار    | خود دستور `make`                                            | `MAKE = make`                                               |
+| `DESTDIR`       | مسیر     | مسیر موقت برای نصب (قبل از root)                            | `DESTDIR = /tmp/install`                                    |
+| `PREFIX`        | مسیر     | معادل `prefix`، برای سازگاری با بعضی پروژه‌ها               | `PREFIX = /opt/myapp`                                       |
+| `VERSION`       | عمومی    | نسخه نرم‌افزار                                              | `VERSION = 1.0.0`                                           |
+| `DEBUG`         | گزینه‌ها | فلگ برای enable کردن debug                                  | `DEBUG = -g`                                                |
+| `OPTIMIZE`      | گزینه‌ها | فلگ بهینه‌سازی                                              | `OPTIMIZE = -O3`                                            |
+| `PROFILE`       | گزینه‌ها | فلگ برای profiling                                          | `PROFILE = -pg`                                             |
+| `STATIC`        | گزینه‌ها | فلگ برای build static                                       | `STATIC = -static`                                          |
+| `SHARED`        | گزینه‌ها | فلگ برای build shared library                               | `SHARED = -shared`                                          |
+| `PIC`           | گزینه‌ها | Position Independent Code برای لیبری‌های shared             | `PIC = -fPIC`                                               |
+| `THREADS`       | گزینه‌ها | فلگ برای پشتیبانی از multi-threading                        | `THREADS = -pthread`                                        |
+| `VERBOSE`       | گزینه‌ها | فلگ برای نمایش جزئیات build                                 | `VERBOSE = 1`                                               |
+| `CONFIG`        | عمومی    | تنظیمات پیکربندی                                            | `CONFIG = release`                                          |
+| `OS`            | عمومی    | سیستم عامل هدف                                              | `OS = Linux`                                                |
+| `ARCH`          | عمومی    | معماری CPU هدف                                              | `ARCH = x86_64`                                             |
+| `EXEEXT`        | خروجی    | پسوند فایل اجرایی (در ویندوز `.exe`)                        | `EXEEXT = .exe`                                             |
+| `OBJEXT`        | object   | پسوند فایل object                                           | `OBJEXT = .o`                                               |
+| `LIBEXT`        | خروجی    | پسوند فایل لیبری (`.a`, `.so`, `.dll`)                      | `LIBEXT = .a`                                               |
+| `DOCSDIR`       | مسیر     | مسیر ذخیره مستندات                                          | `DOCSDIR = $(prefix)/doc/$(PROJECT)`                        |
+| `ETCDIR`        | مسیر     | مسیر فایل‌های config                                        | `ETCDIR = $(prefix)/etc`                                    |
+| `DATADIR`       | مسیر     | مسیر داده‌های برنامه                                        | `DATADIR = $(prefix)/data`                                  |
+| `LOCALEDIR`     | مسیر     | مسیر فایل‌های ترجمه                                         | `LOCALEDIR = $(DATADIR)/locale`                             |
+| `SYSCONFDIR`    | مسیر     | مسیر فایل‌های پیکربندی سیستمی                               | `SYSCONFDIR = /etc`                                         |
+| `LOCALSTATEDIR` | مسیر     | مسیر داده‌های محلی سیستم (مانند log, run)                   | `LOCALSTATEDIR = /var`                                      |
+| `INFODIR`       | مسیر     | مسیر info manuals                                           | `INFODIR = $(prefix)/info`                                  |
+| `HTMLDIR`       | مسیر     | مسیر مستندات HTML                                           | `HTMLDIR = $(DOCSDIR)/html`                                 |
+| `PDFDIR`        | مسیر     | مسیر مستندات PDF                                            | `PDFDIR = $(DOCSDIR)/pdf`                                   |
+| `MANDIR`        | مسیر     | مسیر فایل‌های man page                                      | `MANDIR = $(DATADIR)/man`                                   |
+| `XSLTPROC`      | ابزار    | XSLT processor                                              | `XSLTPROC = xsltproc`                                       |
+| `DOXYGEN`       | ابزار    | ابزار تولید مستندات Doxygen                                 | `DOXYGEN = doxygen`                                         |
+| `SPHINXBUILD`   | ابزار    | ابزار ساخت مستندات Sphinx                                   | `SPHINXBUILD = sphinx-build`                                |
+| `CTEST`         | تست      | تست runner برای CMake                                       | `CTEST = ctest`                                             |
+| `AUTOMAKE`      | ابزار    | ابزار Automake                                              | `AUTOMAKE = automake`                                       |
+| `AUTOCONF`      | ابزار    | ابزار Autoconf                                              | `AUTOCONF = autoconf`                                       |
+| `LIBTOOL`       | ابزار    | ابزار Libtool                                               | `LIBTOOL = libtool`                                         |
+| `PKG_CONFIG`    | ابزار    | ابزار pkg-config برای یافتن لیبری‌ها                        | `PKG_CONFIG = pkg-config`                                   |
+| `WGET`          | سیستمی   | دانلود فایل از طریق HTTP                                    | `WGET = wget`                                               |
+| `CURL`          | سیستمی   | دانلود/آپلود داده از طریق شبکه                              | `CURL = curl`                                               |
+| `SSH`           | سیستمی   | اتصال به روت Remote                                         | `SSH = ssh`                                                 |
+| `SCP`           | سیستمی   | کپی فایل روی SSH                                            | `SCP = scp`                                                 |
+| `RSYNC`         | سیستمی   | سنکرون کردن فایل‌ها                                         | `RSYNC = rsync`                                             |
+| `DATE`          | سیستمی   | نمایش یا تبدیل تاریخ                                        | `DATE = date`                                               |
+| `UUIDGEN`       | سیستمی   | تولید UUID                                                  | `UUIDGEN = uuidgen`                                         |
+| `BASENAME`      | سیستمی   | نمایش نام فایل بدون مسیر                                    | `BASENAME = basename`                                       |
+| `DIRNAME`       | سیستمی   | نمایش مسیر فایل بدون نام فایل                               | `DIRNAME = dirname`                                         |
+| `REALPATH`      | سیستمی   | نمایش مسیر واقعی فایل                                       | `REALPATH = realpath`                                       |
+| `HOSTNAME`      | سیستمی   | نمایش نام هاست                                              | `HOSTNAME = hostname`                                       |
+| `UNAME`         | سیستمی   | نمایش اطلاعات سیستم                                         | `UNAME = uname`                                             |
+| `ID`            | سیستمی   | نمایش شناسه کاربر                                           | `ID = id`                                                   |
+| `WHOAMI`        | سیستمی   | نمایش نام کاربر فعلی                                        | `WHOAMI = whoami`                                           |
 
 </div>
 
@@ -281,7 +291,7 @@ main.o: main.c utils.h
     * فقط وابستگی‌هایی که جدیدتر از main.o هستند
     * مثلاً اگر utils.h تغییر کرده باشد، $? برابر main.c utils.h می‌شود
 
-## 4.4.Sample2
+## 4.5.Sample2
 
 ```makefile
 all: program
@@ -320,7 +330,7 @@ utils.o: utils.c defs.h
         * فایل‌هایی که جدیدتر از program هستند (مثلاً main.o)
     * $+ = main.o utils.o
 
-## 4.5.Sample3
+## 4.6.Sample3
 
 در قطعه‌کد زیر شکل عادی و شکل توأم با متغیر را مشاهده می‌کنید(هر دو یکسان هستند ولی با نگارش متفاوت)
 
