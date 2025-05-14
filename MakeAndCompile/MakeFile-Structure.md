@@ -13,9 +13,9 @@
     * $+: similar to $^, but includes duplicates.
     * $?: the names of all prerequisites that are newer than the target, separated by spaces.
 
-### 1.1.Makefile sample
+### 1.1.Sample
 
-* در قطعه‌کد زیر شکل عادی و شکل توأم با متغیر را مشاهده می‌کنید(هر دو یکسان هستند ولی با نگارش متفاوت)
+در قطعه‌کد زیر شکل عادی و شکل توأم با متغیر را مشاهده می‌کنید(هر دو یکسان هستند ولی با نگارش متفاوت)
 
   ```shell
   # شکل عادی فایل
