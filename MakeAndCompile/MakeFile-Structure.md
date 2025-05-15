@@ -379,9 +379,134 @@ vpath %.c src
 vpath %.h include
 ```
 
-# Functions
+# 6.Functions
+
+**Create Function Syntax:**
 
 ```makefile
-function arg1,arg2,... #ایجاد یک تابع در میک‌فایل
-$(function arg1,arg2,...) #فراخوانی یک تابع در میک‌فایل
+define function_name
+    # Function body
+    # Use $(1), $(2) for parameters
+endef
 ```
+
+```makefile
+# تعریف تابع شخصی
+say_hello = Hello, $(1)! You are $(2) years old.
+```
+
+**Call Function Syntax:**
+
+```makefile
+$(function-name argument1,argument2,...)
+
+myFunction =  myFunctionBody with $(1) and $(2) and more
+
+```
+
+
+Example1:
+
+```makefile
+# تعریف تابع شخصی
+say_hello = Hello, $(1)! You are $(2) years old.
+
+# استفاده از تابع با دو آرگومان
+message := $(call say_hello,Ali,25) 
+
+# هدف تست برای نمایش خروجی
+test:
+    @echo "$(message)"
+```
+
+```shell
+make test
+# output:
+         Hello, Ali! You are 25 years old.
+```
+
+* قسمت `say_hello = ...` : تعریف یک تابع شخصی
+* قسمت `$(1)` و `$(2)` : اولین و دومین آرگومانی هستند که به تابع می‌دهیم.
+* قسمت `$(call say_hello,Ali,25)` : نحوه فراخوانی تابع با دو آرگومان.
+* قسمت `message := ...` : متغیر message را با نتیجه فراخوانی تابع مقداردهی می‌کنیم.
+* در هدف test، محتوای متغیر m
+
+
+Example: Simple Function
+```makefile
+# Define a function
+define greet
+    @echo "Hello, $(1)!"
+endef
+
+# Call the function
+all:
+    $(call greet,World)
+```
+
+Example: Function with Multiple Parameters
+```makefile
+define create_file
+    @echo "Creating $(1)..."
+    @touch $(1)
+    @echo "Contents: $(2)" > $(1)
+endef
+
+all:
+    $(call create_file,example.txt,This is some text)
+```
+
+
+Example:  Function Returning a Value
+```makefile
+define get_filename
+    $(notdir $(1))
+endef
+
+all:
+    @echo "Filename is: $(call get_filename,/path/to/file.txt)"
+```
+
+
+
+Using Built-in Functions Inside Custom Functions
+```makefile
+define process_files
+    $(foreach file,$(1),\
+        @echo "Processing $(file)";\
+        cp $(file) $(addprefix backup_,$(notdir $(file)));\
+    )
+endef
+
+all:
+    $(call process_files,file1.txt file2.txt file3.txt)
+```
+
+
+
+Advanced Example: Conditional Logic in Functions
+```makefile
+define compile
+    $(if $(filter %.c,$(1)),\
+        @echo "Compiling C file: $(1)";\
+        gcc -c $(1),\
+        @echo "Unknown file type: $(1)"\
+    )
+endef
+
+all:
+    $(call compile,source.c)
+    $(call compile,source.cpp)
+```
+
+
+
+
+* The call function is used to invoke the custom function: $(call function_name,arg1,arg2)
+* Parameters are accessed via $(1), $(2), etc. inside the function
+* * The define block must start at the beginning of the line (no leading whitespace)
+* Functions can contain multiple commands, but each command line must be properly formatted
+* To suppress command echoing, use @ before commands in the function body
+
+
+essage چاپ می‌شود.
