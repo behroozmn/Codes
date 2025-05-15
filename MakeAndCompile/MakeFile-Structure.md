@@ -528,7 +528,8 @@ all:
 خروجی: وقتی دستور `make` را بزنیم خروجی 'Filename is: file.txt' چاپ می‌شود
 نکته: تابع notdir اسم فایل را از مسیر فایل خارچ می‌کند
 
-**Using Built-in Functions Inside Custom Functions**
+**Example5️⃣️: Using Built-in Functions Inside Custom Functions**
+
 این تابع لیستی از فایل‌ها را میگیرد و اسم آن را چاپ می‌کند و یک بک‌آپ از آن با پیشوند آندرلاین بک‌آپ م‌گیرد
 
 ```makefile
@@ -543,7 +544,7 @@ all:
     $(call process_files,file1.txt file2.txt file3.txt)
 ```
 
-**Advanced Example5️⃣️: Conditional Logic in Functions**
+**Advanced Example6️⃣️: Conditional Logic in Functions**
 
 تشخیص دهد فایل داده‌شده یک فایل .c (زبان C) است یا خیر. اگر فایل .c باشد، آن را با gcc کامپایل می‌کند؛ در غیر این صورت پیامی درباره نوع ناشناخته فایل چاپ می‌کند.
 
