@@ -133,7 +133,7 @@ li a {
 
 ## display
 
-[//]: # (TODO باید بعدا بخواهنم)
+[//]: # (Todo: Need to Review)
 
 ```css
 header nav {
