@@ -279,7 +279,9 @@ main.o: main.c defs.h
 * بنابراین
     * $? = main.c
 
-## 4.4.Sample1
+## 4.3.Examples
+
+**Example1️⃣️:**
 
 ```makefile
 main.o: main.c utils.h
@@ -295,7 +297,7 @@ main.o: main.c utils.h
     * فقط وابستگی‌هایی که جدیدتر از main.o هستند
     * مثلاً اگر utils.h تغییر کرده باشد، $? برابر main.c utils.h می‌شود
 
-## 4.5.Sample2
+**Example2️⃣️:**
 
 ```makefile
 all: program
@@ -334,7 +336,7 @@ utils.o: utils.c defs.h
         * فایل‌هایی که جدیدتر از program هستند (مثلاً main.o)
     * $+ = main.o utils.o
 
-## 4.6.Sample3
+**Example3️⃣️:**
 
 در قطعه‌کد زیر شکل عادی و شکل توأم با متغیر را مشاهده می‌کنید(هر دو یکسان هستند ولی با نگارش متفاوت)
 
@@ -381,6 +383,10 @@ vpath %.h include
 
 # 6.Functions
 
+* همه انواع داده از نوع رشته است و عدد هم رشته محسوب می‌شود
+* باعلامت `$(n)` به آرگومان‌ها دسترسی امکان پذیر می‌شود
+* خود تابع خروجی ندارد؛ فقط یک رشته جایگزین می‌شود جایی که فراخوانی شده.
+
 **Create Function Syntax:**
 
 ```makefile
@@ -391,30 +397,102 @@ endef
 ```
 
 ```makefile
-# تعریف تابع شخصی
+# Create custome function
 say_hello = Hello, $(1)! You are $(2) years old.
 ```
 
 **Call Function Syntax:**
 
 ```makefile
-$(function-name argument1,argument2,...)
-
-myFunction =  myFunctionBody with $(1) and $(2) and more
-
+result = $(call myFunctionName argument1,argument2,...)
+result = $(call myFunctionName,Ali,25)  # فراخوانی تابع یک‌خطی
+$(call myFunctionName,Ali,25) # فراخوانی تابع چندخطی
 ```
 
+**استفاده از تابع:**: برای چاپ یا استفاده از خروجی تابع، باید آن را درون یک دستور shell قرار دهید (مثل echo)
 
-Example1:
+## 6.1.BuiltIn Functions
+
+<div style="direction: rtl">
+
+در اینجا لیست کامل توابع `GNU Make` در قالب یک جدول ساختارمند و خوانا، با **هفت ستون** زیر آورده شده است:
+
+| نام تابع     | توضیح فارسی       | کاربرد                                            | نحوه استفاده                           | مثال                                                             | خروجی مثال                                         | نکته مهم                                               |
+|--------------|-------------------|---------------------------------------------------|----------------------------------------|------------------------------------------------------------------|----------------------------------------------------|--------------------------------------------------------|
+| `subst`      | جایگزینی رشته     | جایگزینی تمام وقوع‌های یک رشته با رشته دیگر       | `$(subst from,to,text)`                | `$(subst ee,EE,feet on the street)`                              | `fEEt on thE strEEt`                               | تمام وقوع‌ها جایگزین می‌شوند.                          |
+| `patsubst`   | جایگزینی الگویی   | جایگزینی عناصری که با یک الگو همخوانی دارند       | `$(patsubst pattern,replacement,text)` | `$(patsubst %.c,%.o,main.c utils.c)`                             | `main.o utils.o`                                   | برای تبدیل اسم فایل‌ها کاربرد دارد.                    |
+| `filter`     | فیلتر کردن        | فیلتر کردن عناصری که با الگوی مشخصی همخوانی دارند | `$(filter pattern...,text)`            | `$(filter a% b%,apple banana cherry)`                            | `apple banana`                                     | فقط عناصر مطابق با الگو را برمی‌گرداند.                |
+| `filter-out` | حذف عناصر         | حذف عناصری که با الگوی مشخصی همخوانی دارند        | `$(filter-out pattern...,text)`        | `$(filter-out a% b%,apple banana cherry)`                        | `cherry`                                           | عناصر مطابق با الگو را حذف می‌کند.                     |
+| `addprefix`  | اضافه کردن پیشوند | افزودن یک رشته به عنوان پیشوند به همه عناصر       | `$(addprefix prefix,text)`             | `$(addprefix obj/,a.o b.o)`                                      | `obj/a.o obj/b.o`                                  | مناسب برای مسیرهای build.                              |
+| `addsuffix`  | اضافه کردن پسوند  | افزودن یک رشته به عنوان پسوند به همه عناصر        | `$(addsuffix suffix,text)`             | `$(addsuffix .c,main utils)`                                     | `main.c utils.c`                                   | برای تولید اسم فایل‌ها استفاده می‌شود.                 |
+| `join`       | الحاق دو لیست     | الحاق دو لیست به صورت عنصر به عنصر                | `$(join list1,list2)`                  | `$(join a b c,d e f)`                                            | `ad be cf`                                         | طول خروجی به کوتاه‌ترین لیست بستگی دارد.               |
+| `wildcard`   | یافتن فایل        | یافتن فایل‌هایی که با الگوی مشخصی همخوانی دارند   | `$(wildcard pattern)`                  | `$(wildcard *.c)`                                                | `main.c utils.c`                                   | از فایل‌های واقعی روی دیسک استفاده می‌کند.             |
+| `shell`      | اجرای دستور shell | اجرای دستورات shell و بازگرداندن خروجی            | `$(shell command)`                     | `$(shell echo Hello World)`                                      | `Hello World`                                      | ممکن است عملکرد `make` را کند کند.                     |
+| `foreach`    | حلقه روی لیست     | اجرای یک دستور برای هر عنصر از یک لیست            | `$(foreach var,list,text)`             | `$(foreach x,$(list),$(x)_done )`                                | `a_done b_done c_done`                             | برای تولید لیست‌های پویا کاربرد دارد.                  |
+| `origin`     | منبع متغیر        | تشخیص منبع یک متغیر (مانند محیط، فایل، خط فرمان)  | `$(origin variable)`                   | `$(origin CC)`                                                   | `default`                                          | برای بررسی وضعیت متغیرهای سیستمی.                      |
+| `error`      | ایجاد خطا         | متوقف کردن `make` با یک پیام خطا                  | `$(error message)`                     | `$(error This is an error message)`                              | `Makefile:xx: *** This is an error message. Stop.` | برای اعتبارسنجی شرایط ضروری.                           |
+| `warning`    | نمایش هشدار       | نمایش یک هشدار ولی ادامه اجرای `make`             | `$(warning message)`                   | `$(warning This is a warning)`                                   | `Makefile:xx: This is a warning`                   | برای اخطارهای غیرمرگبار.                               |
+| `value`      | مقدار بدون expand | بازگرداندن مقدار یک متغیر بدون expand کردن        | `$(value variable)`                    | `$(value VAR)`                                                   | `$(CC)`                                            | وقتی می‌خواهید مقدار raw بگیرید.                       |
+| `eval`       | ارزیابی دستورات   | ارزیابی دستورات Makefile در زمان اجرا             | `$(eval text)`                         | `$(eval $(call build-target,app))`                               | -                                                  | برای تعریف پویا از قوی‌ترین توابع است.                 |
+| `if`         | شرط‌گذاری         | اجرای شرطی بخشی از کد                             | `$(if condition,then-part,else-part)`  | `$(if $(CC),@echo Using compiler $(CC),@echo No compiler found)` | `Using compiler gcc`                               | شرط‌های ساده و کاربردی.                                |
+| `call`       | فراخوانی تابع     | فراخوانی توابع شخصی با آرگومان‌ها                 | `$(call function,arg1,arg2,...)`       | `$(call myfunc,Hello,World)`                                     | `First: Hello, Second: World`                      | پایه توابع کاربری در Makefile.                         |
+| `dir`        | استخراج مسیر      | استخراج مسیر پوشه از یک مسیر فایل                 | `$(dir path)`                          | `$(dir /home/user/file.txt)`                                     | `/home/user/`                                      | برای جدا کردن مسیر فایل.                               |
+| `notdir`     | استخراج اسم فایل  | استخراج فقط اسم فایل از یک مسیر                   | `$(notdir path)`                       | `$(notdir /home/user/file.txt)`                                  | `file.txt`                                         | فقط اسم فایل را برمی‌گرداند.                           |
+| `basename`   | حذف پسوند         | حذف پسوند فایل                                    | `$(basename path)`                     | `$(basename file.txt)`                                           | `file`                                             | اگر پسوند وجود نداشته باشد، همان ورودی را برمی‌گرداند. |
+| `suffix`     | گرفتن پسوند       | بازگرداندن پسوند فایل                             | `$(suffix path)`                       | `$(suffix file.txt)`                                             | `.txt`                                             | اگر پسوند نباشد، خالی برمی‌گرداند.                     |
+| `firstword`  | اولین کلمه        | بازگرداندن اولین کلمه از یک لیست                  | `$(firstword word1 word2 ...)`         | `$(firstword one two three)`                                     | `one`                                              | فقط اولین کلمه را برمی‌گرداند.                         |
+| `lastword`   | آخرین کلمه        | بازگرداندن آخرین کلمه از یک لیست                  | `$(lastword word1 word2 ...)`          | `$(lastword one two three)`                                      | `three`                                            | فقط آخرین کلمه را برمی‌گرداند.                         |
+| `words`      | شمارش کلمات       | شمارش تعداد کلمات در یک لیست                      | `$(words text)`                        | `$(words one two three)`                                         | `3`                                                | برای اعتبارسنجی تعداد ورودی‌ها.                        |
+| `word`       | گرفتن کلمه nام    | بازگرداندن کلمه nام از یک لیست                    | `$(word n,text)`                       | `$(word 2,one two three)`                                        | `two`                                              | شماره کلمه از ۱ شروع می‌شود.                           |
+
+---
+
+✅ این جدول را می‌توانید در قالب PDF یا Excel هم ذخیره کنید و به عنوان **چک‌لیست یا راهنمای سریع** در کار با `Makefile` استفاده کنید.
+
+اگر خواستی یک مثال عملی با استفاده از چندتا از این توابع ببینی، فقط بگو 😊
+
+</div>
+
+## 6.2.Conditional Functions
+
+**$(if condition,then-part,else-part)****
 
 ```makefile
-# تعریف تابع شخصی
+RESULT = $(if $(CONDITION), "True", "False")
+```
+
+**Example:**
+
+```makefile
+LOG_LEVEL = verbose
+LOG = $(if $(filter verbose,$(LOG_LEVEL)), @echo "Debug: $1", @true)
+```
+
+## 6.3.Examples:
+
+**Example1️⃣️: Simple Function**
+
+```makefile
+# Define a function
+define greet
+    @echo "Hello, $(1)!"
+endef
+
+# Call the function
+all:
+    $(call greet,World)
+```
+
+**Example2️⃣️: Simple Function**
+
+```makefile
+# Create custome function
 say_hello = Hello, $(1)! You are $(2) years old.
 
-# استفاده از تابع با دو آرگومان
+# call function with two args
 message := $(call say_hello,Ali,25) 
 
-# هدف تست برای نمایش خروجی
+#target goal is show message
 test:
     @echo "$(message)"
 ```
@@ -429,47 +507,40 @@ make test
 * قسمت `$(1)` و `$(2)` : اولین و دومین آرگومانی هستند که به تابع می‌دهیم.
 * قسمت `$(call say_hello,Ali,25)` : نحوه فراخوانی تابع با دو آرگومان.
 * قسمت `message := ...` : متغیر message را با نتیجه فراخوانی تابع مقداردهی می‌کنیم.
-* در هدف test، محتوای متغیر m
+* در هدف test، محتوای متغیر message چاپ می‌شود.
 
+**Example3️⃣️: Function with Multiple Parameters**
 
-Example: Simple Function
-```makefile
-# Define a function
-define greet
-    @echo "Hello, $(1)!"
-endef
-
-# Call the function
-all:
-    $(call greet,World)
-```
-
-Example: Function with Multiple Parameters
 ```makefile
 define create_file
-    @echo "Creating $(1)..."
-    @touch $(1)
-    @echo "Contents: $(2)" > $(1)
+    @echo "Creating $(1)..." # پیام ایجاد فایل را چاپ می‌کند
+    @touch $(1) # فایل با اسم داده‌شده ایجاد می‌کند (اگر وجود نداشته باشد)
+    @echo "Contents: $(2)" > $(1) # محتوا را درون فایل می‌نویسد
 endef
 
 all:
-    $(call create_file,example.txt,This is some text)
+    $(call create_file,example.txt,This is some text) # فراخوانی تابع به همراه دو آرگومان ورودی آن
 ```
 
+خروجی: وقتی دستور `make` را بزنیم خروجی 'Creating example.txt...' چاپ می‌شود و همچنین فایل `example.txt` با محتوی 'Contents: This is some text' نیز ایجاد می‌شود
 
-Example:  Function Returning a Value
+**Example4️⃣️:  Function Returning a Value**
+
 ```makefile
-define get_filename
-    $(notdir $(1))
+define get_filename # finctionName is 'get_filename'
+    $(notdir $(1)) # notdir is BuiltIn function that give Filename of PATH in fullFileName
 endef
 
 all:
     @echo "Filename is: $(call get_filename,/path/to/file.txt)"
 ```
 
+خروجی: وقتی دستور `make` را بزنیم خروجی 'Filename is: file.txt' چاپ می‌شود
+نکته: تابع notdir اسم فایل را از مسیر فایل خارچ می‌کند
 
+**Using Built-in Functions Inside Custom Functions**
+این تابع لیستی از فایل‌ها را میگیرد و اسم آن را چاپ می‌کند و یک بک‌آپ از آن با پیشوند آندرلاین بک‌آپ م‌گیرد
 
-Using Built-in Functions Inside Custom Functions
 ```makefile
 define process_files
     $(foreach file,$(1),\
@@ -482,9 +553,10 @@ all:
     $(call process_files,file1.txt file2.txt file3.txt)
 ```
 
+**Advanced Example5️⃣️: Conditional Logic in Functions**
 
+تشخیص دهد فایل داده‌شده یک فایل .c (زبان C) است یا خیر. اگر فایل .c باشد، آن را با gcc کامپایل می‌کند؛ در غیر این صورت پیامی درباره نوع ناشناخته فایل چاپ می‌کند.
 
-Advanced Example: Conditional Logic in Functions
 ```makefile
 define compile
     $(if $(filter %.c,$(1)),\
@@ -499,14 +571,102 @@ all:
     $(call compile,source.cpp)
 ```
 
+* تابع filter تمام عناصری از $(1) را برمی‌گرداند که با الگوی %.c مطابقت داشته باشند.
 
+# 7.Conditions
 
+## 7.1.ifeq | ifneq
 
-* The call function is used to invoke the custom function: $(call function_name,arg1,arg2)
-* Parameters are accessed via $(1), $(2), etc. inside the function
-* * The define block must start at the beginning of the line (no leading whitespace)
-* Functions can contain multiple commands, but each command line must be properly formatted
-* To suppress command echoing, use @ before commands in the function body
+Equality Conditions
 
+```makefile
+ifeq ($(VARIABLE), value)
+    # Code to execute if equal
+else
+    # Code to execute if not equal
+endif
 
-essage چاپ می‌شود.
+ifneq ($(VARIABLE), value)
+    # Code to execute if not equal
+endif
+```
+
+**Example:**
+
+```makefile
+DEBUG = 1
+
+ifeq ($(DEBUG), 1)
+    CFLAGS = -g -O0
+else
+    CFLAGS = -O2
+endif
+```
+
+## 7.2.ifdef | ifndef
+
+Variable Definition Checks
+
+```makefile
+ifdef VARIABLE
+    # Code if variable is defined
+endif
+
+ifndef VARIABLE
+    # Code if variable is not defined
+endif
+```
+
+**Example:**
+
+```makefile
+ifdef USE_CLANG
+    CC = clang
+else
+    CC = gcc
+endif
+```
+
+## 7.3.Pattern Matching
+
+**$(filter pattern...,text)**
+
+```makefile
+SOURCES = main.c util.c helper.cpp
+
+%.o: %.c
+    $(if $(filter %.c,$<), \
+        $(CC) -c $< -o $@, \
+        @echo "Skipping non-C file: $<")
+```
+
+## 7.4.Conditional Variable Assignment
+
+* = → Immediate value Assignment
+    * از = وقتی نیاز دارید متغیرها دینامیک باشند
+* ?= → Assign only if not already set
+    * فقط اگر متغیر قبلاً تعریف نشده باشد مقداردهی می‌کند
+    * کاربرد: برای تنظیم مقادیر پیش‌فرض
+    * توجه: اگر متغیر خالی باشد باز هم مقداردهی می‌کند
+    * PREFIX ?= /usr/local # اگر کاربر پریفیکس را تنظیم نکرده باشد
+    * از ?= برای مقادیر پیش‌فرض استفاده کنید
+* += → Append conditionally
+    * مقدار جدید را به انتهای مقدار موجود اضافه می‌کند
+    * از += برای اضافه کردن به مقادیر موجود با توجه به نوع تعریف اولیه
+* := → Evaluates the right-hand side immediately (only once)
+    * NOW := $(shell date)  # تاریخ فقط یکبار هنگام خواندن «میک‌فایل» گرفته می‌شود
+    * FILE_LIST := $(wildcard *.c)  # لیست فایل‌ها یکبار ایجاد می‌شود
+    * از := برای مقادیر ثابت و دستورات سنگین استفاده کنید
+* != → ShellCommand output
+    * رفتار: خروجی دستور shell را در متغیر ذخیره می‌کند
+    * available after GNU Make 3.82
+    * جایگزین: می‌توان از `$(shell ...)` با := استفاده کرد
+        * $(shell ...)
+    * از != برای ساده‌نویسی دستورات shell استفاده کنید (اگر نسخه Make پشتیبانی می‌کند)
+
+دو بخش زیر معادل هستند
+
+```makefile
+GIT_HASH != git rev-parse --short HEAD  # معادل:
+GIT_HASH := $(shell git rev-parse --short HEAD)
+```
