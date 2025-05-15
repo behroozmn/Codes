@@ -24,13 +24,13 @@ nm ObjectFile.so # مشاهده توابع داخل یک آبجکت فایل
 
 # Images
 
-![installSteps.jpg](../Files/Images/install.jpg "در نصب یک برنامه می‌بایست این مراحل را انجام دهید")
+![installSteps.jpg](../Files/Images/install.jpg "installSteps.jpg")
 <br>
-![Linker](../Files/Images/Linker.jpg "Linker")
+![Linker.jpg](../Files/Images/Linker.jpg "Linker")
 <br>
-![compilation](../Files/Images/compilation.jpg "compilation")
+![compilation.jpg](../Files/Images/compilation.jpg "compilation.jpg")
 <br>
-![CompilePhase](../Files/Images/CompilePhase.jpg "CompilePhase")
+![CompilePhase.jpg](../Files/Images/CompilePhase.jpg "CompilePhase.jpg")
 <br>
 ![](../Files/Images/XXXXXXXXXXXXXX.jpg "TITLE")
 <br>
