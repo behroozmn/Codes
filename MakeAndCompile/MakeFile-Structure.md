@@ -1,4 +1,8 @@
-<div style="width: 100%; margin: 0; padding: 0;">
+<style>
+body {width:100%;margin:0;padding:0;}
+table{width:100%;margin:0;padding:0;}
+</style>
+
 # 1.Concept
 
 استفاده از روش ماژولار(Modular) بهترین گزینه در کدنویسی و کامپایل پروژه‌هاست بگونه‌ای که بخش‌های مختلف پروژه به صورت ماژول‌های مجزا کامپایل شوند. این موضوع سبب بروز پیچیدگی خواهد شد که بدین جهت ابزار Make برای تسهیل این مراحل و خودکارسازی این فرایند مورد استفاده قرار می‌گیرد. روند کامپایل این ماژول‌ها در فایلی به‌نام Makefile تعریف می‌شوند.
@@ -665,5 +669,3 @@ SOURCES = main.c util.c helper.cpp
 GIT_HASH != git rev-parse --short HEAD  # معادل:
 GIT_HASH := $(shell git rev-parse --short HEAD)
 ```
-
-</div>
