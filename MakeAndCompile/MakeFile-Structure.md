@@ -472,7 +472,7 @@ endef
 all:
     $(call greet,World)
 ```
-
+---
 **Example2️⃣️: Simple Function**
 
 ```makefile
@@ -498,7 +498,7 @@ make test
 * قسمت `$(call say_hello,Ali,25)` : نحوه فراخوانی تابع با دو آرگومان.
 * قسمت `message := ...` : متغیر message را با نتیجه فراخوانی تابع مقداردهی می‌کنیم.
 * در هدف test، محتوای متغیر message چاپ می‌شود.
-
+---
 **Example3️⃣️: Function with Multiple Parameters**
 
 ```makefile
@@ -513,7 +513,7 @@ all:
 ```
 
 خروجی: وقتی دستور `make` را بزنیم خروجی 'Creating example.txt...' چاپ می‌شود و همچنین فایل `example.txt` با محتوی 'Contents: This is some text' نیز ایجاد می‌شود
-
+---
 **Example4️⃣️:  Function Returning a Value**
 
 ```makefile
@@ -527,7 +527,7 @@ all:
 
 خروجی: وقتی دستور `make` را بزنیم خروجی 'Filename is: file.txt' چاپ می‌شود
 نکته: تابع notdir اسم فایل را از مسیر فایل خارچ می‌کند
-
+---
 **Example5️⃣️: Using Built-in Functions Inside Custom Functions**
 
 این تابع لیستی از فایل‌ها را میگیرد و اسم آن را چاپ می‌کند و یک بک‌آپ از آن با پیشوند آندرلاین بک‌آپ م‌گیرد
@@ -543,7 +543,7 @@ endef
 all:
     $(call process_files,file1.txt file2.txt file3.txt)
 ```
-
+---
 **Advanced Example6️⃣️: Conditional Logic in Functions**
 
 تشخیص دهد فایل داده‌شده یک فایل .c (زبان C) است یا خیر. اگر فایل .c باشد، آن را با gcc کامپایل می‌کند؛ در غیر این صورت پیامی درباره نوع ناشناخته فایل چاپ می‌کند.
