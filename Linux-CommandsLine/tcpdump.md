@@ -41,7 +41,7 @@
 
 
 * tcpdump src NUMBER && dst port NUMBER
-* tcpdump ether dst ff:ff:ff:ff:ff:ff
+* tcpdump dst ff:ff:ff:ff:ff:ff
 * tcpdump broadcast and multicast
 * tcpdump broadcast && multicast
 * tcpdump tcp and host 169.144.0.1 or host 169.144.0.20
