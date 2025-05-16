@@ -35,8 +35,22 @@
   behrooz mohamadi\
   behrooz123 behrooz
 
+# Repetition
+
+**Repetition:** A regular expression may be followed by one of several repetition operators:
+
+* ?      The preceding item is optional and matched at most once.
+* \*      The preceding item will be matched zero or more times.
+* \+      The preceding item will be matched one or more times.
+* {n}    The preceding item is matched exactly n times.
+* {n,}   The preceding item is matched n or more times.
+* {,m}   The preceding item is matched at most m times.  This is a GNU extension.
+* {n,m}  The preceding item is matched at least n times, but not more than m times. 
+
+  
 
 # EXAMPLE
 
+* grep -E "[a]{3}" File.txt ⇄  grep  "[a]\{3\}" File.txt  ⇄  egrep "[a]{3}" File.txt #خطوطی که حرف a سه مرتبه تکرار شده باشد
 * grep "^<PATTERN>" File → هرچیزی که شروع خط با یک الگو باشد
 * grep "<PATTERN>$" File → هرچیزی که پایان خط با یک الگو باشد
