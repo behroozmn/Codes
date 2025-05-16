@@ -1,5 +1,5 @@
 
-
+ [ابزار آنلاین برای تمرین](https://awk.js.org)
 # Concepts
 
 * [$0] → print all column
@@ -56,3 +56,37 @@
 * `awk 'gsub("^[ \t]*","") {print $0}'` #حذف تمام خط‌فاصله‌های ابتدایی هر سطر
 * `awk 'gsub("[ \t]*$" ,"") {print$0}'` #حذف تمام خط‌فاصله‌های انتهایی هر سطر
 * `awk  '!/^$/'` ⇄ `awk '/./'`  #حذف خط خالی 
+
+
+
+# Functions
+
+* [getline]: به ازای هر «گِت‌لاین» یک خط را نادیده می‌گیرد و به خط بعد می‌رود
+  * awk '/PATTERN/ {getline;print$0}' #نمایش خط بعد از خطی که الگو یافت شده است
+  * awk '/PATTERN/ {print$0;getline;print$0}'#خط الگو و خط بعد از الگو
+* [sqrt]
+  * awk '{ print sqrt(625)}' ⇄ echo 625|awk '{print sqrt($0)}'
+* [match]
+  * awk -F ":" 'match($1,/\<....\>/) {print$0}' ⇄ awk '/^\<....\>/ {print$0}' #ستون اول دقیقا ۴کاراکتر باشد
+* [gsub]
+  * awk '{gsub(";",""); print $2}' #حذف کاراکتر سمیکالون
+  * awk 'gsub("^[ \t]*","") {print $0}' #حذف تمام خط‌فاصله‌های ابتدایی هر سطر
+  * awk 'gsub("[ \t]*$" ,"") {print$0}' #حذف تمام خط‌فاصله‌های انتهایی هر سطر
+* [substr]
+  * echo "hello, how are you?" | awk '{ print substr( $0, 3 ) }' #حذف دو کاراکتر اول یک عبارت
+* [lenght]
+  * echo "hello, how are you?" | awk '{ print substr( $0, 1, length($0)-1 ) }' #حذف آخرین کاراکتر
+  * echo "hello, how are you?" | awk '{ print substr( $0, 2, length($0) - 2)}'
+* [tolower]
+  * awk '{print tolower($0)}'
+# کدنویسی
+
+* awk '{if(Condition1){action} else if(Condition2){action} else {action}}'
+* awk -F":" '{if($1=="user") print "====> " $1; else if($1 == "root") print $1 " =====> " $7; else print "[" $0 "]"}' /etc/passwd
+* awk -F ":" '$3>=1000 {print $1,$3,$NF}' /etc/passwd
+* awk '{<CONDITION> print$1}'
+* awk 'BEGIN{print "salam";}{print $0}' #دقیقا ورودی را به خروجی هدایت میکند و تنها در اولین خط یک سلام اضافه میکند
+* awk -F ':' 'BEGIN{OFS="→";}{print $1,$3}' /etc/passwd ⇄ awk -F ":" ‘{print $1 "→" $3}’ /etc/passwd ⇄ awk -F ':' 'OFS="→" {print $1,$3}' /etc/passwd #OFS کاراکتر خاص بین ستون‌ها
+
+
+
