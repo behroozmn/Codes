@@ -47,7 +47,7 @@ behrooz.func2(*person)
 
 behrooz.func3_holico(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
 
-numbers = [1, 2, 3, 4, 5, 6] #لیست است و میخواهیم بعنوان آرگومان ورودی به تابع بدهیم
+numbers = [1, 2, 3, 4, 5, 6]  # لیست است و میخواهیم بعنوان آرگومان ورودی به تابع بدهیم
 behrooz.func3_holico(*numbers)  # اگر ستاره نباشد ارور میدهد
 
 behrooz.func4(name="behrooz", FamilyName="Mohammadi")

@@ -1,4 +1,3 @@
-
 ```shell
 pip freeze # check for "virtualenv" that must be installed
 python3 -m venv myenv #ایجاد مجیط مجازی مستقل از سیستم اصلی 
@@ -17,17 +16,25 @@ django-admin startproject config . # پروژه با نام کانفیگ در م
 ```
 
 ```python
-pip install djangorestframework
-pip install markdown
-pip install django-filter
+pip
+install
+djangorestframework
+pip
+install
+markdown
+pip
+install
+django - filter
 ```
 
 File: `setting.py`
+
 ```python
-INSTALL_APPS=[... , 'rest_framework' ,...]
+INSTALL_APPS = [..., 'rest_framework', ...]
 ```
 
 File: `urls.py`
+
 ```python
 
 urlpatterns = [

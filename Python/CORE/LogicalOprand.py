@@ -1,10 +1,10 @@
 # AND
 print("---------AND----------")
 
-print(f"True and True : { True and True }")
-print(f"False and True : { False and True }")
-print(f"True and False : { True and False }")
-print(f"False and False : { False and False }")
+print(f"True and True : {True and True}")
+print(f"False and True : {False and True}")
+print(f"True and False : {True and False}")
+print(f"False and False : {False and False}")
 
 userAge = 17
 userGender = "female"
@@ -13,13 +13,12 @@ if userAge >= 18 and userGender == "male":
 else:
     print("you can stay at home")
 
-
 # OR
 print("---------OR----------")
-print(f"True or True : { True or True }")
-print(f"False or True : { False or True }")
-print(f"True or False : { True or False }")
-print(f"False or False : { False or False }")
+print(f"True or True : {True or True}")
+print(f"False or True : {False or True}")
+print(f"True or False : {True or False}")
+print(f"False or False : {False or False}")
 
 weather = "sunny"
 if weather == "sunny" or weather == "cloudy":
@@ -27,11 +26,10 @@ if weather == "sunny" or weather == "cloudy":
 else:
     print("we can not travel")
 
-
 # NOT
 print("--------NOT-----------")
-print(f"not True : { not True }")
-print(f"not False : { not False }")
+print(f"not True : {not True}")
+print(f"not False : {not False}")
 
 isBrotherComming = False
 if not isBrotherComming:

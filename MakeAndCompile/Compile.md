@@ -1,17 +1,12 @@
-
 # Compile Proces steps
-
 
 # 1️⃣️:PreProcessing[پیش‌پردازش]
 
 # 2️⃣️:Compilling[کامپایل]
 
-
 # 3️⃣️:CreatingObjectFile[تبدیل کداسمبلی به زبان‌ماشین]
 
 # 4️⃣️:Linker[لینک‌کردن]
-
-
 
 # Commands
 
@@ -19,8 +14,6 @@
 make install  #کپی فایل‌های کامپایل شده در مسیرهای درست
 nm ObjectFile.so # مشاهده توابع داخل یک آبجکت فایل
 ```
-
-
 
 # Images
 

@@ -8,7 +8,6 @@
 # __name__ => in python special function define in this form such as __init__ as construction
 
 
-
 class User:
     _mobile = "09191671085"  # بعنوان پیشنهاد در لیست intelliSence نمایش داده نمی‌شود و تلویحاً بعنوان متغیر محلی تلفی‌می‌شود
     __password = "myPassword"  # Generally __password is not available. only available by _User__password

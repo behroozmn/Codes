@@ -77,10 +77,10 @@ File: `index.html`
 {% include "topic.html"%}✅️
 {% endblock %}
 ```
+
 # 3 Include by `send Parameter`
 
 تهیه بخش های متفاوت از تکه‌ها صفحه و استفاده در صفحه اصلی
-
 
 File: `topic.html`
 
@@ -107,6 +107,7 @@ File: `index.html`
 </ul>
 {% endblock %}
 ```
+
 File: `page2.html`
 
 ```html
@@ -123,11 +124,14 @@ File: `page2.html`
     {% endif %}
 {% endblock  %}
 ```
+
 # 4. استفاده از جاوااسکریپ در برخی از صفحات
+
 {% block footer_references %}
   <script>
   console.log('hello')
   </script>
-{% endblock  %}
+{% endblock %}
+
 ```
 > Note: میتوان در تکه صفحه‌ها تگ اسکریپت یعنی جاوا اسکریپت را هم درج نماییم

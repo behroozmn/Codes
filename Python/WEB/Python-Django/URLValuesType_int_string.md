@@ -13,6 +13,7 @@ urlpatterns = [
 ]
 
 ```
+
 ```
 
 def dynamic_id(request, ids):

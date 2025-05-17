@@ -26,5 +26,5 @@ for file_name in os.listdir(''):
 print(glob.glob('**/*[0-9][0-9]*', recursive=True))
 
 print('#### WALK: Search all directory and subDirectory####')
-for data in os.walk(''): #os.walk('dir',topdown=False) از تویی ترین مسیر شروع میکنه و اقدام به بررسی محتویات می‌کنه
+for data in os.walk(''):  # os.walk('dir',topdown=False) از تویی ترین مسیر شروع میکنه و اقدام به بررسی محتویات می‌کنه
     print(data)

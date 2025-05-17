@@ -3,7 +3,6 @@ import sqlite3
 connection = sqlite3.connect("/tmp//my-database.db")
 cursor = connection.cursor()
 
-
 ###############################1
 sql = """
     CREATE TABLE IF NOT EXISTS user (
@@ -28,7 +27,6 @@ sql = """
 """
 cursor.execute(sql)
 cursor.executescript(sql)
-
 
 #################################3
 sql = """

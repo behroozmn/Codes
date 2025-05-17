@@ -2,20 +2,17 @@
 # اگر تمام آیتم‌های داده شده به این تابع درست باشد مقدار ترو را برمی‌گرداند
 # عدد صفر بطور پیش‌فرض در پایتون مقدار فالس در نظر گرفته شده است
 
-print(all([2, 3, 4,8]))
+print(all([2, 3, 4, 8]))
 print("")
-
 
 print("-----Step2-----")
 print(all([]))  # اگر خالی باشد ترو برمی‌گرداند
 print("")
 
-
 print("-----Step3-----")
 numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 print(list(num for num in numbers if num % 2 == 0))
 print("")
-
 
 print("-----Step4-----")
 print([num % 2 == 0 for num in numbers])
@@ -25,4 +22,3 @@ print("-----Step5-----")
 
 # همه آیتم هایی که در نامبر هستند بر دو بخش پذیر هستند یا خیر
 print(all([num % 2 == 0 for num in numbers]))
-

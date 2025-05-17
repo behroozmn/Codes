@@ -1,4 +1,3 @@
-
 def func2sort_NoChange():
     numbers = [1, 5, 8, 4, 6, 2]
     print(f"func2(befor): {list(numbers)}")
@@ -13,6 +12,7 @@ def func4sort_Change():
     numbers.sort(reverse=False)
     print(f"func4(after): {list(numbers)}")
 
+
 # لیست ها برای مرتب سازی نیاز به کلید دارند
 
 
@@ -25,6 +25,7 @@ def func5():
     ]
     print(users)
     print(sorted(users, key=lambda user: user['age'], reverse=False))
+
 
 func2sort_NoChange()
 print("")

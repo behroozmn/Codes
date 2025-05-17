@@ -1,18 +1,17 @@
-
 try:
     pass
     # Code
-except NameError as NameE: # Handle NameError Error
-    print (NameE)
-    print (NameE.message)
+except NameError as NameE:  # Handle NameError Error
+    print(NameE)
+    print(NameE.message)
     pass
     # مدیریت ارور NameEror در این بلاک صورت می‌گیرد
-except IOError as IOE: # Handle NameError Error
-    print (IOE)
-    print (IOE.message)
+except IOError as IOE:  # Handle NameError Error
+    print(IOE)
+    print(IOE.message)
     # مدیریت ارور IOError در این بلاک صورت می‌گیرد
 
-except: # ErrorHandler of each other error type
+except:  # ErrorHandler of each other error type
     pass
     # مدیریت ارور IOError در این بلاک صورت می‌گیرد
 else:

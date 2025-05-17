@@ -214,6 +214,7 @@ File: `index.html`
 ```
 
 ## 5.نکات
+
 <div style="direction: rtl">
 *  اگر بخواهیم نوع رکوئست رو مشخص کنیم از روش زیر استفاده میکنیم تا به IntelliSence کمک کرده باشیم
 
@@ -221,6 +222,7 @@ File: `index.html`
 def FunctionName(request: HTTPRequest):
     print(request.body)
 ```
+
 </div>
 ## 6.مثال‌ها
 

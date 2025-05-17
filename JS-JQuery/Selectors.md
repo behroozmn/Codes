@@ -1138,7 +1138,6 @@ $("#Button_41").click(function () {
 });
 ```
 
-
 ## 5.26.selected[:selected]
 
 * selected text in selectBox
@@ -1181,7 +1180,6 @@ $("#ID").change(function (e) {
     $("#secondInput").val(selected);
 });
 ```
-
 
 # 6.Has Attribute
 
@@ -1340,7 +1338,9 @@ $("#Button_33").click(function () {
 ```
 
 # 11.This
+
 * این دیس به چیزی که سلکت کردیم برمی‌گردد
+
 ```html
 
 ```

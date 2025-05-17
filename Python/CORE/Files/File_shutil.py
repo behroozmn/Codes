@@ -1,7 +1,6 @@
 import os
 import shutil
 
-
 # shutil.copy('src', 'Des') # Only copy file
 # print(os.stat('./my_files/data-1.txt'))
 # print(os.stat('./new_my_files/new-data-1.txt'))

@@ -14,16 +14,16 @@
 #      ---> class who must define __next__() to  return next item and if nextItem is not available, return [StopIteration exception]) [Obj.next()]
 
 
-numbers = [1, 2, 3]                 # iterableObjects
-colors = ('red', 'green', 'blue')   # iterableObjects
-name = "Behrooz"                    # iterableObjects
+numbers = [1, 2, 3]  # iterableObjects
+colors = ('red', 'green', 'blue')  # iterableObjects
+name = "Behrooz"  # iterableObjects
 
 iterator = iter(numbers)
 
-print(iterator)         # output: <list_iterator object at 0x7fb1fd78e8f0>
-print(next(iterator))   # output: 1
-print(next(iterator))   # output: 2
-print(next(iterator))   # output: 3
+print(iterator)  # output: <list_iterator object at 0x7fb1fd78e8f0>
+print(next(iterator))  # output: 1
+print(next(iterator))  # output: 2
+print(next(iterator))  # output: 3
 # print(next(iterator)) # output: Exception(StopIteration) [only 3 items is Exist in iterableObjects]
 
 

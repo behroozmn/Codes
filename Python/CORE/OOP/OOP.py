@@ -9,7 +9,6 @@
 # __name__ --> name of the module(file)
 
 
-
 class User:
     def __init__(self, name, age):  # تابع سازنده
         self.name = name
@@ -21,4 +20,4 @@ class User:
 
 obj = User("behrooz", 33)
 obj.show_data()
-print("آیا شیء یک نمونه از کلاس است؟" , isinstance(obj,User))
+print("آیا شیء یک نمونه از کلاس است؟", isinstance(obj, User))

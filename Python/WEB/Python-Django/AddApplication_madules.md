@@ -88,7 +88,7 @@
 
 ### available urls
 
-   * 127.0.0.1:8080                 #function madulewithouturl
-   * 127.0.0.1:8080/Example1/show   #function usershow
-   * 127.0.0.1:8080/Example1/edit   #function useredit
+* 127.0.0.1:8080 #function madulewithouturl
+* 127.0.0.1:8080/Example1/show #function usershow
+* 127.0.0.1:8080/Example1/edit #function useredit
     

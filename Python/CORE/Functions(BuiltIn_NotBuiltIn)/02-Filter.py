@@ -11,6 +11,7 @@ users = [{'name': 'Behrooz', 'family': 'nadery', 'born': 1369, 'shopCart': []},
          {'name': 'Alireza', 'family': 'saberi', 'born': 1400, 'shopCart': []},
          {'name': 'Attefeh', 'family': 'Rezaie', 'born': 1372, 'shopCart': ['kotlin', 'vue']}]
 
+
 def func1_get_even():
     evens = filter(lambda num: num % 2 == 0, numbers)
     print(f"func1:{list(evens)}")
@@ -26,9 +27,8 @@ def func4_map_filter():
     result_user = filter(lambda user: not user['shopCart'], users)
     result_user_name = lambda user: user['name']
     result = map(result_user_name, result_user)
-    #ALTERNATIVE =====> result = [user['name'] for user in users if len(user['shopCart']) == 0]
+    # ALTERNATIVE =====> result = [user['name'] for user in users if len(user['shopCart']) == 0]
     print(f"func4(filterAndMap):{list(result)}")
-
 
 
 func1_get_even()
@@ -38,4 +38,3 @@ func3()
 print()
 
 func4_map_filter()
-

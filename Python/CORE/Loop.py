@@ -41,7 +41,7 @@ class loop:
             print("your password is wrong!!!")
             password = input("what is your password : ")
             print("your password is correct !!!!")
-        
+
     def whileLoop2(self):
         num = 1
         while num < 30:
@@ -52,8 +52,7 @@ class loop:
             print("*" * num)
             num += 1
 
-        
-        
+
 behrooz = loop()
 # behrooz.forLoop1()
 # behrooz.forLoop2()

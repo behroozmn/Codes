@@ -1,6 +1,7 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 
+
 class MyHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         # تنظیم کد وضعیت پاسخ
@@ -12,7 +13,6 @@ class MyHandler(BaseHTTPRequestHandler):
         response = "Requested path: {}\n".format(self.path)
         response += "This is a new line.\n"  # اضافه کردن خط جدید
         self.wfile.write(response.encode('utf-8'))
-
 
     def do_POST(self):
         # تنظیم کد وضعیت پاسخ
@@ -32,6 +32,7 @@ def run(server_class=HTTPServer, handler_class=MyHandler, port=8080):
     httpd = server_class(server_address, handler_class)
     print(f'Server running on port {port}...')
     httpd.serve_forever()
+
 
 if __name__ == "__main__":
     run()

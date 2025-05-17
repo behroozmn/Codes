@@ -195,7 +195,7 @@ pip install djangorestframework-simplejwt
     "AUTH_HEADER_TYPES": ("Bearer",), # نام ارسالی همراه توکن باید چه باشد
    }
    ```
-    [URL](https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html)
+   [URL](https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html)
 
 2. File: `/config/urls.py` # Main urls
    ```python

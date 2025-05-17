@@ -11,4 +11,3 @@ print(function1(5, 2))
 
 function2 = lambda x: "Positive" if x > 0 else ("Zero" if x == 0 else "Negative")
 print(function2(-5))
-

@@ -24,5 +24,4 @@ top_forth.pack(side=LEFT)
 top_fifth = Frame(root, width=400, height=50, bg='blue')
 top_fifth.pack(side=RIGHT)
 
-
 root.mainloop()
