@@ -16,14 +16,14 @@ udevadm **trigger** [options] [devpath(such as /dev/sda)|file|unit]
 **options**
 
 * [--action=]:
-    * add
-    * remove
-    * change
-    * move
-    * online
-    * offline
-    * bind
-    * unbind
+    * add # افزودن
+    * remove # حذف‌کردن
+    * change # اعمال تغییر
+    * move # جابه‌جایی
+    * online # آنلاین‌نمودن 
+    * offline # آفلاین نمودن 
+    * bind # اتصال رویکرد در دو شیء یا دیوایس
+    * unbind # خارح کردن ارتباط و اتصال دو شیء یا دیوایس از هم
 * [--subsystem-match=]
     * block: برای دستگاه‌های بلاک (مانند دیسک‌های سخت و SSDها)
         * net: برای دستگاه‌های شبکه (مانند کارت‌های شبکه)

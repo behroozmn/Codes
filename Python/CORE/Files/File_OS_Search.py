@@ -17,7 +17,7 @@ for file_name in os.listdir(''):
 
 print('#### Search by fnmatch ####')
 
-print(fnmatch.fnmatch('/Learning-Concept/Files/File_Pathlib.py', '*.py'))  # ‌آیا فایل با الگو تطابق دارد یا خیر
+print(fnmatch.fnmatch('/Learning-Concept/Files-SourceFiles/File_Pathlib.py', '*.py'))  # ‌آیا فایل با الگو تطابق دارد یا خیر
 
 for file_name in os.listdir(''):
     if fnmatch.fnmatch(file_name, '*_*.py'):  # *[0-9][0-9]* : وجود فایل دارای دو رقم عدد

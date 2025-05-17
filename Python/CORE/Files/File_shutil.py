@@ -9,7 +9,7 @@ import shutil
 # print(os.stat('./my_files/data-2.txt'))
 # print(os.stat('./new_my_files/new-data-2.txt'))
 
-# shutil.copytree('src', 'Des') #create Backup[all Files and subDir and Subfiles]
+# shutil.copytree('src', 'Des') #create Backup[all Files-SourceFiles and subDir and Subfiles]
 
 # shutil.move('src', 'Des')
 
