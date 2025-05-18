@@ -3,49 +3,7 @@
 * در «جی‌کوئری» مبحث Manipulation(دستکاری) بمعنای تغییر یا دستکاری المان‌های «اچ‌تی‌اِم‌اِل» در DOM است.
 * یکی از قدرتمندترین و پرکاربردترین بخش‌های «جی‌کوئری» که امکان ۱-اضافه ۲-حذف ۳-تغییر ۴-مدیریت محتوا و ساختار را به سهولت برای المان‌ها فراهم و مدیریت می‌کند
 
-## Add Elements
 
-### .append()
-
-* اضافه کردن محتوا به انتهای یک المان
-
-```javascript
-$('#myDiv').append('<p>پاراگراف جدید</p>');
-```
-
-### .prepend()
-
-* اضافه کردن محتوا به ابتدای یک المان
-
-```javascript
-$('#myList').append('<li>آیتم ۲</li>');
-```
-
-### .before()
-
-* اضافه کردن محتوی قبل از المان
-
-```javascript
-$('#myList').before('<h2>لیست من</h2>');
-```
-
-### .after()
-
-* اضافه کردن محتوی بعد از المان
-
-## Remove Elements
-
-### .remove()
-
-* کاملاً حذف کند
-
-```javascript
-$('#oldElement').remove();
-```
-
-### .empty()
-
-* فقط محتوای داخلی را پاک کند
 
 ## تغییر محتوا
 
@@ -63,28 +21,6 @@ $('#title').html('<strong>عنوان جدید</strong>');
 
 ```javascript
 $('#description').text('این یک توضیح است.');
-```
-
-## دستکاری ویژگی‌ها (Attributes)
-
-### .attr()
-
-* ویژگی‌های HTML مثل src, href, class و غیره را تنظیم یا بخوانید
-
-```javascript
-$('img').attr('src', 'new-image.jpg');
-```
-
-### .removeAttr()
-
-* یک ویژگی را حذف کند
-
-### .prop()
-
-* خاصیت‌های DOM (مانند checked, disabled) را تنظیم یا بخوانید
-
-```javascript
-$('input').prop('disabled', true);
 ```
 
 ## دستکاری کلاس‌ها
@@ -290,7 +226,8 @@ $(".myBox").click(function (e) {
 
 ## .attr()
 
-به منظور دریافت مقدار یا تنظیم مقدار جدید به یک ویژگی از تگ‌های اچ تی ام ال مورد استفاده قرار می‌گیرد
+* به منظور دریافت مقدار یا تنظیم مقدار جدید به یک ویژگی از تگ‌های اچ تی ام ال مورد استفاده قرار می‌گیرد
+* ویژگی‌های HTML مثل src, href, class و غیره را تنظیم یا بخوانید
 
 ### Get Attribute
 
@@ -307,6 +244,10 @@ $(selector).attr(attributeName, function () {
 });
 ```
 
+```javascript
+$('img').attr('src', 'new-image.jpg');
+```
+
 ### Set Attribute
 
 ```javascript
@@ -318,6 +259,8 @@ $(selector).attr({
 ```
 
 ### RemoveAttributes
+
+* یک ویژگی را حذف کند
 
 ```javascript
 $("#input").removeAttr("class");
@@ -345,6 +288,10 @@ $(selector).prop(attributeName);
 $("#ID").prop("value", function () {
     return "Behrooz";
 });
+```
+
+```javascript
+$('input').prop('disabled', true);
 ```
 
 ### Set Attribute
