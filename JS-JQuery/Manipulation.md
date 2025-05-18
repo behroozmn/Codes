@@ -382,17 +382,6 @@ var data = $("#input3").val(); // دریافت مقدار جدید
 alert(data);
 ```
 
-## .clone() | .append()
-
-از یک تگ عینا کپی میکند و به تگ دیگر اضافه می‌کند
-
-```javascript
-$("#ID").click(function (e) {
-    var copied = $("#myPragraph").clone();
-    $("#cloneParagraphs").append(copied);
-});
-```
-
 ## انواع wrap
 
 * در jQuery ، توابع wrap(), wrapInner(), و wrapAll() همه مربوط به جاسازی (wrapping) المان‌ها با تگ HTML دیگری هستند،
@@ -565,17 +554,23 @@ After:
 <div class="box">محتوای ۲</div>
 ```
 
-## .after()|.before()|.insertAfter()|.insertBefore()
+## Insertion
 
+* توابعی نظیر after و before و insertAfter و insertBefore
 * درج المان‌ها یا محتوا در موقعیت‌های خاص نسبت به المان‌های دیگر استفاده می‌شوند.
 * تفاوت اصلی بین آنها این است که چه چیزی را جایگذاری می‌کنند و کجا قرارشان می‌دهند
 
 | تابع                    | نحوه فراخوانی                     | عملکرد                                         | مثال                                    |
 |-------------------------|-----------------------------------|------------------------------------------------|-----------------------------------------|
-| `.after(content)`       | `$(selector).after(content)`      | **بعد از** هر المان انخابی قرار می‌دهد         | `$('.box').after('<p>جدید</p>')`        |
-| `.before(content)`      | `$(selector).before(content)`     | **قبل از** هر المان انتخابی قرار می‌دهد        | `$('.box').before('<p>جدید</p>')`       |
-| `.insertAfter(target)`  | `$(content).insertAfter(target)`  | **محتوا را بعد از** تارگت انتخابی قرار می‌دهد  | ` $('<p>...</p>').insertAfter('.box')`  |
-| `.insertBefore(target)` | `$(content).insertBefore(target)` | **محتوا را قبل از** تارگت  انتخابی قرار می‌دهد | ` $('<p>...</p>').insertBefore('.box')` |
+| `.after(content)`       | `$(selector).after(content)`      | **بعد از** هر المان انخابی قرارمی‌دهد          | `$('.box').after('<p>جدید</p>')`        |
+| `.before(content)`      | `$(selector).before(content)`     | **قبل از** هر المان انتخابی قرارمی‌دهد         | `$('.box').before('<p>جدید</p>')`       |
+| `.insertAfter(target)`  | `$(content).insertAfter(target)`  | **محتوا را بعد از** تارگت انتخابی قرارمی‌دهد   | ` $('<p>...</p>').insertAfter('.box')`  |
+| `.insertBefore(target)` | `$(content).insertBefore(target)` | **محتوا را قبل از** تارگت  انتخابی قرارمی‌دهد  | ` $('<p>...</p>').insertBefore('.box')` |
+| `.prepend(content)`     | `$(selector).prepend(content)`    | محتوا را در ابتدای هر المان انتخابی قرارمی‌دهد | `$('.box').prepend('<p>...</p>')`       |
+| `.prependTo(target)`    | `$(content).prependTo(target)`    | المان جدید را در ابتدای تارگت قرارمی‌دهد       | `$('<p>...</p>').prependTo('.box')`     |
+| `.append(content)`      | `$(selector).append(content)`     | محتوا را در انتهای هر المان انتخابی قرارمی‌دهد | `$('.box').append('<p>...</p>')`        |
+| `.appendTo(target)`     | `$(content).appendTo(target)`     | المان جدید را در انتهای تارگت قرارمی‌دهد       | `$('<p>...</p>').appendTo('.box')`      |
+| `.clone()`              | `$(selector).clone()`             | یک کپی از المان انتخابی می‌گیرد                | `$('.box').first().clone()`             |
 
 ---
 
@@ -592,7 +587,7 @@ After:
 
 ### .after( content )
 
-* محتوای داده شده را بعد از هر یک از المان‌های انتخابی قرار می‌دهد.
+* محتوای داده شده را بعد از هر یک از المان‌های انتخابی قرارمی‌دهد.
 
 ```javascript
 $('.box').after('<p>پس از محتوای ۱</p>');
@@ -611,7 +606,7 @@ $('.box').after('<p>پس از محتوای ۱</p>');
 
 ### .before( content )
 
-* محتوای داده شده را قبل از هر یک از المان‌های انتخابی قرار می‌دهد.
+* محتوای داده شده را قبل از هر یک از المان‌های انتخابی قرارمی‌دهد.
 
 ```javascript
 $('.box').before('<p>قبل از محتوای ۱</p>');
@@ -629,7 +624,7 @@ $('.box').before('<p>قبل از محتوای ۱</p>');
 
 ### .insertAfter( target )
 
-* المان(های) انتخابی را بعد از تارگت قرار می‌دهد.
+* المان(های) انتخابی را بعد از تارگت قرارمی‌دهد.
 * در این مورد ابتدا المان۱ انتخاب می‌شود و بعد گفته می‌شود که المان۲ به بعد از المان۱ افزوده گردد
 
 ```javascript
@@ -649,7 +644,7 @@ $('<p>NewContent</p>').insertAfter('.box');
 
 ### .insertBefore( target )
 
-* المان(های) انتخابی را قبل از تارگت قرار می‌دهد.
+* المان(های) انتخابی را قبل از تارگت قرارمی‌دهد.
 
 ```javascript
 $('<p>NewContent</p>').insertBefore('.box');
@@ -663,4 +658,106 @@ $('<p>NewContent</p>').insertBefore('.box');
 
 <p>NewContent</p>
 <div class="box">محتوای ۲</div>
+```
+
+### .prepend( content )
+
+* محتوا را در ابتدای هر المان انتخابی قرارمی‌دهد (داخل المان، قبل از سایر محتوا).
+
+```javascript
+$('.box').prepend('<strong>شروع: </strong>');
+```
+
+نتیجه: به هر باکس یک استرانگ در ابتدای آن اضافه می‌کند
+
+```html
+
+<div class="box">
+    <strong>شروع: </strong>محتوای ۱
+</div>
+<div class="box">
+    <strong>شروع: </strong>محتوای ۲
+</div>
+```
+
+### .prependTo( target )
+
+* المان جدید را در ابتدای تارگت قرارمی‌دهد.
+* ⚠️ در این حالت، شما اول المان جدید را می‌سازید و بعد به جی‌کوئری می‌گویید "این رو ببر و در ابتدای المان دیگری قرار بده".
+
+```javascript
+$('<strong>شروع: </strong>').prependTo('.box');
+```
+
+نتیجه:همان عملکرد prepend() ولی با سینتکس معکوس
+
+```html
+
+<div class="box">
+    <strong>شروع: </strong>محتوای ۱
+</div>
+<div class="box">
+    <strong>شروع: </strong>محتوای ۲
+</div>
+```
+
+### .append( content )
+
+* محتوا را در انتهای هر المان انتخابی قرارمی‌دهد (داخل المان، بعد از سایر محتوا).
+
+```javascript
+$('.box').append('<strong> - پایان</strong>');
+```
+
+نتیجه:به هر باکس یک استرانگ در انتهای آن اضافه می‌کند
+
+```html
+
+<div class="box">
+    محتوای ۱<strong> - پایان</strong>
+</div>
+<div class="box">
+    محتوای ۲<strong> - پایان</strong>
+</div>
+```
+
+### .appendTo( target )
+
+* المان جدید را در انتهای تارگت قرارمی‌دهد.
+* مثل prependTo، ولی در انتهای المان مقصد.
+
+```javascript
+$('<strong> - پایان</strong>').appendTo('.box');
+```
+
+نتیجه:همانند مثال قبل
+
+```html
+
+<div class="box">
+    محتوای ۱<strong> - پایان</strong>
+</div>
+<div class="box">
+    محتوای ۲<strong> - پایان</strong>
+</div>
+```
+
+### .clone()
+
+* یک کپی از المان(های) انتخابی می‌گیرد.
+* این کاربردی است وقتی می‌خواهید یک المان را جابه‌جا کنید یا کپی کنید بدون اینکه اصل آن حذف شود.
+
+```javascript
+$('.box').first().clone().appendTo('body');
+```
+
+نتیجه: اولین باکس کپی شده به انتهای بادی اضافه شد
+
+```html
+
+<div class="box">محتوای ۱</div>
+<div class="box">محتوای ۲</div>
+
+<!-- یک کپی اضافی از اولین .box -->
+<div class="box">محتوای ۱</div>
 ```
