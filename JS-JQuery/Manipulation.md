@@ -391,8 +391,8 @@ alert(data);
 
 ```html
 
-<div class="box">محتوای ۱</div>
-<div class="box">محتوای ۲</div>
+<div class="box">FirstContent</div>
+<div class="box">SecondContent</div>
 ```
 
 ### .wrap()
@@ -413,10 +413,10 @@ $('.box').wrap('<div class="wrapper"></div>');
 ```html
 
 <div class="wrapper">
-    <div class="box">محتوای ۱</div>
+    <div class="box">FirstContent</div>
 </div>
 <div class="wrapper">
-    <div class="box">محتوای ۲</div>
+    <div class="box">SecondContent</div>
 </div>
 ```
 
@@ -439,10 +439,10 @@ $('.box').wrapInner('<div class="inner-wrapper"></div>');
 ```html
 
 <div class="box">
-    <div class="inner-wrapper">محتوای ۱</div>
+    <div class="inner-wrapper">FirstContent</div>
 </div>
 <div class="box">
-    <div class="inner-wrapper">محتوای ۲</div>
+    <div class="inner-wrapper">SecondContent</div>
 </div>
 ```
 
@@ -464,8 +464,8 @@ $('.box').wrapAll('<div class="all-wrapper"></div>');
 ```html
 
 <div class="all-wrapper">
-    <div class="box">محتوای ۱</div>
-    <div class="box">محتوای ۲</div>
+    <div class="box">FirstContent</div>
+    <div class="box">SecondContent</div>
 </div>
 ```
 
@@ -481,10 +481,10 @@ $('.box').wrapAll('<div class="all-wrapper"></div>');
 ```html
 
 <div class="wrapper">
-    <div class="box">محتوای ۱</div>
+    <div class="box">FirstContent</div>
 </div>
 <div class="wrapper">
-    <div class="box">محتوای ۲</div>
+    <div class="box">SecondContent</div>
 </div>
 ```
 
@@ -498,8 +498,8 @@ $('.box').unwrap();
 
 ```html
 
-<div class="box">محتوای ۱</div>
-<div class="box">محتوای ۲</div>
+<div class="box">FirstContent</div>
+<div class="box">SecondContent</div>
 ```
 
 #### برگرداندن wrapInner
@@ -509,7 +509,7 @@ Before:
 ```html
 
 <div class="box">
-    <div class="inner-wrapper">محتوای ۱</div>
+    <div class="inner-wrapper">FirstContent</div>
 </div>
 ```
 
@@ -523,7 +523,7 @@ After:
 
 ```html
 
-<div class="box">محتوای ۱</div>
+<div class="box">FirstContent</div>
 ```
 
 #### برگرداندن wrapAll
@@ -535,8 +535,8 @@ Before:
 ```html
 
 <div class="all-wrapper">
-    <div class="box">محتوای ۱</div>
-    <div class="box">محتوای ۲</div>
+    <div class="box">FirstContent</div>
+    <div class="box">SecondContent</div>
 </div>
 ```
 
@@ -550,8 +550,8 @@ After:
 
 ```html
 
-<div class="box">محتوای ۱</div>
-<div class="box">محتوای ۲</div>
+<div class="box">FirstContent</div>
+<div class="box">SecondContent</div>
 ```
 
 ## Insertion
@@ -560,8 +560,8 @@ After:
 * درج المان‌ها یا محتوا در موقعیت‌های خاص نسبت به المان‌های دیگر استفاده می‌شوند.
 * تفاوت اصلی بین آنها این است که چه چیزی را جایگذاری می‌کنند و کجا قرارشان می‌دهند
 
-| تابع                    | نحوه فراخوانی                     | عملکرد                                         | مثال                                    |
-|-------------------------|-----------------------------------|------------------------------------------------|-----------------------------------------|
+| تابع                    | نحوه فراخوانی                     | عملکرد                                          | مثال                                    |
+|-------------------------|-----------------------------------|-------------------------------------------------|-----------------------------------------|
 | `.after(content)`       | `$(selector).after(content)`      | **بعد از** هر المان انخابی قرارمی‌دهد          | `$('.box').after('<p>جدید</p>')`        |
 | `.before(content)`      | `$(selector).before(content)`     | **قبل از** هر المان انتخابی قرارمی‌دهد         | `$('.box').before('<p>جدید</p>')`       |
 | `.insertAfter(target)`  | `$(content).insertAfter(target)`  | **محتوا را بعد از** تارگت انتخابی قرارمی‌دهد   | ` $('<p>...</p>').insertAfter('.box')`  |
@@ -570,7 +570,7 @@ After:
 | `.prependTo(target)`    | `$(content).prependTo(target)`    | المان جدید را در ابتدای تارگت قرارمی‌دهد       | `$('<p>...</p>').prependTo('.box')`     |
 | `.append(content)`      | `$(selector).append(content)`     | محتوا را در انتهای هر المان انتخابی قرارمی‌دهد | `$('.box').append('<p>...</p>')`        |
 | `.appendTo(target)`     | `$(content).appendTo(target)`     | المان جدید را در انتهای تارگت قرارمی‌دهد       | `$('<p>...</p>').appendTo('.box')`      |
-| `.clone()`              | `$(selector).clone()`             | یک کپی از المان انتخابی می‌گیرد                | `$('.box').first().clone()`             |
+| `.clone()`              | `$(selector).clone()`             | یک کپی از المان انتخابی می‌گیرد                 | `$('.box').first().clone()`             |
 
 ---
 
@@ -581,8 +581,8 @@ After:
 
 ```html
 
-<div class="box">محتوای ۱</div>
-<div class="box">محتوای ۲</div>
+<div class="box">FirstContent</div>
+<div class="box">SecondContent</div>
 ```
 
 ### .after( content )
@@ -590,18 +590,18 @@ After:
 * محتوای داده شده را بعد از هر یک از المان‌های انتخابی قرارمی‌دهد.
 
 ```javascript
-$('.box').after('<p>پس از محتوای ۱</p>');
+$('.box').after('<p>After FirstContent</p>');
 ```
 
 نتیجه: بعد از هر باکس یک «تگ‌پی» درج شد.
 
 ```html
 
-<div class="box">محتوای ۱</div>
-<p>پس از محتوای ۱</p>
+<div class="box">FirstContent</div>
+<p>After FirstContent</p>
 
-<div class="box">محتوای ۲</div>
-<p>پس از محتوای ۱</p>
+<div class="box">SecondContent</div>
+<p>After FirstContent</p>
 ```
 
 ### .before( content )
@@ -609,17 +609,17 @@ $('.box').after('<p>پس از محتوای ۱</p>');
 * محتوای داده شده را قبل از هر یک از المان‌های انتخابی قرارمی‌دهد.
 
 ```javascript
-$('.box').before('<p>قبل از محتوای ۱</p>');
+$('.box').before('<p>Before FirstContent</p>');
 ```
 
 نتیجه: قبل از هر باکس یک «تگ‌پی» درج شد.
 
 ```html
-<p>قبل از محتوای ۱</p>
-<div class="box">محتوای ۱</div>
+<p>Before FirstContent</p>
+<div class="box">FirstContent</div>
 
-<p>قبل از محتوای ۱</p>
-<div class="box">محتوای ۲</div>
+<p>Before FirstContent</p>
+<div class="box">SecondContent</div>
 ```
 
 ### .insertAfter( target )
@@ -635,10 +635,10 @@ $('<p>NewContent</p>').insertAfter('.box');
 
 ```html
 
-<div class="box">محتوای ۱</div>
+<div class="box">FirstContent</div>
 <p>NewContent</p>
 
-<div class="box">محتوای ۲</div>
+<div class="box">SecondContent</div>
 <p>NewContent</p>
 ```
 
@@ -654,10 +654,10 @@ $('<p>NewContent</p>').insertBefore('.box');
 
 ```html
 <p>NewContent</p>
-<div class="box">محتوای ۱</div>
+<div class="box">FirstContent</div>
 
 <p>NewContent</p>
-<div class="box">محتوای ۲</div>
+<div class="box">SecondContent</div>
 ```
 
 ### .prepend( content )
@@ -673,10 +673,10 @@ $('.box').prepend('<strong>شروع: </strong>');
 ```html
 
 <div class="box">
-    <strong>شروع: </strong>محتوای ۱
+    <strong>Start: </strong>FirstContent
 </div>
 <div class="box">
-    <strong>شروع: </strong>محتوای ۲
+    <strong>Start: </strong>SecondContent
 </div>
 ```
 
@@ -686,7 +686,7 @@ $('.box').prepend('<strong>شروع: </strong>');
 * ⚠️ در این حالت، شما اول المان جدید را می‌سازید و بعد به جی‌کوئری می‌گویید "این رو ببر و در ابتدای المان دیگری قرار بده".
 
 ```javascript
-$('<strong>شروع: </strong>').prependTo('.box');
+$('<strong>Start: </strong>').prependTo('.box');
 ```
 
 نتیجه:همان عملکرد prepend() ولی با سینتکس معکوس
@@ -694,10 +694,10 @@ $('<strong>شروع: </strong>').prependTo('.box');
 ```html
 
 <div class="box">
-    <strong>شروع: </strong>محتوای ۱
+    <strong>Start: </strong>FirstContent
 </div>
 <div class="box">
-    <strong>شروع: </strong>محتوای ۲
+    <strong>Start: </strong>SecondContent
 </div>
 ```
 
@@ -714,10 +714,10 @@ $('.box').append('<strong> - پایان</strong>');
 ```html
 
 <div class="box">
-    محتوای ۱<strong> - پایان</strong>
+    FirstContent<strong> - End</strong>
 </div>
 <div class="box">
-    محتوای ۲<strong> - پایان</strong>
+    SecondContent<strong> - End</strong>
 </div>
 ```
 
@@ -735,10 +735,10 @@ $('<strong> - پایان</strong>').appendTo('.box');
 ```html
 
 <div class="box">
-    محتوای ۱<strong> - پایان</strong>
+    FirstContent<strong> - End</strong>
 </div>
 <div class="box">
-    محتوای ۲<strong> - پایان</strong>
+    SecondContent<strong> - End</strong>
 </div>
 ```
 
@@ -755,9 +755,9 @@ $('.box').first().clone().appendTo('body');
 
 ```html
 
-<div class="box">محتوای ۱</div>
-<div class="box">محتوای ۲</div>
+<div class="box">FirstContent</div>
+<div class="box">SecondContent</div>
 
 <!-- یک کپی اضافی از اولین .box -->
-<div class="box">محتوای ۱</div>
+<div class="box">FirstContent</div>
 ```
