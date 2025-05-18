@@ -469,7 +469,7 @@ $('.box').wrapAll('<div class="all-wrapper"></div>');
 </div>
 ```
 
-#### برگرداندن unwrap
+### برگرداندن unwrap
 
 * تابع unwrap() والد مستقیم المان(های) انتخابی را حذف می‌کند — یعنی فقط والد را پاک می‌کند و المان‌های اصلی باقی می‌مانند
 * اگر یک المان توی یک تگ دیگه wrap شده باشه، با unwrap() فقط اون تگ wrap کننده حذف می‌شه
@@ -502,7 +502,7 @@ $('.box').unwrap();
 <div class="box">SecondContent</div>
 ```
 
-#### برگرداندن wrapInner
+### برگرداندن wrapInner
 
 Before:
 
@@ -526,7 +526,7 @@ After:
 <div class="box">FirstContent</div>
 ```
 
-#### برگرداندن wrapAll
+### برگرداندن wrapAll
 
 * برای wrapAll()، معکوس مستقیمی وجود ندارد، ولی می‌توانید والد مشترک را پاک کنید
 
