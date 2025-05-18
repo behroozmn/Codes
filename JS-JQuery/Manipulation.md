@@ -755,7 +755,6 @@ $('<div class="new-box">New Content</div>').replaceAll('.box');
 نتیجه: همانند قبل
 
 ```html
-
 <div class="new-box">New Content</div>
 <div class="new-box">New Content</div>
 ```
