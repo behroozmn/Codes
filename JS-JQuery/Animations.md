@@ -132,6 +132,18 @@ $("#SlideToggleButton").click(function (e) {
 });
 ```
 
+```javascript
+$("#DelayButton").click(function (e) {
+    $("#div_1").slideUp(2000).slideDown(2000);
+    $("#div_2").slideUp(2000).delay(1000).slideDown(2000);
+});
+
+$("#StopButton").click(function (e) {
+    $("#StopDiv").stop().slideToggle(1500);
+});
+
+```
+
 # Fading Animation
 
 ## .fadeIn();
@@ -222,6 +234,189 @@ $("#FadeToggleButton").click(function (e) {
 });
 ```
 
+# Custome Animation
+
+## .animate(propery,duration,easing)
+
+Syntax:
+
+```javascript
+$(selector).animate(propery, option);
+$(selector).animate(propery, duration, easing);
+```
+
+```javascript
+ $(".colored").click(function (e) {
+    $(this).animate({
+        "height": "20px",
+        "width": "20px",
+        "opacity": "0.3"
+    }, {
+        duration: 1000,
+        done: function () {
+            console.log('hello');
+        }
+    });
+});
+```
+
+```javascript
+$("#StrButton").click(function (e) {
+    $(".inside").animate({"bottom": "0px"}, 2000);
+    $(".inside").animate({"right": "0px"}, 2000);
+    $(".inside").animate({"top": "0px"}, 2000);
+});
+```
+
+## .finish()
+
+```javascript
+$("#FinButton").click(function (e) {
+    $(".inside").finish();
+});
+```
+
+# QUEUE
+
+* هر کار انیمیشن که داریم انجام میدهیم یک صف نامیده می‌شوند
+* گاهی میخواهیم چندین فعالیت و کار پشت سر هم انجام شوند تا یک تجربه انیمیشن بوقوع بپیوندد، آنگاه هر کدام یک صف است
+
+## .queue() | .dequeue()
+
+* اگر بخواهیم یک صف به مجموعه صفوف انیمیشن اضافه نماییم از روش زیر استفاده می‌کنیم
+* نکته: در انهای صف حتما باید از دیکیو استفاده شود تا صف بعدی به اجرا دربیاید وگرنه صف اضافه شده پس از انجام سبب توقف مجموعه صف می‌شوند
+* تابع queue به شما اجازه می‌دهد تا فانکشن‌ها را به صف پیش‌فرض (یا یک صف مشخص) اضافه کنید ، تا بعداً به ترتیب اجرا شوند.
+* تابع dequeue مرحله بعدی در صف را اجرا می‌کند. این تابع زمانی استفاده می‌شود که شما یک تابع را به صف اضافه کرده‌اید و می‌خواهید jQuery را وادار کنید به اجرای مرحله بعدی ادامه دهد .
+
+```javascript
+$("#StrButton").click(function (e) {
+    $(".inside").animate({"bottom": "0"}, 2000); // Queue Number 1️⃣️
+    $(".inside").animate({"right": "0"}, 2000);  // Queue Number 2️⃣️
+    $(".inside").queue(function () {
+        $(this).css({"background-color": "red"}).dequeue(); // Queue Number 3️⃣️
+    });
+    $(".inside").animate({"top": "0"}, 2000); // Queue Number 4️⃣️
+});
+```
+
+```html
+
+<body>
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="well" style="height: 350px;">
+                <div class="col-md-9">
+                    <div class="Test" style="position: absolute;top:0;">
+                        <div class="inside"></div>
+                    </div>
+                </div>
+                <div class="col-md-4 pull-left">
+                    <a class="btn btn-success btn-block" id="StrButton">
+                        Start
+                    </a>
+                    <a class="btn btn-success btn-block" id="ClearButton">
+                        Clear Queue
+                    </a>
+                    <a class="btn btn-success btn-block" id="OffButton">
+                        jQuery.fx.off
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+```
+
+```css
+.colored {
+    width: 100px;
+    height: 100px;
+    background-color: brown;
+    position: relative;
+    float: right;
+    margin-left: 10px;
+}
+
+.Test {
+    width: 300px;
+    height: 300px;
+    border: 2px solid red;
+}
+
+.inside {
+    width: 20px;
+    height: 20px;
+    background-color: black;
+    position: inherit;
+    margin: 5px;
+    left: 0px;
+}
+```
+
+## .clearQueue()
+
+* سبب پاک نمودن اعضای صف انیمیشن می‌شود(محموعه عضوهای صف انیمیشن که از کنار هم قرار دادن آن انیمشین کامل اجرا می‌شود)
+* البته عضو در داخل صف انیمیشن(بعنوان تنها عضو صف[زیرا بقیه پاک شدند])به اجرای خود ادامه می‌دهد و پس از اتمام کار آن انیمشن متوقف می‌شود
+
+```javascript
+$("#ClearButton").click(function (e) {
+    $(".inside").clearQueue();
+});
+```
+
+## .stop()
+
+انیمیشن در حین کار خود در همان حالت کنونی متوقف شود
+
+```javascript
+$("#btn").click(function (e) {
+    $("#selector").stop();
+});
+```
+
+```javascript
+$("#selector").stop().clearQueue();
+```
+
+## $.fx.off
+
+* در jQuery، متغیر سراسری $.fx.off وجود دارد که کنترل می‌کند آیا انیمیشن‌ها اجرا شوند یا خیر :
+    * اگر $.fx.off = true باشد: تمام انیمیشن‌ها غیرفعال می‌شوند.
+    * اگر $.fx.off = false باشد: انیمیشن‌ها فعال هستند (پیش‌فرض).
+
+* هر بار که تابع زیر فراخوانی شود، وضعیت انیمیشن‌های jQuery را فعال یا غیرفعال می‌کند.
+```javascript
+        var toggleFx = function () {
+          $.fx.off = !$.fx.off;
+};
+```
+
+* اولین بار که بدنه تابع بالا اجرا شود، $.fx.off از حالت پیش‌فرض (false) به true تغییر می‌کند و انیمیشن‌ها غیرفعال می‌شوند.
+* بار بعد، $.fx.off دوباره به false تغییر می‌کند و انیمیشن‌ها فعال می‌شوند.
+* این تغییر وضعیت به صورت چرخشی  ادامه پیدا می‌کند.
 
 
+در مثال زیر هر بار روی دکمه کلیک کنید، وضعیت انیمیشن تغییر می‌کند: اگر فعال باشد، جعبه حرکت می‌کند. اگر غیرفعال باشد، حرکت بدون انیمیشن اتفاق می‌افتد (یا اصلاً حرکت نمی‌کند، بسته به تنظیمات).
+```html
+<button id="toggle">Toggle Animation</button>
+<div id="box" style="width:100px;height:100px;background:red;position:relative"></div>
 
+<script>
+var toggleFx = function() {
+    $.fx.off = !$.fx.off;
+};
+
+$('#toggle').on('click', function() {
+    toggleFx(); // توگل وضعیت انیمیشن
+    $('#box').animate({ left: '+=100' }, 1000);
+});
+</script>
+```
+
+
+*     اگر $.fx.off = true باشد، تمام توابعی مثل .animate(), .fadeIn(), .slideUp() و غیره بلافاصله اجرا می‌شوند بدون هیچ انیمیشنی  — یعنی فقط تغییرات CSS اعمال می‌شوند ولی "انتقال" وجود ندارد. 
+     
