@@ -1,0 +1,22 @@
+https://github.com/koalaman/shellcheck/wiki/SC2082
+
+Problematic code:
+        var_1="hello world"
+        n=1
+        echo "${var_$n}"
+
+
+Correct code:
+        # Use arrays instead of dynamic names
+        declare -a var
+        var[1]="hello world"
+        n=1
+        echo "${var[n]}"
+
+OR
+        # Expand variable names dynamically
+        var_1="hello world"
+        n=1
+        name="var_$n"
+        echo "${!name}"
+

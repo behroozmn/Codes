@@ -1,0 +1,16 @@
+diskGetAllDisksWWN() {
+    # [https://github.com/koalaman/shellcheck/wiki/SC2207]
+    # روش اول
+    mapfile -t Disks < <(find /dev/disk/by-id/wwn* -print0 | xargs -0 -n1 basename | awk -F '-part' '{print $1}' | sort | uniq) # خروجی دستورات توسط خط جدید از هم جدا شده است
+    echo "${Disks[@]}"
+
+    # روش دوم
+    # cd "/dev/disk/by-id" || exit 1
+    # Disks=($(find ./wwn* | tr -d './' | awk -F '-part' '{print $1}' | sort | uniq))
+    # echo "${Disks[@]}"
+}
+
+
+    #دو دستور زیر یکسان هستند
+    IFS=" " read -r -a all <<<"$(diskGetAllDisksWWN)" #آرایه با فاصله از هم جدا شده اند
+    all=($(diskGetAllDisksWWN))
