@@ -1,3 +1,6 @@
+چیت شیت از موارد مهم در شل اسکریپت
+
+
 ~     Home directory
 $     Denote a variable (as in $HOME or $USER)
 &     Run a command in the background
