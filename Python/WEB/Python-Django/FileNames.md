@@ -29,6 +29,8 @@
         * `INSTALL_APPS=[... , 'rest_framework.authtoken' ,...]`
         * `INSTALL_APPS=[... , 'drf-spectacular' ,...]` # Swagget
     * `LANGUAGE_CODE = 'fa-ir'` تغییر زبان داشبورد از انگلیسی به فارسی
+    * `TEMPLATES`
+        * `'APP_DIRS': True`  بصورت خودکار در هر اپلیکیشن اضافه‌شده دنبال پوشه تمپلیت بگرد و آن را بخوان
     * `MEDIA_ROOT = BASE_DIR / 'MyDir'` مدیاهای ارسالی کاربر بصورت پیش‌فرض کجا ذخیره گردد
         * must be absolute name
     * `MEDIA_URL = 'MyDir'` باز کردن یک مسیر خاص در آدرس‌های داخلی جنگو
