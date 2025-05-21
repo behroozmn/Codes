@@ -15,16 +15,10 @@ pip freeze # باید بسته جنگو نصب شده در لیست موجود �
 django-admin startproject config . # پروژه با نام کانفیگ در مسیر جاری ایجاد می‌کنیم
 ```
 
-```python
-pip
-install
-djangorestframework
-pip
-install
-markdown
-pip
-install
-django - filter
+```
+pip install djangorestframework
+pip install markdown
+pip install django-filter
 ```
 
 File: `setting.py`
