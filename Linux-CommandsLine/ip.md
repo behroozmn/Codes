@@ -1,17 +1,63 @@
 # IP Commands
 
-* show
-    * ip a
-    * ip addr show
-    * ip -s link #network statistics
-    * ip -4 a #Only show TCP/IP IPv4
-    * ip -6 a #Only show TCP/IP IPv6
-    * ip a list eth0 #Only show eth0 interface
-    * ip a show dev eth0 #Only show eth0 interface
-    * ip a show eth0 #Only show eth0 interface
-    * ip addr #Show information for all addresses
-    * ip addr help #Display address commands and arguments
-    * ip addr show dev eth0 #Display information only for device
+Usage: ip OPTIONS OBJECT COMMAND
+
+**نکته:** به جهت سهولت اگر بخشی از کلمه دستور نگارش شود به منزله‌آن است که همه کلمه به نگارش درآمده است
+
+**OBJECTS*:*
+
+* address
+    * ip a[|ad|add|addr|addre|addres|address] [s|sh|sho|show] [dev] eth0
+    * ip a sh
+    * ip ad sho
+    * ip add s
+    * ip -4 addre sho
+* addrlabel
+* amt
+* fou
+* help
+* ila
+* ioam
+* l2tp
+* link: network device
+* macsec
+* maddress: multicast address
+* monitor: watch for netlink messages
+* mptcp
+* mroute
+* mrule
+* neigh
+* neighbor
+* neighbour
+* netconf
+* netns
+* nexthop
+* ntable
+* ntbl
+* route: routing table entry
+* rule: rule in routing policy database
+* sr
+* stats: manage and show interface statistics
+* tap
+* tcp_metrics
+* token
+* tunnel: tunnel over IP
+* tuntap
+* vrf
+* xfrm
+
+**Options:**
+
+* -c[olor]: نمایش رنگی دستورات
+    * ip -c address show
+* -d[etails]: نمایش جزییات
+    * ip -d address
+* -s[tatistics]
+    * ip -s link
+* -4: ip version4
+* -6: ip version6
+
+* ip -s link #network statistics
 * link
     * ip link set <NIC> up|down
     * ip link #show information for all interfaces
