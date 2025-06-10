@@ -57,7 +57,7 @@
         },
         {
             "title": "nmap custom IP(GUI)",
-            "command": "gnome-terminal -- bash -c 'ip=$(zenity --entry --title=\"Input\" --text=\"Enter ip:\"); if [ -n \"$ip\" ]  ; then /usr/bin/sudo /usr/bin/nmap -T5 $ip;fi;/usr/bin/sleep 2; exec bash'",
+            "command": "gnome-terminal -- bash -c 'ip=$(zenity --entry --title=\"Input\" --text=\"Enter ip:\" --entry-text=\"192.168.100.\"); if [ -n \"$ip\" ]  ; then /usr/bin/sudo /usr/bin/nmap -T5 $ip;fi;/usr/bin/sleep 2;'",
             "icon": "network-offline"
         },
         {
@@ -112,7 +112,7 @@
             "submenu": [
                 {
                     "title": "xx.xx.xx.xx(General)",
-                    "command": "terminator -x bash -c 'ssh user@xx.xx.xx.2; exec bash'",
+                    "command": "terminator -x bash -c 'ssh user@xx.xx.xx.2; exec bash'",ش
                     "icon": "utilities-terminal"
                 },
                 {
