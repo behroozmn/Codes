@@ -1,11 +1,13 @@
-# 1.Install
+# 1.MYSQL
+
+## 1.Install
 
 ```shell
 sudo apt install mysql- server #Installation
 sudo mysql_secure_installation #ایجاد تنظیمات اولیه
 ```
 
-# 2.Login
+## 2.Login
 
 ```shell
 
@@ -15,7 +17,7 @@ mysql -u <USER> -p <DataBaseName> # → then !EnterPassword
 mysql> quite #خروج
 ```
 
-# 3.DataBase
+## 3.DataBase
 
 ```shell
 mysql> CREATE DATABASE <database_name>;
@@ -26,7 +28,7 @@ mysql> DROP DATABASE IF EXISTS database;
 mysql> DROP DATABASE <db_name>;
 ```
 
-# 4.user
+## 4.user
 
 create
 
@@ -51,7 +53,7 @@ mysql> DROP USER 'jeffrey'@'localhost';
 mysql> DROP USER IF EXISTS username;
 ```
 
-## 4.4.Permision
+### 4.4.Permision
 
 **typeOfPermission**
 
@@ -64,7 +66,7 @@ mysql> DROP USER IF EXISTS username;
 * **UPDATE**: allow them to update table rows
 * **GRANT OPTION**: allows them to grant or remove other users' privileges
 
-## 4.4.1.Assigne permission
+### 4.4.1.Assigne permission
 
 ```shell
 mysql> GRANT [typeOfPermission] ON [databaseName].[tableName] TO '[username]'@'localhost’;
@@ -73,14 +75,14 @@ mysql> GRANT ALL PRIVILEGES ON *.* TO 'newusername'@'localhost';
 mysql> GRANT ALL PRIVILEGES ON *.* TO 'newusername'@'localhost' WITH GRANT OPTION;
 ```
 
-## 4.4.2.Revoke permission
+### 4.4.2.Revoke permission
 
 ```shell
 mysql > REVOKE [typeOfPermission] ON [databaseName].[tableName] FROM '[username]'@'localhost’;
 mysql> REVOKE ALL ON [database name].[table name] FROM '[username]'@'localhost'
 ```
 
-# 5.Table
+## 5.Table
 
 Create:
 
@@ -107,3 +109,12 @@ Delete
 mysql> ALTER TABLE table DROP COLUMN column; #حذف ستون از جدول
 mysql> DROP TABLE IF EXISTS table #حذف یک جدول
 ```
+
+
+# 2.Reddis
+
+* دیتا را بصورت Key-Value ذخیره می‌کند
+* تمام دیتا را در حافظه نگه‌داری می‌کند یعنی سریع است
+* حتی می‌تواند بعنوان کش‌سرور استفاده شود
+* هرنوع Data از هر نوع Structure را ذخیره می‌کند
+* می‌توان بعنوان صف از آن استفاده کرد که دیتا به او بدهیم و آن به دیگران بدهد
