@@ -198,10 +198,10 @@ gcc main.o helper.o -o program # لینک کردن آبجکت‌فایل‌ها
 
 # Images
 
-![installSteps.jpg](../Files-SourceFiles/Images/install.jpg "installSteps.jpg")
+![installSteps.jpg](../_srcFiles/Images/install.jpg "installSteps.jpg")
 <br>
-![Linker.jpg](../Files-SourceFiles/Images/Linker.jpg "Linker")
+![Linker.jpg](../_SRCFiles/Images/Linker.jpg "Linker")
 <br>
-![compilation.jpg](../Files-SourceFiles/Images/compilation.jpg "compilation.jpg")
+![compilation.jpg](../_SRCFiles/Images/compilation.jpg "compilation.jpg")
 <br>
-![CompilePhase.jpg](../Files-SourceFiles/Images/CompilePhase.jpg "CompilePhase.jpg")
+![CompilePhase.jpg](../_SRCFiles/Images/CompilePhase.jpg "CompilePhase.jpg")

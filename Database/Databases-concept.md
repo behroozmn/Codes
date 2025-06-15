@@ -34,7 +34,7 @@
 
 **database Sharding**: optimizing database management systems by separating the rows or columns of a larger database table into multiple smaller tables
 
-![DatabaseSharding.jpg](../Files-SourceFiles/Images/DatabaseSharding.jpg "DatabaseSharding.jpg")
+![DatabaseSharding.jpg](../_srcFiles/Images/DatabaseSharding.jpg "DatabaseSharding.jpg")
 
 # 4.Partition
 
@@ -42,4 +42,4 @@
 
 **Database partition**: division of a logical database into distinct independent parts
 
-![DatabasePartition.jpg](../Files-SourceFiles/Images/DatabasePartition.jpg "DatabasePartition.jpg")
+![DatabasePartition.jpg](../_srcFiles/Images/DatabasePartition.jpg "DatabasePartition.jpg")
