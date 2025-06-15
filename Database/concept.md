@@ -27,3 +27,19 @@
 * در پایگاه‌داده SQLserver :Schema یک لایه‌ی منطقی در داخل یک Database است.
 
 </div>
+
+# 3.Sharding
+
+> خرد کردن دیتا(از بزرگ به کوچک)
+
+**database Sharding**: optimizing database management systems by separating the rows or columns of a larger database table into multiple smaller tables
+
+![DatabaseSharding.jpg](../Files-SourceFiles/Images/DatabaseSharding.jpg "DatabaseSharding.jpg")
+
+# 4.Partition
+
+> خرد کردن دیتا(از بزرگ به کوچک)
+
+**Database partition**: division of a logical database into distinct independent parts
+
+![DatabasePartition.jpg](../Files-SourceFiles/Images/DatabasePartition.jpg "DatabasePartition.jpg")
