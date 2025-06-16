@@ -53,7 +53,7 @@ ssh -o StrictHostKeyChecking=no -l root ${peer}
 * -f: fork
 * -N: Non login
 * -o: اعمال تنظیمات داخل فایل کانفیگ بعنوان آپشن در لحظه اتصال
-  * ssh -o StrictHostKeyChecking=no user@10.10.10.10
+    * ssh -o StrictHostKeyChecking=no user@10.10.10.10
 
 # 4.KEY
 
@@ -99,18 +99,61 @@ ssh -D -N <localPort> behrooz@<serverWithNet> # بش مبدا همواره با�
 ssh -f -D -N <localPort> behrooz@<serverWithNet> #بَش مبدا همچنان باقی است و دستورات درحالت فورک اجرا درآمده‌اند
 ```
 
+## [Trick1](https://serverfault.com/questions/456960/how-to-force-all-packets-go-through-ssh-tunnel)
+
+* client network: 10.0.50.0/24
+* remote network10.0.99.0/24
+* Check sshd_config configuration option PermitTunnel controls whether the server supports this
+* from 10.1.1.1 to 10.1.1.2, provided that the SSH server running on the gateway to the remote network, at 192.168.1.15, allows it.
+
+```shell
+#On the client:
+ssh -f -w 0:1 192.168.1.15 true
+ifconfig tun0 10.1.1.1 10.1.1.2 netmask 255.255.255.252
+route add 10.0.99.0/24 10.1.1.2
+#On the server:
+ifconfig tun1 10.1.1.2 10.1.1.1 netmask 255.255.255.252
+route add 10.0.50.0/24 10.1.1.1
+```
+
+## Trick2
+
+* سیستم **بدون** اینترنت با آی‌پی ۱۹۲.۱۶۸.۱۰.۱۷۳
+* سیستم **دارای** اینترنت با آی‌پی ۱۹۲.۱۶۸.۱۰.۱۴۸دارای یوزر بهروز
+
+### روش اول
+
+on 192.168.10.173
+
+```shell
+[ssh -N -D XXXX behrooz@192.168.10.148] or [ssh -f -N -D XXXX behrooz@192.168.10.148]
+```
+
+on 192.168.10.148
+
+```shell
+echo 'Acquire::http::proxy "socks5h://127.0.0.1:XXXX"; ' >> /etc/apt/apt.conf.d/behrooz
+```
+
+###روش دوم
+Only on 192.168.10.173
+
+```shell
+[ssh -N -D XXXX behrooz@192.168.10.148] or [ssh -f -N -D XXXX behrooz@192.168.10.148]
+[apt --option Acquire::HTTP::Proxy="socks5h://127.0.0.1:XXXX" update
+
+```
+
 # 6.PortForwarding-tunnel(Local)
 
-* AllowTcpForwarding yes 
+* AllowTcpForwarding yes
 * Gatewayports yes
 
 ![sshL.jpg](_srcFiles/Images/sshL.jpg "sshL.jpg")
 
-
-
 # 7.PortForwarding-tunnel(Remote)
 
-* AllowTcpForwarding yes 
+* AllowTcpForwarding yes
 * Gatewayports yes
 
 ![sshR.jpg](_srcFiles/Images/sshR.jpg "sshR.jpg")
