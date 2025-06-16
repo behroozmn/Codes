@@ -137,7 +137,8 @@ echo 'Acquire::http::proxy "socks5h://127.0.0.1:XXXX"; ' >> /etc/apt/apt.conf.d/
 
 ### روش دوم
 
-در سیستم ۱۹۲.۱۶۸.۱۰.۱۷۳ بدون اینترنت دستور زیر را بزنید
+در سیستم ۱۹۲.۱۶۸.۱۰.۱۷۳ بدون اینترنت دستور زیر را بزنید  و در سیستم ۱۹۲.۱۶۸.۱۰.۱۴۸ دارای اینترنت نیاز به زدن دستوری نیست
+
 
 ```shell
 [ssh -N -D XXXX behrooz@192.168.10.148] or [ssh -f -N -D XXXX behrooz@192.168.10.148]
@@ -145,7 +146,24 @@ echo 'Acquire::http::proxy "socks5h://127.0.0.1:XXXX"; ' >> /etc/apt/apt.conf.d/
 
 ```
 
-* در سیستم ۱۹۲.۱۶۸.۱۰.۱۴۸ دارای اینترنت نیاز به زدن دستوری نیست
+
+## Trick3
+
+* 192.168.10.173[No Net]
+* 192.168.10.148[With Net][with user behrooz]
+
+در سیستم ۱۹۲.۱۶۸.۱۰.۱۷۳ بدون اینترنت دستور زیر را بزنید  و در سیستم ۱۹۲.۱۶۸.۱۰.۱۴۸ دارای اینترنت نیاز به زدن دستوری نیست
+
+```shell
+echo "proxy=socks5h://localhost:xxxx" >> /etc/yum.conf
+ssh -N-D XXXX behrooz@<serverWithNet>
+```
+
+
+
+
+
+
 
 # 6.PortForwarding-tunnel(Local)
 
