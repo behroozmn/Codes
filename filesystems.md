@@ -146,6 +146,13 @@ btrfs subvolume snapshot <From> <Directory>
 
 ---
 
+
+```shell
+sudo mount -t tmpfs tmpfs <MountPoint>
+sudo mount -t tmpfs -o size=12M,mode=700 <MountPoint>
+```
+
+
 ### 📌 نکات مهم:
 
 * فایل‌سیستم Temporary Filesystem ممکن است **In-memory** باشد یا **فایل‌های موقت روی دیسک**، ولی مهم این است که داده‌ها **پاک می‌شوند**.
