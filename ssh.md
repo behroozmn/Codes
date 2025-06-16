@@ -4,7 +4,6 @@
 
 * نرم افزار termius نرم افزار ssh و scp و sftp و tunnel است که هم نسخه موبایلی و هم نسخه لینوکسی دارد و تخصصی در بحث اس اس اچ کار کرده است
 
-
 ```shell
 ssh -t user@IP 'cd /usr/local/sbin; bash --login' # Login and execute command[such as cd]
 scp [Server1Username]@[Server1_ip]:[Server1_Path] [Server2Username]@[Server2_ip]:[Server2_Path]
@@ -25,7 +24,7 @@ ssh -o StrictHostKeyChecking=no -l root ${peer}
 * /home/user/.ssh/id_rsa : حاوی کلید خصوصی است
 * /home/user/.ssh/id_rsa.pub: حاوی کلید عمومی است
 
-# Options
+## configuration
 
 * PubkeyAuthentication: آیا احراز هویت با استفاده از کلید عمومی (Public Key Authentication) مجاز است یا خیر
     * yes: احراز هویت با کلید عمومی مجاز و سرور به کلیدهای عمومی کلاینت‌ها توجه می‌کند
@@ -48,7 +47,15 @@ ssh -o StrictHostKeyChecking=no -l root ${peer}
     * defaults:2min
     * recommended:30s or 1m
 
-# KEY
+# 3.options
+
+* -D: forward all traffic of service
+* -f: fork
+* -N: Non login
+* -o: اعمال تنظیمات داخل فایل کانفیگ بعنوان آپشن در لحظه اتصال
+  * ssh -o StrictHostKeyChecking=no user@10.10.10.10
+
+# 4.KEY
 
 <div dir="rtl">
 
@@ -83,3 +90,27 @@ cat ~/.ssh/id_rsa.pub | ssh User@YourServerIPAddress "mkdir -p ~/.ssh && cat >> 
 ```
 
 </div>
+
+# 5.proxy
+
+```shell
+ssh -D <localPort> behrooz@<serverWithNet> #بَش مقصد نمایش داده میشود
+ssh -D -N <localPort> behrooz@<serverWithNet> # بش مبدا همواره باز میماند و نمیتوان دستوری وارد کرد
+ssh -f -D -N <localPort> behrooz@<serverWithNet> #بَش مبدا همچنان باقی است و دستورات درحالت فورک اجرا درآمده‌اند
+```
+
+# 6.PortForwarding-tunnel(Local)
+
+* AllowTcpForwarding yes 
+* Gatewayports yes
+
+![sshL.jpg](_srcFiles/Images/sshL.jpg "sshL.jpg")
+
+
+
+# 7.PortForwarding-tunnel(Remote)
+
+* AllowTcpForwarding yes 
+* Gatewayports yes
+
+![sshR.jpg](_srcFiles/Images/sshR.jpg "sshR.jpg")
