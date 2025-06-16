@@ -116,53 +116,44 @@ ifconfig tun1 10.1.1.2 10.1.1.1 netmask 255.255.255.252
 route add 10.0.50.0/24 10.1.1.1
 ```
 
-## Trick2
+## Trick2-apt
 
-* 192.168.10.173[No Net]
-* 192.168.10.148[With Net][with user behrooz]
-
-### روش اول
-
-در سیستم ۱۹۲.۱۶۸.۱۰.۱۷۳ بدون اینترنت دستور زیر را بزنید
-
-```shell
-[ssh -N -D XXXX behrooz@192.168.10.148] or [ssh -f -N -D XXXX behrooz@192.168.10.148]
-```
-
-در سیستم ۱۹۲.۱۶۸.۱۰.۱۴۸ دارای اینترنت(دارای کاربر بهروز) دستور زیر را بزنید
+در سیستم دارای اینترنت دستور زیر را بزنید
 
 ```shell
 echo 'Acquire::http::proxy "socks5h://127.0.0.1:XXXX"; ' >> /etc/apt/apt.conf.d/behrooz
 ```
 
-### روش دوم
-
-در سیستم ۱۹۲.۱۶۸.۱۰.۱۷۳ بدون اینترنت دستور زیر را بزنید  و در سیستم ۱۹۲.۱۶۸.۱۰.۱۴۸ دارای اینترنت نیاز به زدن دستوری نیست
-
+در سیستم بدون اینترنت دستور زیر را بزنید
 
 ```shell
-[ssh -N -D XXXX behrooz@192.168.10.148] or [ssh -f -N -D XXXX behrooz@192.168.10.148]
+[ssh -f -N -D XXXX behrooz@systemWithInternet] # or [ssh -N -D XXXX behrooz@systemWithInternet]
+
+```
+
+### روش جایگزین
+
+در سیستم بدون اینترنت دستور زیر را بزنید و در سیستم دارای اینترنت نیاز به زدن دستوری نیست
+
+```shell
+[ssh -f -N -D XXXX behrooz@systemWithInternet] # or [ssh -N -D XXXX behrooz@systemWithInternet]
 [apt --option Acquire::HTTP::Proxy="socks5h://127.0.0.1:XXXX" update
 
 ```
 
+## Trick3-yum
 
-## Trick3
-
-* 192.168.10.173[No Net]
-* 192.168.10.148[With Net][with user behrooz]
-
-در سیستم ۱۹۲.۱۶۸.۱۰.۱۷۳ بدون اینترنت دستور زیر را بزنید  و در سیستم ۱۹۲.۱۶۸.۱۰.۱۴۸ دارای اینترنت نیاز به زدن دستوری نیست
+در سیستم دارای اینترنت دستور زیر را بزنید
 
 ```shell
 echo "proxy=socks5h://localhost:xxxx" >> /etc/yum.conf
-ssh -N-D XXXX behrooz@<serverWithNet>
 ```
 
+در سیستم بدون اینترنت دستور زیر را بزنید
 
-
-
-
+```shell
+[ssh -f -N -D XXXX behrooz@systemWithInternet] # or [ssh -N -D XXXX behrooz@systemWithInternet]
+```
 
 
 # 6.PortForwarding-tunnel(Local)
