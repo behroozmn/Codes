@@ -86,7 +86,6 @@ ssh -o StrictHostKeyChecking=no user@10.0.20.2 # [OR] ssh -o StrictHostKeyChecki
 # روش دوم
 cat ~/.ssh/id_rsa.pub | ssh User@YourServerIPAddress "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
 # [OR] scp /home/user/.ssh/id_rsa.pub user@YourServerIPAddress:/home/user/.ssh
-
 ```
 
 </div>
@@ -128,7 +127,6 @@ echo 'Acquire::http::proxy "socks5h://127.0.0.1:XXXX"; ' >> /etc/apt/apt.conf.d/
 
 ```shell
 [ssh -f -N -D XXXX behrooz@systemWithInternet] # or [ssh -N -D XXXX behrooz@systemWithInternet]
-
 ```
 
 ### روش جایگزین
@@ -138,7 +136,6 @@ echo 'Acquire::http::proxy "socks5h://127.0.0.1:XXXX"; ' >> /etc/apt/apt.conf.d/
 ```shell
 [ssh -f -N -D XXXX behrooz@systemWithInternet] # or [ssh -N -D XXXX behrooz@systemWithInternet]
 [apt --option Acquire::HTTP::Proxy="socks5h://127.0.0.1:XXXX" update
-
 ```
 
 ## Trick3-yum
@@ -154,7 +151,6 @@ echo "proxy=socks5h://localhost:xxxx" >> /etc/yum.conf
 ```shell
 [ssh -f -N -D XXXX behrooz@systemWithInternet] # or [ssh -N -D XXXX behrooz@systemWithInternet]
 ```
-
 
 # 6.PortForwarding-tunnel(Local)
 
