@@ -362,7 +362,7 @@ Diretory/ #نادیده گرفتن یک دایرکتوری
 * [-d]: اجرای ایمیج در بک‌گراند
     * docker run -d [Image]   # یک کانینر را در بک‌گراند بالا می‌آورد و هش آن را نمایش می‌دهد
     * docker run -d --name نام‌برای‌کانتینر ImageName
-* [-e]:‌ define a new EnvironmentVariable
+* [-e]: define a new EnvironmentVariable
 * [-H]:ریموت روی سرور داکر در آی‌پی خاص و اجرای دستور
     * Docker -H=RemoteIP:2222 Command
     * docker -H=10.10.0.10:2222 run ImageName
