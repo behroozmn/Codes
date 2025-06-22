@@ -157,11 +157,11 @@ echo "proxy=socks5h://localhost:xxxx" >> /etc/yum.conf
 * AllowTcpForwarding yes
 * Gatewayports yes
 
-![sshL.jpg](_srcFiles/Images/sshL.jpg "sshL.jpg")
+![sshL.jpg](../_srcFiles/Images/sshL.jpg "sshL.jpg")
 
 # 7.PortForwarding-tunnel(Remote)
 
 * AllowTcpForwarding yes
 * Gatewayports yes
 
-![sshR.jpg](_srcFiles/Images/sshR.jpg "sshR.jpg")
+![sshR.jpg](../_srcFiles/Images/sshR.jpg "sshR.jpg")

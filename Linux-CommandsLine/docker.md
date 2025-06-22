@@ -1,6 +1,6 @@
 <div dir="rtl">
-# 1.Concept
 
+# 1.Concept
 
 **ایمیج**:
 
@@ -28,6 +28,16 @@
 * Kubernetes: [متن‌باز][استفاده گسترده‌ در صنعتIT][امکانات پیشرفته‌تر نسبت به Docker Swarm]
 * Apache Mesos
 
+
+* EnginDocker:سروری که در روی آن داکر نصب شده است
+    * DockerDaemon: پروسه‌اصلی داکر که در بک گراند کار می‌کند و مدیریت شبکه داکر و کانتینرها و ایمیج‌ها و غیره
+    * REST API: قابلیت ارتباط برنامه‌ها با کانتینرها در بستر این سکو میسر است
+    * Docker CLI: رابط فط فرمان
+
+* cgroup یا ControlGroup: إعمال محدودیت برای کانتینرها جهت استفاده از منابع(گروهی برای محدود کردن منابع)
+    * docker run--cpu=1.5 ImageName
+    * docker run --memory=100m imageName
+
 **نکات:**
 
 * داکرهاست: همان سیستم عامل خودمان است که برنامه داکر در آن نصب شده است
@@ -38,4 +48,37 @@
 * نام hostname های کانتینرهای داکر همان DockerId است
 * داکر با زبان go نوشته شده است
 
+# 2.Network
+
+آی پی در کانتیرها تفاوت می‌کند و هربار آی پی ممکن است تغییر کند پس اگر بخواهیم با یک کانتینر ارتباط بگیریم توصیه می‌شود که از نام استفاده نماییم تغییرات آی پی سبب بروز اشکال نشود
+
+* Bridge:  پورت باز بصورت مجازی به کانتینر اختصاص داشته و برای هاست اصلی و دیگر کانتینرها اعمال نمی‌شود
+    * docker run myImage
+* None
+    * docker run myImage --network=none
+* Host: پورت باز دقیقا روی هاست فیزیکی باز می‌شود و در سرور فیزیکی درحال لیستِن می باشد
+    * docker run myImage --network=host
+
+* Change subnet for some container
+    * docker network create --driver bridge --subnet X.Y.W.Z/16 custom-isolated-network
+
+# 3.Repository
+
+نکته: عمل ارسال به ریپوزیتوری(پوش کردن) لایه لایه انجام می‌شود یعنی اگر تنها یک لایه تغییر نماید آنگاه تنها یک لایه ارسال می‌شود
+
+* [login] #در خط فرمان به آی‌دی از قبل ساخته شده خودمان در سایت داکر هاب لاگین می‌کنیم
+    * docker login #enter user and password
+* [push]: ارسال ایمیج به داکرهاب
+    * docker tag imagNameOrID [IdOnDockerHub]/[NewNameForVisibleOnDockerHub]
+    * docker push [id]/[name]
+* [pull]: دریافت ایمیج از داکر هاب
+    * docker pull [NameOfImageOnDockerHub] #دانلود یک ایمیج داکر از روی داکرهاب
+    * docker pull docker/whalesay #دانلود ایمیج مدنظر با حجم تقریبا۷۰مگابایت
+        * docker run docker/whalesay cowsay salam # ایجاد یک کانتینر از ایمیج موردنظر و اجرای دستور و پس از اتمام دستور کانتینر از بین می‌رود
+
 </div>
+
+
+
+
+![Docker-Concept.jpg](../_srcFiles/Images/Docker-Concept.jpg "Docker-Concept.jpg")
