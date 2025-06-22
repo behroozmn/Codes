@@ -151,7 +151,7 @@
 
 ![Docker-DockerFile.jpg](../_srcFiles/Images/Docker-DockerFile.jpg "Docker-DockerFile.jpg")
 
-## 5.1.Contents
+## 5.1.🔎️Contents
 
 یک داکر فایل شامل موارد زیر است
 
@@ -210,7 +210,7 @@
 * MAINTAINER: نام سازنده و اطلاعات
     * MAINTAINER "behroozmn@chmail.ir"
 
-## 5.2.Example
+## 5.2.💡️Example
 
 ```dockerfile
 1-CreateDockerFile
@@ -259,7 +259,7 @@
 
 </div>
 
-## 6.1.Contents
+## 6.1.🔎️Contents
 
 یک داکر کامپوز شامل موارد زیر است
 
@@ -289,7 +289,7 @@
     * no: هنگام کرش کردن ریست نکند
     * unless-stopped: ریست هنگام استاپ کردن سرویس
 
-## 6.2.Example
+## 6.2.💡️Example
 
 ```dockerfile
 [docker composer-yaml]
@@ -334,7 +334,7 @@ Diretory/ #نادیده گرفتن یک دایرکتوری
 
 # 8.COMMANDs
 
-## docker run
+## 📍️docker run
 
 * اجرای یک دستور بر پایه یک ایمیج که سبب تولید یک کانتینر می‌شود و هرگاه دستور تمام شود آنگاه کانتینر ازبین می‌رود
 * نکته۱:کانتینرها درواقع پروسس هستند که در قالب ایمیج ایجاد می‌شوند و پس از اجرا تمام و از بین می‌روند
@@ -388,7 +388,7 @@ docker run -d --name <N> -e APP_PORT=7070 -p 8081:7070 <Image>
 docker  run --rm ..........  # run after kill after delete
 ```
 
-## docker stop
+## 📍️docker stop
 
 ```shell
 docker stop Name #استاپ کردن یک کانتینر
@@ -397,7 +397,7 @@ docker container prune #  اگر کانتینرهای استاپ شده زیاد
 
 ```
 
-## docker save
+## 📍️docker save
 
 ذخیره یک ایمیج
 
@@ -405,7 +405,7 @@ docker container prune #  اگر کانتینرهای استاپ شده زیاد
 docker save -o <Name>.tar.gz Repository:Tag
 ```
 
-## docker exec
+## 📍️docker exec
 
 اجرای یک دستور جدید در یک کانتینر موجود که هم‌اکنون درحال اجرای دستور است
 
@@ -414,7 +414,7 @@ docker exec -it <NameContiner> <Commnads>
 docker exec -it <NameContiner> /bin/bash
 ```
 
-## docker cp
+## 📍️docker cp
 
 کپی اطلاعات کانتینر درحال اجرا برروی سیستم فیزیکی ولوکال خودمان و برعکس
 
@@ -424,7 +424,7 @@ docker cp f39a65:/app/My_file.txt /home/user/Document
 docker cp <localHostSystem> <ContainerID>:fullFileName #کپی از سیستم به کانتینر
 ```
 
-## docker commit
+## 📍️docker commit
 
 ذخیره اطلاعات یک کانتینر و تبدیل به یک ایمیج
 
@@ -432,7 +432,7 @@ docker cp <localHostSystem> <ContainerID>:fullFileName #کپی از سیستم �
 docker commit <ContainerID> <repository:[Tag]>
 ```
 
-## docker volume
+## 📍️docker volume
 
 MountPoint:‌مسیری که در دستورinspect نمایش داده می‌شود و نشان می‌دهد که والیوم در کدام مسیر لینوکس اصلی قرار دارد
 
@@ -451,7 +451,7 @@ MountPoint:‌مسیری که در دستورinspect نمایش داده می‌
 
 </div>
 
-## docker load
+## 📍️docker load
 
 دریافت ورودی و یک ایمیج را در ایمیج های داکر لود میکند
 
@@ -459,13 +459,13 @@ MountPoint:‌مسیری که در دستورinspect نمایش داده می‌
 docker load -i <PATH.tar.gz>
 ```
 
-## docker rmi
+## 📍️docker rmi
 
 ```shell
 docker rmi [<Container ID>|<NAME>]
 ```
 
-## docekr ps
+## 📍️docekr ps
 
 * نمایش کانینرهای درحال اجرای دستور در سیستم عامل کنونی را نشان می‌دهد که درحال اجرای چه دستوری است
 * نکته۱:کانتینرها درواقع پروسس هستند که در قالب ایمیج اجرا می‌شوند و پس از اجرا تمام و از بین می‌روند
@@ -479,7 +479,7 @@ docker rmi [<Container ID>|<NAME>]
 
 </div>
 
-## docker build
+## 📍️docker build
 
 * برای build کردن نیاز به یک داکرفایل است
 * تمام Step های ران شده در build یک ایمج کش می‌شود تا در نوبت بعدی از این استفاده شود
@@ -497,7 +497,7 @@ docker rmi [<Container ID>|<NAME>]
 
 </div>
 
-## docker Container
+## 📍️docker Container
 
 نکته: در توزیع لینوکس alpine دستور apt نداریم بلکه معادل آن apk است
 
@@ -516,7 +516,7 @@ docker rmi [<Container ID>|<NAME>]
 
 </div>
 
-## docker docker-machin
+## 📍️docker docker-machin
 
 ```shell
 docker-machine ls
@@ -524,7 +524,7 @@ docker-machine ssh default <Command>
 docker-machine ip <ContainerName>
 ```
 
-## docker volume
+## 📍️docker volume
 
 ```shell
 docker volume create --name Behrooz
@@ -532,20 +532,20 @@ docker volume ls
 docker volume inspect behrooz
 ```
 
-## docker history
+## 📍️docker history
 
 ```shell
 docker history [ImageName] #نمایش تاریخچه دستورات
 ```
 
-## docker inspect|info
+## 📍️docker inspect|info
 
 ```shell
 docker info # show environments
 docker inspect <CoutainerID|Name>
 ```
 
-## docker logs
+## 📍️docker logs
 
 <div dir="ltr">
 
@@ -562,7 +562,7 @@ docker logs [ContainerID | NAME] #Fetch the logs of a container منظور خط�
 
 </div>
 
-## docker image
+## 📍️docker image
 
 * برای تولید یک ایمیج Custom باید ابتدا یک DockerFile ایجاد کنیم و دستورالعمل‌هایمان را داخل آن قرار دهیم. سپس داکر فایل را بیلد نماییم یعنی داکر فایل خط به خط خوانده شود و پس از اتمام آن خروجی حاصله را توسط دستور build به یک ایمیج تبدیل کنیم
 * نکته: توزیع alpine یک توزیع بسیار سبک از لینوکس است که بجای دانلود ایمیج لینوکس با حجم زیاد بهتر است این را استفاده نمایید
