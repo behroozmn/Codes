@@ -5,7 +5,7 @@
 **ایمیج**:
 
 * نسخه برنامه یا سرویس یا سیستم‌عامل یا هرچیزی که برپایه داکر ارائه شده است و کانتینرها بر پایه آن به اجرا درخواهند آمد
-* شامل تمامی مواردی که یک اپلیکیشن برای اجرا نیاز دارد شامل :‌[PieceOfOS] [ThirdPartyLibraries] [ApplicationsFiles] [EnvironmentsVariables]
+* شامل تمامی مواردی که یک اپلیکیشن برای اجرا نیاز دارد شامل :[PieceOfOS] [ThirdPartyLibraries] [ApplicationsFiles] [EnvironmentsVariables]
 
 **کانتینر**:
 
@@ -47,7 +47,7 @@
 * Host: پورت باز دقیقا روی هاست فیزیکی باز می‌شود و در سرور فیزیکی درحال لیستِن می باشد
     * docker run myImage --network=host
 
-</div>
+<div dir="ltr">
 
 * [ls]: List networks
     * docker network ls
@@ -60,7 +60,7 @@
 * [prune]: Remove all unused networks
 * [rm]: Remove one or more networks
 
-<div dir="rtl">
+</div>
 
 # 3.Repository
 
@@ -96,7 +96,7 @@
 * برای ارتباط گرفتن با شرکت های ارائه دهنده خدمات کلود(مثلا ماشین مجازی) توسط کامندلاین باید در چهار چوب API ارائه شده توسط این سایت‌ها اقدام نماییم و برای ارتباط حتما باید token ایجاد نماییم و توسط آن توکن دستورات را به شرکت میزبان ارائه دهنده ماشین مجازی کلود بدهیم(معمولا در منوی API دنبال ایجاد توکن ساختن بگردید)
 * توسط دستور docker-machine می‌توان یک ماشین مجازی توسط کامند لاین در سایت دیجیتال اوشن ساخت که به اصطلاح می‌گویند ماشین مجازی provision می‌کنیم
 
-</div>
+<div dir="ltr">
 
 * docker-machine --version #Current version is 19.03.9
 * docker-machine rm machineName -f #حذف یک ماشین ساخته شده
@@ -110,7 +110,7 @@
 
 ![dockerMachine01.jpg](../_srcFiles/Images/dockerMachine01.jpg "dockerMachine01.jpg")
 
-<div dir="rtl">
+</div>
 
 ## 4.2.✅ terraform
 
@@ -151,13 +151,11 @@
 
 ![Docker-DockerFile.jpg](../_srcFiles/Images/Docker-DockerFile.jpg "Docker-DockerFile.jpg")
 
-
-</div>
-
 ## 5.1.Contents
 
 یک داکر فایل شامل موارد زیر است
 
+<div dir="ltr">
 
 * FROM:تعیین ایمیج پایه که قرار است دستورات بر روی آن اجرا شود و باید اولین خط در داکرفایل باشد
     * FROM baseImage
@@ -226,9 +224,9 @@
    sudo docker run -p 5001:5000 <name>
 ```
 
-# 6.DockerCompose
+</div>
 
-<div dir="rtl">
+# 6.DockerCompose
 
 * اگر بخواهیم چندین سرویس همزمان در یک ایمیج قرار داده شود تا این سرویس‌ها یکدیگر را ببینند
 * باید docker-compose جداگانه نصب شود و پس از نصب می‌توان دستور docker-compose --version از صحت نصب مطلع شویم
@@ -238,7 +236,8 @@
 * برای هر سرویس باید داکر فایل مستقل داشت(ایمیج مستقل که در داکر فایل مختص همان سرویس مورد استفاده قرار بگیرد. یعنی دانلود کنیم یا خود داکر توسط کامپوزر دانلود نماید)
 *
 
-</div>
+<div dir="ltr">
+
 
 
 **docker-compos COMMAND**
@@ -258,16 +257,16 @@
 * [ps]: List containers
     * docker-compose ps
 
+</div>
+
 ## 6.1.Contents
 
 یک داکر کامپوز شامل موارد زیر است
 
-<div dir="rtl">
-
 * اولین خط همواره باید ورژن باشد و عدد آن باید مطابق با ورژن «Docker Engine» باشد که مثلا در ورژن‌های داکر بالاتر از 19.03 می‌توان ورژن را ۳.۸ قرار داد
 * هرکدام از سرویس‌ها یک سرور با آی‌پی مستقل خواهند بود یعنی اگر داخل هرکدام دیگری را پینگ کنیم پاسخ را خواهیم گرفت(دستور پینگ و نام هاست را نام سرویس می‌گذاریم یعین ping web)
 
-</div>
+<div dir="ltr">
 
 * version: # اولین خط همیشه باید تعیین ورژن باشد
     * ورژن رو باید با توجه به نسخه داکر هاست تعیین کنین که در سایت داکر نیز آمده است
@@ -322,25 +321,283 @@ volumes:
 ```
 
 ![Docker-compose.jpg](../_srcFiles/Images/Docker-compose.jpg "Docker-compose.jpg")
+</div>
 
-# 7.sockerignore
+# 7.dockerignore
 
 * فایل sockerignore که شروع آن با یک نقطه است(برای شناساندن به سیستم‌عامل‌ها که این فایل از نوع مخفی است) برای نادیده گرفتن فایل‌ها و دایرکتوری‌ها می‌باشد.
 * مثال: هنگام کپی تمام محتوی یک دایرکتوری که ذیل آن یک دایرکتوری ignore شده وجود دارد، دراین حالت پوشه ignore شده کپی نمی‌شود
 
-```dockerfile
+```shell
 Diretory/ #نادیده گرفتن یک دایرکتوری
 ```
 
-
-
 # 8.COMMANDs
 
-## 
+## docker run
 
-<div dir="rtl">
+* اجرای یک دستور بر پایه یک ایمیج که سبب تولید یک کانتینر می‌شود و هرگاه دستور تمام شود آنگاه کانتینر ازبین می‌رود
+* نکته۱:کانتینرها درواقع پروسس هستند که در قالب ایمیج ایجاد می‌شوند و پس از اجرا تمام و از بین می‌روند
+* نکته۲: هر ایمیج که توسط دستور run سبب ایجاد یک کانتینر می‌شود یک کاری را باید انجام دهد. هنگامی که دستور مورد نظر برای آن ایمیج تمام شد بصورت خودکار از بین می‌روند
+* نکته۳: اگر دستور ران شده سبب باز کردن پورت و ارائه سرویس باشد آنگاه آن کانتینر همچنان دردسترس است و در دستور docker ps آن ایمیج نمایش داده می‌شود که در حال ران است. اگر سرویس مد نظر crash کند آنگاه کانتینر از بین می‌رود
+* نکته۴: وظیفه کانتینرها این نیست که بیایند و یک سیستم عامل بر پایه ایمیج ایجاد نمایند
+* نکته۵(خیلی‌مهم): وظیفه‌ی کانتینرها اجرای «دستور» یا «جاب» یا «محاسبه» یا ا«جرای‌یک‌پردازه» و از این قبیل است و هنگامی که پردازش آنها تمام شد، بطور خودکار از بین می‌شوند
+* نکته۶: به ازای هر کانتینر که برای اجرای یک دستور خاص توسط «داکر ران» ایجاد می‌شود یک محیط ایزوله و مستقل است و درصورت اجرای مجدد همان دستور یک کانتینر در محیط ایزوله و مستقل و با آی‌دی دیگر برایش ایجاد خواهد شد
+* HotFix: همزمان که در سیستم خودتان درحال اصلاح کد هستید این تغییرات در داخل کانتینر هم لحاظ بشود. اگر چه این فایل‌ها در لایه readonlyداکر فایل(در وضعیت غیرقابل تغییر) قرار گرفته باشد
 
+<div dir="ltr">
 
-
+* [docker run]: Run a command in a new container
+    * Docker run [ImageName] [Commands]#
+    * docker run ubuntu # ایمیج اوبونتو مورد استفاده قرار می‌گیرد تا یک دستور را اجرا نماید و چون در این دستور آرگومانی که کامند را مشخص کند ندادیم پس کاری انجام نمی‌دهد و خودکار بسته می‌شود
+    * docker run ubuntu sleep ۱۰ #به کانتینر اوبونتو می‌گوید که دستور توقف زمانی۱۰ثانه را در بش اجرا کن و پس ازاتمام کانتینر را از بین ببر یعنی اگر در مدت ۱۰ثانیه در ترمینال دیگر دستور «داکر پی‌‌اِس» را بزنیم کانتینر را خواهیم دید
+    * docker run mongodb #جستجو در ایمیح‌های داکرهاست(سیستم‌لوکال) و درصورت عدم وجود، جستجو در ریپوزیتوری پیش‌فرض(داکرهاب) و سپس دانلود و نهایتا استفاده از آن
+    * docker run -it node:16.5.0-alpine3.14 #ورود به کنسول ریَکت
+    * docker run -it node:16.5.0-alpine3.14 sh #ورود به شل ایمیج
+* [-it]: abbrivationOf Interactive اجازه استفاده مستقیم به ایمیج می‌دهد
+    * docker run -it ubuntu bash #خط فرمان بش داخل ایمیج را در بصورت اینتراکتیو در اختیار کاربر قرار میدهد و صفحه ترمینال سیستم‌عامل لوکال به بش داخل ایمیج تغییر می‌کند
+* [-p <portOnLocalHost>:<portOnImage>] #مَپ کردن پورت داخلی یک ایمیج روی سیستم لوکال
+    * docker run -p 5001:5000  [نام‌ایمیج] #پورت۵۰۰۱ سرور اصلی(فیزیکی) را به ۵۰۰۰ ایمیج(کانتینر) وصل می‌کند
+    * نکته(بهروز باید بعدا بررسی کند): این سوییچ باید بعد از دستور سوییچ دی اجرا شود
+* [-d]: اجرای ایمیج در بک‌گراند
+    * docker run -d [Image]   # یک کانینر را در بک‌گراند بالا می‌آورد و هش آن را نمایش می‌دهد
+    * docker run -d --name نام‌برای‌کانتینر ImageName
+* [-e]:‌ define a new EnvironmentVariable
+* [-H]:ریموت روی سرور داکر در آی‌پی خاص و اجرای دستور
+    * Docker -H=RemoteIP:2222 Command
+    * docker -H=10.10.0.10:2222 run ImageName
+* [-u userName]: تعیین نام یوزر برای اجرای دستور
+    * docker run -it -u root face4 sh
+* [--name NAME]: دادن نام خاص به کانتینر
+* [-v VolumeName:DirectoryOnContainer]
+    * docker rin -d -p 3001:3000 -v myShareVolume:/Dire1/subdir imageName
+    * نکته:اگر از قبل توسط دستور داکر والیوم ایجاد نکرده باشیم، به محض قرار دادن نام جدید بعنوان والیوم آن را میسازد
+    * نکته۲:مسیر داده شده در کانتینر که قرار است به والیوم متصل شود خودکار ایجاد می‌شود ونیاز به از قبل ساخته شدن نیست
+* HotFix[توجه به توضیحات]
+    * docker run ... -v DirOnLocal:DirOnContainer imageName
+    * مثال۱: docker run -d -p 3001:3000 -v $(pwd):/app imageName
 
 </div>
+
+```shell
+docker run -i -t Repo:Tag #run and go to bash of OS
+docker run -i -t --name <NAME> <Repo:Tag> #run and go to bash of OS 
+docker run -d --name <N> -v <VolumeName>:Path <Image>
+docker run ---name  <N> -v BehroozData:/data/db -p 28001:27017 -d <Image>
+docker run -d --name <N> -e APP_PORT=7070 -p 8081:7070 <Image>
+docker  run --rm ..........  # run after kill after delete
+```
+
+## docker stop
+
+```shell
+docker stop Name #استاپ کردن یک کانتینر
+docker stop [Hash | Name] # نکته۱: کانتینر رو از بین نمی‌برد بلکه استاپ میکند و بعدا با دستور استارت می‌توانیم از وضعیت استاپ خارج نماییم
+docker container prune #  اگر کانتینرهای استاپ شده زیاد داریم با این دستور می‌توانیم آنها را از بین ببریم
+
+```
+
+## docker save
+
+ذخیره یک ایمیج
+
+```shell
+docker save -o <Name>.tar.gz Repository:Tag
+```
+
+## docker exec
+
+اجرای یک دستور جدید در یک کانتینر موجود که هم‌اکنون درحال اجرای دستور است
+
+```shell
+docker exec -it <NameContiner> <Commnads>
+docker exec -it <NameContiner> /bin/bash
+```
+
+## docker cp
+
+کپی اطلاعات کانتینر درحال اجرا برروی سیستم فیزیکی ولوکال خودمان و برعکس
+
+```shell
+docker cp <ContainerID>:fullFileName <localHostSystem> #کپی از کانتینر به سیستم
+docker cp f39a65:/app/My_file.txt /home/user/Document
+docker cp <localHostSystem> <ContainerID>:fullFileName #کپی از سیستم به کانتینر
+```
+
+## docker commit
+
+ذخیره اطلاعات یک کانتینر و تبدیل به یک ایمیج
+
+```shell
+docker commit <ContainerID> <repository:[Tag]>
+```
+
+## docker volume
+
+MountPoint:‌مسیری که در دستورinspect نمایش داده می‌شود و نشان می‌دهد که والیوم در کدام مسیر لینوکس اصلی قرار دارد
+
+<div dir="ltr">
+
+* docker volume COMMAND
+* create: Create a volume
+    * docker volume create myShareVolume #ایجاد یک والیوم جدید
+* inspect: Display detailed information on one or more volumes
+    * docker volume inspec myShareVolume #نمایش جزییات والیوم ساخته شده از قبل
+* ls: List volumes
+* prune: Remove unused local volumes
+* rm: Remove one or more volumes
+    * docker volume rm volumeName
+* update: Update a volume (cluster volumes only)
+
+</div>
+
+## docker load
+
+دریافت ورودی و یک ایمیج را در ایمیج های داکر لود میکند
+
+```shell
+docker load -i <PATH.tar.gz>
+```
+
+## docker rmi
+
+```shell
+docker rmi [<Container ID>|<NAME>]
+```
+
+## docekr ps
+
+* نمایش کانینرهای درحال اجرای دستور در سیستم عامل کنونی را نشان می‌دهد که درحال اجرای چه دستوری است
+* نکته۱:کانتینرها درواقع پروسس هستند که در قالب ایمیج اجرا می‌شوند و پس از اجرا تمام و از بین می‌روند
+
+<div dir="ltr">
+
+* [-a]: تاریخچه دستورات و وضعیت کانتینرهای فعال و غیرفعال
+    * doccker ps -a
+* [-q]
+    * docker ps -a -q #show ContainerID of all containers
+
+</div>
+
+## docker build
+
+* برای build کردن نیاز به یک داکرفایل است
+* تمام Step های ران شده در build یک ایمج کش می‌شود تا در نوبت بعدی از این استفاده شود
+* پس از اتمام بیلد بعنوان گزارش پارامتر Build context یک معیار خوب برای فهم کارایی ایمیج هست که حجم آن چقدر شده است
+* در محیط عملیاتی هنگامی که بخواهیم یک ایمیج را ورژن بدهیم از تگ استفاده می‌کنیم که معمولاً عدد استفاده می‌شود(مدیریت نسخه‌ها) و برای اینکار باید در سوییچ«تی» که نام ایمیج را مشخص می‌کنیم سپس دو نقطه بگذاریم و شماره نسخه را بدهیم
+*
+
+<div dir="ltr">
+
+* [-t]: تعیین نام برای ایمیج جدید حاصله از داکر فایل
+    * نکته: اگر اسم داکرفایل را پیشفرض بگذاریم نیاز به تعیین نام نیست و نام پیش‌فرض Dockerfile است
+    * docker build -t <ImageName> <Dir>
+* [--no-cache=true|false]
+    * docker build --no-cache=true -t <TagName> <Dir>
+
+</div>
+
+## docker Container
+
+نکته: در توزیع لینوکس alpine دستور apt نداریم بلکه معادل آن apk است
+
+<div dir="ltr">
+
+* [ls] #مشاهده لیست کانیتنرهای درحال اجرا
+* [-a]: تاریخچه اجرای دستورات در کانتینرها را میدهد
+    * docker container ls -a
+* [exec] : اجرای دستور در یک کانتینر موجود
+    * docker container exec -it <ExistContainerID> bash
+* [stop]: از بین بردن کانتینر در حال اجرا
+    * docker container stop <ExistContainerID>
+* [prune]: حذف کانتینرهای اضافی که مثلا لایه‌های آنها کش شده است
+    * docker container prune #همواره ابتدا کانتینر رو هرس کنید و سپس ایمیج‌ها را هرس کنید
+*
+
+</div>
+
+## docker docker-machin
+
+```shell
+docker-machine ls
+docker-machine ssh default <Command>
+docker-machine ip <ContainerName>
+```
+
+## docker volume
+
+```shell
+docker volume create --name Behrooz
+docker volume ls
+docker volume inspect behrooz
+```
+
+## docker history
+
+```shell
+docker history [ImageName] #نمایش تاریخچه دستورات
+```
+
+## docker inspect|info
+
+```shell
+docker info # show environments
+docker inspect <CoutainerID|Name>
+```
+
+## docker logs
+
+<div dir="ltr">
+
+```shell
+docker logs [ContainerID | NAME] #Fetch the logs of a container منظور خطوط خروجی دستورات داکر است اگر در حالت بک‌گراند اجرا بگیریم
+```
+
+* [--details] #Show extra details provided to logs
+* [-f] or [--follow] : # Follow log output یعنی ته فایل رو باز می‌گذارد که خروجی جدید مشاهده شود
+* [-n] or [--tail string] #Number of lines to show from the end of the logs (default "all")
+    * docker logs ContainerName -n 5 #نمایش تعدا خط خروجی
+* [-t]: نمایش تایم برای هر خط
+    * docker logs -t -n 100 ImageName # نمایش صد خط از خروجی دستورات داکر به همراه نمایش تایم آن دستورات که به اجرا درآمده است
+
+</div>
+
+## docker image
+
+* برای تولید یک ایمیج Custom باید ابتدا یک DockerFile ایجاد کنیم و دستورالعمل‌هایمان را داخل آن قرار دهیم. سپس داکر فایل را بیلد نماییم یعنی داکر فایل خط به خط خوانده شود و پس از اتمام آن خروجی حاصله را توسط دستور build به یک ایمیج تبدیل کنیم
+* نکته: توزیع alpine یک توزیع بسیار سبک از لینوکس است که بجای دانلود ایمیج لینوکس با حجم زیاد بهتر است این را استفاده نمایید
+* نکته۲: نمونه ایمیج‌های مفید و stable را می‌توان از مسیر URL استخراج کرد که ایمیج هر برنامه بصورت تفکیک شده موجود است
+* نکته۳: وقتی یک ایمیج رو اکسپورت می‌کنیم و سپس در سیستم دوم ایمپورت می‌کنیم باید آی دی تغییر نکرده باشد
+
+<div dir="ltr">
+
+* [docker images]: نمایش ایمیج‌ها
+    * docker images
+* [ls]: list images [نمایش لیست ایمیج‌های داکرهاست(سیستم‌لوکال)خود]
+* [build]
+    * [-f] تعیین نام داکرفایل
+    * [-t] نام ایمیج جدیدی که قرار است ساخته شود
+        * docker image build -t [NewName] .
+            * اگر دستور داکر ایمج رو بزنیم نام جدید را در ستور ریپوزیتوری مشاهده خواهیم کرد
+* [rm]: حذف یک ایمیج و به تَبَع آن تمام کانتینرهای آن نیز پاک خواهند شد
+    * [-f]: تمام کانتینرهای مشتق شده از ایمیج(مثلا در ریپوزیتوری) را نیز پاک کن
+    * docker image rm <ImageID> #آی‌دی ایمیج را توسط دستر «داکر ایمیج» می‌توان استخراج کرد
+* [prune]: (Remove unused images) هرس و حذف اضافات یا اصطلاحاً «کلین‌آپ» کردن
+    * هرس کردن و حذف ایمیج‌های که با ایمیج اصلی ارتباط ندارند و اضافی یا خطرناک هستند مثل لایه‌های کش شده
+    * مثلا مواردی که در دستور «لیست ایمیج‌ها»ستون ریپوزیتوری یا ستون تگ در آن عبارت «نان» درج شده است
+    * docker image prune
+* [rm]|[remove] : Remove one or more images
+    * docker images rm
+    * [-f]: اگر وابستگی بین ایمیج‌ها باشد خطا میدهد و باید از این سوییچ استفاده شود
+* [tag]: Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE
+    * docker image tag ExistName:ExistTag newName:NewTag #ایجاد یک ایمیج جدید با نام و تگ جدید اما با هش کد مشابه
+    * نکته: اگر نام موجود باشد «اُوِررایت» می‌شود
+* [save]: ذخیره ایمیج در قالب فایل برای انتقال به سیستم دوم جهت استفاده مجدد
+    * docker image save -o [outputFile] [imageName]
+* [load]: Load an image from a tar archive or STDIN اگر بخواهیم دستی یه ایمیج رو به سیستم خود اضافه کنیم
+    * docker image load -i [imageFile]
+
+</div>
+</div>
+
+
