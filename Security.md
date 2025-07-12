@@ -69,7 +69,7 @@
 - تغییر شماره پورت‌ها[مخصوصا SSH]
 - حتی المقدور محدود کردن دسترسی‌ها به‌صورت فقط فیزیکی به سرور(بستن ریموت‌ها)
 - غیرفعال نمودن IPv6: مهاجمین معمولا ترافیک را از ورژن۶ ارسال می‌کنند
-    - باز کردن فایل /etc/sysctl.d/99-sysctl.conf و تغییر مقدار به ۱ برای پارامترهای[net.ipv6.conf.all.disable_ipv6 = 1][net.ipv6.conf.default.disable_ipv6 = 1][ net.ipv6.conf.lo.disable_ipv6 = 1] در ادامه دستور sudo sysctl -p ودر ادامه فایل /proc/sys/net/ipv6/conf/all/disable_ipv6 را باز کرده و باید مقادیر بالا عدد یک داشته باشند
+    - باز کردن فایل /etc/sysctl.d/99-sysctl.conf و تغییر مقدار به ۱ برای پارامترهای[net.ipv6.conf.all.disable_ipv6 = 1] [net.ipv6.conf.default.disable_ipv6 = 1][ net.ipv6.conf.lo.disable_ipv6 = 1] در ادامه دستور sudo sysctl -p ودر ادامه فایل /proc/sys/net/ipv6/conf/all/disable_ipv6 را باز کرده و باید مقادیر بالا عدد یک داشته باشند
 - استفاده از SFTP بجای FTP
     - TTP رمزنگاری ندارد
     - FTPS فقط رمزنگاری اعتبارنامه‌ها و نه انتقال فایل[FTP over TLS]
@@ -82,7 +82,7 @@
 
 # Notations نکات اضافی
 
-- سیستم عامل های رقیب کالی:[سیستم عامل Parrot][سیستم عامل Backbox]
+- Kali Alterntives OS: 1-Parrot os  2-Backbox os
 
 ## 5 Step for do Hacking...
 
