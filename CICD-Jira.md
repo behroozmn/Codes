@@ -2,7 +2,6 @@
 
 رویکرد مدیریت توسعه‌نرم‌افزار است که برپایه اصولی ۱۲گانه استوار است(توسط گروهی توسعه‌دهنده در سال ۲۰۰۱)
 
-
 1. Customer satisfaction(رضایت‌مشتری)
 2. Welcome changing requirementsm(پاسخ‌به‌تغییرات)
 3. Deliver working software frequently(تحویل‌مداوم)
@@ -16,12 +15,12 @@
 11. Regular reflection and adjustment
 12. Attention to good design and technical excellence
 
----
+# JQL(JiraQueryLanguage)
 
-- JQL
-    - sprint in openSprints() AND assignee = currentUser() AND (status="In Progress" OR status="To Do")
-    - [Pycharm]:assignee=currentUser() and resolution=Unresolved order by updated
+sprint in openSprints() AND assignee = currentUser() AND (status="In Progress" OR status="To Do")
+[Pycharm]:assignee=currentUser() and resolution=Unresolved order by updated
 
+# مفاهیم و توضیحات
 
 <div dir="rtl">
 
@@ -37,8 +36,6 @@
     - تیم‌ها می‌توانند از اسپرینت‌های ثابت استفاده کنند، اما همچنین می‌توانند به صورت پیوسته و بدون نیاز به اسپرینت‌های مشخص کار کنند
     - تیم‌ها از تابلو کانبان برای نمایش وضعیت کارها استفاده می‌کنند
 - **Lean**: هدف آن افزایش ارزش برای مشتری با کمترین هزینه و زمان ممکن است.
-
-
 - **UserStory**: ویژگی جدید سیستم که کاربر نهایی درخواست ایجاد آن را داده است
     - A user story is a short and simplified description of a feature in the system which is being developed
 - **Epic**:بخش‌های بزرگ کار که قابلیت تقسیم‌بندی به کارهای کوچک‌تر در آن وجود دارد
