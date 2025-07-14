@@ -16,11 +16,12 @@
 11. Regular reflection and adjustment
 12. Attention to good design and technical excellence
 
-
+---
 
 - JQL
     - sprint in openSprints() AND assignee = currentUser() AND (status="In Progress" OR status="To Do")
     - [Pycharm]:assignee=currentUser() and resolution=Unresolved order by updated
+
 
 <div dir="rtl">
 
