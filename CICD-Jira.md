@@ -1,5 +1,3 @@
-<div dir="rtl">
-
 - **Agile**: رویکرد مدیریت توسعه‌نرم‌افزار است که برپایه اصولی ۱۲گانه استوار است[توسط گروهی توسعه‌دهنده در سال ۲۰۰۱]:
     1. رضایت مشتری یا Customer satisfaction
     2. پاسخ به تغییرات یا Welcome changing requirementsm
@@ -13,6 +11,12 @@
     10. The best architectures, requirements, and designs emerge from self-organizing teams
     11. Regular reflection and adjustment
     12. Attention to good design and technical excellence
+- JQL
+    - sprint in openSprints() AND assignee = currentUser() AND (status="In Progress" OR status="To Do")
+    - [Pycharm]:assignee=currentUser() and resolution=Unresolved order by updated
+
+<div dir="rtl">
+
 - متدولوژی‌ها:
     - **Scrum**:شامل مواردی نظیر ScrumMaster و ProductOwner و [Sprint] و [2الی۳هفته و نهایتا یک ساختار جدید به پروژه]
     - **Kanban** : کار در محدوده فرآیند خاص یعنی WorkInProcess است
@@ -34,6 +38,3 @@
 
 </div>
 
-- JQL
-    - sprint in openSprints() AND assignee = currentUser() AND (status="In Progress" OR status="To Do")
-    - [Pycharm]:assignee=currentUser() and resolution=Unresolved order by updated
