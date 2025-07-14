@@ -3,9 +3,9 @@
 رویکرد مدیریت توسعه‌نرم‌افزار است که برپایه اصولی ۱۲گانه استوار است(توسط گروهی توسعه‌دهنده در سال ۲۰۰۱)
 
 
-1. رضایت مشتری یا Customer satisfaction
-2. پاسخ به تغییرات یا Welcome changing requirementsm
-3. تحویل مداوم یا Deliver working software frequently
+1. Customer satisfaction(رضایت‌مشتری)
+2. Welcome changing requirementsm(پاسخ‌به‌تغییرات)
+3. Deliver working software frequently(تحویل‌مداوم)
 4. Business and developers must work together
 5. Build projects around motivated individuals
 6. Working software is the primary measure of progress
