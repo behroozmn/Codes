@@ -42,4 +42,3 @@ sprint in openSprints() AND assignee = currentUser() AND (status="In Progress" O
     - به یک نوع مسئله (Issue Type) اشاره دارد که نمایانگر یک ویژگی بزرگ یا یک هدف کلی در پروژه است. اپیک‌ها معمولاً شامل مجموعه‌ای از استوری‌ها (Stories) و تسک‌ها (Tasks) هستند که به یک هدف مشترک مرتبط می‌شوند.
 
 </div>
-
