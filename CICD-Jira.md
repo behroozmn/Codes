@@ -1,16 +1,23 @@
-- **Agile**: رویکرد مدیریت توسعه‌نرم‌افزار است که برپایه اصولی ۱۲گانه استوار است[توسط گروهی توسعه‌دهنده در سال ۲۰۰۱]:
-    1. رضایت مشتری یا Customer satisfaction
-    2. پاسخ به تغییرات یا Welcome changing requirementsm
-    3. تحویل مداوم یا Deliver working software frequently
-    4. Business and developers must work together
-    5. Build projects around motivated individuals
-    6. Working software is the primary measure of progress
-    7. Sustainable development
-    8. Continuous attention to technical excellence
-    9. Simplicity
-    10. The best architectures, requirements, and designs emerge from self-organizing teams
-    11. Regular reflection and adjustment
-    12. Attention to good design and technical excellence
+# Agile
+
+رویکرد مدیریت توسعه‌نرم‌افزار است که برپایه اصولی ۱۲گانه استوار است(توسط گروهی توسعه‌دهنده در سال ۲۰۰۱)
+
+
+1. رضایت مشتری یا Customer satisfaction
+2. پاسخ به تغییرات یا Welcome changing requirementsm
+3. تحویل مداوم یا Deliver working software frequently
+4. Business and developers must work together
+5. Build projects around motivated individuals
+6. Working software is the primary measure of progress
+7. Sustainable development
+8. Continuous attention to technical excellence
+9. Simplicity
+10. The best architectures, requirements, and designs emerge from self-organizing teams
+11. Regular reflection and adjustment
+12. Attention to good design and technical excellence
+
+
+
 - JQL
     - sprint in openSprints() AND assignee = currentUser() AND (status="In Progress" OR status="To Do")
     - [Pycharm]:assignee=currentUser() and resolution=Unresolved order by updated
