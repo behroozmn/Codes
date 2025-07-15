@@ -1,3 +1,5 @@
+<div dir="rtl">
+
 # fun Comamnds
 
 ```shell
@@ -35,14 +37,15 @@ convert <input.png> -resize 50% <output.jpg> #کاهش ۵۰درصدی طول و 
 
 برنامه‌ای برای اجرای فایل صوتی در خط فرمان
 
-
 # WINOWS
 
 ## yad
 
 نمایش یک پنجره به سبک برنامه نویسی ویژوال:
 
-`echo My text | yad --text-info --width=400 --height=200 `
+```shell
+echo My text | yad --text-info --width=400 --height=200
+```
 
 ```shell
 yad \
@@ -67,7 +70,9 @@ yad \
 
 اگر بخواهیم در یک متن با خاصیت بلی ویا خیر در قلب ترمینال نمایش شود (همانند ok و Cancell در حین نصب آپاچی) از دستور زیر استفاده می‌نماییم:
 
-`whiptail --title "<message box title>" --msgbox "<text to show>" <height> <width>`
+```shell
+whiptail --title "<message box title>" --msgbox "<text to show>" <height> <width>
+```
 
 [url1](https://unix.stackexchange.com/questions/144924/how-to-create-a-message-box-from-the-command-line)
 [url2](https://stackoverflow.com/questions/7035/how-to-show-a-gui-message-box-from-a-bash-script-in-linux)
@@ -78,7 +83,9 @@ yad \
 
 ### [Yes/No]Box
 
-`whiptail --title "<dialog box title>" --yesno "<text to show>" <height> <width>`
+```shell
+whiptail --title "<dialog box title>" --yesno "<text to show>" <height> <width>
+```
 
 ```shell
 #!/bin/bash
@@ -102,7 +109,9 @@ fi
 
 ### ChecklistDialog
 
-`whiptail --title "<checklist title>" --checklist "<text to show>" <height> <width> <list height> [ <tag> <item> <status> ] . . .`
+```shell
+whiptail --title "<checklist title>" --checklist "<text to show>" <height> <width> <list height> [ <tag> <item> <status> ] . . .
+```
 
 ```shell
 #!/bin/bash
@@ -123,7 +132,9 @@ fi
 
 ### FormInput
 
-`whiptail --title "<input box title>" --inputbox "<text to show>" <height> <width> <default-text>`
+```shell
+whiptail --title "<input box title>" --inputbox "<text to show>" <height> <width> <default-text>
+```
 
 ```shell
 #!/bin/bash
@@ -139,7 +150,9 @@ fi
 
 ### MenuBox
 
-`whiptail --title "<menu title>" --menu "<text to show>" <height> <width> <menu height> [ <tag> <item> ] . . .`
+```shell
+whiptail --title "<menu title>" --menu "<text to show>" <height> <width> <menu height> [ <tag> <item> ] . . .
+```
 
 ```shell
 #!/bin/bash
@@ -160,7 +173,9 @@ fi
 
 ### MessageBox
 
-`whiptail --title "<message box title>" --msgbox "<text to show>" <height> <width>`
+```shell
+whiptail --title "<message box title>" --msgbox "<text to show>" <height> <width>
+```
 
 ```shell
 #!/bin/bash
@@ -169,7 +184,9 @@ whiptail --title "Test Message Box" --msgbox "Create a message box with whiptail
 
 ### PasswordBox
 
-`whiptail --title "<password box title>" --passwordbox "<text to show>" <height> <width>`
+```shell
+whiptail --title "<password box title>" --passwordbox "<text to show>" <height> <width>
+```
 
 ```shell
 #!/bin/bash
@@ -185,7 +202,9 @@ fi
 
 ### ProgressBar
 
-`whiptail --gauge "<test to show>" <height> <width> <inital percent>`
+```shell
+whiptail --gauge "<test to show>" <height> <width> <inital percent>
+```
 
 ```shell
 #!/bin/bash
@@ -199,7 +218,9 @@ fi
 
 ### RadiolistDialog
 
-`whiptail --title "<radiolist title>" --radiolist "<text to show>" <height> <width> <list height> [ <tag> <item> <status> ] . . .`
+```shell
+whiptail --title "<radiolist title>" --radiolist "<text to show>" <height> <width> <list height> [ <tag> <item> <status> ] . . .
+```
 
 ```shell
 #!/bin/bash
@@ -251,3 +272,5 @@ echo $my_variable
 ```shell
 zenity --calendar
 ```
+
+</div>
