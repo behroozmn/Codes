@@ -135,4 +135,10 @@ nc -l -p 55000 > /tmp/FIle.txt # Server1
 netcat <IPserver1> 55000 < File.txt # server2
 ```
 
+```shell
+nc -l -p 55000 > /tmp/FIle.txt # Server1
+nc <IPserver1> 55000 < File.txt # server2
+```
+
+
 </div>

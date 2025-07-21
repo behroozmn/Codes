@@ -1,4 +1,3 @@
-
 # group: PackageManagements
 
 ## Debian
@@ -10,23 +9,21 @@ part1 part2 part3 part4
 ```
 
 * part1
-  * deb: دانلود فایل‌های اجرایی
-  * deb-src: دانلود سورس پکیج‌شده که برای دِوِلُپ یا دیباگ استفاده می‌شود
+    * deb: دانلود فایل‌های اجرایی
+    * deb-src: دانلود سورس پکیج‌شده که برای دِوِلُپ یا دیباگ استفاده می‌شود
 * part2
-  * URL
+    * URL
 * part3
-  * bullseye → Debian11
+    * bullseye → Debian11
 * part4
-  * Main:بطور کامل توسط شرکت سازنده پشتیبانی می‌شود
-  * Restricted: پشتیبانی می‌شود ولی بطور کامل پشتیبانی نمیشود مثل درایور های شرکت ان ویدیا
-  * Universe: توسط کامیونتی‌ها پشتیبانی می‌شود و برنامه های رسمی نیستند
-  * Multiverse: رایگان نیستنتد
-  * partner: [بهروز: باید بررسی شود]
-  * می‌تواند چندین قسمت باشد یعنی هم شامل main و هم شامل Universe و هم شامل موارد دیگر باشد
+    * Main:بطور کامل توسط شرکت سازنده پشتیبانی می‌شود
+    * Restricted: پشتیبانی می‌شود ولی بطور کامل پشتیبانی نمیشود مثل درایور های شرکت ان ویدیا
+    * Universe: توسط کامیونتی‌ها پشتیبانی می‌شود و برنامه های رسمی نیستند
+    * Multiverse: رایگان نیستنتد
+    * partner: [بهروز: باید بررسی شود]
+    * می‌تواند چندین قسمت باشد یعنی هم شامل main و هم شامل Universe و هم شامل موارد دیگر باشد
 
 ☑️ **Examples:**
-
-
 
 ```shell
 # 1️⃣️ Debian11:
@@ -52,7 +49,7 @@ part1 part2 part3 part4
 ### apt
 
 * [install] PackageName
-  * install --fix-broken
+    * install --fix-broken
 * [remove] PackageName
 * [purge] PackageName
 * [show] PackageName
@@ -67,18 +64,18 @@ part1 part2 part3 part4
 ### apt-get
 
 * [install] PackageName #نصب بسته
-  * [install] PackageName --print-urls #نمایش آدرس دانلود بسته‌ها
-    * بجای نصب فقط آدرس «یوآرال» نمایش خواهد داد
+    * [install] PackageName --print-urls #نمایش آدرس دانلود بسته‌ها
+        * بجای نصب فقط آدرس «یوآرال» نمایش خواهد داد
 * [update] #بروزرسانی لیست همه بسته‌های موجود در مخازن
 * [upgrade] #آپگرید همه بسته‌ّای نصب شده به نسخه جدیدتر
 * [remove] PackageName #حذف یک بسته با پسوند دب از روی سیستم توسط ابزار اَپْت
 * [check] # بررسی وضعیت پیش‌نیاز‌ها یا همان دیپندنسی
 * [clean] #پاک کردن کش که شامل بسته‌های پسوند دب دانلود شده است
-  * [clean] all #حذف تمام کش مدیریت بسته
+    * [clean] all #حذف تمام کش مدیریت بسته
 
 ☑️ **Examples:**
 
-* sudo apt-get download php && apt-cache depends -i php |awk '/Depends:/ {print $2}' | xargs apt-get download  # DownloadAllDependency
+* sudo apt-get download php && apt-cache depends -i php |awk '/Depends:/ {print $2}' | xargs apt-get download # DownloadAllDependency
 
 ### apt-cache
 
@@ -96,8 +93,8 @@ ap-cdrom install PackageName #نصب یا آپگرید یک بسته باپسو�
 * [-s PackageName] # نمایش اطلاعات مربوط به یک بسته خاص نصب شده در سیستم
 * [-L PackageName] # نمایش لیست فایل‌ّای مربوط به یک بسته نصب شده
 * [-L PackageName] # لیست تمام فایل‌های یک برنامه
-  * dpkg -L vim
-* [--contents PackageName.deb] #  نمایش لیست فایل‌های مربوط به یک بسته که هنوز نصب نشده
+    * dpkg -L vim
+* [--contents PackageName.deb] # نمایش لیست فایل‌های مربوط به یک بسته که هنوز نصب نشده
 * [-S /bin/ping] # بررسی اینکه فایل موردنظر به کدام بسته تعلق دارد
 
 ### dpkg-query
@@ -112,22 +109,22 @@ ap-cdrom install PackageName #نصب یا آپگرید یک بسته باپسو�
 
 ### LocalRepository[DVD]
 
-1. download  DVD From Debian website
+1. download DVD From Debian website
 2. sudo vim /etc/apt/sources.list
 3. mount file to specific directory with next line command:
-   1. [temporary]:sudo mount -o loop /home/behrooz/App/DVD/debian-9.3.0-amd64-DVD-1.iso /media/repo_1
-   2. [Permanently]:
-      1. sudo vim /etc/fstab
-      2. edit: /home/behrooz/App/DVD/debian-9.3.0-amd64-DVD-1.iso    /media/repo_1  iso9660   defaults   0    0
+    1. [temporary]:sudo mount -o loop /home/behrooz/App/DVD/debian-9.3.0-amd64-DVD-1.iso /media/repo_1
+    2. [Permanently]:
+        1. sudo vim /etc/fstab
+        2. edit: /home/behrooz/App/DVD/debian-9.3.0-amd64-DVD-1.iso /media/repo_1 iso9660 defaults 0 0
 4. sudo vim /etc/apt/sources.list
 5. add:  deb [trusted=yes] file:///media/repo_1 stretch main contrib
 6. sudo mount -a
 7. lsblk
-dpkg -S /bin/ping # بررسی اینکه فایل موردنظر به کدام بسته تعلق دارد
+   dpkg -S /bin/ping # بررسی اینکه فایل موردنظر به کدام بسته تعلق دارد
 
 ### LocalRepository[WEB]
 
-1. apt-get install build-essential  apache2
+1. apt-get install build-essential apache2
 2. mkdir /var/www/html/packages /var/www/html/packages/amd64
 3. mount /dev/cdrom /media/cdrom
 4. DVD1:find /media/cdrom/pool/ -name "*.deb" -exec cp {} /var/www/html/packages/amd64 \;
@@ -137,9 +134,9 @@ dpkg -S /bin/ping # بررسی اینکه فایل موردنظر به کدام 
 8. dpkg-scanpackages . /dev/null | gzip -9c > Packages.gz
 
 * SERVER:
-  * vim /etc/apt/sources.list: `deb file:/var/www/html/packages/amd64/ /`
+    * vim /etc/apt/sources.list: `deb file:/var/www/html/packages/amd64/ /`
 * CLIENT
-  * vim /etc/apt/sources.list: `deb <http://192.168.1.150/packages/amd64/> /`
+    * vim /etc/apt/sources.list: `deb <http://192.168.1.150/packages/amd64/> /`
 
 ## CentOS
 
@@ -188,13 +185,13 @@ dpkg -S /bin/ping # بررسی اینکه فایل موردنظر به کدام 
 Epel: Extra Packages for Enterprise Linux
 
 * install
-  * Cenots 7 64bit : rpm -ivh <http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-7.noarch.rpm>
-  * Cenots 6 64bit :rpm -ivh <http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm>
-  * Cenots 6 32bit :rpm -ivh <http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm>
-  * Cenots 5 64bit :rpm -ivh <http://download.fedoraproject.org/pub/epel/5/x86_64/epel-release-5-4.noarch.rpm>
-  * Cenots 5 32bit :rpm -ivh <http://download.fedoraproject.org/pub/epel/5/i386/epel-release-5-4.noarch.rpm>
+    * Cenots 7 64bit : rpm -ivh <http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-7.noarch.rpm>
+    * Cenots 6 64bit :rpm -ivh <http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm>
+    * Cenots 6 32bit :rpm -ivh <http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm>
+    * Cenots 5 64bit :rpm -ivh <http://download.fedoraproject.org/pub/epel/5/x86_64/epel-release-5-4.noarch.rpm>
+    * Cenots 5 32bit :rpm -ivh <http://download.fedoraproject.org/pub/epel/5/i386/epel-release-5-4.noarch.rpm>
 * configFile
-  * /etc/yum.repos.d/epel.repo
+    * /etc/yum.repos.d/epel.repo
 
 ### rpmbuld
 
@@ -206,10 +203,10 @@ Epel: Extra Packages for Enterprise Linux
 rpm2cpio PackageName | cpio -extract -make directories *bin* #استخراج فایل‌های اجرایی از یک بسته «آرپی‌ام»
 ```
 
-
 # group:user
 
 ## adduser
+
 - در نسخه لینوکس‌های کوچک دستور adduser وجود دارد(توزیع لینوکس alpine) و دستور useradd دستور بزرگتری و با ابزارهای بیشتری است.
 
 # group: groups
@@ -219,7 +216,6 @@ rpm2cpio PackageName | cpio -extract -make directories *bin* #استخراج ف�
 ```shell
 groups <name> #نمایش تمام گروه‌های یوزر فعلی
 ```
-
 
 # group: process
 
@@ -232,6 +228,38 @@ fuser #پروسس‌هایی که دارد از یک فایل استفاده م�
 
 # group: network
 
+## arp
+
+* پروتکل arp: چه مک‌آدرس به چه آی‌پی متصل است
+* بسته‌های پروتکل ARP از روتر عبور نمی‌کنند
+
+
+* [-e]: display (all) hosts in default (Linux) style
+    * `sudo arp -e`
+* [-n|--numeric]:don't resolve names
+    * `sudo arp -n`
+
+
+## ethtool
+
+
+```shell
+sudo ethtool enp5s0 # اطلاعات فوق‌العاده زیاد بابت کارت شبکه
+
+```
+
+## fping
+
+`fping -g 192.168.10.1 192.168.10.5 #alive hosts`
+
+## iwlist|iwconfig
+
+wifi|wireless|وای‌فای
+
+```shell
+iwlist <nic> scan #بررسی وایرلس‌های اطراف سیستم که بخواهیم به آن وصل شویم
+iwconfig wlp4s0 essid "<Name>" key s:<Pass> #اتصال به یک وایرلس
+```
 
 ## ip
 
@@ -316,7 +344,6 @@ Usage: ip OPTIONS OBJECT COMMAND
     * ip route add default via 192.168.200.1/24 #assign a default gateway
 * remove
     * ip route del 192.168.0.150/24 #Removing a static route
-
 
 ## lsof
 
@@ -407,6 +434,13 @@ Usage: ip OPTIONS OBJECT COMMAND
     * lsof +L1
 * deletedFiles
     * sudo lsof [path] | grep deleted
+
+## mtr
+
+```shell
+mtr google.com
+mtr -n --report IP
+```
 
 ## netstat
 
@@ -532,7 +566,6 @@ Usage: ip OPTIONS OBJECT COMMAND
     * nmap –script banner.nse –script-trace 192.168.0.1
 * nmap –script-updatedb #Update the Script Database
 
-
 ## tcpdump
 
 دستور لینوکس برای گوش کردن به شبکه- سوییچ‌ها
@@ -600,6 +633,11 @@ Usage: ip OPTIONS OBJECT COMMAND
 * tcpdump -i any -c5 -nn "port 80 and (src 192.168.122.98 or src 54.204.39.132)" → #filtering packets for HTTP service
   only (port 80) and source IP addresses 192.168.122.98 or 54.204.39.132
 
+## traceroute
+
+```shell
+traceroute google.com
+```
 
 ## wget
 
@@ -635,16 +673,9 @@ Usage: ip OPTIONS OBJECT COMMAND
 - `wget --spider --force-html -r -l5 htp://dl.folan.net/Movie/ 2>&1 | grep '^--' | awk '{ print $3 }' | grep -v '\.css\|js\|png\|gif\|jpg$' | grep -v '\/$'`
 - `wget --mirror --convert-links --page-requisites --no-parent -P documents/websites/ URL` #می توان از دستور wget برای دانلود محتوای کل سایت استفاده کرد
 - `wget -r -np -R "index.html*" https://shop.hemat-elec.ir/wp-content/themes/irankala/assets/fonts` # Note: دانلود فایل های مشخص شده
-    - wget -r -A.pdf 
-
-
-
-
-
+    - wget -r -A.pdf
 
 # groups: text Filterring
-
-
 
 ## awk
 
@@ -735,6 +766,36 @@ Usage: ip OPTIONS OBJECT COMMAND
 
 [OnlineTools](https://awk.js.org)
 
+## cat
+
+* [-E]: نمایش انتهای خط که مثلا کاراکتر دالر باشد
+
+```shell
+cat -E fileName
+```
+
+## echo
+
+* `echo -e`: Display a message containing special characters
+
+```shell
+echo -e "You know nothing, Jon Snow.\n\t- Ygritte"
+# output:You know nothing, Jon Snow.
+#                - Ygritte
+```
+
+```shell
+echo -e 'Here \vthe \vspaces \vhave \vvertical \vtab \vspaces.'
+#Here
+#     the
+#         spaces
+#                have
+#                     vertical
+#                              tab
+#                                  spaces.
+#
+
+```
 
 ## find
 
@@ -858,8 +919,6 @@ Usage: ip OPTIONS OBJECT COMMAND
 * grep "^<PATTERN>" File → هرچیزی که شروع خط با یک الگو باشد
 * grep "<PATTERN>$" File → هرچیزی که پایان خط با یک الگو باشد
 
-
-
 ## sed
 
 * برای Not کردن یک علامت تعجب قبل از d یا s یا غیره قرار دهید
@@ -928,6 +987,43 @@ Usage: ip OPTIONS OBJECT COMMAND
 
 * sed '!s/day/night/g'
 
+## tail
+
+* [-<n>]
+    * نمایش تعداد خط آخر
+* tail [+<n>]
+    * از خط شماره «اِن» شروع کن به نمایش
+
+```shell
+echo -ne "1 one\n2 two\n3 three\n4 four\n5 five\n6 six\n7 seven\n8 eight\n9 nine\n10 ten\n" | tail -3
+8 eight
+9 nine
+10 ten
+```
+
+```shell
+echo -ne "1 one\n2 two\n3 three\n4 four\n5 five\n6 six\n7 seven\n8 eight\n9 nine\n10 ten\n" | tail +3
+3 three
+4 four
+5 five
+6 six
+7 seven
+8 eight
+9 nine
+10 ten
+```
+
+## tr
+
+‌تبدیل کاراکتر به کاراکتر دیگر
+
+* [-d]: حذف کاراکتر هایی که معین می‌شود
+* [-c]: معکوس حذف یعنی تنها این کاراکترها را نگه‌داری کن
+    * `tr -dc '0-9'` #نگهداری تنها اعداد و حذف همه کاراکترها
+
+```shell
+echo behrooz | tr 'o' 'u' #--> out: behruuz
+```
 
 # dd
 
@@ -965,7 +1061,6 @@ Usage: ip OPTIONS OBJECT COMMAND
 * dd if=/dev/sda of=/tmp/sdaMBR.img bs=512 count=1 #MBR size is 512 byte
 * dd if=debian.iso of=/dev/sda bs=4M conv=fdatasync status=progress # ساخت یک فلش با قابلیت بوت
 * dd if=/dev/da0 conv=sync,noerror bs=128K | gzip -c | ssh behrooz@server1 dd of=centos-core-7.gz # نبودن فضا کافی و ذخیره در ریموت
-
 
 # udevadm
 
