@@ -2,7 +2,7 @@
 
 # 1.concepts
 
-* نرم افزار termius نرم افزار ssh و scp و sftp و tunnel است که هم نسخه موبایلی و هم نسخه لینوکسی دارد و تخصصی در بحث اس اس اچ کار کرده است
+* نرم‌افزار termius نرم‌افزار ssh و scp و sftp و tunnel است که هم نسخه موبایلی و هم نسخه لینوکسی دارد و تخصصی در بحث ssh کار کرده است
 
 ```shell
 ssh -t user@IP 'cd /usr/local/sbin; bash --login' # Login and execute command[such as cd]
@@ -15,8 +15,8 @@ ssh -o StrictHostKeyChecking=no -l root ${peer}
 
 # 2.files
 
-* sshd_config:  فایل تنظیماتی سرویس اس اس اچ سرور(یعنی سرویس اس اس اچ سرور چه تنظماتی داشته باشد)
-* ssh_config:  فایل تنظیماتی کلاینتی اس اس اچ(یعنی در هنگام اس اس اچ به سرورهای متفاوت چه تنظیماتی داشته باشد)
+* sshd_config: فایل تنظیماتی سرویس «اس‌اس‌اچ» سرور(یعنی سرویس «اس‌اس‌اچ» سرور چه تنظماتی داشته باشد)
+* ssh_config: فایل تنظیماتی کلاینتی «اس‌اس‌اچ»(یعنی در هنگام «اس‌اس‌اچ» به سرورهای متفاوت چه تنظیماتی داشته باشد)
 * ~/.ssh/known_hosts: Contains a list of host keys for all hosts the user has logged into that are not already in the systemwide list of known host keys(fingerprint).
 * ~/.ssh/authorized_keys: اگر کلید عمومی کسی رو در این فایل قرار بدهیم دیگر از او پسورد نمی‌گیرد و مستقیما لاگین می‌نماید
     * هر سروری که کلید عمومی آن در فایل authorized_keys موجود باشد می‌تواند بدون وارد کردن پسورد در سرور لاگین نماید
@@ -33,13 +33,13 @@ ssh -o StrictHostKeyChecking=no -l root ${peer}
 * ClientAliveInterval(برحسب ثانیه):
     * تعیین مقدار زمان ارسال پیامalive به کلاینت و اگر کلاینت به این پیام‌ها پاسخ ندهد و زمان تعریف شده (که باClientAliveCountMaxتعیین می‌شود) بگذرد، سرور اتصال را قطع می‌کند
     * اگر ClientAliveIntervalبرابر60ثانیه وClientAliveCountMaxبرابر3باشد،سرور هر۶۰ثانیه یک بار پیام "alive" ارسال می‌کند و اگر کلاینت به 3 پیام متوالی پاسخ ندهد، سرور اتصال را قطع خواهد کرد
-* ListenAddress: اگر چند کارت شبکه داشته باشیم با این مولفه تعیین می‌کنیم که از کدام آی پی (تنظیم شده روی کارت شبکه) اس اس اچ پذیفته شود
+* ListenAddress: اگر چند کارت شبکه داشته باشیم با این مولفه تعیین می‌کنیم که از کدام آی پی (تنظیم شده روی کارت شبکه) «اس‌اس‌اچ» پذیفته شود
 * PasswordAuthentication[sshd_config]:
     * no : فقط کسانی که کلید دارند می‌توانند لاگین نمایند
 * AllowUsers: کاربران مجاز برای لاگین
 * DenyUsers: کاربران غیر مجاز برای لاگین
 * AllowGroups: گروه‌های مجاز لاگین
-* DenyGroups: گروه‌های غیر غیر مجاز برای لاگین
+* DenyGroups: گروه‌های غیر غیرمجاز برای لاگین
 * PermitRootLogin: آیا یوزر روت بتواند لاگین نماید یا خیر
 * X11Forwarding: آیا رابط کاربری بتواند فوروارد شود
 * AllowTcpForwarding: سرور بتواند پروتکل‌های تونل را بپذیرد
@@ -157,11 +157,11 @@ echo "proxy=socks5h://localhost:xxxx" >> /etc/yum.conf
 * AllowTcpForwarding yes
 * Gatewayports yes
 
-![sshL.jpg](../_srcFiles/Images/sshL.jpg "sshL.jpg")
+![sshL.jpg](_srcFiles/Images/sshL.jpg "sshL.jpg")
 
 # 7.PortForwarding-tunnel(Remote)
 
 * AllowTcpForwarding yes
 * Gatewayports yes
 
-![sshR.jpg](../_srcFiles/Images/sshR.jpg "sshR.jpg")
+![sshR.jpg](_srcFiles/Images/sshR.jpg "sshR.jpg")

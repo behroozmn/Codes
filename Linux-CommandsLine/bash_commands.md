@@ -37,7 +37,7 @@ convert <input.png> -resize 50% <output.jpg> #کاهش ۵۰درصدی طول و 
 
 برنامه‌ای برای اجرای فایل صوتی در خط فرمان
 
-# WINOWS
+# Form Or Banner
 
 ## yad
 

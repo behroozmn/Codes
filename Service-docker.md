@@ -34,7 +34,7 @@
 * نام hostname های کانتینرهای داکر همان DockerId است
 * داکر با زبان go نوشته شده است
 
-![Docker-Concept.jpg](../_srcFiles/Images/Docker-Concept.jpg "Docker-Concept.jpg")
+![Docker-Concept.jpg](_srcFiles/Images/Docker-Concept.jpg "Docker-Concept.jpg")
 
 # 2.Network
 
@@ -108,7 +108,7 @@
         * eval $(docker-machine env machineName) #بجای تنظیم تک تک متغیرها با دستورمقابل همه موارد خودکار لحاظ می‌شود ازین پس هر دستور بزنیم(مثلا دستور داکر ایمیج) در ریموت اجرا می‌شود
         * docker-compose -f docker-compose1.yaml build -d # مثلا بعد از زدن دستور بالا دستور جاری درریموت اجرا خواهد شد
 
-![dockerMachine01.jpg](../_srcFiles/Images/dockerMachine01.jpg "dockerMachine01.jpg")
+![dockerMachine01.jpg](_srcFiles/Images/dockerMachine01.jpg "dockerMachine01.jpg")
 
 </div>
 
@@ -149,7 +149,7 @@
     * هنگام بیلد مجدد یک ایمیج دستورات(لایه‌ها) cache می‌شوند تا نوبت بعدی زمان صرف نشود(مگر در بیلد مجدد دستور تغییرکند) پس حتی‌المقدور دستوراتی که ثابت است را در ابتدای داکرفایل بگذارید تا تغییر نکند
     * دستور کپی همواره سبب تغییر در لایه‌ها و مانع کش نمودن است پس حتی‌المقدور کپی را در لایه‌های انتهایی داکرفایل قرار دهید تا لایه‌های قبل بتواند از کش بهره‌مند گردد
 
-![Docker-DockerFile.jpg](../_srcFiles/Images/Docker-DockerFile.jpg "Docker-DockerFile.jpg")
+![Docker-DockerFile.jpg](_srcFiles/Images/Docker-DockerFile.jpg "Docker-DockerFile.jpg")
 
 ## 5.1.🔎️Contents
 
@@ -320,7 +320,7 @@ volumes:
     mydb:
 ```
 
-![Docker-compose.jpg](../_srcFiles/Images/Docker-compose.jpg "Docker-compose.jpg")
+![Docker-compose.jpg](_srcFiles/Images/Docker-compose.jpg "Docker-compose.jpg")
 </div>
 
 # 7.dockerignore

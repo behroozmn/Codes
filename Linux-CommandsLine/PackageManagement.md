@@ -158,7 +158,7 @@ dpkg -S /bin/ping # بررسی اینکه فایل موردنظر به کدام 
 
 * rpm -ivh Package.rpm #نصب یک بسته جدید
 * rpm -ivh nodeeps Package.rpm #نصب یک بسته بدون درنظر گرفتن بسته‌های پیش‌نیاز
-* rpm -U Package.rpm  # آپگرید یک بسته بدون تغییر فایل‌های تنظیماتی مربوط به آن بسته
+* rpm -U Package.rpm # آپگرید یک بسته بدون تغییر فایل‌های تنظیماتی مربوط به آن بسته
 * rpm -F Package.rpm #آپگرید یک بسته فقط در حالتی که آن بسته نصب شده باشد
 * rpm -e PackageName #حذف یک بسته از سیستم
 * rpm -qa #نمایش همه بسته‌هایی که در سیستم نصب شده است
@@ -176,13 +176,13 @@ dpkg -S /bin/ping # بررسی اینکه فایل موردنظر به کدام 
 * rpm -cheksig Package.rpm #بررسی سالم بودن یک بسته «آرپی‌ام» مدنظر
 * rpm -qa gpg-pubkey #بررسی سالم بودن همه بسته‌های نصب شده
 * rpm -V PackageName #چک کردن حجم و هش «ام‌دی‌فایو» و مجوز و سایر مشخصات یک بسته «آرپی‌ام» مدنظر
-* rpm  -Va #چک کردن حجم و کد هش «ام‌دی‌فایو» و مجوز و سایر مشخصات همه بسته‌های «آرپی‌ام» مدنظر
+* rpm -Va #چک کردن حجم و کد هش «ام‌دی‌فایو» و مجوز و سایر مشخصات همه بسته‌های «آرپی‌ام» مدنظر
 * rpm -Vp PackageName.rpm #جک کردن حجم و هش «ام‌دی‌فایو» و سایر مشخصات یک بسته «آرپی‌ام» نصب نشده
 * rpm -ivh /usr/src/redhat/RPMS/`arch`/PackageName.rpm #نصب یک بسته ساخته‌شده از سورس یک‌بسته «آرپی‌ام» مدنظر
 
 ## EPEL
 
-Epel:‌Extra Packages for Enterprise Linux
+Epel: Extra Packages for Enterprise Linux
 
 * install
   * Cenots 7 64bit : rpm -ivh <http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-7.noarch.rpm>
