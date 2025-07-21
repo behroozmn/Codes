@@ -331,44 +331,71 @@ echo 1 | sudo tee /sys/class/block/sdX/device/rescan
 
 </div>
 
+# SCSI
+
+* SCSI یا [small computer system interface]: پروتکلی برای افزایش سرعت بین دیوایس‌ها که می تواند بروی پرینتر و اسکنر و هاردها استفاده شود
+* ISCSI یا Internet SCSI: اجازه استفاده از SCSI بر روی اینترنت. یعنی دیوایس‌های پشت شبکه بعنوان دیسک دیده بشود.
+* ISCSI Node: به هر سیستم موجود در اتصال iscsi گفته ‌می‌شود
+* ISCSI Target: سیستم ارائه دهنده هارد در بستر شبکه
+* ISCSI Initiator: سیستم دریافت کننده سرویس هارد در شبکه
+* ISCSIName: هر ISCSINode یک ISCSIName دارند تا شناسایی شوند که با نام IP یا DNS متفاوت است
+* ISCSIAddress: دونوع نام گذاری برای نودهای ISCSI داریم:
+    * الف-IQN یعنی iSCSI Qualified Name که فرمت آن iqn.yyyy‐mm.com.xyz.aabbccddeeffgghh است.[iqn همواره اول آن می‌آید] و [yyyy‐mm] اشاره دارد به زمانی که ایجاد شده است و[aabbccddeeffgghh] شناسه دیوایس که می‌تواند wwn یا نام سیستم یا هر چیزی دیگر باشد
+    * ب-EUI یعمی IEEE Naming convention : که فرمت آن eui.64‐bit WWN می‌باشد و [eui] همواره در ابتدا می‌آید و بقیه می‌تواند نام wwn باشد
+* گفته می‌شود که حداکثر سرعت تا 640MB/s می‌دهد ولی این پروتکل در حال تکمیل و افزایش سرعت است
+
+![iscsi.jpg](_srcFiles/Images/iscsi.jpg "iscsi.jpg")
+
+# SCST
+
+* IP: وقتی در سرویس از آی پی صحبت می‌کنیم منظور پرتال است یعنی از چند کارت شبکه که روی سیستم نصب است دیتا از کدام پرزنت گردد
 
 
+* Device: یک Path که به یک دیوایس اختصاص داده می‌شود و سرویس آن دیوایس را با آن نام می‌فهمد
+* Handler: تعیین کننده نحوه رفتار scst (آن دیوایس چگونه توسط سرویس دیده شود)
+    * در پروژه ما تنها از VDISK_BLOCKIO کار میکنیم
+* Driver:
+* Target:
+    * برای هر تارگت گروه‌های متفاوت داریم
+* Group:
+    * برای تارگت گروه ساخته می‌شود(گروه ذیل تارگت ساخته می‌شود)
+    * هنگام تعریف و حذف گروه باید نام تارگت داده شود.
+* Lun: در هر گروه می‌توان lun متفاوت که از صفر شروع شود داشت
+* Initiator: «آی‌کیو‌اِن» منحصربفرد کلاینت که باید در پرزنت لحاظ شود
 
+# LVM(Logical Volume Management)
+
+* Physical Volume یا PV : دیسک‌های فیزیکی یعنی هارد دیسک‌های موجود در سیستم عامل که چند pv را عضو یک vg می‌نماییم
+* Volume Group یا VG: گروهی از دیسک‌های فیزیکی(pv) که می‌توان گفت pool می‌باشد
+* Logical Volume یا LV : یک دیسکی که به کاربر ارائه می‌شود تا روی آن فایل سیستم نصب کند
+* PE: کوچکترین بلاکی موجود در physical Volume که قابلیت اختصاص به یک vg دارد
+* مکانیزم LVM قابلیت اسنپ‌شات براساس روش COW می‌دهد.
+
+```shell
+lvmcreate
+    [-L]:سایز مثلا ۱گیگ
+    [-n]:نام اسنپ‌شات
+    [-v]:verbose
+pvcreate /dev/sdb[1-3] #Create physical volumepvscan #بررسی والیوم‌های فیزیکی سیستم
+pvdisplay /dev/sdb2 #نمایش اطلاعات
+vgcreate <Name(such as vg00)> /dev/sdb1 /dev/sdb2 /dev/sdb 3vgdisplay #نمایش والبوم گروه
+lvcreate -L 3.5G vg00 #Create new lvlvdisplay #نمایش اطلاعات
+lvremove /dev/<VG>/<LV>mkfs.ext4 /dev/<VG>/<LV>mount /dev/<vg>/<LV> /mnt/dir1-
+vgextend <VG> <new partition[/dev/sdc4]> # add partion to volume group
+lvextend -L g 5G /dev/<vg>/LVNameresize2fs /dev/<vg>/LVName #اضافه کردن حجم فایل سیستم2-
+lvmcreate -L 100m -s -n <Name> /dev/VG>/<LV>lvscan #اسنپ‌شات باید در این دستور بیاید # 
+3-lvremove /dev/<VG>/<SnapShotName> # حذف یکی اسنپ‌شات
+```
+
+<div style="display: flex; flex-direction: column; align-items: center;">
+
+![LVM.jpg](_srcFiles/Images/LVM.jpg "LVM.jpg")
+![disklayout-lvmdetails2.jpg](_srcFiles/Images/disklayout-lvmdetails2.jpg "disklayout-lvmdetails2.jpg")
 
 
 </div>
 
-# FileNames
 
-## /sbin/init
 
-* اولین برنامه ایکه برای اجرای دیگر پردازه‌ها به اجرا درمی‌آید
-* اول می‌رود سراغ /sbin/init اگرنبود می‌رود سراغ /etc/init و اگر نبود میرود سراغ /bin/sh
-* سه برنامه برای initiate کردن پردزه ‌ها وجود دارد:۱-sysV که سیستم۵ هم نامیده می‌شود ۲-systemdجدید است۳-upstart برای اوبونتو بود که استفبال نشد
-
-## /proc
-
-تمام محتویات مسیر آن توسط کرنل[kernel] پر می‌شود
-
-* /proc/cmdline]: Arguments passed to the Linux kernel at boot time
-    * OOT_IMAGE=/boot/vmlinuz-5.10.0-20-amd64 root=UUID=4bfb45d2-d701-44c7-8941-9d52d2f6f227 ro quiet
-* /proc/net/dev]: All about Network
-    * cat /proc/net/dev | column -t
-* /proc/cpuinfo]
-* /proc/filesystems]: A text listing of the filesystems which are supported by the kernel
-* /proc/meminfo]
-* /proc/modules]: A text list of the modules that have been loaded by the system
-* /proc/mounts]: list of all the filesystems currently mounted on the system
-* /proc/net/arp]: This holds an ASCII readable dump of the kernel ARP table
-* /proc/swaps]: Swap areas in use
-* /proc/sys/kernel/hostname]
-* /proc/sys/kernel/pty/nr]: This read-only file indicates how many pseudoterminals are currently in use #نمایش تعداد ترمینال‌های باز
-* /proc/sys/kernel/pid_max]: ماکزیمم تعداد پردازه قابل استفاده در لینوکس توسط این فایل معین شده است که نباید از آن فراتر رود
-* /proc/interrupts] : show interrupt request on system
-* /proc/version]
-* /proc/<PID>/fd]
-    * ls -la /proc/<PID>/fd #لیست فایل‌های باز یک پردازه
-    * ls -l /proc/<PID>/fd | wc -l
-* /proc/<PID>/limits]: مشاهده محدودیت‌های یک پردازه
-* /proc/sys/fs/file-max]: # مشاهده محدودیت مجموع فایل‌های باز در سیستم یعنی حداکثر تعداد فایل‌هایی است که می‌توانند به طور همزمان در سیستم باز باشند
+</div>
 
