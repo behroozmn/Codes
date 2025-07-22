@@ -124,6 +124,16 @@ renice -10 -p 22678
             * کاهش اولویت: استفاده بلند مدت از «سی‌پی‌یو» توسط یک پروسه
             * افزایش اولیت:پروسه در طولانی مدت از «سی‌پی‌یو» استفاده نکرده باشد
 
+
+## ✅️ global
+
+
+```shell
+systemctl status smb | grep PID
+ss -utlpn | grep <PIDnumber>
+```
+
+
 # 📍️ Files
 
 ## 📌️ /proc/cpuinfo
