@@ -1,4 +1,4 @@
-# COMPILE
+# 📍️ COMPILE
 
 ## Compile Proces steps
 
@@ -206,7 +206,7 @@ gcc main.o helper.o -o program # لینک کردن آبجکت‌فایل‌ها
 <br>
 ![CompilePhase.jpg](_srcFiles/Images/CompilePhase.jpg "CompilePhase.jpg")
 
-# LIBRARY
+# 📍️ LIBRARY
 
 ## Library
 
@@ -236,7 +236,7 @@ gcc main.o helper.o -o program # لینک کردن آبجکت‌فایل‌ها
 nm ObjectFile.so # مشاهده توابع داخل یک آبجکت فایل
 ```
 
-# MAKEFILE
+# 📍️ MAKEFILE
 
 ## 1️⃣️.Concept
 
@@ -980,4 +980,181 @@ clean:
 * مورد $(SRCS:.c=.o): تمام .cها را به .o تبدیل می‌کند (مانند main.c → main.o).
 * مورد $@: اسم هدف (target) فعلی است (مانند myprogram).
 * مورد $<: اولین وابستگی (dependency) است (مانند main.c در حین کامپایل main.o).
-     
+
+# 📍️ Commands
+
+## ✅️ dd
+
+### Switchs
+
+* if: Input File
+    * if=IMAGE.img
+* of: Output File
+    * of=/dev/sdc
+* bs: BlockSize تعداد بایت هایی است که در یک زمان خوانده یا نوشته می شود
+    * مطمین شین که اندازه بلوک مضربی از ۱۰۲۴ که برابر با ۱ کیلوبایت است استفاده شود.
+    * bs=1M
+    * bs=1K
+* status:
+    * progress:‌اطلاع از میزان پیشرفت
+* conv:روش تبدیل فایل ورودی و نوشتن روی دیسک مقصد چگونه است
+    * noerror: کپی کردن داده ها در صورت برخورد به هر گونه خطا ادامه یابد
+    * sync: استفاده از همگام‌سازی بین ورودی و خروجی
+    * fdatasync: بافر به درستی پاکسازی و مجدداً نوشته شود و خطایی رخ ندهد
+    * ucase: تبدیل به حروف بزرگ
+        * dd if=~/file1 of=~/file2 conv=ucase # برای تبدیل کل محتویات فایل به حروف بزرگ
+    * lcase: تبدیل به حروف کوچک
+        * dd if=~/file1 of=~/file2 conv=lcase # برای تبدیل کل محتویات فایل به حروف کوچک
+    * ascii: تبدیل فایلی ازهر فرمت به فرمت اسکی
+        * dd if=textfile.ebcdic of=textfile.ascii conv=ascii
+    * ebcdic: تبدیل فایل از هر فرمت به فرمت «اِب‌دیک» که بیشتر از «مِین‌فِرِیم»ها بازیابی می‌شود\
+        * dd if=textfile.ascii of=textfile.ebcdic conv=ebcdic
+* count: تعداد انجام عملیات
+
+### Examples
+
+* dd if=/dev/sda1 of=/dev/sdb1 bs=4096 conv=noerror,sync
+    * Note: برای کپی یک پارتیشن رو یک پارتیشن دیگر از دستور زیر استفاده می کنیم
+* dd if=/dev/cdrom of=/mycd.iso
+* dd if=/dev/sda of=/tmp/sdaMBR.img bs=512 count=1 #MBR size is 512 byte
+* dd if=debian.iso of=/dev/sda bs=4M conv=fdatasync status=progress # ساخت یک فلش با قابلیت بوت
+* dd if=/dev/da0 conv=sync,noerror bs=128K | gzip -c | ssh behrooz@server1 dd of=centos-core-7.gz # نبودن فضا کافی و ذخیره در ریموت
+
+## ✅️ gcc
+
+* عبارت GCC مخفف GNU Compiler Collection می‌باشد
+* توسط ریچارد استالمن توسعه داده شده است
+* کامپایلر Clang که بر مبنای پروژه LLVM توسعه داده شده و بسیار شبیه به کامپایلر GCC است.
+* کامپایلر MSVS که مخفف MicroSoft Visual Studio هست و توسط مایکروسافت توسعه داده شده است.
+* کامپایلر GCC در سیستم‌عامل‌هایی که کرنل آنها بر مبنای UNIX نوشته شده باشد(مثل لینوکس یا مک) عملکرد بهتری دارد و عملکرد gcc در ویندوز کندتر هست
+* `sudo apt install gcc`: نصب کامپایلر جی‌سی‌سی
+
+**CommandSyntax:** gcc Options Files
+
+### options:
+
+* [-o Output]: ایجاد فایل باینتری خروجی
+* [-D<NameofConstant>=Value]: بجای تعریف ثابت‌ها تحت عنوان «دیفاین» مقادیر را درهنگام کامپایل مقدار دهی کرد
+    * gcc -D<NameOfConstant>=Value NameOfSourceCode -o NameOfOutputFile]
+* [-S outFile.c]: specifies to produce assembly code, instead of object code
+    * ایجاد یک «فایل‌اسمبلی» (که حاوی کداسمبلی است) بجای ایجاد «آبجکت‌فایل» توسط کامپایلر
+    * gcc -S metech2.c -o assembled.s
+
+```shell
+gcc main.c -o outpu_bin_file
+```
+
+### Environment Variables
+
+[//]: # (Todo: Need to Review)
+GCC uses the following environment variables:
+
+* **PATH**: For searching the executables and run-time shared libraries (.dll, .so)
+* **CPATH**: For searching the include-paths for headers.
+    * It is searched after paths specified in -I<dir> options.
+    * `C_INCLUDE_PATH` and `CPLUS_INCLUDE_PATH` can be used to specify C and C++ headers if the particular language was indicated in pre-processing
+* **LIBRARY_PATH**: For searching library-paths for link libraries.
+    * It is searched after paths specified in -L<dir> options.
+
+## ✅️ g++
+
+Syntax: g++ [options] [files]
+
+### options
+
+* [-o]: specifies the output executable filename.
+* [-g]: generates additional symbolic debuggging information for use with gdb debugger.
+* [-Wall]: prints "all" warning messages. نمایش تمام هشدار ها
+
+### Examples
+
+```shell
+g++ -o myCode.exe file.cpp  # تک فایل
+g++ -o myCode file1.cpp file2.cpp # چند فایل
+g++ -c file1.cpp && g++ -c file2.cpp  &&   g++ -o myprog.exe file1.o file2.o # چند فایل
+```
+
+## ✅️ udevadm
+
+### 1.Concepts
+
+* در سیستم‌عامل لینوکس مبحث udev عاملی برای مدیریت سیستم و دستگاه است که به طور خودکار دستگاه‌های متصل به سیستم را شناسایی و پیکربندی می‌کند.
+* در سیستم‌عامل‌های لینوکسی دستور udevadm برای فعال‌سازی مجدد رویدادهای udev استفاده می‌شود
+* دستور [udevadm trigger]: ارسال فرمان به «udev» جهت ایجاد رویدادهای جدید برای دستگاه‌های متصل
+    * به گونه‌ای که قوانین و اسکریپت‌های مربوط به دستگاه‌ها(شامل بارگذاری ماژول‌های هسته، تنظیم مجدد مجوزها، یا اجرای اسکریپت‌های خاص) دوباره اجرا شوند
+    * حاصل نمودن اطمینان از صحت إعمال تغییرات در پیکربندی دستگاه‌ها یا قوانین udev
+    * تغیین کلاس خاصی از دیوایس‌ها(مثلا فقط بلاک‌ها و غیره) که بخواهیم تحت تأثیر قرار بگیرند با سوییچ subsystem-match
+
+### 2.Switch
+
+### trigger
+
+udevadm **trigger** [options] [devpath(such as /dev/sda)|file|unit]
+
+**options**
+
+* [--action=]:
+    * add # افزودن
+    * remove # حذف‌کردن
+    * change # اعمال تغییر
+    * move # جابه‌جایی
+    * online # آنلاین‌نمودن
+    * offline # آفلاین نمودن
+    * bind # اتصال رویکرد در دو شیء یا دیوایس
+    * unbind # خارح کردن ارتباط و اتصال دو شیء یا دیوایس از هم
+* [--subsystem-match=]
+    * block: برای دستگاه‌های بلاک (مانند دیسک‌های سخت و SSDها)
+        * net: برای دستگاه‌های شبکه (مانند کارت‌های شبکه)
+            * udevadm trigger --subsystem-match=net #فعالسازی مجدد رویدادها برای دستگاه‌های شبکه
+    * usb: برای دستگاه‌های USB
+    * pci: برای دستگاه‌های PCI
+    * tty: برای دستگاه‌های ترمینال (مانند tty و pty)
+    * input: برای دستگاه‌های ورودی (مانند کیبورد و ماوس)
+    * sound: برای دستگاه‌های صوتی
+    * video: برای دستگاه‌های ویدیویی (مانند دوربین‌ها)
+    * char: برای دستگاه‌های کاراکتری (مانند دستگاه‌های سریال)
+    * firmware: دستگاه‌های مربوط به فریمور
+    * backlight: دستگاه‌های نور پس‌زمینه (مانند صفحه‌نمایش)
+    * dmi: اطلاعات DMI (دستگاه‌های سخت‌افزاری)
+    * gpu: دستگاه‌های گرافیکی
+    * scsi: دستگاه‌های SCSI
+    * md: دستگاه‌های RAID (مدیریت دیسک)
+        * برای مشاهده لیست کامل(البته وابسته به توزیع لینوکس و سخت‌افزار) از دستور زیر استفاده نمایید
+            * ls /sys/class/
+
+### 3.info
+
+Query the udev database for device information
+
+udevadm **info** [options] [devpath(such as /dev/sda)|file|unit]
+
+* [-t] or [--tree]: نمایش در ساختار درختی
+* [-c] or [--cleanup-db]: Cleanup the udev database
+    * sudo udevadm info --cleanup-db /dev/sdb
+    * توصیه‌می‌شوددر ادامه دستور زیر را بزنید
+    * sudo udevadm trigger /dev/sdb
+
+### 4.Examples
+
+* `udevadm trigger  --subsystem-match=block --action=add $disk`
+* `sudo udevadm info /dev/sda`
+* ```shell
+  for disk in /dev/sda /dev/sdb; do
+  udevadm trigger  --subsystem-match=block --action=add $disk 
+  done
+  ```
+* `sudo udevadm info /dev/sdb`
+
+## ✅️ uname
+
+نمایش اطلاعات کرنل و سیستمی
+
+* [-a] OR [--all] → print all information
+* [-s] OR [--kernel-name] → print the kernel name
+* [-n] OR [--nodename] → print the network node hostname
+* [-r] OR [--kernel-release] → print the Linux kernel release
+* [-v] OR [--kernel-version] → print the kernel version
+* [-m] OR [--machine] → print the machine hardware name
+* [-p] OR [--processor] → print the processor type or “unknown”
+* [-i] OR [--hardware-platform] → print the hardware platform or “unknown”
+* [-o] OR [--operating-system] → print the operating system

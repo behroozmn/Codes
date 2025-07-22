@@ -248,3 +248,35 @@ tar xf /dev/st0 /home/restorMyData #بازیابی بک‌آپ از نوار
 * /proc/<PID>/limits: مشاهده محدودیت‌های یک پردازه
 * /proc/sys/fs/file-max: # مشاهده محدودیت مجموع فایل‌های باز در سیستم یعنی حداکثر تعداد فایل‌هایی است که می‌توانند به طور همزمان در سیستم باز باشند
 
+
+
+
+
+
+
+# 📍️ Command
+
+## ✅️ fio
+
+```shell
+fio --name=Rand_RW_100_8K --rw=randrw --direct=1 --rwmixwrite=100  --ioengine=windowsaio --time_based  --runtime=1800  --size=30tib --blocksize=8k  --numjobs=8 --filesize=4tib --thread --group_reporting --filename="\\.\PhysicalDrive2"  --output="c:\1403-08-29-TestRand100Write-T2.txt"
+```
+
+## ✅️ tree
+
+نمایش فایل‌های بصورت درختی
+
+```shell
+tree -fi #نمایش تنها لیست فایل‌ها بصورت نام کامل
+```
+
+## ✅️ ulimit
+
+get and set user limits
+
+```shell
+ulimit --help
+ulimit -n #مشاهده محدودیت تعداد فایل‌های باز برای هر پردازه
+ulimit -n <new_limit> #Temprory #the maximum number of open file
+vim /etc/security/limits.conf # اگر بخواهیم بصورت دائمی باشد
+```
