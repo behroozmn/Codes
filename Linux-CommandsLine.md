@@ -250,7 +250,22 @@ sudo ethtool enp5s0 # اطلاعات فوق‌العاده زیاد بابت ک�
 
 `fping -g 192.168.10.1 192.168.10.5 #alive hosts`
 
+
+
+
+## ✅️ hostname
+
+* [-I] or [--all-ip-addresses] → All IP addresses for the host
+
+```shell
+hostname -I # show all ip address
+```
+
+
+
 ## ✅️ iwlist|iwconfig
+
+
 
 wifi|wireless|وای‌فای
 
@@ -706,6 +721,376 @@ traceroute google.com
     - wget -r -A.pdf
 
 # 📍️ group:Text
+
+
+
+## ✅️ awk
+
+### Concepts
+
+* [$0] → print all column
+* [OFS] → Output field separator
+    * awk -F ":" 'OFS="-" {print $1,$7}' /etc/passwd #نمایش تنها ستون اول و هفتم و یک خط تیره بین این دو ستون
+    * awk -F ":" ‘{print $1 "→" $3}’ /etc/passwd ⇄ awk -F ':' 'OFS="→" {print $1,$3}' /etc/passwd ⇄ awk -F ':' 'BEGIN{OFS="→";}{print $1,$3}' /etc/passwd #کاراکتر خاص بین ستون‌ها
+* && → AND
+* || → OR
+* [!] → NOT (!= Means not equal)
+* [-F '<Pattern>'] or [--field-separator '<Pattern>'] → splitter
+    * echo "192.168.1.1"| awk -F '.' '{ print $1" "$2" "$3" "$4;}'
+* [$NF] → prints the last columns
+    * awk -F ':' '{print $NF}' /etc/passwd #نمایش ستون آخر
+    * awk 'NF>=3' #نمایش خطوطی که محتوی ۳ستون و بیشتر باشند
+* [NR] → prints the line number(NumberRecord)
+    * cat /etc/passwd | awk 'NR%2==1' #تمام خطوط فرد
+    * cat /etc/passwd | awk 'NR%2==0' #تمام خطوط زوج
+    * awk '$0 ~ "user" {print NR}' /etc/passwd #نمایش خطی که کلمه یوزر در آن وجود دارد
+    * awk '{print NR"-"$0}' /etc/passwd #نمایش تمام خطوط به همراه شماره خط و یک خط تیره
+    * awk 'NR==6 {print$1}' ⇄ awk '{if(NR==6) print$1}' #نمایش فقط خط۶
+    * awk '/user/ {print$0;x=NR+2;next}(NR<=x) {print$0}' /etc/passwd #نمایش الگو و ۲ خط پس از الگو(حتی اگر چند الگو داشته باشیم)
+
+### spliter
+
+* awk -F ':' '{print $1}' /etc/passwd #نمایش ستون‌دوم با جداکننده دو نقطه
+
+### [PATTERN]
+
+* `awk '/PATTERN/ {print}'`  #نمایش خطوط حاولی الگو
+* `awk '/PATTERN1/&&/PATTERN2/ {print$0}'`
+* `awk '$0 ~ "PATTERN" {print$0}'`
+* `awk '/^PATTERN$/ {print}'` #خطوطی که دقیقا حاوی الگو باشند و کاراکتر اضافی نداشته باشند
+* `awk '! /PATTERN/'` #عدم نمایش الگو
+* `awk '$0 !~ "PATTERN1|PATTERN2" {print$0}'` #عدم نمایش الگوها
+* `awk '/PATTERN/{found=1} found'`  #نمایش الگو تا انتهای خروجی
+    * {found=1}: وقتی الگو پیدا شد، متغیر را به ۱ تنظیم می‌کند
+    * found: هر خط بعد از الگو چاپ شود
+* `awk '/startPattern/{found=1} /endPattern/{print; found=0} found' file.txt` #نمایش از الگو اول تا الگوی دوم
+    * `awk /startPattern/{found=1}`: وقتی الگوی "شروع شونده" پیدا شد، متغیر را به ۱ تنظیم می‌کند
+    * `awk /endPattern/{print; found=0}`: وقتی الگوی "پایان‌پذیر" پیدا شد، خط را چاپ می‌کند و متغیر را به تنظیم می‌کند (یعنی از این به بعد هیچ خطی چاپ نخواهد شد)
+    * found: هر خطی را که بین "الگوی استارت" و "الگوی پایان" است، چاپ کند
+* `awk -v pattern="$PATTERN" -F ":" '$1 ~ pattern {print$0}' /etc/passwd` #[Behroooz: PATTERN=user]
+
+### [PATTERN Eexactly]
+
+* `awk ‘/\<PATTERN\>/ {print$0}’ File.txt` #match whole words only
+* `awk -F ":" 'match($1,/\<....\>/) {print$0}'` ⇄ `awk '/^\<....\>/ {print$0}'` #ستون اول دقیقا ۴کاراکتر باشد
+* `awk -v EID="$enclosure" -v SLT="$slot" '-F[:\t]' '$1 == EID && $2 == SLT {print$4}'`
+
+### Trim
+
+* `awk 'gsub("^[ \t]*","") {print $0}'` #حذف تمام خط‌فاصله‌های ابتدایی هر سطر
+* `awk 'gsub("[ \t]*$" ,"") {print$0}'` #حذف تمام خط‌فاصله‌های انتهایی هر سطر
+* `awk  '!/^$/'` ⇄ `awk '/./'`  #حذف خط خالی
+
+### Functions
+
+* [getline]: به ازای هر «گِت‌لاین» یک خط را نادیده می‌گیرد و به خط بعد می‌رود
+    * `awk '/PATTERN/ {getline;print$0}'` #نمایش خط بعد از خطی که الگو یافت شده است
+    * `awk '/PATTERN/ {print$0;getline;print$0}'` #خط الگو و خط بعد از الگو
+* [sqrt]
+    * `awk '{ print sqrt(625)}'` ⇄ `echo 625|awk '{print sqrt($0)}'`
+* [match]
+    * `awk -F ":" 'match($1,/\<....\>/) {print$0}'` ⇄ `awk '/^\<....\>/ {print$0}'` #ستون اول دقیقا ۴کاراکتر باشد
+* [gsub]
+    * `awk '{gsub(";",""); print $2}'` #حذف کاراکتر سمیکالون
+    * `awk 'gsub("^[ \t]*","") {print $0}'` #حذف تمام خط‌فاصله‌های ابتدایی هر سطر
+    * `awk 'gsub("[ \t]*$" ,"") {print$0}'` #حذف تمام خط‌فاصله‌های انتهایی هر سطر
+* [substr]
+    * `echo "hello, how are you?" | awk '{ print substr( $0, 3 ) }'` #حذف دو کاراکتر اول یک عبارت
+* [lenght]
+    * `echo "hello, how are you?" | awk '{ print substr( $0, 1, length($0)-1 ) }'` #حذف آخرین کاراکتر
+    * `echo "hello, how are you?" | awk '{ print substr( $0, 2, length($0) - 2)}'`
+* [tolower]
+    * `awk '{print tolower($0)}'`
+
+### کدنویسی
+
+* `awk '{if(Condition1){action} else if(Condition2){action} else {action}}'`
+* `awk -F":" '{if($1=="user") print "====> " $1; else if($1 == "root") print $1 " =====> " $7; else print "[" $0 "]"}' /etc/passwd`
+* `awk -F ":" '$3>=1000 {print $1,$3,$NF}' /etc/passwd`
+* `awk '{<CONDITION> print$1}'`
+* `awk 'BEGIN{print "salam";}{print $0}'` #دقیقا ورودی را به خروجی هدایت میکند و تنها در اولین خط یک سلام اضافه میکند
+* `awk -F ':' 'BEGIN{OFS="→";}{print $1,$3}' /etc/passwd ⇄ awk -F ":" ‘{print $1 "→" $3}’ /etc/passwd ⇄ awk -F ':' 'OFS="→" {print $1,$3}' /etc/passwd` #OFS کاراکتر خاص بین ستون‌ها
+
+[OnlineTools](https://awk.js.org)
+
+
+
+## ✅️ cat
+
+* [-E]: نمایش انتهای خط که مثلا کاراکتر دالر باشد
+
+```shell
+cat -E fileName
+```
+
+
+## ✅️ dos2unix
+
+```shell
+dos2unix filedos.txt fileUnix.txt #تبدیل فرمت یک فایل متنی از سیستم ام اس داس به سیتمس یونیکس
+```
+
+
+
+## ✅️ echo
+
+* `echo -e`: Display a message containing special characters
+
+```shell
+echo -e "You know nothing, Jon Snow.\n\t- Ygritte"
+# output:You know nothing, Jon Snow.
+#                - Ygritte
+```
+
+```shell
+echo -e 'Here \vthe \vspaces \vhave \vvertical \vtab \vspaces.'
+#Here
+#     the
+#         spaces
+#                have
+#                     vertical
+#                              tab
+#                                  spaces.
+#
+
+```
+
+
+## ✅️ find
+
+### Time
+
+* [-mmin n]  → File's data was last modified less than, more than or exactly n minutes ago
+    * [-mmin -60] ⇉ فایل‌های تغییر یافته در ۶۰دقیقه گذشته
+    * [-mmin +60] ⇉ فایل‌های تغییر یافته از ۶۰ دقیقه پیش به قبل
+* [-mtime n] → File's data was last modified less than, more than or exactly n*24 hours ago
+* [-amin n]   → File was last accessed less than, more than or exactly n minutes ago
+* [-atime n]  → File was last accessed less than, more than or exactly n*24 hours ago
+* [-cmin n]   → File's status was last changed less than, more than or exactly n minutes ago
+* [-ctime n]  → File's status was last changed less than, more than or exactly n*24 hours ago
+* [-newermt]
+    * [-newermt '-2 seconds'] → فایل‌هایی که تا دوثانیه پیش تغییر کرده‌اند
+
+### Type
+
+* [-type d] → Directory
+* [-type f] → RegularFile
+* [-type l] → SymbolicLink
+* [-type s] → Socket
+* [-type b] → block device Or block (buffered) special
+
+### Size
+
+* [-size +2G] → بزرگتر از دو گیگابایت
+* [-size -10k] → کمتر از ۱۰ کیلوبایت
+* [-size +10M -size -20M] → بزرگتر از ۱۰مگابایت و کوچکتر از ۲۰ مگابایت
+
+### Perm
+
+* [-perm 777]
+* [! -perm 777] → NOT(without permission)
+* [-perm 2644] → Find all the SGID bit files whose permissions are set to 644
+* [-perm 1551] → Find all the Sticky Bit set files whose permission is 551
+* [-perm /u=s] → Find all SUID set files.
+* [-perm /g=s] → Find all SGID set files
+* [-perm /u=r] → Find all Read-Only files
+* [-perm /a=x] → Find all Executable files
+
+### Other
+
+* [-maxdepth X] → تعداد دایرکتوری هایی که بصورت بازگشتی مشاهده شود
+    * بصورت دیفالت نامحدود است و همه زیر دایرکتوری مشاهده می‌شود
+* [-empty]
+    * find . -type f -empty
+* [-name]
+    * [-name] → جستجوی برمبنای نام
+    * [-iname] → نادیده گرفتن حروف بزرگ و کوچک و آوردن هردو
+    * find <Dir> -name behrooz.txt
+* [-user]
+    * [-user root]
+* [-group]
+    * [-group behrooz]
+* [-print0] → رکوردهای یافت شده پشت‌سرهم در یک خط چاپ شوند
+* [-print] → رکوردهای یافت شده توسط خط جدید از هم تفکیک شوند
+
+### Examples
+
+* [find / -type f -perm 0777 -print -exec chmod 644 {} \;] → Find all 777 permission files and use the chmod command to set permissions to 644
+* [find / -type d -perm 777 -print -exec chmod 755 {} \;]  → Find all 777 permission directories and use the chmod command to set permissions to 755
+* [find . -type f -name "tecmint.txt" -exec rm -f {} \;]         → To find a single file called tecmint.txt and remove it
+* [find . -type f -name "*.mp3" -exec rm -f {} \;] → To find and remove multiple files such as .mp3 then use
+* [find . -type f -name "*.txt" -exec rm -f {} \;]    → To find and remove multiple files such as .txt then use
+* [find ./backup -type f -print0] → show all regular file wth path
+* [find path -name file_name |xargs grep string] → پیدا کردن محتوی خاص در داخل فایل‌ها
+* [find . -type f | xargs grep "example"]
+* [] →
+
+## ✅️ grep
+
+### Switchs
+
+* [--color=auto] →نمایش رنگی
+    * grep --color=auto user /etc/passwd #کلمه جستجو شده رنگی نمایش داده خواهد شد
+* [-i] → ignore any case sensitivity
+* [-c] → count for the number of occurrences of the matched pattern in a file
+* [-o] → Print only the matched parts of a matching line, with each such part on a separate output line.
+* [-n] → لحاظ کردن حروف کوچک یا بزرگ[دقیقا دنبال عبارت روبرو بگرد اگر بزرگ است یا کوچک]
+* [-v] → عدم نمایش خطوط پیدا شده
+    * echo -ne "۱\n\n\n\n۲\n۳\n\n۴" | grep -v "^$" #حذف خط خالی
+* [-m] → فقط چند مورد(برحسب خط) از موارد یافت شده را نشان بده
+    * grep -m 5 nologin /etc/passwd #‌فقط ۵ خط از موارد یافت شده را نشان بده و بقیه را نادیده بگیر
+* [-A] → نمایش تعداد خط پس از الگو
+    * grep -A 3 systemd /etc/passwd
+* [-B] → نمایش تعدا خط قبل از الگو
+    * grep -B 3 systemd /etc/passwd
+* [-C] → نمایش تعداد خط قبل و پس از الگو
+    * grep -C 3 systemd /etc/passwd
+* [-e] → Egrep
+    * grep -E "one|two|three"   ⇄ egrep  "one|two|three" #multi flter
+    * ldd /sbin/ifconfig | grep -E -o '/lib.*\.[0-9]'  ⇄ ldd /sbin/ifconfig | egrep -o '/lib.*\.[0-9]' #نمایش ماژول‌های یک برنامه
+
+* [-w] → match whole words only #مثال توجه شود
+    * cat /tmp/salam\
+      behrooz mohamadi\
+      behrooz1 mohama\
+      behrooz123 behrooz\
+      behrooz12\
+      behroo\
+    * cat /tmp/salam |grep -w behrooz\
+      behrooz mohamadi\
+      behrooz123 behrooz
+
+### Repetition(تکرار)
+
+**Repetition:** A regular expression may be followed by one of several repetition operators:
+
+* ? The preceding item is optional and matched at most once.
+* \* The preceding item will be matched zero or more times.
+* \+ The preceding item will be matched one or more times.
+* {n} The preceding item is matched exactly n times.
+* {n,} The preceding item is matched n or more times.
+* {,m} The preceding item is matched at most m times. This is a GNU extension.
+* {n,m} The preceding item is matched at least n times, but not more than m times.
+
+### EXAMPLE
+
+* grep -E "[a]{3}" File.txt ⇄ grep  "[a]\{3\}" File.txt ⇄ egrep "[a]{3}" File.txt #خطوطی که حرف a سه مرتبه تکرار شده باشد
+* grep "^<PATTERN>" File → هرچیزی که شروع خط با یک الگو باشد
+* grep "<PATTERN>$" File → هرچیزی که پایان خط با یک الگو باشد
+
+## ✅️ sed
+
+* برای Not کردن یک علامت تعجب قبل از d یا s یا غیره قرار دهید
+* برای در نظر نگرفتن case sensitive تنها کنار g یک آی بزرگ قرار دهید(یا تنها فقط یک آی قرار دهید)
+
+### [s] → substitute
+
+* echo  "day day day day" | sed 's/day/(day)/g' #out: (day) (day) (day) (day)
+* echo  "day day day day" | sed 's/day/(&)/g' → #out: (day) (day) (day) (day)
+* echo  "day day day day" | sed 's/day/night/' #تغییر فقط در اولی → #out: night day day day
+* echo  "day day day day" | sed 's/day/night/2' #تغییر فقط در دومی → #out: day night day day
+* echo  "day day day day" | sed 's/day/night/3' #تغییر فقط در سومی → #out: day day night day
+* echo  "day day day day" | sed 's/day/night/3g' #تغییر در سومی به بعد → #out: day day night night
+* echo  "day day day day" | sed 's/[a-f]/r/g' → #out: rry rry rry rry #substitute [a-f]  waith r
+* sed 's/^[a-d]*/r/g' → #out: اگر کاراکتر «آ» تا کاراکتر «د» هر چند بار تکرار شده بود(در ابتدای خط) بجای آن «آر» قرار بده(حتی اگر صفر بار تکرار شده بود یعنی خط خالی بود)
+* sed '3 s/<X>/<Y>/g' File.txt ⇉ #Change only in Line 3
+* sed '3,5 s/<X>/<Y>/g' ⇉ #Change in Line 3 until line5
+* sed '3,$    s/<X>/<Y>/g' ⇉ #Change in Line 3 until End
+* sed /'^/,$ s/<X>/<Y>/g' ⇉ #Change in Line 1 until End [Carrot must be between  slash]
+* sed -e 's/ *$//' #كاركتر خالي در آخر هر سطر را پاك كن
+* sed -e 's/00*/0/g' #صفرهاي متعدد را با يك صفر تعويض كن
+
+### [d] → delete
+
+* sed '<NUM>d' #حذف خط شماره خاص
+    * echo -ne "1 one\n2 two\n3 three\n4 four\n5 five\n6 six\n7 seven\n8 eight\n9 nine\n10 ten\n" |sed '7d' #نمایش همه بجز خط شماره هفتم
+* sed '5d' File.txt #حذف خط خاص[مثلا  خط ۵]
+* sed '$d' File.txt #حذف خط آخر
+* sed '4,$d' File.txt #حذف خط چهارم تا آخر
+* sed '/<X>/d' File.txt #حذف یک الگو از فایل
+* sed -i '/<td>الگو<\/td>/{n;d}' FILE.txt #حذف یک خط پس از یک الگو
+* sed '/^$/ d' File.tx #پاک کردن خطی که خالی هست و چیزی در آن نیست
+* sed '/ *#/d;/^$/d' File.txt @تمام خطوط خالی و همچنین خطوط شامل کامنت حذف شود
+* sed '/./!d' ⇄ sed '/^$/d'#حذف خط خالی
+
+### [q]
+
+* sed '<NUM>q;d' #نمایش خط شماره خاص از فایل
+    * echo -ne "1 one\n2 two\n3 three\n4 four\n5 five\n6 six\n7 seven\n8 eight\n9 nine\n10 ten\n" |sed '6q;d' #نمایش فقط خط شماره ۶
+* sed '<NUM>q' #نمایش تعداد خط اول
+    * echo -ne "1 one\n2 two\n3 three\n4 four\n5 five\n6 six\n7 seven\n8 eight\n9 nine\n10 ten\n" |sed '6q' #نمایش 6 خط اول
+
+### [p] → Print twice
+
+* sed 'p' file #Print every line twice on output
+* sed '6p' #print line 6 twice(every line once)
+    * echo -ne "1 one\n2 two\n3 three\n4 four\n5 five\n6 six\n7 seven\n8 eight\n9 nine\n10 ten\n" |sed '6p' #
+
+### [n] → سوییچ «اِن» سبب می‌شود که هرخط فقط یک بار چاپ شود
+
+* sed -n 'p' file #print every line only once
+* sed -n <NUM>p File.txt # نمایش فقط یک خط خاص
+    * cat /etc/passwd|nl|sed '4q;d'
+    * cat /etc/passwd|nl|sed -n 4p
+    * cat /etc/passwd|nl|sed -n '4p;4q'
+    * cat /etc/passwd|nl|awk '{if(NR==4) print $0}'
+    * cat /etc/passwd|nl|head -n 4| tail -n +4
+      هر۴تای بالا یکسان هستند
+* sed -n '1,3 p' file #چاپ خط یک تا سه
+* sed -n '1,8p' file #چاپ خط یک تا هشت
+* sed -n '/^[a]/ p' file # خطوطی که خط اول با «آ» شروع می‌شود را چاپ کن
+* sed -n '/^[a]/ !p' file #خطوطی که خط اول با «آ» شروع می‌شود را چاپ نکن
+* sed -n '/string1/p' # نمایش خطوطی که شامل کلمه استرینگ۱ باشد
+
+### [NOT]
+
+* sed '!s/day/night/g'
+
+## ✅️ tail
+
+* [-<n>]
+    * نمایش تعداد خط آخر
+* tail [+<n>]
+    * از خط شماره «اِن» شروع کن به نمایش
+
+```shell
+echo -ne "1 one\n2 two\n3 three\n4 four\n5 five\n6 six\n7 seven\n8 eight\n9 nine\n10 ten\n" | tail -3
+8 eight
+9 nine
+10 ten
+```
+
+```shell
+echo -ne "1 one\n2 two\n3 three\n4 four\n5 five\n6 six\n7 seven\n8 eight\n9 nine\n10 ten\n" | tail +3
+3 three
+4 four
+5 five
+6 six
+7 seven
+8 eight
+9 nine
+10 ten
+```
+
+## ✅️ tr
+
+‌تبدیل کاراکتر به کاراکتر دیگر
+
+* [-d]: حذف کاراکتر هایی که معین می‌شود
+* [-c]: معکوس حذف یعنی تنها این کاراکترها را نگه‌داری کن
+    * `tr -dc '0-9'` #نگهداری تنها اعداد و حذف همه کاراکترها
+
+```shell
+echo behrooz | tr 'o' 'u' #--> out: behruuz
+```
+
+## ✅️ unix2dos
+
+```shell
+unix2dos fileUnix.txt filedos.txt #تبدیل فرمت یک فایل متنی از سیستم ام اس داس به سیتمس یونیکس 
+```
+
+
 
 ## ✅️ vim
 
@@ -1344,355 +1729,9 @@ au BufRead,BufNewFile *.qss set filetype=css
 
 ```
 
-## ✅️ cat
 
-* [-E]: نمایش انتهای خط که مثلا کاراکتر دالر باشد
 
-```shell
-cat -E fileName
-```
 
-## ✅️ echo
-
-* `echo -e`: Display a message containing special characters
-
-```shell
-echo -e "You know nothing, Jon Snow.\n\t- Ygritte"
-# output:You know nothing, Jon Snow.
-#                - Ygritte
-```
-
-```shell
-echo -e 'Here \vthe \vspaces \vhave \vvertical \vtab \vspaces.'
-#Here
-#     the
-#         spaces
-#                have
-#                     vertical
-#                              tab
-#                                  spaces.
-#
-
-```
-
-# 📍️ group:Text Filterring
-
-## ✅️ awk
-
-### Concepts
-
-* [$0] → print all column
-* [OFS] → Output field separator
-    * awk -F ":" 'OFS="-" {print $1,$7}' /etc/passwd #نمایش تنها ستون اول و هفتم و یک خط تیره بین این دو ستون
-    * awk -F ":" ‘{print $1 "→" $3}’ /etc/passwd ⇄ awk -F ':' 'OFS="→" {print $1,$3}' /etc/passwd ⇄ awk -F ':' 'BEGIN{OFS="→";}{print $1,$3}' /etc/passwd #کاراکتر خاص بین ستون‌ها
-* && → AND
-* || → OR
-* [!] → NOT (!= Means not equal)
-* [-F '<Pattern>'] or [--field-separator '<Pattern>'] → splitter
-    * echo "192.168.1.1"| awk -F '.' '{ print $1" "$2" "$3" "$4;}'
-* [$NF] → prints the last columns
-    * awk -F ':' '{print $NF}' /etc/passwd #نمایش ستون آخر
-    * awk 'NF>=3' #نمایش خطوطی که محتوی ۳ستون و بیشتر باشند
-* [NR] → prints the line number(NumberRecord)
-    * cat /etc/passwd | awk 'NR%2==1' #تمام خطوط فرد
-    * cat /etc/passwd | awk 'NR%2==0' #تمام خطوط زوج
-    * awk '$0 ~ "user" {print NR}' /etc/passwd #نمایش خطی که کلمه یوزر در آن وجود دارد
-    * awk '{print NR"-"$0}' /etc/passwd #نمایش تمام خطوط به همراه شماره خط و یک خط تیره
-    * awk 'NR==6 {print$1}' ⇄ awk '{if(NR==6) print$1}' #نمایش فقط خط۶
-    * awk '/user/ {print$0;x=NR+2;next}(NR<=x) {print$0}' /etc/passwd #نمایش الگو و ۲ خط پس از الگو(حتی اگر چند الگو داشته باشیم)
-
-### spliter
-
-* awk -F ':' '{print $1}' /etc/passwd #نمایش ستون‌دوم با جداکننده دو نقطه
-
-### [PATTERN]
-
-* `awk '/PATTERN/ {print}'`  #نمایش خطوط حاولی الگو
-* `awk '/PATTERN1/&&/PATTERN2/ {print$0}'`
-* `awk '$0 ~ "PATTERN" {print$0}'`
-* `awk '/^PATTERN$/ {print}'` #خطوطی که دقیقا حاوی الگو باشند و کاراکتر اضافی نداشته باشند
-* `awk '! /PATTERN/'` #عدم نمایش الگو
-* `awk '$0 !~ "PATTERN1|PATTERN2" {print$0}'` #عدم نمایش الگوها
-* `awk '/PATTERN/{found=1} found'`  #نمایش الگو تا انتهای خروجی
-    * {found=1}: وقتی الگو پیدا شد، متغیر را به ۱ تنظیم می‌کند
-    * found: هر خط بعد از الگو چاپ شود
-* `awk '/startPattern/{found=1} /endPattern/{print; found=0} found' file.txt` #نمایش از الگو اول تا الگوی دوم
-    * `awk /startPattern/{found=1}`: وقتی الگوی "شروع شونده" پیدا شد، متغیر را به ۱ تنظیم می‌کند
-    * `awk /endPattern/{print; found=0}`: وقتی الگوی "پایان‌پذیر" پیدا شد، خط را چاپ می‌کند و متغیر را به تنظیم می‌کند (یعنی از این به بعد هیچ خطی چاپ نخواهد شد)
-    * found: هر خطی را که بین "الگوی استارت" و "الگوی پایان" است، چاپ کند
-* `awk -v pattern="$PATTERN" -F ":" '$1 ~ pattern {print$0}' /etc/passwd` #[Behroooz: PATTERN=user]
-
-### [PATTERN Eexactly]
-
-* `awk ‘/\<PATTERN\>/ {print$0}’ File.txt` #match whole words only
-* `awk -F ":" 'match($1,/\<....\>/) {print$0}'` ⇄ `awk '/^\<....\>/ {print$0}'` #ستون اول دقیقا ۴کاراکتر باشد
-* `awk -v EID="$enclosure" -v SLT="$slot" '-F[:\t]' '$1 == EID && $2 == SLT {print$4}'`
-
-### Trim
-
-* `awk 'gsub("^[ \t]*","") {print $0}'` #حذف تمام خط‌فاصله‌های ابتدایی هر سطر
-* `awk 'gsub("[ \t]*$" ,"") {print$0}'` #حذف تمام خط‌فاصله‌های انتهایی هر سطر
-* `awk  '!/^$/'` ⇄ `awk '/./'`  #حذف خط خالی
-
-### Functions
-
-* [getline]: به ازای هر «گِت‌لاین» یک خط را نادیده می‌گیرد و به خط بعد می‌رود
-    * `awk '/PATTERN/ {getline;print$0}'` #نمایش خط بعد از خطی که الگو یافت شده است
-    * `awk '/PATTERN/ {print$0;getline;print$0}'` #خط الگو و خط بعد از الگو
-* [sqrt]
-    * `awk '{ print sqrt(625)}'` ⇄ `echo 625|awk '{print sqrt($0)}'`
-* [match]
-    * `awk -F ":" 'match($1,/\<....\>/) {print$0}'` ⇄ `awk '/^\<....\>/ {print$0}'` #ستون اول دقیقا ۴کاراکتر باشد
-* [gsub]
-    * `awk '{gsub(";",""); print $2}'` #حذف کاراکتر سمیکالون
-    * `awk 'gsub("^[ \t]*","") {print $0}'` #حذف تمام خط‌فاصله‌های ابتدایی هر سطر
-    * `awk 'gsub("[ \t]*$" ,"") {print$0}'` #حذف تمام خط‌فاصله‌های انتهایی هر سطر
-* [substr]
-    * `echo "hello, how are you?" | awk '{ print substr( $0, 3 ) }'` #حذف دو کاراکتر اول یک عبارت
-* [lenght]
-    * `echo "hello, how are you?" | awk '{ print substr( $0, 1, length($0)-1 ) }'` #حذف آخرین کاراکتر
-    * `echo "hello, how are you?" | awk '{ print substr( $0, 2, length($0) - 2)}'`
-* [tolower]
-    * `awk '{print tolower($0)}'`
-
-### کدنویسی
-
-* `awk '{if(Condition1){action} else if(Condition2){action} else {action}}'`
-* `awk -F":" '{if($1=="user") print "====> " $1; else if($1 == "root") print $1 " =====> " $7; else print "[" $0 "]"}' /etc/passwd`
-* `awk -F ":" '$3>=1000 {print $1,$3,$NF}' /etc/passwd`
-* `awk '{<CONDITION> print$1}'`
-* `awk 'BEGIN{print "salam";}{print $0}'` #دقیقا ورودی را به خروجی هدایت میکند و تنها در اولین خط یک سلام اضافه میکند
-* `awk -F ':' 'BEGIN{OFS="→";}{print $1,$3}' /etc/passwd ⇄ awk -F ":" ‘{print $1 "→" $3}’ /etc/passwd ⇄ awk -F ':' 'OFS="→" {print $1,$3}' /etc/passwd` #OFS کاراکتر خاص بین ستون‌ها
-
-[OnlineTools](https://awk.js.org)
-
-## ✅️ find
-
-### Time
-
-* [-mmin n]  → File's data was last modified less than, more than or exactly n minutes ago
-    * [-mmin -60] ⇉ فایل‌های تغییر یافته در ۶۰دقیقه گذشته
-    * [-mmin +60] ⇉ فایل‌های تغییر یافته از ۶۰ دقیقه پیش به قبل
-* [-mtime n] → File's data was last modified less than, more than or exactly n*24 hours ago
-* [-amin n]   → File was last accessed less than, more than or exactly n minutes ago
-* [-atime n]  → File was last accessed less than, more than or exactly n*24 hours ago
-* [-cmin n]   → File's status was last changed less than, more than or exactly n minutes ago
-* [-ctime n]  → File's status was last changed less than, more than or exactly n*24 hours ago
-* [-newermt]
-    * [-newermt '-2 seconds'] → فایل‌هایی که تا دوثانیه پیش تغییر کرده‌اند
-
-### Type
-
-* [-type d] → Directory
-* [-type f] → RegularFile
-* [-type l] → SymbolicLink
-* [-type s] → Socket
-* [-type b] → block device Or block (buffered) special
-
-### Size
-
-* [-size +2G] → بزرگتر از دو گیگابایت
-* [-size -10k] → کمتر از ۱۰ کیلوبایت
-* [-size +10M -size -20M] → بزرگتر از ۱۰مگابایت و کوچکتر از ۲۰ مگابایت
-
-### Perm
-
-* [-perm 777]
-* [! -perm 777] → NOT(without permission)
-* [-perm 2644] → Find all the SGID bit files whose permissions are set to 644
-* [-perm 1551] → Find all the Sticky Bit set files whose permission is 551
-* [-perm /u=s] → Find all SUID set files.
-* [-perm /g=s] → Find all SGID set files
-* [-perm /u=r] → Find all Read-Only files
-* [-perm /a=x] → Find all Executable files
-
-### Other
-
-* [-maxdepth X] → تعداد دایرکتوری هایی که بصورت بازگشتی مشاهده شود
-    * بصورت دیفالت نامحدود است و همه زیر دایرکتوری مشاهده می‌شود
-* [-empty]
-    * find . -type f -empty
-* [-name]
-    * [-name] → جستجوی برمبنای نام
-    * [-iname] → نادیده گرفتن حروف بزرگ و کوچک و آوردن هردو
-    * find <Dir> -name behrooz.txt
-* [-user]
-    * [-user root]
-* [-group]
-    * [-group behrooz]
-* [-print0] → رکوردهای یافت شده پشت‌سرهم در یک خط چاپ شوند
-* [-print] → رکوردهای یافت شده توسط خط جدید از هم تفکیک شوند
-
-### Examples
-
-* [find / -type f -perm 0777 -print -exec chmod 644 {} \;] → Find all 777 permission files and use the chmod command to set permissions to 644
-* [find / -type d -perm 777 -print -exec chmod 755 {} \;]  → Find all 777 permission directories and use the chmod command to set permissions to 755
-* [find . -type f -name "tecmint.txt" -exec rm -f {} \;]         → To find a single file called tecmint.txt and remove it
-* [find . -type f -name "*.mp3" -exec rm -f {} \;] → To find and remove multiple files such as .mp3 then use
-* [find . -type f -name "*.txt" -exec rm -f {} \;]    → To find and remove multiple files such as .txt then use
-* [find ./backup -type f -print0] → show all regular file wth path
-* [find path -name file_name |xargs grep string] → پیدا کردن محتوی خاص در داخل فایل‌ها
-* [find . -type f | xargs grep "example"]
-* [] →
-
-## ✅️ grep
-
-### Switchs
-
-* [--color=auto] →نمایش رنگی
-    * grep --color=auto user /etc/passwd #کلمه جستجو شده رنگی نمایش داده خواهد شد
-* [-i] → ignore any case sensitivity
-* [-c] → count for the number of occurrences of the matched pattern in a file
-* [-o] → Print only the matched parts of a matching line, with each such part on a separate output line.
-* [-n] → لحاظ کردن حروف کوچک یا بزرگ[دقیقا دنبال عبارت روبرو بگرد اگر بزرگ است یا کوچک]
-* [-v] → عدم نمایش خطوط پیدا شده
-    * echo -ne "۱\n\n\n\n۲\n۳\n\n۴" | grep -v "^$" #حذف خط خالی
-* [-m] → فقط چند مورد(برحسب خط) از موارد یافت شده را نشان بده
-    * grep -m 5 nologin /etc/passwd #‌فقط ۵ خط از موارد یافت شده را نشان بده و بقیه را نادیده بگیر
-* [-A] → نمایش تعداد خط پس از الگو
-    * grep -A 3 systemd /etc/passwd
-* [-B] → نمایش تعدا خط قبل از الگو
-    * grep -B 3 systemd /etc/passwd
-* [-C] → نمایش تعداد خط قبل و پس از الگو
-    * grep -C 3 systemd /etc/passwd
-* [-e] → Egrep
-    * grep -E "one|two|three"   ⇄ egrep  "one|two|three" #multi flter
-    * ldd /sbin/ifconfig | grep -E -o '/lib.*\.[0-9]'  ⇄ ldd /sbin/ifconfig | egrep -o '/lib.*\.[0-9]' #نمایش ماژول‌های یک برنامه
-
-* [-w] → match whole words only #مثال توجه شود
-    * cat /tmp/salam\
-      behrooz mohamadi\
-      behrooz1 mohama\
-      behrooz123 behrooz\
-      behrooz12\
-      behroo\
-    * cat /tmp/salam |grep -w behrooz\
-      behrooz mohamadi\
-      behrooz123 behrooz
-
-### Repetition(تکرار)
-
-**Repetition:** A regular expression may be followed by one of several repetition operators:
-
-* ? The preceding item is optional and matched at most once.
-* \* The preceding item will be matched zero or more times.
-* \+ The preceding item will be matched one or more times.
-* {n} The preceding item is matched exactly n times.
-* {n,} The preceding item is matched n or more times.
-* {,m} The preceding item is matched at most m times. This is a GNU extension.
-* {n,m} The preceding item is matched at least n times, but not more than m times.
-
-### EXAMPLE
-
-* grep -E "[a]{3}" File.txt ⇄ grep  "[a]\{3\}" File.txt ⇄ egrep "[a]{3}" File.txt #خطوطی که حرف a سه مرتبه تکرار شده باشد
-* grep "^<PATTERN>" File → هرچیزی که شروع خط با یک الگو باشد
-* grep "<PATTERN>$" File → هرچیزی که پایان خط با یک الگو باشد
-
-## ✅️ sed
-
-* برای Not کردن یک علامت تعجب قبل از d یا s یا غیره قرار دهید
-* برای در نظر نگرفتن case sensitive تنها کنار g یک آی بزرگ قرار دهید(یا تنها فقط یک آی قرار دهید)
-
-### [s] → substitute
-
-* echo  "day day day day" | sed 's/day/(day)/g' #out: (day) (day) (day) (day)
-* echo  "day day day day" | sed 's/day/(&)/g' → #out: (day) (day) (day) (day)
-* echo  "day day day day" | sed 's/day/night/' #تغییر فقط در اولی → #out: night day day day
-* echo  "day day day day" | sed 's/day/night/2' #تغییر فقط در دومی → #out: day night day day
-* echo  "day day day day" | sed 's/day/night/3' #تغییر فقط در سومی → #out: day day night day
-* echo  "day day day day" | sed 's/day/night/3g' #تغییر در سومی به بعد → #out: day day night night
-* echo  "day day day day" | sed 's/[a-f]/r/g' → #out: rry rry rry rry #substitute [a-f]  waith r
-* sed 's/^[a-d]*/r/g' → #out: اگر کاراکتر «آ» تا کاراکتر «د» هر چند بار تکرار شده بود(در ابتدای خط) بجای آن «آر» قرار بده(حتی اگر صفر بار تکرار شده بود یعنی خط خالی بود)
-* sed '3 s/<X>/<Y>/g' File.txt ⇉ #Change only in Line 3
-* sed '3,5 s/<X>/<Y>/g' ⇉ #Change in Line 3 until line5
-* sed '3,$    s/<X>/<Y>/g' ⇉ #Change in Line 3 until End
-* sed /'^/,$ s/<X>/<Y>/g' ⇉ #Change in Line 1 until End [Carrot must be between  slash]
-* sed -e 's/ *$//' #كاركتر خالي در آخر هر سطر را پاك كن
-* sed -e 's/00*/0/g' #صفرهاي متعدد را با يك صفر تعويض كن
-
-### [d] → delete
-
-* sed '<NUM>d' #حذف خط شماره خاص
-    * echo -ne "1 one\n2 two\n3 three\n4 four\n5 five\n6 six\n7 seven\n8 eight\n9 nine\n10 ten\n" |sed '7d' #نمایش همه بجز خط شماره هفتم
-* sed '5d' File.txt #حذف خط خاص[مثلا  خط ۵]
-* sed '$d' File.txt #حذف خط آخر
-* sed '4,$d' File.txt #حذف خط چهارم تا آخر
-* sed '/<X>/d' File.txt #حذف یک الگو از فایل
-* sed -i '/<td>الگو<\/td>/{n;d}' FILE.txt #حذف یک خط پس از یک الگو
-* sed '/^$/ d' File.tx #پاک کردن خطی که خالی هست و چیزی در آن نیست
-* sed '/ *#/d;/^$/d' File.txt @تمام خطوط خالی و همچنین خطوط شامل کامنت حذف شود
-* sed '/./!d' ⇄ sed '/^$/d'#حذف خط خالی
-
-### [q]
-
-* sed '<NUM>q;d' #نمایش خط شماره خاص از فایل
-    * echo -ne "1 one\n2 two\n3 three\n4 four\n5 five\n6 six\n7 seven\n8 eight\n9 nine\n10 ten\n" |sed '6q;d' #نمایش فقط خط شماره ۶
-* sed '<NUM>q' #نمایش تعداد خط اول
-    * echo -ne "1 one\n2 two\n3 three\n4 four\n5 five\n6 six\n7 seven\n8 eight\n9 nine\n10 ten\n" |sed '6q' #نمایش 6 خط اول
-
-### [p] → Print twice
-
-* sed 'p' file #Print every line twice on output
-* sed '6p' #print line 6 twice(every line once)
-    * echo -ne "1 one\n2 two\n3 three\n4 four\n5 five\n6 six\n7 seven\n8 eight\n9 nine\n10 ten\n" |sed '6p' #
-
-### [n] → سوییچ «اِن» سبب می‌شود که هرخط فقط یک بار چاپ شود
-
-* sed -n 'p' file #print every line only once
-* sed -n <NUM>p File.txt # نمایش فقط یک خط خاص
-    * cat /etc/passwd|nl|sed '4q;d'
-    * cat /etc/passwd|nl|sed -n 4p
-    * cat /etc/passwd|nl|sed -n '4p;4q'
-    * cat /etc/passwd|nl|awk '{if(NR==4) print $0}'
-    * cat /etc/passwd|nl|head -n 4| tail -n +4
-      هر۴تای بالا یکسان هستند
-* sed -n '1,3 p' file #چاپ خط یک تا سه
-* sed -n '1,8p' file #چاپ خط یک تا هشت
-* sed -n '/^[a]/ p' file # خطوطی که خط اول با «آ» شروع می‌شود را چاپ کن
-* sed -n '/^[a]/ !p' file #خطوطی که خط اول با «آ» شروع می‌شود را چاپ نکن
-* sed -n '/string1/p' # نمایش خطوطی که شامل کلمه استرینگ۱ باشد
-
-### [NOT]
-
-* sed '!s/day/night/g'
-
-## ✅️ tail
-
-* [-<n>]
-    * نمایش تعداد خط آخر
-* tail [+<n>]
-    * از خط شماره «اِن» شروع کن به نمایش
-
-```shell
-echo -ne "1 one\n2 two\n3 three\n4 four\n5 five\n6 six\n7 seven\n8 eight\n9 nine\n10 ten\n" | tail -3
-8 eight
-9 nine
-10 ten
-```
-
-```shell
-echo -ne "1 one\n2 two\n3 three\n4 four\n5 five\n6 six\n7 seven\n8 eight\n9 nine\n10 ten\n" | tail +3
-3 three
-4 four
-5 five
-6 six
-7 seven
-8 eight
-9 nine
-10 ten
-```
-
-## ✅️ tr
-
-‌تبدیل کاراکتر به کاراکتر دیگر
-
-* [-d]: حذف کاراکتر هایی که معین می‌شود
-* [-c]: معکوس حذف یعنی تنها این کاراکترها را نگه‌داری کن
-    * `tr -dc '0-9'` #نگهداری تنها اعداد و حذف همه کاراکترها
-
-```shell
-echo behrooz | tr 'o' 'u' #--> out: behruuz
-```
 
 # 📍️ group:Kernel
 
