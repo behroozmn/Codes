@@ -1,11 +1,251 @@
-# 1.Concept
+# COMPILE
+
+## Compile Proces steps
+
+برنامه GCC یک برنامه نوشته شده به زبان C یا C++ را در ۴ مرحله اجرا می کند به عنوان مثال، `gcc -o hello.exe hello.c` به صورت زیر انجام می شود
+
+## 1️⃣️:PreProcessing[پیش‌پردازش]
+
+* فایل‌های پیش‌پردازش شده دارای پسوند “i.” هستند.
+* مشمول کلیه خطوط در زبان C است که با علامت # شروع می‌شوند.
+    * شامل [defineها که تعریف مقادیر ثابت است] و [Headerها]
+* در فایل خروجی پیش‌پردازنده برای کامنت‌گذاری از علامت # همراه با یک عدد استفاده می‌شود
+* در این مرحله مجموعه دستورات پیش‌پردازنده با مقادیر واقعی‌شان جایگزین می‌شوند.
+    * فایلی که با پسوند i می‌باشد حاوی هیچ «include» یا «define» نیست و بجای هرکدام از «include»‌ یا «define» مقادیر محتوی آنها قرار گرفته است
+    * دستورات پیش‌پردازنده با محتوایشان جایگزین شده‌اند و خود این دستورات یا کامنت شده یا حذف شده‌اند.
+    * در این مرحله، عملکرد کامپایلر به‌صورت بازگشتی است.
+        * یعنی ابتدا کتابخانه‌هایی که سورس کد به آنها نیاز دارد را می‌یابد، سپس کتابخانه‌هایی که کتابخانه‌های سورس کد به آنها نیاز دارد را می‌یابد
+        * این کار را تا جایی ادامه می‌دهد که کتابخانه‌ای موردنیاز کتابخانه دیگر نباشد.
+        * پس از یافتن آنها، از همان نقطه شروع ، اقدام به جایگزینی کتابخانه‌ها با محتوای آنها در کد می‌کند
+* برای مقداردهی به ثابت‌های کد، می‌توان در هنگام کامپایل این مقادیر داده شود.[در قطعه کد FORM1 بجای تعریف مقدار A تحت عنوان «define» آن را در هنگام کامپایل مقدار دهید]
+
+gcc -E [Name of Source Code] -o [Name of Output File]
+
+* `gcc -E metech2.c -o PreProcessed.i`
+* `cpp file.c > PreProcessedFile.i` #via the GNU C Preprocessor (cpp.exe)
+
+```shell
+//metech3.c Source Code
+#include <stdio.h>
+int main(){
+printf("5 * 2 = %d", A);
+}
+```
+
+`gcc -DA=100 metech3.c -o output`
+
+## 2️⃣️:Compilling[کامپایل]
+
+* در این مرحله کد پیش‌پردازش شده کامپایل می‌شود یعنی کد زبان C به یک کد اسمبلی تبدیل می‌شود
+* زبان اسمبلی: یکی از زبان‌های سطح پایین محسوب می‌شود که در آن ما معمولاً مستقیماً با رجیسترهای پردازنده درگیر هستیم(عملیات ریاضی و منطقی از طریق کار روی رجیسترها)
+* معمولاً فایل‌های تبدیل شده به فایل اسمبلی دارای پسوند “s.” هستند.
+
+
+* gcc -S [Name of Source Code] -o [Name of Output file]
+
+`gcc -S metech2.c -o assembled.s` # as -o hello.o hello.s → The assembler (as.exe) converts the assembly code into machine code
+
+## 3️⃣️:CreatingObjectFile[تبدیل کداسمبلی به زبان‌ماشین]
+
+* Object fileها:
+    * کدهای صفر و یک هستند که توسط پردازنده قابل‌فهم و اجراست.(دستورالعمل اجرایی پردازنده)
+    * فایل object نتیجه کامپایل یک فایل منبع (مانند main.c) است بدون اینکه لینک شده باشد
+    * معمولاً Object File ها دارای پسوند “o.” هستند.
+    * نمی‌توان به‌صورت یک فایل متنی باز کرد
+    * برای دیدن محتوای Object file از دستور objdump استفاده نمایید
+    * داخل آن مجموعه سری کد به فرمت هگز می‌باشد
+* یکی از راه‌های Close source کردن کد ، تبدیل آن به یک Object file است که عملاً قابلیت تغییر ندارد
+* در این مرحله کد اسمبلی به کد زبان ماشین(Object file) تبدیل می‌شود
+
+### Commands
+
+`gcc -c [Name of Source Code] -o [Name of Output file]`
+`gcc -c metech2.c -o ObjectFile.o`
+
+برای دیس‌اسمبل کردن (Disassemble) یک فایل اُبجِکت (Object File)
+`objdump [Option] [File] `
+
+* [-D]:  تبدیل کد ماشین به اسمبلی
+    * تمام بخش‌های قابل اجرا و داده‌های کد ماشین را دیس‌اسمبل کند
+    * `objdump -D ObjectFile.o`
+
+```shell
+make install  #کپی فایل‌های کامپایل شده در مسیرهای درست
+nm ObjectFile.so # مشاهده توابع داخل یک آبجکت فایل
+```
+
+### Create ObjectFile.so
+
+**مرحله اول:** یک فایل با پسوند سی ایجاد نمایید که حاوی کد زبان سی باشد
+
+cat `libhello.c`
+
+```c
+#include <stdio.h>
+
+void say_hello() {
+    printf("Hello from .so file!\n");
+}
+```
+
+**مرحله‌دوم:** تبدیل به آبحکت‌فایل
+
+```shell
+gcc -shared -fPIC -o libhello.so libhello.c
+```
+
+**مرحله‌سوم:** استفاده در برنامه
+
+```shell
+gcc main.c -o app -L. -lhello
+```
+
+**مرحله‌چهارم:**
+
+```shell
+./app
+# output: Hello from .so file!
+```
+
+## 4️⃣️:Linker[لینک‌کردن]
+
+* لینک کردن فرآیند ترکیب چندین فایل object و کتابخانه‌ها (libraries) برای ایجاد یک فایل اجرایی (executable)، کتابخانه به اشتراک گذاری شده (shared library) یا کتابخانه استاتیک (static library) است.
+* دو نوع لینک کردن داریم:
+    * ۱-نوع Static Linking: تمام کُد (از جمله کتابخانه‌ها) در زمان لینک به فایل executable اضافه می‌شود. فایل بزرگ‌تر ولی مستقل
+    * ۲-نوع Dynamic Linking: کتابخانه‌ها در زمان اجرا بارگذاری می‌شوند. فایل کوچک‌تر و به اشتراک‌گذاری کتابخانه‌ها ممکن است
+* تجمیع فایل‌های مستقل کنار هم که بعضا با هم ارتباط دارند(همانند includeهایی که در کد سبب فراخوانی یک فایل دیگر می‌شود)
+* لینکر یک مرحله ضروری در کامپایل است و فایل object تنها نیمی از کار است و بدون لینک کردن با کتابخانه‌ها،نمی‌توان یک برنامه کامل و اجراپذیر ساخت.
+
+### Commands
+
+در عمل، مردم اغلب مستقیماً از gcc برای لینک کردن استفاده می‌کنند، چون gcc خودش می‌داند چه کتابخانه‌ها و فایل‌های اولیه‌سازی را باید به ld بدهد و نیاز نیست مانند دستور ld آن را مستقیمان وارد نماییم
+
+`ld -o hello.exe hello.o ...libraries...` #the linker (ld or ld.exe) links the object code with the library code to produce an executable file hello.exe
+
+* این برنامه `ld` است که فایل‌های object (مثل hello.o) و کتابخانه‌ها (مثل libc.a) را با هم ترکیب می‌کند و یک فایل اجرایی می‌سازد.
+* عبارت `libraries`  را باید وارد نماییم یعنی کتابخانه‌های لازم (مانند libc.a یا libm.so) را هم به لینکر بدهیم.
+
+### example1
+
+فرض کنید شما یک فایل C دارید به نام hello.c:
+
+```c
+#include <stdio.h>
+
+int main() {
+    printf("Hello, world!\n");
+    return 0;
+}
+```
+
+* دو دستور زیر یکسان‌هستند و دستور gcc خودش کارهای ld را نیز انجام می‌دهد
+
+```shell
+gcc -o hello.exe hello.o
+```
+
+```shell
+gcc -c hello.c -o hello.o # کامپایل بدون لینک (فقط تولید فایل آبجکت)
+ld -o hello.exe hello.o /usr/lib/x86_64-linux-gnu/crt0.o -lc # لینک کردن با کتابخانه‌ها
+./hello.exe # اجرای برنامه
+# output: Hello, world!
+```
+
+نکته‌ها:
+
+* بخش /usr/lib/.../crt0.o: فایل اولیه‌سازی برنامه
+* بخش -lc: کتابخانه استاندارد C (libc.a)
+
+### example2
+
+فرض کنید دو فایل داریم:فایل‌اول `main.c` که شامل تابع main و فایل‌دوم `helper.c`که شامل تابع addاست
+
+Filename: `main.c`
+
+```c
+#include <stdio.h>
+
+int add(int a, int b); // تعریف در helper.c
+
+int main() {
+    printf("Sum: %d\n", add(5, 7));
+    return 0;
+}
+```
+
+Filename: `helper.c`
+
+```c
+int add(int a, int b) {
+    return a + b;
+}
+```
+
+```shell
+# کامپایل هر فایل به صورت جداگانه
+gcc -c main.c -o main.o
+gcc -c helper.c -o helper.o
+```
+
+```shell
+gcc main.o helper.o -o program # لینک کردن آبجکت‌فایل‌ها
+```
+
+```shell
+./program # اجرای برنامه
+# output: Sum: 12
+```
+
+## Images
+
+![installSteps.jpg](_srcFiles/Images/install.jpg "installSteps.jpg")
+<br>
+![Linker.jpg](_srcFiles/Images/Linker.jpg "Linker.jpg")
+<br>
+![compilation.jpg](_srcFiles/Images/compilation.jpg "compilation.jpg")
+<br>
+![CompilePhase.jpg](_srcFiles/Images/CompilePhase.jpg "CompilePhase.jpg")
+
+# LIBRARY
+
+## Library
+
+* معمولا نام فایل های کتابخانه با پیشوند lib شروع می شوند و با پسوند .a یا so تمام می شوند. این موضوع در مورد تمام کتابخانه های استاندارد سی حتمی است
+* درزمان کامپایل(دربرنامه) هنگام لینک دادن به کتابخانه پسوند و پیشوند آورده نمی شود و خود کامپایلر میداند که باید آنها را اضافه کند
+
+## Static Library
+
+* بیشتر با پسوند a دیده‌می‌شوند
+* یک بخش از برنامه هستند و به برنامه لینک شده است
+
+## Dynamic Library
+
+* بیشتر با پسوند *.so دیده‌می‌شوند که مخفف SharedObject می‌باشند
+* کتابخانه های اشتراکی در برنامه اجرایی ادغام نمی شوند اما به برنامه اجرایی متصل هستند.
+* به دوحالت مورد استفاده قرار می‌گیرند
+    * **حالت‌اول:** در زمان شروع اجرا به برنامه وصل می شوند(برنامه از قبل مکان و وجود آنها آگاهی دارد) یعنی در زمان استفاده(کامپایل و زمان لینک شدن) باید وجود داشته باشند.
+    * **حالت‌دوم:**کتابخانه های پویا در حین اجرا لود و به برنامه اجرایی متصل می شوند.
+        * مثلا یک پلاگین مرورگر این کار با استفاده از توابع لود لینک سیستم انجام می پذیرد.
+
+معمولا نام فایل های کتابخانه با پیشوند lib شروع می شوند و با پسوند .a یا so تمام می شوند. این موضوع در مورد تمام کتابخانه های استاندارد سی حتمی است.
+درزمان کامپایل(دربرنامه) هنگام لینک دادن به کتابخانه پسوند و پیشوند آورده نمی شود و خود کامپایلر میداند که باید آنها را اضافه کند
+
+## Commands
+
+```shell
+nm ObjectFile.so # مشاهده توابع داخل یک آبجکت فایل
+```
+
+# MAKEFILE
+
+## 1️⃣️.Concept
 
 استفاده از روش ماژولار(Modular) بهترین گزینه در کدنویسی و کامپایل پروژه‌هاست بگونه‌ای که بخش‌های مختلف پروژه به صورت ماژول‌های مجزا کامپایل شوند. این موضوع سبب بروز پیچیدگی خواهد شد که بدین جهت ابزار Make برای تسهیل این مراحل و خودکارسازی این فرایند مورد استفاده قرار می‌گیرد. روند کامپایل این ماژول‌ها در فایلی به‌نام Makefile تعریف می‌شوند.
 
 وقتی شما دستور make را در خط فرمان می‌نویسید، برنامهٔ Make در دایرکتوری فعلی‌ای که در آن قرار دارید فایلی به‌نام Makefile را می‌خواند و شروع به پردازش اولین هدف موجود در آن می‌کند (Default Goal). اما قبل از اینکه دستورات موجود در این هدف اجرا شوند، Make باید تمام پیش‌نیازهای مربوط به آن هدف را پردازش کند. هر یک از این پیش‌نیازها نیز برای خود Rule
 دارند که برای ساخت آن‌ها پردازش خواهد شد.
 
-# 2.makefile Structure and Syntax
+## 2️⃣️.makefile Structure and Syntax
 
 ```makefile
 Target: PreRequirments
@@ -43,7 +283,7 @@ Target: PreRequirments
 * استفاده از Make وابسته به زبان برنامه‌نویسی خاصی نیست.
 * برنامه ldd در لینوکس لایبرری‌های اشتراکی یک برنامه اجرایی را لیست می‌کند
 
-# 3.Rules
+## 3️⃣️.Rules
 
 قوانین  (Rules) به دو دسته کلی تقسیم می‌شوند:
 
@@ -81,7 +321,7 @@ main.o: main.c
 
 ```
 
-# 4.Variables
+## 4️⃣️.Variables
 
 متغیرها برای ساده‌سازی مورد استفاده قرار می‌گیرند(دو نمونه زیر یکسان هستند)
 
@@ -102,7 +342,7 @@ cc -o edit $(objects)
 * تقریباً تمام Makefileها متغیری با نامی شبیه به objects یا OBJECTS یا objs یا OBJS یا obj یا OBJ دارند که فهرستی از نام تمام آبجکت‌های مورد نیاز در پروژه را در خود نگه داشته‌است
 * متغیر می‌تواند شامل کاراکتر فاصله باشد. یعنی موارد را توسط فاصله از هم جدا نماید
 
-## 4.1.GeneralVariable
+### 4.1.GeneralVariable
 
 <div style="direction: rtl">
 
@@ -245,7 +485,7 @@ all: main.o
 main.o:
 ```
 
-## 4.2.Automatic variables[متغیرهای خودکار]
+### 4.2.Automatic variables[متغیرهای خودکار]
 
 متغیرهایی هستند که توسط make به صورت خودکار وقتی یک قاعده(rule) با یک هدف(target) و وابستگی‌های(prerequisites) آن مطابقت پیدا می‌کند ، تنظیم می‌شوند
 این متغیرها بسیار مفید هستند زیرا به شما اجازه می‌دهند بدون نوشتن دوباره مسیرها و نام فایل‌ها، در دستورات build استفاده کنید.
@@ -279,7 +519,7 @@ main.o: main.c defs.h
 * بنابراین
     * $? = main.c
 
-## 4.3.Examples
+### 4.3.Examples
 
 **Example1️⃣️:**
 
@@ -362,7 +602,7 @@ utils.o: utils.c defs.h
       rm hello.o hello.exe
   ```
 
-# 5.VirtualPath
+## 5️⃣️.VirtualPath
 
 **وی‌پَت با حروف کوچک یا VPATH**: تعیین دایرکتوری جهت جستجوی وابستگی‌ها(Dependencies) و فایل‌های تارگت
 
@@ -381,7 +621,7 @@ vpath %.c src
 vpath %.h include
 ```
 
-# 6.Functions
+## 6️⃣️.Functions
 
 * همه انواع داده از نوع رشته است و عدد هم رشته محسوب می‌شود
 * باعلامت `$(n)` به آرگومان‌ها دسترسی امکان پذیر می‌شود
@@ -411,7 +651,7 @@ $(call myFunctionName,Ali,25) # فراخوانی تابع چندخطی
 
 **استفاده از تابع:**: برای چاپ یا استفاده از خروجی تابع، باید آن را درون یک دستور shell قرار دهید (مثل echo)
 
-## 6.1.BuiltIn Functions
+### 6.1.BuiltIn Functions
 
 لیست کامل توابع `GNU Make`
 
@@ -443,7 +683,7 @@ $(call myFunctionName,Ali,25) # فراخوانی تابع چندخطی
 | `words`      | شمارش کلمات                           | شمارش تعداد کلمات دریک لیست            | `$(words text)`                        | `$(words one two three)`                                          | `3`                                                             | برای اعتبارسنجی تعداد ورودی‌ها.                   |
 | `word`       | گرفتن کلمه nام                        | بازگرداندن کلمهnام ازیک لیست           | `$(word n,text)`                       | `$(word 2,one two three)`                                         | `two`                                                           | شماره کلمه از ۱ شروع می‌شود.                      |
 
-## 6.2.Conditional Functions
+### 6.2.Conditional Functions
 
 **$(if condition,then-part,else-part)****
 
@@ -458,7 +698,7 @@ LOG_LEVEL = verbose
 LOG = $(if $(filter verbose,$(LOG_LEVEL)), @echo "Debug: $1", @true)
 ```
 
-## 6.3.Examples:
+### 6.3.Examples:
 
 **Example1️⃣️: Simple Function**
 
@@ -515,6 +755,7 @@ all:
 ```
 
 خروجی: وقتی دستور `make` را بزنیم خروجی 'Creating example.txt...' چاپ می‌شود و همچنین فایل `example.txt` با محتوی 'Contents: This is some text' نیز ایجاد می‌شود
+
 ---
 **Example4️⃣️:  Function Returning a Value**
 
@@ -567,9 +808,9 @@ all:
 
 * تابع filter تمام عناصری از $(1) را برمی‌گرداند که باالگوی %.c مطابقت داشته باشند.
 
-# 7.Conditions
+## 7️⃣️.Conditions
 
-## 7.1.ifeq | ifneq
+### 7.1.ifeq | ifneq
 
 Equality Conditions
 
@@ -597,7 +838,7 @@ else
 endif
 ```
 
-## 7.2.ifdef | ifndef
+### 7.2.ifdef | ifndef
 
 Variable Definition Checks
 
@@ -621,7 +862,7 @@ else
 endif
 ```
 
-## 7.3.Pattern Matching
+### 7.3.Pattern Matching
 
 **$(filter pattern...,text)**
 
@@ -634,7 +875,7 @@ SOURCES = main.c util.c helper.cpp
         @echo "Skipping non-C file: $<")
 ```
 
-## 7.4.Conditional Variable Assignment
+### 7.4.Conditional Variable Assignment
 
 * = → Immediate value Assignment
     * از = وقتی نیاز دارید متغیرها دینامیک باشند
@@ -664,3 +905,79 @@ SOURCES = main.c util.c helper.cpp
 GIT_HASH != git rev-parse --short HEAD  # معادل:
 GIT_HASH := $(shell git rev-parse --short HEAD)
 ```
+
+## 8️⃣️.Examples
+
+### 1️⃣️.Hello World
+
+```shell
+// hello.c
+#include <stdio.h>
+int main() {
+    printf("Hello, world!\n");
+    return 0;
+}
+
+
+//makefile
+all: hello.exe
+hello.exe: hello.o
+	 gcc -o hello.exe hello.o
+hello.o: hello.c
+	 gcc -c hello.c
+clean:
+	 rm hello.o hello.exe
+```
+
+**توضیحات**
+
+* فایل makeFile را باید در مسیر جاری پروژه قرار دهیم
+* بخش all بصورت پیش‌فرض اجرا می‌شود
+* اگر پس از اجرای دستور ALL مجدد این دستور را اجرا نماییم با دستور زیر مواجه می‌شویم
+    * `make: Nothing to be done for 'all'`
+* ترتیب اجرای خط به خط
+    * ابتدا سراغ تارگت `all` رفته و درمیابد که پیش‌نیاز آن `hello.exe` است
+    * میرود سراغ تارگت `hello.exe` و مشاهده میکند که پیش نیاز آن فایل `hello.o` است
+    * میرود سراغ تارگت `hello.o` و مشاهده میکند که پیش‌نیاز آن فایل hello.c است که متوجه می‌شود که این فایل در مسیر جاری وجود دارد
+    * در ادامه این فایل را میخواند
+    * در ادامه دستورات این تارگت(که فایل پیش‌نیاز آن را پیدا کرده است یعنی دستورات تارگت `hello.o`) را اجرا میکند یعنی دستور زیر
+    ```shell
+    gcc -c hello.c
+    ```
+    * حال که بادستور بالا فایل `hello.o` ایجاد شد در ادامه دستور تارگت hello.exe را اجرا میکند یعنی دستور زیر
+    ```shell
+    `gcc -o hello.exe hello.o`
+    ```
+
+### 2️⃣️.makefile sample
+
+```makefile
+CC      = gcc
+CFLAGS  = -Wall -Wextra -g
+CPPFLAGS= -Iinclude
+LDFLAGS =
+LDLIBS  = -lm
+
+SRCS    = main.c utils.c
+OBJS    = $(SRCS:.c=.o)
+TARGET  = myprogram
+
+all: $(TARGET)
+
+$(TARGET): $(OBJS)
+    $(CC) $(LDFLAGS) $(OBJS) -o $@ $(LDLIBS)
+
+%.o: %.c
+    $(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
+
+clean:
+    rm -f $(OBJS) $(TARGET)
+```
+
+توضیح کوتاه برخی قسمت‌ها:
+
+* مورد $(CC) و $(CFLAGS) و غیره: متغیرها را فراخوانی می‌کنند.
+* مورد $(SRCS:.c=.o): تمام .cها را به .o تبدیل می‌کند (مانند main.c → main.o).
+* مورد $@: اسم هدف (target) فعلی است (مانند myprogram).
+* مورد $<: اولین وابستگی (dependency) است (مانند main.c در حین کامپایل main.o).
+     
