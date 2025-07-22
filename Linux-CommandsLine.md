@@ -1,4 +1,4 @@
-# group:PackageManagements
+# 📍️ group:PackageManagements
 
 ## Debian
 
@@ -203,13 +203,11 @@ Epel: Extra Packages for Enterprise Linux
 rpm2cpio PackageName | cpio -extract -make directories *bin* #استخراج فایل‌های اجرایی از یک بسته «آرپی‌ام»
 ```
 
-# 📍️ group:User
+# 📍️ group:UserManagements
 
 ## ✅️ adduser
 
 - در نسخه لینوکس‌های کوچک دستور adduser وجود دارد(توزیع لینوکس alpine) و دستور useradd دستور بزرگتری و با ابزارهای بیشتری است.
-
-# 📍️ group:Groups
 
 ## ✅️ groups
 
@@ -250,9 +248,6 @@ sudo ethtool enp5s0 # اطلاعات فوق‌العاده زیاد بابت ک�
 
 `fping -g 192.168.10.1 192.168.10.5 #alive hosts`
 
-
-
-
 ## ✅️ hostname
 
 * [-I] or [--all-ip-addresses] → All IP addresses for the host
@@ -261,11 +256,7 @@ sudo ethtool enp5s0 # اطلاعات فوق‌العاده زیاد بابت ک�
 hostname -I # show all ip address
 ```
 
-
-
 ## ✅️ iwlist|iwconfig
-
-
 
 wifi|wireless|وای‌فای
 
@@ -722,8 +713,6 @@ traceroute google.com
 
 # 📍️ group:Text
 
-
-
 ## ✅️ awk
 
 ### Concepts
@@ -813,8 +802,6 @@ traceroute google.com
 
 [OnlineTools](https://awk.js.org)
 
-
-
 ## ✅️ cat
 
 * [-E]: نمایش انتهای خط که مثلا کاراکتر دالر باشد
@@ -823,14 +810,11 @@ traceroute google.com
 cat -E fileName
 ```
 
-
 ## ✅️ dos2unix
 
 ```shell
 dos2unix filedos.txt fileUnix.txt #تبدیل فرمت یک فایل متنی از سیستم ام اس داس به سیتمس یونیکس
 ```
-
-
 
 ## ✅️ echo
 
@@ -854,7 +838,6 @@ echo -e 'Here \vthe \vspaces \vhave \vvertical \vtab \vspaces.'
 #
 
 ```
-
 
 ## ✅️ find
 
@@ -1089,8 +1072,6 @@ echo behrooz | tr 'o' 'u' #--> out: behruuz
 ```shell
 unix2dos fileUnix.txt filedos.txt #تبدیل فرمت یک فایل متنی از سیستم ام اس داس به سیتمس یونیکس 
 ```
-
-
 
 ## ✅️ vim
 
@@ -1728,10 +1709,6 @@ au BufRead,BufNewFile *.qss set filetype=css
 :autocmd FileType sh  :noremap <F5> :AsyncRun bash % <CR> 
 
 ```
-
-
-
-
 
 # 📍️ group:Kernel
 
