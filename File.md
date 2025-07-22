@@ -49,6 +49,69 @@ rename "s/jpeg$/jpg/" *.jpeg  # convert all jpeg to jpg
 
 </div>
 
+# SpecialAttributes
+
+* a: تنها در حالت اضافه شدن(الحاقی) قابلیت تغییر خواهد داشت.یعنی فایل کم نمی‌شود ولی زیاد می‌شود
+* c: اجازه فشرده‌سازی و بازکردن خودکار یک فایل را به کرنل می‌دهد
+* d: در این حالت در هنگام اجرای ابزار سیستمی دامپ یا نسخه پشتیبان در پارتیشن‌های «ای‌ایکس‌تی۳» از فایل مورد نظر پشتیبان تهیه نخواهد شد
+* i: حتی توسط کاربر روت قابلیت تغییر نخواهد داشت
+* s: امن بودن در برابر حذف شدن
+* S: تغییرات در فایل همزمان برروی دیسک ذخیره خواهد شد
+* u: اجازه بازیابی محتویات یک فایل حتی اگرکه کنسل شده باشد را می‌دهد
+
+```shell
+lsattr: show Special attributes in directory
+chattr [+|-]<attributes> file.txt
+chattr +a file.txt
+chattr -a file.txt
+```
+
+# Permission
+
+```shell
+# r → Read
+# w → Write
+# x → Execute
+# u → USER
+# g → GROUP
+# o → OTHER
+# a → ALL
+```
+
+## SUID
+
+اگر فایلی این دسترسی را داشته باشد یعنی استفاده از این فایل با دسترسی مشابه روت صورت خواهد گرفت
+
+What’s the benefit? The passwd command needs to edit files like /etc/passwd, /etc/shadow to change the password. These files are owned by root and can only be modified by root. But thanks to the setuid flag (SUID bit), a regular user will also be able to modify these files (that are owned by root) and change his/her password.
+
+```shell
+$ ls -l /usr/bin/passwd
+-rwsr-xr-x 1 root root 59640 Mar 22 2019 /usr/bin/passwd
+```
+
+<div style="display: flex; flex-direction: column; align-items: center;">
+
+
+![permissions.webp](_srcFiles/Images/permissions.webp "permissions.webp")
+![permission.jpg](_srcFiles/Images/permission.jpg "permission.jpg")
+![linux-special-permissions-explained.webp](_srcFiles/Images/linux-special-permissions-explained.webp "linux-special-permissions-explained.webp")
+![linux-special-permission-suid-guid-sticky-bit.webp](_srcFiles/Images/linux-special-permission-suid-guid-sticky-bit.webp "linux-special-permission-suid-guid-sticky-bit.webp")
+![perm_special.png](_srcFiles/Images/perm_special.png "perm_special.png")
+![permis-accessmodes.jpg](_srcFiles/Images/permis-accessmodes.jpg "permis-accessmodes.jpg")
+![sgid-linux.webp](_srcFiles/Images/sgid-linux.webp "sgid-linux.webp")
+![sticky-bit-linux.webp](_srcFiles/Images/sticky-bit-linux.webp "sticky-bit-linux.webp")
+![suid-linux.webp](_srcFiles/Images/suid-linux.webp "suid-linux.webp")
+![](_srcFiles/Images/ "")
+![](_srcFiles/Images/ "")
+
+</div>
+
+```shell
+chmod o-w File.txt → Remove write from OTHER group
+chmode u=rw,g=rwx,o=r file.txt
+chmod u+x file.txt → add EXECUTE to USER group
+```
+
 # Backup
 
 * برای بک‌آپ گرفتن مهم است که دیتای خود را دسته‌بندی کرده باشید
@@ -153,35 +216,35 @@ tar xf /dev/st0 /home/restorMyData #بازیابی بک‌آپ از نوار
 
 # FileNames
 
-## /sbin/init
+## 📍️ /sbin/init
 
 * اولین برنامه ایکه برای اجرای دیگر پردازه‌ها به اجرا درمی‌آید
 * اول می‌رود سراغ /sbin/init اگرنبود می‌رود سراغ /etc/init و اگر نبود میرود سراغ /bin/sh
 * سه برنامه برای initiate کردن پردزه ‌ها وجود دارد:۱-sysV که سیستم۵ هم نامیده می‌شود ۲-systemdجدید است۳-upstart برای اوبونتو بود که استفبال نشد
 
-## /proc
+## 📍️ /proc
 
 تمام محتویات مسیر آن توسط کرنل[kernel] پر می‌شود
 
-* /proc/cmdline]: Arguments passed to the Linux kernel at boot time
+* /proc/cmdline: Arguments passed to the Linux kernel at boot time
     * OOT_IMAGE=/boot/vmlinuz-5.10.0-20-amd64 root=UUID=4bfb45d2-d701-44c7-8941-9d52d2f6f227 ro quiet
-* /proc/net/dev]: All about Network
+* /proc/net/dev: All about Network
     * cat /proc/net/dev | column -t
-* /proc/cpuinfo]
-* /proc/filesystems]: A text listing of the filesystems which are supported by the kernel
-* /proc/meminfo]
-* /proc/modules]: A text list of the modules that have been loaded by the system
-* /proc/mounts]: list of all the filesystems currently mounted on the system
-* /proc/net/arp]: This holds an ASCII readable dump of the kernel ARP table
-* /proc/swaps]: Swap areas in use
+* /proc/cpuinfo
+* /proc/filesystems: A text listing of the filesystems which are supported by the kernel
+* /proc/meminfo
+* /proc/modules: A text list of the modules that have been loaded by the system
+* /proc/mounts: list of all the filesystems currently mounted on the system
+* /proc/net/arp: This holds an ASCII readable dump of the kernel ARP table
+* /proc/swaps: Swap areas in use
 * /proc/sys/kernel/hostname]
-* /proc/sys/kernel/pty/nr]: This read-only file indicates how many pseudoterminals are currently in use #نمایش تعداد ترمینال‌های باز
-* /proc/sys/kernel/pid_max]: ماکزیمم تعداد پردازه قابل استفاده در لینوکس توسط این فایل معین شده است که نباید از آن فراتر رود
-* /proc/interrupts] : show interrupt request on system
+* /proc/sys/kernel/pty/nr: This read-only file indicates how many pseudoterminals are currently in use #نمایش تعداد ترمینال‌های باز
+* /proc/sys/kernel/pid_max: ماکزیمم تعداد پردازه قابل استفاده در لینوکس توسط این فایل معین شده است که نباید از آن فراتر رود
+* /proc/interrupts: show interrupt request on system
 * /proc/version]
-* /proc/<PID>/fd]
+* /proc/<PID>/fd
     * ls -la /proc/<PID>/fd #لیست فایل‌های باز یک پردازه
     * ls -l /proc/<PID>/fd | wc -l
-* /proc/<PID>/limits]: مشاهده محدودیت‌های یک پردازه
-* /proc/sys/fs/file-max]: # مشاهده محدودیت مجموع فایل‌های باز در سیستم یعنی حداکثر تعداد فایل‌هایی است که می‌توانند به طور همزمان در سیستم باز باشند
+* /proc/<PID>/limits: مشاهده محدودیت‌های یک پردازه
+* /proc/sys/fs/file-max: # مشاهده محدودیت مجموع فایل‌های باز در سیستم یعنی حداکثر تعداد فایل‌هایی است که می‌توانند به طور همزمان در سیستم باز باشند
 
