@@ -203,13 +203,13 @@ Epel: Extra Packages for Enterprise Linux
 rpm2cpio PackageName | cpio -extract -make directories *bin* #استخراج فایل‌های اجرایی از یک بسته «آرپی‌ام»
 ```
 
-# group:User
+# 📌️ group:User
 
 ## ✅️ adduser
 
 - در نسخه لینوکس‌های کوچک دستور adduser وجود دارد(توزیع لینوکس alpine) و دستور useradd دستور بزرگتری و با ابزارهای بیشتری است.
 
-# group:Groups
+# 📌️ group:Groups
 
 ## ✅️ groups
 
@@ -217,7 +217,7 @@ rpm2cpio PackageName | cpio -extract -make directories *bin* #استخراج ف�
 groups <name> #نمایش تمام گروه‌های یوزر فعلی
 ```
 
-# group:Process
+# 📌️ group:Process
 
 ## ✅️ fuser
 
@@ -226,7 +226,7 @@ fuser #پروسس‌هایی که دارد از یک فایل استفاده م�
 
 ```
 
-# group:Network
+# 📌️ group:Network
 
 ## ✅️ arp
 
@@ -705,7 +705,7 @@ traceroute google.com
 - `wget -r -np -R "index.html*" https://shop.hemat-elec.ir/wp-content/themes/irankala/assets/fonts` # Note: دانلود فایل های مشخص شده
     - wget -r -A.pdf
 
-# group:Text
+# 📌️ group:Text
 
 ## ✅️ vim
 
@@ -1375,7 +1375,7 @@ echo -e 'Here \vthe \vspaces \vhave \vvertical \vtab \vspaces.'
 
 ```
 
-# group:Text Filterring
+# 📌️ group:Text Filterring
 
 ## ✅️ awk
 
@@ -1694,7 +1694,7 @@ echo -ne "1 one\n2 two\n3 three\n4 four\n5 five\n6 six\n7 seven\n8 eight\n9 nine
 echo behrooz | tr 'o' 'u' #--> out: behruuz
 ```
 
-# group:Kernel
+# 📌️ group:Kernel
 
 ## ✅️ dd
 
@@ -1872,7 +1872,7 @@ udevadm **info** [options] [devpath(such as /dev/sda)|file|unit]
 * [-i] OR [--hardware-platform] → print the hardware platform or “unknown”
 * [-o] OR [--operating-system] → print the operating system
 
-# group:Form Or Banner
+# 📌️ group:Form Or Banner
 
 ## ✅️ yad
 
@@ -2108,11 +2108,46 @@ echo $my_variable
 zenity --calendar
 ```
 
-# group:Fun Comamnds
+# 📌️ group:Fun Comamnds
 
 ```shell
 1-while true; do echo "$(date '+%D %T' | toilet -f term -F border --gay)"; sleep 1; done #نمایش زمان در حالت ترمینال
 2- :(){ :|: & };:   #ForkBomb
 3-rev behrooz #برگرداندن متن
 4-cowsay
+```
+
+# 📌️ group:File
+
+## ✅️ fio
+
+```shell
+fio --name=Rand_RW_100_8K --rw=randrw --direct=1 --rwmixwrite=100  --ioengine=windowsaio --time_based  --runtime=1800  --size=30tib --blocksize=8k  --numjobs=8 --filesize=4tib --thread --group_reporting --filename="\\.\PhysicalDrive2"  --output="c:\1403-08-29-TestRand100Write-T2.txt"
+```
+
+## ✅️ tree
+
+نمایش فایل‌های بصورت درختی
+
+```shell
+tree -fi #نمایش تنها لیست فایل‌ها بصورت نام کامل
+```
+
+## ✅️ ulimit
+
+get and set user limits
+
+```shell
+ulimit --help
+ulimit -n #مشاهده محدودیت تعداد فایل‌های باز برای هر پردازه
+ulimit -n <new_limit> #Temprory #the maximum number of open file
+vim /etc/security/limits.conf # اگر بخواهیم بصورت دائمی باشد
+```
+
+# 📌️ group:MultiMedia
+
+## ✅️ ffmpeg
+
+```shell
+ffmpeg -ss <Second> -i input.mp3 output.mp3
 ```
