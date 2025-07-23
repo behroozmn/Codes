@@ -2,12 +2,62 @@
 
 # 🅰️ مفاهیم و نکات
 
-*
-    * Document:کل صفحه از بالا تا پایین با تمام اسکرول‌های آن
+* Document:کل صفحه از بالا تا پایین با تمام اسکرول‌های آن
 * Window: صفحه پیش رو که درصفحه مرورگر، به هرکدام از قسمت‌های اسکرول شده در ابعاد صفحه نمایش
 * موضوع CDN مربوط به زمانی است که بخواهیم یک کتابخانه را بصورت آنلاین استفاده نماییم
 * جاوا اسکریپت خط به خط اجرا می‌شود و وقتی تگی شناسایی نشده باشد نمی‌توانید توسط جاوا اسکریپت روی آن تغییرات بزنید.مگر اینکه در رویداد لود کامل صفحه عملیات را قرار دهید
 * debugger: هرگاه به آن خط برسد متوقف می‌شود و در inspector در تب دیباگر می‌توان وضعیت را رصد کرد
+
+
+## 🅱️ let|var|const
+
+* متغیر let میتونه بعنوان یک متغیر محلی درنظر گرفته شود
+* متغیر let از سال ۲۰۱۵ آمده و مرورگرهای قدیمی آن را تشخیص نمی‌دهند
+* همواره باید از متغیر var استفاده شود
+* متغیر Const برای ثابت‌ها مورد استفاده قرار می‌گیرد
+
+```javascript
+// The "equal to" operator is written like == in JavaScript.
+let person = "John Doe", carName = "Volvo", price = 200; // All in one line
+
+```
+
+```javascript
+
+// Sample1:
+var x = 6;
+{
+  var x = 7;
+}
+document.getElementById('d1').innerHTML = x;
+// output: 7
+
+// Sample2:
+let x = 6;
+{
+  let x = 7;
+}
+document.getElementById('d1').innerHTML = x;
+// output: 6
+
+// Sample3:
+let x = 6;
+{
+  let x = 7;
+  document.getElementById('d2').innerHTML = x;
+}
+// output: 7
+
+// Sample4:
+var x = 6
+{
+  let x = 7
+}
+document.getElementById('d2').innerHTML = x;
+// output: 6
+
+
+```
 
 # 🅰️ AddElements
 
@@ -16,23 +66,23 @@
 <html lang="en">
 <body>
 <div id="div1">
-    <p id="p1">element1</p>
-    <p id="p2">element2</p>
+  <p id="p1">element1</p>
+  <p id="p2">element2</p>
 </div>
 </body>
 
 <script>
-    var elem_div = document.getElementById("div1");
+  var elem_div = document.getElementById("div1");
     var newElem_p = document.createElement("p");
     var elem_p1 = document.getElementById("p1");
     var elem_p2 = document.getElementById("p2");
 
     var text = document.createTextNode("NewText");
-    newElem_p.appendChild(text);
-    elem_div.appendChild(newElem_p);
-    elem_div.insertBefore(newElem_p, elem_p2);
-    elem_div.removeChild(elem_p2);
-    elem_div.replaceChild(newElem_p, elem_p1);
+            newElem_p.appendChild(text);
+            elem_div.appendChild(newElem_p);
+            elem_div.insertBefore(newElem_p, elem_p2);
+            elem_div.removeChild(elem_p2);
+            elem_div.replaceChild(newElem_p, elem_p1);
 </script>
 </html>
 ```
@@ -49,13 +99,13 @@
 
 </body>
 <script>
-    function myfunc() {
-        if (confirm("لطفا انتخاب کنین که آیا می‌خواهید مقدار وارد نمایید یا خیر؟")) {
-            var value = prompt("لطفا عدد خود را وارد نمایید", "عدد پیش‌فرض را ۲۰ درنظر می‌توان گرفت");
-            document.getElementById("demo").innerHTML = value;
-            alert(value);
-        }
-    }
+          function myfunc() {
+              if (confirm("لطفا انتخاب کنین که آیا می‌خواهید مقدار وارد نمایید یا خیر؟")) {
+          var value = prompt("لطفا عدد خود را وارد نمایید", "عدد پیش‌فرض را ۲۰ درنظر می‌توان گرفت");
+                  document.getElementById("demo").innerHTML = value;
+                  alert(value);
+                  }
+              }
 </script>
 
 </html>
@@ -134,7 +184,30 @@ function func() {
 </html>
 ```
 
+# 🅰️ Number
 
+## 🅱️ leadingZero
 
+```
+data = String(<variable>).padStart(2, '0')  #نمایش دو رقمه
+data = String(<variable>).padStart(3, '0')  #نمایش سه رقمه
+
+// or
+    
+minutes = minutes <= 9 ? '0' + minutes : minutes; //اگر متغیر دقیقه تک رقمی بود دورقمی می‌شود یعنی اگر کمتراز ده باشد یک صفر به ته آن اضافه می‌کند
+```
+
+```html
+<!DOCTYPE html>
+<body>
+<p id="demo"></p>
+<script>
+    const d = new Date();
+    let day = d.getDate();
+    document.getElementById("demo").innerHTML = String(day).padStart(2, '0');
+</script>
+</body>
+</html>
+```
 
 

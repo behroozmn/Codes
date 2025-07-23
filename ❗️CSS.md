@@ -257,7 +257,6 @@ p {
 @color-profile
 @container
 @counter-style
-@font-face
 @font-feature-values
 @font-palette-values
 @keyframes
@@ -272,6 +271,25 @@ p {
 @supports
 @view-transition
 
+```
+
+### ✅️ @font-face
+
+```CSS
+@font-face {
+    font-family: Behroooooooz;
+    src: url('http://www.parsquran.com/data/fonts/UthmanTN.otf') format('opentype');
+```
+
+```html
+font-family: Behroooooooz
+```
+
+```
+TrueType                 font/ttf
+OpenType                 font/otf
+Web Open Font Format     font/woff
+Web Open Font Format2    font/woff2
 ```
 
 ### ✅️ @import
@@ -302,6 +320,5 @@ selector {
     padding-right: 0 !important;
 }
 ```
-
 
 </div>
