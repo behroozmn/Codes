@@ -398,7 +398,7 @@ gschwartz = GarySchwartz
 [...]
 ```
 
-## 📌️ /etc/smb.conf
+## 📁️ /etc/smb.conf
 
 * خش‌های متفاوتی در smb.conf قابل تنظیم است از جمله:
 * [global]:این بخش از فایل smb.conf شامل کانفگ‌های کلی و کاربردی در سطح سرویس smbd است
@@ -750,7 +750,7 @@ Facility.[priority|severity] action
     - username1, username2, etc → Log to these users' screens
     - \* → Log to all users' screens
 
-## 📌️ /etc/rsyslog.conf
+## 📁️ /etc/rsyslog.conf
 
 ```shell
 sudo vim /etc/rsyslog.conf

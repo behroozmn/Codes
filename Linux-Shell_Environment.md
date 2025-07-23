@@ -92,14 +92,14 @@ output:
     9. When you start a new session, you start over at step 1 with a HISTFILE of HISTFILESIZE=10
 - Example 3: HISTFILESIZE=5 and HISTSIZE=10
     1. You start your session
-    2. Your HISTFILE (file that stores your bash command history), is truncated to contain at most HISTFILESIZE=5 lines
-    3. You write 50 lines
-    4. At the end of your 50 commands, only commands 41 to 50 are in your history list, whose size is determined by HISTSIZE=10
-    5. You end your session
-    6. Assuming histappend is not enabled, commands 41 to 50 are saved to your HISTFILE which now has the 5 commands it held at the beginning plus the 10 newly written commands
-    7. Your HISTFILE is truncated to contain HISTFILESIZE=5 lines
-    8. You now have 5 commands in your history - the last 5 that you just typed in the session you just finished
-    9. When you start a new session, you start over at step 1 with a HISTFILE of HISTFILESIZE=5
+  2. Your HISTFILE (file that stores your bash command history), is truncated to contain at most HISTFILESIZE=5 lines
+  3. You write 50 lines
+  4. At the end of your 50 commands, only commands 41 to 50 are in your history list, whose size is determined by HISTSIZE=10
+  5. You end your session
+  6. Assuming histappend is not enabled, commands 41 to 50 are saved to your HISTFILE which now has the 5 commands it held at the beginning plus the 10 newly written commands
+  7. Your HISTFILE is truncated to contain HISTFILESIZE=5 lines
+  8. You now have 5 commands in your history - the last 5 that you just typed in the session you just finished
+  9. When you start a new session, you start over at step 1 with a HISTFILE of HISTFILESIZE=5
 
 # 📍️ TTY|PTS
 
@@ -136,7 +136,7 @@ Terminal: Command | xclip -selection clipboard
 
 # 📍️ Files
 
-## 📌️ bash_aliases
+## 📁️ ~/.bash_aliases
 
 ```shell
 alias ifconfig='/sbin/ifconfig'
@@ -204,6 +204,8 @@ LIGHTCYAN='\033[1;36m'
 WHITE='\033[1;37m'
 
 ```
+
+
 
 # 📍️ Commands
 
@@ -441,7 +443,9 @@ echo $my_variable
 zenity --calendar
 ```
 
+
 # Terminal Shortcuts
+
 
 * [Ctrl+A]:jump to start of the line
 * [Ctrl+E:]:jump to end of the line

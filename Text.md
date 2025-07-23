@@ -675,7 +675,7 @@ unix2dos fileUnix.txt filedos.txt #تبدیل فرمت یک فایل متنی ا
 
 ### Files
 
-#### 📌️ [~/.vim/color](http://amirsamimi.ir/vimrc)
+#### 📁️ [~/.vim/color](http://amirsamimi.ir/vimrc)
 
 ```shell
 cat ~/.vim/colors 
@@ -893,7 +893,7 @@ if &t_Co > 255
 end
 ```
 
-#### 📌️ ~/.vimrc
+#### 📁️ ~/.vimrc
 
 ```shell
 

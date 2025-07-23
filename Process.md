@@ -136,4 +136,4 @@ ss -utlpn | grep <PIDnumber>
 
 # 📍️ Files
 
-## 📌️ /proc/cpuinfo
+## 📁️ /proc/cpuinfo
