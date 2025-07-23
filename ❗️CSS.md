@@ -1,79 +1,96 @@
-# 1.Shorthand
+<div dir="rtl">
+
+# 🅰️ مفاهیم و نکات
+
+<div style="display: flex; flex-direction: column; align-items: center;">
+
+![ruleset](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_syntax/Syntax/ruleset.png)
+![_declaration](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_syntax/Syntax/css_syntax_-_declaration.png)
+![](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_syntax/Syntax/css_syntax_-_statements_venn_diag.png)
+
+</div>
+
+# 🅰️ Properties
+
+## 🅱️ Shorthand
 
 * به شما اجازه می دهد مقادیر متعدد خاص CSS را همزمان تنظیم کنید
 * می توانید برگه های سبک مختصر تر ، صرفه جویی در وقت و انرژی را بنویسید
 * شامل موارد زیر می‌شود
-    * all
-    * animation
-    * animation-range
-    * background
-    * border-block
-    * border-block-end
-    * border-block-start
-    * border-bottom
-    * border-color
-    * border-image
-    * border-inline
-    * border-inline-end
-    * border-inline-start
-    * border-left
-    * border-radius
-    * border-right
-    * border-style
-    * border-top
-    * border-width
-    * column-rule
-    * columns
-    * contain-intrinsic-size
-    * container
-    * flex
-    * flex-flow
-    * font
-    * font-synthesis
-    * font-variant
-    * gap
-    * grid
-    * grid-area
-    * grid-column
-    * grid-row
-    * grid-template
-    * inset
-    * inset-block
-    * inset-inline
-    * list-style
-    * margin-block
-    * margin-inline
-    * mask
-    * mask-border
-    * offset
-    * outline
-    * overflow
-    * overscroll-behavior
-    * padding
-    * padding-block
-    * padding-inline
-    * place-content
-    * place-items
-    * place-self
-    * position-try
-    * scroll-margin
-    * scroll-margin-block
-    * scroll-margin-inline
-    * scroll-padding
-    * scroll-padding-block
-    * scroll-padding-inline
-    * scroll-timeline
-    * text-box
-    * text-emphasis
-    * text-wrap
-    * view-timeline
-    * -webkit-text-stroke
-    * -webkit-border-before
-    * -webkit-mask-box-image
 
-## border-*
+```
+all
+animation
+animation-range
+background
+border-block
+border-block-end
+border-block-start
+border-bottom
+border-color
+border-image
+border-inline
+border-inline-end
+border-inline-start
+border-left
+border-radius
+border-right
+border-style
+border-top
+border-width
+column-rule
+columns
+contain-intrinsic-size
+container
+flex
+flex-flow
+font
+font-synthesis
+font-variant
+gap
+grid
+grid-area
+grid-column
+grid-row
+grid-template
+inset
+inset-block
+inset-inline
+list-style
+margin-block
+margin-inline
+mask
+mask-border
+offset
+outline
+overflow
+overscroll-behavior
+padding
+padding-block
+padding-inline
+place-content
+place-items
+place-self
+position-try
+scroll-margin
+scroll-margin-block
+scroll-margin-inline
+scroll-padding
+scroll-padding-block
+scroll-padding-inline
+scroll-timeline
+text-box
+text-emphasis
+text-wrap
+view-timeline
+-webkit-text-stroke
+-webkit-border-before
+-webkit-mask-box-image
+```
 
-### border-bottom
+### ✅️ border-*
+
+#### ✳️ border-bottom
 
 ```css
 li:last-child {
@@ -81,9 +98,9 @@ li:last-child {
 }  
 ```
 
-## margin-*
+### ✅️ margin-*
 
-### margin
+#### ✳️ margin
 
 ```css
 p {
@@ -91,9 +108,9 @@ p {
 }
 ```
 
-## text-*
+### ✅️ text-*
 
-### text-decoration
+#### ✳️ text-decoration
 
 * مورد none: سبب می‌شود که با نگه داشتن روی لینک زیر آن لینک خط نیافتد
 
@@ -103,9 +120,9 @@ p {
 }
 ```
 
-## transition-*
+### ✅️ transition-*
 
-### transition[[url]](https://developer.mozilla.org/en-US/docs/Web/CSS/transition)
+#### ✳️ transition[[url]](https://developer.mozilla.org/en-US/docs/Web/CSS/transition)
 
 ```css
 li a {
@@ -129,9 +146,9 @@ li a {
 }
 ```
 
-# 2.general
+## 🅱️ general
 
-## display
+### ✅️ display
 
 [//]: # (Todo: Need to Review)
 
@@ -141,7 +158,7 @@ header nav {
 }
 ```
 
-### flex
+#### ✳️ flex
 
 > در حالت عادی دو اِلِمان ۱-تصویر ۲-محتوی(عنوان و متن) زیر هم قرار می‌گیرند
 
@@ -179,9 +196,9 @@ header nav {
 }
 ```
 
-## list-*
+### ✅️ list-*
 
-### list-style-type
+#### ✳️ list-style-type
 
 ```css
 ul {
@@ -189,9 +206,9 @@ ul {
 }
 ```
 
-## font-*
+### ✅️ font-*
 
-### font-family
+#### ✳️ font-family
 
 ```css
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,900&display=swap');
@@ -209,9 +226,9 @@ p {
 }
 ```
 
-## box-*
+### ✅️ box-*
 
-### box-shadow[[url]](https://developer.mozilla.org/en-US/docs/Web/CSS/box-shadow)
+#### ✳️ box-shadow[[url]](https://developer.mozilla.org/en-US/docs/Web/CSS/box-shadow)
 
 ```css
 p {
@@ -225,3 +242,66 @@ p {
 }
 ```
 
+# 🅰️ Statement
+
+## 🅱️ RulesSets
+
+* نوع Rulesets :مجموعه‌ای از declaration های CSS که توسط Selectorها تخصیص پیدا می‌کنند
+
+## 🅱️ At-rules
+
+* نوع At-rules: مواردی که با علامت @ آغاز می‌شوند.
+
+```
+@charset
+@color-profile
+@container
+@counter-style
+@font-face
+@font-feature-values
+@font-palette-values
+@keyframes
+@layer
+@media
+@namespace
+@page
+@position-try
+@property
+@scope
+@starting-style
+@supports
+@view-transition
+
+```
+
+### ✅️ @import
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,900&display=swap');
+
+html {
+    font-family: 'Roboto', sans-serif;
+}
+```
+
+# 🅰️ اجباری نمودن یک خصلت برای یک اِلِمان
+
+```css
+selector {
+    property: value; /* normal declaration */
+    property: value !important; /* important declaration (preferred) */
+    property: value ! important; /* important declaration (not preferred) */
+}
+
+```
+
+## 🅱️ Example1
+
+```css
+.errorlist {
+    padding-right: 0 !important;
+}
+```
+
+
+</div>
