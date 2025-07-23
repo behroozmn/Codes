@@ -92,14 +92,14 @@ output:
     9. When you start a new session, you start over at step 1 with a HISTFILE of HISTFILESIZE=10
 - Example 3: HISTFILESIZE=5 and HISTSIZE=10
     1. You start your session
-  2. Your HISTFILE (file that stores your bash command history), is truncated to contain at most HISTFILESIZE=5 lines
-  3. You write 50 lines
-  4. At the end of your 50 commands, only commands 41 to 50 are in your history list, whose size is determined by HISTSIZE=10
-  5. You end your session
-  6. Assuming histappend is not enabled, commands 41 to 50 are saved to your HISTFILE which now has the 5 commands it held at the beginning plus the 10 newly written commands
-  7. Your HISTFILE is truncated to contain HISTFILESIZE=5 lines
-  8. You now have 5 commands in your history - the last 5 that you just typed in the session you just finished
-  9. When you start a new session, you start over at step 1 with a HISTFILE of HISTFILESIZE=5
+    2. Your HISTFILE (file that stores your bash command history), is truncated to contain at most HISTFILESIZE=5 lines
+    3. You write 50 lines
+    4. At the end of your 50 commands, only commands 41 to 50 are in your history list, whose size is determined by HISTSIZE=10
+    5. You end your session
+    6. Assuming histappend is not enabled, commands 41 to 50 are saved to your HISTFILE which now has the 5 commands it held at the beginning plus the 10 newly written commands
+    7. Your HISTFILE is truncated to contain HISTFILESIZE=5 lines
+    8. You now have 5 commands in your history - the last 5 that you just typed in the session you just finished
+    9. When you start a new session, you start over at step 1 with a HISTFILE of HISTFILESIZE=5
 
 # 📍️ TTY|PTS
 
@@ -204,8 +204,6 @@ LIGHTCYAN='\033[1;36m'
 WHITE='\033[1;37m'
 
 ```
-
-
 
 # 📍️ Commands
 
@@ -442,3 +440,27 @@ echo $my_variable
 ```shell
 zenity --calendar
 ```
+
+# Terminal Shortcuts
+
+* [Ctrl+A]:jump to start of the line
+* [Ctrl+E:]:jump to end of the line
+* [Escape+B][Alt+B]:jump Backward by a word(left word)
+* [Escape+F]+[Alt+F]:jump Forward by a word(right word)
+* [CTRL+B]:move backward by a char
+* [CTRL+F]:move forward by a char
+* [CTRL+W]:remove the word backwards from cursor position
+* [CTRL+Y]:paste text from the kill buffer
+* [CTRL+R]:reverse search for commands you typed in the past from your history.
+* [CTRL+S]:forward search (works in ZSH for me but not bash)
+* [Ctrl+D]: حذف کاراکتر در موقعیت مکان نما
+* [Ctrl+T]: جابجا کردن و مبادله کاراکتر در موقعیت مکان نما با کاراکتر قبلی
+* [Alt+T]: جابجا کردن کلمه در موقعیت مکان نما به کلمه قبلی
+* [Alt+L]: تبدیل کاراکترها از موقعیت مکان نما تا آخر کلمه
+* [Alt+U]: تبدیل کاراکترها از موقعیت مکان نما تا آخر کلمه به حروف بزرگ
+* برش وچسباندن
+* [CTRL+K]:kill the line starting from the cursor position
+* [CTRL+U]: حذف متن از موقعیت مکان نما تا اول خط
+* [ALT+D]:delete a word starting from the current cursor position
+* [Alt+Backspace]: حذف متن از موقعیت مکان نما تا ابتدای کلمه اخیر. اگر مکان نما در اول یک کلمه باشد کلمه قبلی حذف خواهد شد
+* [Ctrl+Y]: برش متن از کلیپ‌بورد و درج در موقعیت مکان نما

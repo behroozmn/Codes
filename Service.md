@@ -696,6 +696,259 @@ include /etc/nginx/proxy_params;
 
 یک وب سرور است که معمولا بعنوان پروکسی در مرورگرها تنظیم می‌شود و همه از طریق او به اینترنت وصل می‌شوند و میتواند صفحات را کش نماید.(از دردسرهای کش سرور رهایی یابیم)
 
+# 📍️ rSyslog
+
+## Options
+
+Facility.[priority|severity] action
+
+- **Facility**: Facilities are simply categories
+    - kern: Kernel messages
+    - user: User-level messages
+    - mail: Mail system
+    - daemon: System daemons
+    - auth: Security/authentication messages
+    - syslog: Messages generated internally by syslogd
+    - lpr: Line printer subsystem
+    - news: Network news subsystem
+    - uucp: UUCP subsystem
+    - cron: Cron subsystem
+    - authpriv: Security/authentication messages
+    - ftp: FTP daemon
+    - ntp: NTP subsystem
+    - security: Log audit
+    - console: Log alert
+    - solaris-cron: Scheduling daemon
+    - local0 – local7: Locally used facilities[local defined application message]
+- **Severity or priority level**
+    - emerg: System is unusable[A panic condition]
+    - alert: Action must be taken immediately[A condition that should be corrected immediately, such as a corrupted system database]
+    - crit: Critical conditions[Hard device errors]
+    - err: Error conditions
+    - warning: Warning conditions
+    - notice: Normal but significant conditions[Conditions that are not error conditions, but that may require special handling]
+    - info: Informational messages[Confirmation that the program is working as expected]
+    - debug: Debug-level messages[Messages that contain information normally of use only when debugging a program]
+- prefixes with priorities
+    - *.notice (no prefix) → any event with priority of `notice' or higher
+    - *.!notice → no event with priority of `notice' or higher
+    - *.=notice → only events with priority `notice'
+    - *.!=notice → no events with priority of `notice'
+- Example:
+    - kern.info = kernel logs with info priority and higher.
+    - kern.=info = only kernel messages with info priority.
+    - kern.info;kern.!err = only kernel messages with info, notice, and warning priorities.
+    - kern.debug;kern.!=warning = all kernel priorities except warning.
+    - kern.* = all kernel priorities messages.
+    - kern.none = don’t log any related kernel facility messages regardless of the priority.
+- **Action**:
+    - /some/file → Log to specified file
+    - -/some/file → Log to specified file but don't sync afterwards
+    - /some/pipe → Log to specified pipe
+    - /dev/some/tty_or_console → Log to specified console
+    - @remote.hostname.or.IP → Log to specified remote host
+    - username1, username2, etc → Log to these users' screens
+    - \* → Log to all users' screens
+
+## 📌️ /etc/rsyslog.conf
+
+```shell
+sudo vim /etc/rsyslog.conf
+*.* @@192.168.100.10:514 
+#@@: TCP
+# @: UDP
+sudo systemctl restart rsyslog
+
+```
+
+```shell
+vim /etc/rsyslog.conf:
+:syslogtag, isequal, "salamm:" /var/log/behroooz.log #tag
+auth.info /var/log/beh_auth_info.log
+user.=warn /var/log/beh_user_warn.log
+```
+
+1. Verify Rsyslog Installation
+
+  ```shell
+  rpm -q | grep rsyslog
+  rsyslogd -v
+  # if not exist[yum install rsyslog7]
+  ```
+
+2. Edit:`sudo vim /etc/rsyslog.conf`
+   ```shell
+   $template RemoteLogs,"/var/log/%HOSTNAME%/%PROGRAMNAME%.log"
+     *.* ?RemoteLogs
+     & stop
+
+     #################
+     #### MODULES ####
+     #################
+     module(load="imuxsock") # provides support for local system logging
+     module(load="imklog")   # provides kernel logging support
+     #module(load="immark")  # provides --MARK-- message capability
+
+     # provides UDP syslog reception
+     module(load="imudp")
+     input(type="imudp" port="514")
+     
+     # provides TCP syslog reception
+     module(load="imtcp")
+     input(type="imtcp" port="514")
+   ```
+3. `sudo systemctl restart rsyslog`
+4. `sudo ss -tulnp | grep "rsyslog"`
+   ```shell
+    udp   UNCONN 0      0              0.0.0.0:514        0.0.0.0:*    users:(("rsyslogd",pid=9727,fd=6))                                                                         
+    udp   UNCONN 0      0                 [::]:514           [::]:*    users:(("rsyslogd",pid=9727,fd=7))                                                                         
+    tcp   LISTEN 0      25             0.0.0.0:514        0.0.0.0:*    users:(("rsyslogd",pid=9727,fd=8))                                                                         
+    tcp   LISTEN 0      25                [::]:514           [::]:*    users:(("rsyslogd",pid=9727,fd=9))
+   ```
+
+5. Manage SELinux
+   ```shell
+   sudo semanage -a -t syslogd_port_t -p udp 514
+   sudo semanage -a -t syslogd_port_t -p tcp 514 
+   ```
+6. Manage Firewall
+   ```shell
+   ------------- On CentOS ------------- 
+   sudo firewall-cmd --permanent --add-port=514/udp
+   sudo firewall-cmd --permanent --add-port=514/tcp
+   sudo firewall-cmd --reload
+
+   ------------- On Ubuntu -------------
+   sudo ufw allow 514/udp
+   sudo ufw allow 514/tcp
+   sudo ufw reload 
+   ```
+
+# 📍️ LogRotate
+
+* هنگامی که در یک سرور لاگ به تعداد زیاد تولید م‌شود ممکن است یک فایل لاگ حجیم شده و سبب کندی سرور گردد. به همین جهت لاگ‌های قدیمی تر را برحسب سفارشی سازی از فایل اصلی لاگ جدا می‌نماییم
+
+```shell
+logrotate [--force] [--debug] [--state file] [--skip-state-lock] [--verbose] [--log file] [--mail command] config_file [config_file2 ...]
+#OPTIONS:
+#   [-f,--force]:   Tells logrotate to force the rotation, even if it doesn't think this is necessary
+#   [-v,--verbose]: Turns on verbose mode, for example to display messages during rotation
+```
+
+## Options
+
+`- FullFileName { # مسیر کامل فایل لاگ که قرار است آن را روتیت کنیم
+
+- [hourly | daily | weekly | monthly | yearly] # عملیات روزانه یا هفتگی یا ماهانه صورت بگیرد
+- [rotate n] # چه تعداد از فایل‌های آرشیو شده نگهداری شود
+- [compress | nocompress] # فشرده سازی
+- [delaycompress] # فایل آرشیوی یکی مانده به آخر را زیپ نکن
+- [missingok] # If the log file is missing, go on to the next one without issuing an error message
+- [notifempty] # Do not rotate the log if it is empty (this overrides the ifempty option)
+- [create 0755 <user> <group>] # فایل با چه سطح دسترسی ذخیره شود
+- [postrotate] # دستوراتی که مایل هستیم پس از روتیتی کردن انجام شود
+- [prerotate] # دستوراتی که مایل هستیم پیش از روتیتی کردن انجام شود
+- [endscript] # اتمام دستورات دلخواه
+- [size <size>] #انتخاب سایز فایل‌ها
+- Log files are rotated only if they grow bigger than size bytes
+- k → kilobytes
+- M → megabytes
+- G → gigabytes
+
+- }`
+
+```shell
+
+
+vim /etc/logrotate.d/apache2
+
+/var/log/apache2/*.log {
+    daily
+    missingok
+    rotate 14
+    compress
+    delaycompress
+    notifempty
+    create 640 root adm
+    sharedscripts
+    prerotate
+	if [ -d /etc/logrotate.d/httpd-prerotate ]; then
+	    run-parts /etc/logrotate.d/httpd-prerotate
+	fi
+    endscript
+    postrotate
+	if pgrep -f ^/usr/sbin/apache2 > /dev/null; then
+	    invoke-rc.d apache2 reload 2>&1 | logger -t apache2.logrotate
+	fi
+    endscript
+}
+```
+
+## [server](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/deployment_guide/s1-basic_configuration_of_rsyslog)
+
+```
+$template RemoteLogs,"/var/log/%fromhost-ip%_%HOSTNAME%/%PROGRAMNAME%.log"
+*.* ?RemoteLogs →  برای همه سطوح از لایه‌ها تنظیمات مربوط به تمپلیت ریموت لاگ را درنظر بگیر
+& STOP
+```
+
+## tag
+
+```
+1-add end of [/etc/rsyslog.conf]: # ریختن تمام لاگ‌ها که تگ آن سلام باشد به درون یک فایل خاص
+ :syslogtag, isequal, "salamm:"      /var/log/behroooz.log
+2- COMMAND | logger -t salamm 
+3-tail -f /var/log/behroooz.log
+```
+
+## Template
+
+* [MessageProperties](https://www.rsyslog.com/doc/v8-stable/configuration/properties.html)
+    * [msg]: the MSG part of the message (aka “the message” ;))
+    * [rawmsg]: the message “as is”. Should be useful for debugging and also if a message should be forwarded totally unaltered. Please notice EscapecontrolCharactersOnReceive is enabled by default, so it may be different from what was received in the socket.
+    * [rawmsg-after-pri]: Almost the same as rawmsg, but the syslog PRI is removed. If no PRI was present, rawmsg-after-pri is identical to rawmsg. Note that the syslog PRI is header field that contains information on syslog facility and severity. It is enclosed in greater-than and less-than characters, e.g. “<191>”. This field is often not written
+      to log files, but usually needs to be present for the receiver to properly classify the message. There are some rare cases where one wants the raw message, but not the PRI. You can use this property to obtain that. In general, you should know that you need this format, otherwise stay away from the property.
+    * [hostname]: hostname from the message
+    * [source]: alias for HOSTNAME
+    * [fromhost]: hostname of the system the message was received from (in a relay chain, this is the system immediately in front of us and not necessarily the original sender). This is a DNS-resolved name, except if that is not possible or DNS resolution has been disabled.
+    * [fromhost-ip]: The same as fromhost, but always as an IP address. Local inputs (like imklog) use 127.0.0.1 in this property.
+    * [syslogtag]: TAG from the message
+    * [programname]: the “static” part of the tag, as defined by BSD syslogd. For example, when TAG is “named[12345]”, programname is “named”.
+    * [pri]: PRI part of the message - undecoded (single value)
+    * [pri-text]: the PRI part of the message in a textual form with the numerical PRI appended in brackets (e.g. “local0.err<133>”)
+    * [iut]: the monitorware InfoUnitType - used when talking to a MonitorWare backend (also for Adiscon LogAnalyzer)
+    * [syslogfacility]: the facility from the message - in numerical form
+    * [syslogfacility-text]: the facility from the message - in text form
+    * [syslogseverity]: severity from the message - in numerical form
+    * [syslogseverity-text]: severity from the message - in text form
+    * [syslogpriority]: an alias for syslogseverity - included for historical reasons (be careful: it still is the severity, not PRI!)
+    * [syslogpriority-text]: an alias for syslogseverity-text
+    * [timegenerated]: timestamp when the message was RECEIVED. Always in high resolution
+    * [timereported]: timestamp from the message. Resolution depends on what was provided in the message (in most cases, only seconds)
+    * [timestamp]: alias for timereported
+    * [protocol-version]: The contents of the PROTOCOL-VERSION field from IETF draft draft-ietf-syslog-protocol
+    * [structured-data]: The contents of the STRUCTURED-DATA field from IETF draft draft-ietf-syslog-protocol
+    * [app-name]: The contents of the APP-NAME field from IETF draft draft-ietf-syslog-protocol
+    * [procid]: The contents of the PROCID field from IETF draft draft-ietf-syslog-protocol
+    * [msgid]: The contents of the MSGID field from IETF draft draft-ietf-syslog-protocol
+    * [inputname]: The name of the input module that generated the message (e.g. “imuxsock”, “imudp”).
+        * Note that not all modules necessarily provide this property. If not provided, it is an empty string.
+    * [jsonmesg]
+* SystemProperties
+    * [timereported]: contains the timestamp that is contained within the message header.
+        * Ideally, it resembles the time when the message was created at the original sender
+        * Depending on how long the message was in the relay chain, this can be quite old.
+    * [timegenerated]: contains the timestamp when the message was received by the local system.
+        * Here “received” actually means the point in time when the message was handed over from the OS to rsyslog’s reception buffers, but before any actual processing takes place.
+        * This also means a message is “received” before it is placed into any queue. Note that depending on the input, some minimal processing like extraction of the actual message content from the receive buffer can happen.
+        * If multiple messages are received via the same receive buffer (a common scenario for example with TCP-based syslog), they bear the same timegenerated stamp because they actually were received at the same time.
+    * [$now]: is not from the message. It is the system time when the message is being processed.
+        * There is always a small difference between timegenerated and $now because processing always happens after reception.
+        * If the message is sitting inside a queue on the local system, the time difference between the two can be some seconds up to several hours in extreme cases where a message is sitting inside a disk queue (e.g. due to a database outage).
+        * The timereported property is usually older than timegenerated, but may be totally different due to differences in time and time zone configuration between systems
+    * [$bom]: The UTF-8 encoded Unicode byte-order mask (BOM). This may be useful in templates for RFC5424 support, when the character set is know to be Unicode.
+    * [$myhostname]: The name of the current host as it knows itself (probably useful for filtering in a generic way)
+
 </div>
 
 

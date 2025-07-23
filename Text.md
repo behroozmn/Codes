@@ -52,18 +52,17 @@ cat /etc/passwd | grep [a-h]$ #تمام خط‌هایی که آخر آن a تا 
     - qurantaha
     - تبسم
 - محبوبیت فونت‌ها
-  - ایران سنس
-  - ایران‌یکان
-  - یکان
-  - وزیر
-  - شبنم
-  - کودک
-  - ساحل
-  - یکان بخ
-  - دروید نسخ
-  - دانا
-  - ایران
-
+    - ایران سنس
+    - ایران‌یکان
+    - یکان
+    - وزیر
+    - شبنم
+    - کودک
+    - ساحل
+    - یکان بخ
+    - دروید نسخ
+    - دانا
+    - ایران
 
 </div>
 
@@ -1074,4 +1073,31 @@ au BufRead,BufNewFile *.qss set filetype=css
 :autocmd FileType python :noremap <F5> :AsyncRun -raw python % <CR> 
 :autocmd FileType sh  :noremap <F5> :AsyncRun bash % <CR> 
 
+```
+
+## ✅️ logger
+
+```
+-i, --id              log the process ID too
+-t, --tag [tag]       mark every line with this tag
+-n, --server [name]   write to this remote syslog server
+-T, --tcp             use TCP only
+-d, --udp             use UDP only
+-f, --file [file]     log the contents of this file
+-h, --help            display this help text and exit
+-S, --size [num]      maximum size for a single message (default 1024)
+-P, --port [port]     use this port for UDP or TCP connection
+-p, --priority [prio] mark given message with this priority
+-s, --stderr          output message to standard error as well
+-u, --socket [socket] write to this Unix socket
+-V, --version         output version information and exit
+```
+
+
+Example:
+```shell
+echo "MESSAGES" | logger -p user.warn
+logger -p auth.info "MESSAGES"
+Command | logger
+Command | logger -t salamm
 ```

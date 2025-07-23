@@ -1,5 +1,214 @@
 # 📍️ Application
 
+## General
+
+* GeneralShortcut(AllApps)
+    * [Shift+F10]: در هر برنامه‌ای همانند راست کلیک عمل خواهد کرد
+    * [Alt+F10]: Toggle windows Size
+    * [Alt+F] : نمایش منوها
+    * F6: change to sidebar
+
+## goldendict
+
+* -no-bidi:سبب راست چین شدن نوشته در افزونه گنوم می‌شود
+    * trans -b -s en -t fa -no-bidi -- LDWORD
+
+## Eitaa
+
+* رزولیشن و سایز استیکر در ایتا
+    * ← سایز ۵۱۲ * ۵۱۲
+    * ← رزولیشن ۷۲
+
+```shell
+#Google All-->Fa
+trans -e google -t fa -show-original n -show-original-phonetics n -show-translation y -no-ansi -show-translation-phonetics n -show-prompt-message n -show-languages n -show-original-dictionary n -show-dictionary n -show-alternatives n "%GDWORD%" -no-bidi
+
+# Google En-->Fa
+trans -e google -s en -t fa -show-original n -show-original-phonetics n -show-translation y -no-ansi -show-translation-phonetics n -show-prompt-message n -show-languages n -show-original-dictionary n -show-dictionary n -show-alternatives n "%GDWORD%" -no-bidi
+
+#Google Ar-->Fa
+trans -e google -s ar -t fa -show-original n -show-original-phonetics n -show-translation y -no-ansi -show-translation-phonetics n -show-prompt-message n -show-languages n -show-original-dictionary n -show-dictionary n -show-alternatives n "%GDWORD%" -no-bidi
+```
+
+## Firefox
+
+* Shortcut
+    * [ctrl+sift+b]: Hide|Show BookmarksMenu
+* about:about
+    * about:config:[Accept]
+        * url:media.peerconnection.enabled
+        * toggle
+            * false: Disable
+            * True: enable
+    * browser
+        * browser.cache.disk.enable: فعال یا غیرفعال کردن کش دیسک
+        * browser.link.open_newwindow: تنظیم رفتار باز کردن پنجره‌های جدید
+        * browser.link.open_newwindow: تنظیم باز کردن پنجره‌های جدید (در همان پنجره، در تب جدید و ...)
+        * browser.sessionstore.restore_on_demand: بارگذاری تب‌های غیرفعال در زمان راه‌اندازی
+        * browser.startup.homepage: تنظیم صفحه اصلی مرورگر
+        * browser.tabs.closeWindowWithLastTab: اجازه به بستن پنجره با آخرین تب
+        * browser.tabs.loadInBackground: بارگذاری تب‌های جدید در پس‌زمینه
+        * browser.tabs.warnOnClose: هشدار در مورد بستن تب‌ها
+        * browser.urlbar.suggest.bookmark: پیشنهاد بوکمارک‌ها در نوار آدرس
+        * browser.urlbar.suggest.history: پیشنهاد تاریخچه در نوار آدرس
+    * dom
+        * dom.allow_scripts_to_close_windows: اجازه به اسکریپت‌ها برای بستن پنجره‌ها
+        * dom.disable_open_click_delay: تنظیم تأخیر در باز کردن پنجره‌های جدید
+        * dom.disable_open_during_load: جلوگیری از باز شدن پنجره‌های جدید در حین بارگذاری
+        * dom.disable_window_status_change: جلوگیری از تغییر وضعیت پنجره‌ها توسط اسکریپت‌ها
+        * dom.event.contextmenu.enabled: فعال یا غیرفعال کردن منوی راست‌کلیک
+        * dom.webnotifications.enabled: فعال یا غیرفعال کردن نوتیفیکیشن‌های وب
+    * extensions
+        * extensions.logging.enabled: فعال یا غیرفعال کردن لاگ‌گیری برای افزونه‌ها. اگر فعال باشد، اطلاعات بیشتری در مورد فعالیت‌های افزونه‌ها ثبت می‌شود
+        * extensions.webextensions.restrictedDomains: [تنظیمات مربوط به دامنه‌های محدود برای افزونه‌ها] [لیستی از دامنه‌هایی که افزونه‌ها نمی‌توانند به آن‌ها دسترسی پیدا کنند][این تنظیم به امنیت افزونه‌ها کمک می‌کند]
+        * extensions.webextensions.storage.enabled: فعال یا غیرفعال کردن ذخیره‌سازی محلی برای افزونه‌ها. اگر غیرفعال باشد، افزونه‌ها نمی‌توانند داده‌های محلی را ذخیره کنند
+    * general
+        * general.autoScroll: فعال یا غیرفعال کردن اسکرول خودکار. اگر فعال باشد، می‌توانید با کلیک و کشیدن ماوس، صفحه را به صورت خودکار اسکرول کنید
+        * general.smoothScroll: فعال یا غیرفعال کردن اسکرول نرم. اگر فعال باشد، اسکرول به صورت نرم و پیوسته انجام می‌شود
+        * general.useragent.override: تغییر User-Agent مرورگر. این تنظیم می‌تواند برای شبیه‌سازی مرورگرهای دیگر یا دستگاه‌های مختلف استفاده شود
+        * general.warnOnAboutConfig: هشدار در مورد خطرات تغییر تنظیمات در about:config. اگر فعال باشد، هنگام ورود به این صفحه هشدار نمایش داده
+    * layout
+        * layout.css.devPixelsPerPx: تنظیم مقیاس DPI برای نمایش. می‌تواند برای بهبود وضوح متن و عناصر در صفحه استفاده شود
+        * layout.css.grid.enabled: فعال یا غیرفعال کردن پشتیبانی از CSS Grid Layout. اگر غیرفعال باشد، مرورگر از این ویژگی پشتیبانی نخواهد کرد
+        * layout.word_select.eat_space_to_next_word: تعیین می‌کند که آیا فضای خالی بین کلمات در هنگام انتخاب کلمات نادیده گرفته شود یا خیر
+        * layout.word_select.eat_space_to_next_word: تنظیم رفتار انتخاب کلمات
+    * media
+        * media.autoplay.default: تنظیمات مربوط به پخش خودکار رسانه‌ها. مقادیر شامل "0" (اجازه به پخش خودکار)، "1" (سکوت) و "2" (غیرفعال) است
+        * media.mediasource.enabled: فعال یا غیرفعال کردن Media Source Extensions (MSE) که به وب‌سایت‌ها اجازه می‌دهد رسانه‌ها را به صورت داینامیک بارگذاری کنند
+        * media.mediasource.mp4.enabled: فعال یا غیرفعال کردن پشتیبانی از فرمت MP4 در Media Source Extensions
+        * media.peerconnection.enabled: فعال یا غیرفعال کردن WebRTC، که برای ارتباطات صوتی و تصویری در مرورگر استفاده می‌شود
+    * network
+        * network.dns.disableIPv6: غیرفعال کردن IPv6 در DNS. اگر این تنظیم فعال باشد، مرورگر فقط از IPv4 استفاده خواهد کرد.
+        * network.http.pipelining: فعال یا غیرفعال کردن HTTP Pipelinin
+        * network.http.pipelining: فعال یا غیرفعال کردن HTTP Pipelining، که به مرورگر اجازه می‌دهد چندین درخواست HTTP را به طور همزمان ارسال کند و بهبود سرعت بارگذاری صفحات را فراهم کند
+        * network.http.referer.default: تعیین می‌کند که چه مقداری به عنوان هدر Referer به وب‌سایت‌ها ارسال شود. مقادیر شامل "0" (همه اطلاعات)، "1" (فقط دامنه) و "2" (غیرفعال) است
+        * network.http.referer.trimmingPolicy: سیاست برش هدر Referer را تعیین می‌کند. می‌تواند شامل برش دامنه یا مسیر باشد
+        * network.http.referer.XOriginPolicy: تعیین می‌کند که آیا هدر Referer برای درخواست‌های بین‌دامنه ارسال شود یا خیر. این تنظیم می‌تواند به امنیت کمک کند و از افشای اطلاعات حساس جلوگیری کند
+        * network.http.referer.XOriginPolicy: تنظیمات مربوط به ارسال Referer
+        * network.proxy.type: تنظیمات مربوط به پروکسی
+        * network.proxy.type: نوع پروکسی مورد استفاده را مشخص می‌کند. مقادیر شامل "0" (غیرفعال)، "1" (تنظیمات پروکسی دستی) و "2" (تنظیمات پروکسی خودکار) است
+        * network.trr.mode: تنظیمات مربوط به DNS-over-HTTPS (DoH). مقادیر مختلفی دارد که می‌تواند شامل غیرفعال، فعال، یا استفاده از DNS-over-HTTPS به عنوان پیش‌فرض باشد
+    * privacy
+        * privacy.clearOnShutdown: پاک‌سازی داده‌ها (کش، تاریخچه و ...) هنگام خروج از مرورگر
+        * privacy.donottrackheader.enabled: فعال یا غیرفعال کردن ارسال هدر "Do Not Track" به وب‌سایت‌ها
+        * privacy.firstparty.isolate: فعال یا غیرفعال کردن ایزوله‌سازی اولین‌طرف برای جلوگیری از ردیابی
+        * privacy.resistFingerprinting: فعال یا غیرفعال کردن مقاومت در برابر اثر انگشت‌زنی
+        * privacy.trackingprotection.cryptomining.enabled: فعال یا غیرفعال کردن حفاظت در برابر استخراج ارز دیجیتال
+        * privacy.trackingprotection.enabled: فعال یا غیرفعال کردن حفاظت از ردیابی
+        * privacy.trackingprotection.pbmode.enabled: فعال یا غیرفعال کردن حفاظت از ردیابی در حالت خصوصی
+        * privacy.trackingprotection.socialtracking.enabled: فعال یا غیرفعال کردن حفاظت در برابر ردیابی اجتماعی
+    * security
+        * security.csp.enable: فعال یا غیرفعال کردن Content Security Policy
+        * security.default_personal_cert: تنظیم گواهی‌نامه شخصی پیش‌فرض
+        * security.fileuri.strict_origin_policy: تنظیمات مربوط به سیاست‌های منبع برای فایل‌های محلی
+        * security.mixed_content.block_active_content: جلوگیری از بارگذاری محتوای مختلط
+        * security.mixed_content.block_active_content: جلوگیری از بارگذاری محتوای مختلط (HTTP در HTTPS)
+        * security.ssl.enable_ocsp_stapling: فعال یا غیرفعال کردن OCSP Stapling برای بررسی اعتبار گواهی‌نامه‌ها
+        * security.tls.version.max: حداکثر نسخه TLS مورد استفاده
+        * security.tls.version.min: حداقل نسخه TLS مورد استفاده
+    * services
+        * services.sync.enabled: فعال یا غیرفعال کردن همگام‌سازی داده‌ها با حساب فایرفاکس
+        * services.sync.engine.addons: همگام‌سازی افزونه‌ها
+        * services.sync.engine.bookmarks: همگام‌سازی بوکمارک‌ها
+        * services.sync.engine.passwords: همگام‌سازی پسوردها
+        * services.sync.engine.tabs: همگام‌سازی تب‌ها
+        * services.sync.prefs.sync.*: همگام‌سازی تنظیمات خاص با حساب فایرفاکس
+
+## [jetbrains]
+
+* Name
+    * IntlliJ → JAVA
+    * Pycharm → Python
+    * CLion → C/C++
+    * PHPstorm → PHP
+    * DataGrip → DatabaseTools
+    * Webstorm → html AND css AND js
+    * Rider → ASP.NET,Visual Basic.NET,#C AND more
+    * AppCode → apple(زبان های سویفت , C, objective-C و ++C)
+    * GoLand: → go
+    * RubyMine → ruby
+* shortcut
+    * [ALT+Insert]:‌ autoGenerate[Getter , Setter,Tostring, ...]
+    * [psvm]: تمام ساختار تابع مین را خوکار ایجاد میکند
+
+## VScode
+
+* Extension
+    * javaScript
+    * HTML CSS Support
+    * HTML Snippets
+    * JavaScript (ES6) code snippets
+* python
+    * autopep[autopep8]
+* plugin
+    * [install] material icon theme
+    * [install] material theme
+* shortcut
+    * [CTRL+K+T] Theme
+    * [Alt+Shift+F]: مرتب سازی ظاهر
+    * [Ctrl + A + C]: کامنت کردن چندین خط که هایلایت شده است
+    * [Ctrl + L]: select Current line
+    * [Ctrl + D]:  select Current word
+    * [Ctrl + Shift + K]: Delete Current Line
+    * Ctrl+Shift+L: Select all occurrences of current selection
+    * Ctrl+A+C #کامنت کردن چندین خط که هایلایت شده است
+* shellcheck
+    * shellcheck disable=SC2207,SC2128,SC2116,SC1072
+
+## Eclips
+
+* ctrl+H=search
+* ctrl+Shift+R=search in resource
+* ctrl+Shift+M=Move to matched couple brackets
+* ctrl+Shift+f=Fix or Redesigne code layout
+* Shift+Alt+R=Rename
+* ctrl+/=comment or uncomment
+* ctrl+F11=run
+* ctrl+j=search
+* ctrl+L=go to line
+* ctrl+d=remove line
+* shift+ctrl+enter= new line at above
+* alt+/=auto complete
+* ctrl+(-)=collapse
+* ctrl+(+)=Expand block
+
+## Gnome
+
+### GnomeShellExtensions
+
+- ~/.local/share/gnome-shell/extensions/
+- **extension.js**: This is the main extension file and contains three main functions:
+   ```
+   function init () {}
+   function enable () {}
+   function disable() {}
+   ```
+- **metadata.json**: This file contains the extension information. You can create it like this
+    ```
+   {
+   "name":"Example#1",
+   "description":"Hello World",
+   "shell-version":["3.36"], #array Shell versions that Extension supports
+   "url":"", #GitLab or GitHub URL
+   "uuid":"example@example.com", #Universally Unique Identifier.
+   "version":1.0
+   }
+   ```
+- **prefs.js**[optional]: This is the main preferences file that loads a GTK window as your extension settings.
+    - Without this file your extension won’t have any settings dialogue.
+- **stylesheet.css**[optional]:  This file contains css classes to style your elements.
+- Enable Extension(if edit and want to see)
+    - X11 Press alt-f2, type r, press enter to restart the GNOME shell.
+    - Wayland Logout and re-login.
+- Debug
+    - `journalctl -f -o cat /usr/bin/gnome-shell` #To Debug the Extension (extension.js)
+    - `journalctl -f -o cat /usr/bin/gnome-shell-extension-prefs` #To Debug the Extension Preferences (prefs)
+    - log('Message'); #To log a message use log:
+
+## Gimp
+
+* در گیمپ درحین رنگ‌آمیزی اگر شیفت را بگیری رنگ بک‌گراند را درنظر می‌گیرد(که شرت‌کات آن می‌شود کنترل و نقطه) و فورگران می‌شود شرت‌کات کنترل و کاما
+
 # 📍️ group:PackageManagements
 
 ## Debian

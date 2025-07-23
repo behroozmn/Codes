@@ -10,6 +10,45 @@
 ![httpBasicSession.png](_srcFiles/Images/httpBasicSession.png "httpBasicSession.png")
 ![uri.png](_srcFiles/Images/uri.png "uri.png")
 
+# 📍️ CISCO
+
+PacketTracer: نرم‌افزار سیسکو برای شبیه سازی محیط واقعی شبکه
+
+
+
+
+
+# 📍️ Proxy
+
+* سایت‌های زیر برای تست پروکسی مفید است
+  * ifconfig.me
+  * ping.eu
+
+
+## Tor
+
+* از موارد مشابه تور می‌توان به proxychains4 و privoxy اشاره کرد که همانند torsocks در ابتدای دستورات قرار می‌دهیم.
+* پورت پیش‌فرض تور 9050 است
+* مسیر لاگ تور
+    * `/etc/tor/torrc` تنظیمات تولید لاگ را از کامنت خارج نمایید
+    * /var/log/tor/notices.log
+    * /var/log/tor/debug.log
+* [PythonCode: change Ip periodicatly](https://github.com/FDX100/Auto_Tor_IP_changer)
+    * cd Auto_Tor_IP_changer
+    * sudo apt-get install tor
+    * sudo apt-get install privoxy
+    * python3 autoTOR.py
+* [url](https://pentestcore.com/tor-ip-change/)
+
+```shell
+kill -HUP `pidof tor` دریافت آی‌پی جدید برای تور
+export http_proxy="socks4://localhost:9050" #اگر بخواهیم در یک شل که در سیستم tor نصب است تمام موارد را پروکسی کنیم
+torsocks curl https://showip.net # Test Ip Adderess
+
+
+
+```
+
 # 📍️ Commands
 
 ## ✅️ arp
