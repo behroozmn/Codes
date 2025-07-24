@@ -40,6 +40,7 @@ cat /etc/passwd | grep [a-h]$ #تمام خط‌هایی که آخر آن a تا 
 
 # 🅰️ Fonts
 
+
 <div dir="rtl">
 
 - [eot] این فرمت را مایکروسافت برای استفاده در وب سایت معرفی کرد اما استفاده از آن تنها برای مرورگر اینترنت اکسپلورر میسر می باشد .
@@ -1138,5 +1139,18 @@ notify-send -u [low | normal | critical] "title" "TEXT" #سطح مهم بودن
 ```shell
 Display=:0 sudo su -c "Command" #اجرای دستور در محیط گرافیکی یک شخص دیگر
 DISPLAY=:0.0 XAUTHORITY=~/.Xauthority notify-send -u critical -i /usr/share/icons/Adwaita/scalable/status/battery-level-0-symbolic.svg "Title" "Message"
+
+```
+
+
+# 🅰️ Encode|Decode
+
+```shell
+#Encode:
+echo 'BehroozMohammadiNasab' | base64
+
+#Decode:
+echo 'QmVocm9vek1vaGFtbWFkaU5hc2FiCg==' | base64 -d
+echo 'QmVocm9vek1vaGFtbWFkaU5hc2FiCg==' | base64 --decode
 
 ```

