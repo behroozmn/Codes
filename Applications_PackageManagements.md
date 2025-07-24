@@ -12,7 +12,6 @@
 * BigBlueButton:سامانه ویدئوکنفرانس متن‌باز بابت انجام امور مجازی(راه اندازی شده در داتشگاه علامه طباطبایی)
 * Moodle: آموزش از راه دور(حضورغیاب و کلاس بندی و مدیریت کلاسا) که علامه طباطبایی راه اندازی کرده(برای کلاس مجازی در دوران کرونا)(طرح مصباح حوزه مشکات پلائین)
 
-
 ## 🅱️ goldendict
 
 * -no-bidi:سبب راست چین شدن نوشته در افزونه گنوم می‌شود
@@ -41,10 +40,12 @@ trans -e google -s ar -t fa -show-original n -show-original-phonetics n -show-tr
     * [ctrl+sift+b]: Hide|Show BookmarksMenu
 * about:about
     * about:config:[Accept]
-        * url:media.peerconnection.enabled
-        * toggle
-            * false: Disable
-            * True: enable
+        * webRTCL
+            * url:media.peerconnection.enabled
+            * toggle
+                * false: Disable
+                * True: enable
+            * [url](https://browserleaks.com)
     * browser
         * browser.cache.disk.enable: فعال یا غیرفعال کردن کش دیسک
         * browser.link.open_newwindow: تنظیم رفتار باز کردن پنجره‌های جدید
@@ -210,7 +211,6 @@ trans -e google -s ar -t fa -show-original n -show-original-phonetics n -show-tr
     - `journalctl -f -o cat /usr/bin/gnome-shell-extension-prefs` #To Debug the Extension Preferences (prefs)
     - log('Message'); #To log a message use log:
 
-
 ### ✅️ تغییرات مربوطه در زمینه بک‌گراند گنوم
 
 ```shell
@@ -222,7 +222,6 @@ gsettings get org.gnome.desktop.background picture-options
 gsettings get org.gnome.desktop.background picture-uri
 
 ```
-
 
 ## 🅱️ Gimp
 

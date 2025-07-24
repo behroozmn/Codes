@@ -1008,8 +1008,63 @@ glances --browser #display all Glances servers available on network or defined i
     * نکته: برای لینک ارائه سرویس خدمات هاستینگ بهترین گزینه فیبر است: سرعت دانلود و آپلود یکسان(متقارن) مید‌هد
     * نکته: لینک tdlte لینک اشتراکی ارائه می‌دهد ولی تضمین می‌کند از یه مقدار کف سرعت پایین‌تر نمی‌رود ولی لینک سرعت دانلود و آپلود متقارن نیست
 
+# 🅰️ Automations
+
+## 🅱️ Cron
+
+```shell
+30 20 * * * export DISPLAY=:0.0 && xeyes
+@reboot  #→ Run once,at startup
+@yearly  #→ Run once a year,"0 0 1 1 *"
+annually #→ (same as @yearly)
+@monthly #→ Run once a month, "0 0 1 * *"
+@weekly  #→ Run once a week, "0 0 * * 0"
+@daily   #→  Run once a day, "0 0 * * *"
+midnight #→ (same as daily)
+@hourly  #→  Run once an hour, "0 * * * *"
+
+```
+
+* crontab
+    * `/var/spool/cron/username`
+    * `/etc/crontab`
+    * `/etc/cron.d/`
+    * `/etc/cron.hourly`
+    * `/etc/cron.daily`
+    * `/etc/cron.weekly`
+    * `/etc/cron.monthly`
+    * `/etc/cron.allow`
+    * `/etc/cron.deny`
+    * export DISKPLAY=:0 && COMMAND
+    * export DISKPLAY=:0.0&& COMMAND
+
+![Crontab.png](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/Crontab.png "Crontab.png")
+
+## 🅱️ At
+
+* این برنامه برای اجرای دستور تنها یکبار مورد استفاده قرار میگیرد
+* در هر خط یک دستور
+* خروج:  ctrl+d
+* دستورات در شل بنام sh اجرا خواهند شدیعنی bin/sh/
+
+```shell
+at now + 1 min #برنامه‌ریزی یک دستور در یک دقیقه بعد
+at tomorrow #برنامه‌ریزی یک دستور در روز بعد در زمان اکنون
+atq #مشاهده تمام کارهای موجود در صف انتظار
+atrm 3 #حذف یک کار موجود در صف انتظار برحسب شماره آن
+at 21:30 2014-07-1
+```
+
+
+
+
+
 </div>
 
 
 
 
+# 🅰️ DHCP
+
+
+* هنگامی که برنامه dhclient لیست سرورهای NTP را از DHCP می‌گیرد به‌صورت خودکار در فایل ntp.conf قرار میدهد. برای جلوگیری ازاین موضوع عبارت PEERNTP=no را در فایل /etc/sysconfig/network قرار دهید

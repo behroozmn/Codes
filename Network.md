@@ -1,11 +1,9 @@
 <div dir="rtl">
 
-# 📍️ Concepts
+# 🅰️ Concepts
 
 * شبکه تحویل محتوا یا CDN[ContentDeliveryNetwork]: بهینه‌سازی شبکه‌ جهت کاهش زمان تحویل محتوا به مصرف‌کننده علی رغم توزیع سرورها در نقاط جغرافیایی گوناگون
     * highly-distributed platform of servers that helps minimize delays in loading web page content by reducing the physical distance between the server and the user. This helps users around the world view the same high-quality content without slow loading times
-
-
 
 ```shell
 iftop
@@ -15,19 +13,176 @@ tcpflow
 
 ```
 
+# 🅰️ WEB
 
-
-# 📍️ WEB
-
-![httpBasicSession.png](_srcFiles/Images/httpBasicSession.png "httpBasicSession.png")
 ![uri.png](_srcFiles/Images/uri.png "uri.png")
 
-# 📍️ CISCO
+## 🅱️ HTTP(Hypertext Transfer Protocol)
+
+* Port:80
+* پروتکل http بهترین ابزار دسترسی فایل بدون داشتن دسترسی public برای عموم است
+* مرورگرها قابلیت اتصال به سرور تحت پروتکل http/https دارد
+* وب‌سایت: یک سایت نمایش است با ملاحظات خود
+* وب اپلیکیشن: یک برنامه سازمانی است که درقالب وب به نمایش درمی‌آید
+*
+
+### ✅️ HTTP Methods
+
+* Get: همواره پارامترها را در یوآرآل می‌فرستد
+    * Selectation
+* Postاطلاعات را در بادی می‌فرستد
+    * مقداری از گِت با امنیت‌تر است
+    * ارسال مقدار زیاد را فقط با پست می‌توان ارسال کرد
+    * Insertation
+* Head(Like GET but only headers)
+* Put: معمولا جایی که در فضای بروزرسانی است
+* Patch(apply patial modifications to a resource)
+    * از سمت کلاینت مودیفیکیشن کوچک ارسال کنین
+* Delete
+    * برای حذف مقداری
+* Trace
+    * آیا سرور زنده است یا خیر
+* Option(http methods that the server supports)
+    * چه متدهایی را ساپورت می‌کند
+* Connect(Establishes a tunnel to a server)
+    * ارتباط تونل
+
+### ✅️ Headers.Request
+
+* Get:
+* Host:
+    * itsee.ir
+* accept: کلاینت چه مواردی را انتظار دارد
+    * text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+* user-agent: مرورگر چه چیزی است
+    * Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0
+* Accept-Encoding: برای تسهیل مشخص می‌شود که این مرورگر قابلیت فهم چه نوع فشرده‌سازی را دارد
+    * gzip, deflate
+* Accept-Language:
+    * en-US,en;q=0.5
+* Connection
+    * keep-alive
+* If-Modified-Since:
+    * Fri, 24 Mar 2023 10:47:57 GMT
+* If-None-Match
+    * "1d18-641d7fdd-43aeb9c7c101613e;gz"
+* Upgrade-Insecure-Requests
+    * 1
+
+### ✅️ Headers.Response
+
+* ServerResponseCode(Status):
+    * 200:OK
+* Connection
+    * Keep-Alive
+* Date: اگر مرورگر کش کرده و تغییر نداشته همونو نشون بده
+    * Mon,03 Apr 2023 06:31:47 GMT
+* Etag
+    * "1d18-641d7fdd-43aeb9c7c101613e;gz"
+* Server
+    * LiteSpeed
+* Vary
+    * User-Agent
+
+![httpBasicSession.png](_srcFiles/Images/httpBasicSession.png "httpBasicSession.png")
+
+## 🅱️ HTTPS(Secure Hypertext Transfer Protocol)
+
+* Port: 443
+* پروتکل http که با ssl امنیت آن افزایش یافته است
+
+![httpsBasicSession.png](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/httpsBasicSession.png "httpsBasicSession.png")
+
+## 🅱️ CGI(Common Gateway Interface)
+
+* CGI یا Common Gateway Interface: استانداردی برای تولید صفحات پویای وب توسط سرور که حاوی مشکلاتی بود:
+* تاخیر در تعداد کلاینت زیاد
+* هر درخواست یک پردازه جدید یعنی بار افزوده برای سرور بود
+* محدود برای برخی زبان‌ها(زبان‌های محدود به پلتفرم)
+* باید قابلیت CGI را در وب‌سرور فعال نمایید
+* قابلیت Get و Post وجود دارد
+* دارای برخی CGI Environment Variables
+
+```shell
+#!/usr/bin/python
+
+print "Content-type:text/html\r\n\r\n"
+print '<html>'
+print '<head>'
+print '<title>Hello World - First CGI Program</title>'
+print '</head>'
+print '<body>'
+print '<h2>Hello World! This is my first CGI program</h2>'
+print '</body>'
+print '</html>'
+# OUTPUT: 
+# Hello World! This is my first CGI program
+```
+
+[Link](http://www.test.com/cgi-bin/hello_get.py?first_name=ZARA&last_name=ALI)
+
+```shell
+
+#!/usr/bin/python
+
+# Import modules for CGI handling 
+import cgi, cgitb 
+
+# Create instance of FieldStorage 
+form = cgi.FieldStorage() 
+
+# Get data from fields
+first_name = form.getvalue('first_name')
+last_name  = form.getvalue('last_name')
+
+print "Content-type:text/html\r\n\r\n"
+print "<html>"
+print "<head>"
+print "<title>Hello - Second CGI Program</title>"
+print "</head>"
+print "<body>"
+print "<h2>Hello %s %s</h2>" % (first_name, last_name)
+print "</body>"
+print "</html>"
+OUTPUT:
+Hello ZARA ALI
+```
+
+
+
+[URL](http://localhost/cgi-bin/env.sh?namex=valuex&namey=valuey&namez=valuez)
+```shell
+#Shellscript CGI
+#!/bin/bash
+echo "Content-type: text/html"
+echo ""
+echo '&lt;html&gt;'
+echo '&lt;head&gt;'
+echo '&lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8"&gt;'
+echo '&lt;title&gt;Environment Variables&lt;/title&gt;'
+echo '&lt;/head&gt;'
+echo '&lt;body&gt;'
+echo 'Environment Variables:'
+echo '&lt;pre&gt;'
+/usr/bin/env
+echo '&lt;/pre&gt;'
+
+echo '&lt;/body&gt;'
+echo '&lt;/html&gt;'
+
+exit 0
+
+```
+
+> تصویر نمایی از حالت قدیمی را نمایش میدهد
+![cgi.jpg](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/cgi.jpg "cgi.jpg")
+
+
+# 🅰️ CISCO
 
 PacketTracer: نرم‌افزار سیسکو برای شبیه سازی محیط واقعی شبکه
 
-# 📍️ Switch
-
+# 🅰️ Switch
 
 * سوییچ لایه۲هست(مفاهیم مک و جدولarp)
 * با گذر ایام، سوییچ در لایه۳ورود کرد(مفاهیم روتینگ) و آی‌پی
@@ -39,20 +194,18 @@ PacketTracer: نرم‌افزار سیسکو برای شبیه سازی محیط
 * StackableSwitch:
 * Port Group: یک مفهوم در مجازی‌سازی شبکه است که به مجموعه‌ای از پورت‌های شبکه مجازی اشاره دارد. این گروه به ماشین‌های مجازی (VMs) اجازه می‌دهد تا به یکدیگر و به شبکه‌های خارجی متصل شوند.
 
-
 ![trunk.jpg](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/trunk.jpg "trunk.jpg")
 
 > StackableSwitch
 ![switch-stack.png](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/switch-stack.png "switch-stack.png")
 
-
-# 📍️ Proxy
+# 🅰️ Proxy
 
 * سایت‌های زیر برای تست پروکسی مفید است
     * ifconfig.me
     * ping.eu
 
-## Tor
+## 🅱️ Tor
 
 * از موارد مشابه تور می‌توان به proxychains4 و privoxy اشاره کرد که همانند torsocks در ابتدای دستورات قرار می‌دهیم.
 * پورت پیش‌فرض تور 9050 است
@@ -76,9 +229,9 @@ torsocks curl https://showip.net # Test Ip Adderess
 
 ```
 
-# 📍️ Commands
+# 🅰️ Commands
 
-## ✅️ arp
+## 🅱️ arp
 
 * پروتکل arp: چه مک‌آدرس به چه آی‌پی متصل است
 * بسته‌های پروتکل ARP از روتر عبور نمی‌کنند
@@ -98,32 +251,32 @@ curl -I itsee.ir #نمایش هدرهای یک سایت
 curl -u username:password -T file.tar.gz ftp://ftp_server
 ```
 
-## ✅️ ethtool
+## 🅱️ ethtool
 
 ```shell
 dig <name>
 dig +short <Name>  #اطلاعات اضافه نشان نده و فقط آی‌پی را نمایش بده
 ```
 
-## ✅️ ethtool
+## 🅱️ ethtool
 
 ```shell
 sudo ethtool enp5s0 # اطلاعات فوق‌العاده زیاد بابت کارت شبکه
 
 ```
 
-## ✅️ fping
+## 🅱️ fping
 
 `fping -g 192.168.10.1 192.168.10.5 #alive hosts`
 
-## ✅️ host
+## 🅱️ host
 
 ```shell
 host -la domain.local # نمایش تمام رکوردهای یک دامنه
 host <name[google.com]>
 ```
 
-## ✅️ hostname
+## 🅱️ hostname
 
 * [-I] or [--all-ip-addresses] → All IP addresses for the host
 
@@ -131,7 +284,7 @@ host <name[google.com]>
 hostname -I # show all ip address
 ```
 
-## ✅️ iwlist|iwconfig
+## 🅱️ iwlist|iwconfig
 
 wifi|wireless|وای‌فای
 
@@ -140,7 +293,7 @@ iwlist <nic> scan #بررسی وایرلس‌های اطراف سیستم که �
 iwconfig wlp4s0 essid "<Name>" key s:<Pass> #اتصال به یک وایرلس
 ```
 
-## ✅️ ip
+## 🅱️ ip
 
 Usage: ip OPTIONS OBJECT COMMAND
 
@@ -214,7 +367,7 @@ Usage: ip OPTIONS OBJECT COMMAND
     * ip addr del x.x.x.x/Y dev <NIC> → del IP
     * ip link del <nic> down → up/down NIC
 
-### [Gateway|Routr] Commands
+### ✅️ [Gateway|Routr] Commands
 
 * show
     * ip route
@@ -224,16 +377,16 @@ Usage: ip OPTIONS OBJECT COMMAND
 * remove
     * ip route del 192.168.0.150/24 #Removing a static route
 
-## ✅️ ifconfig
+## 🅱️ ifconfig
 
 ```shell
 ifconfig eth0:0 xxx.xxx.xxx.xxx #set [Additional ip] or [VirtualIp]
 ifconfig eth0 hw ether AA:BB:CC:DD:EE:FF #MacSpoofing or تغییر مک آدرس
 ```
 
-## ✅️ lsof
+## 🅱️ lsof
 
-### Concept
+### ✅️ Concept
 
 * COMMAND: The command name
 * PID: Process ID (PID) of the process
@@ -270,7 +423,7 @@ ifconfig eth0 hw ether AA:BB:CC:DD:EE:FF #MacSpoofing or تغییر مک آدر�
 * NODE: Node description of the local file; this could be the number of the local file, TCP, UDP, or STR (stream)
 * NAME: The name of the mount point where the file resides
 
-### Switch
+### ✅️ Switch
 
 * [-i] → List all network connecttion
     * tcp|udp:
@@ -314,21 +467,21 @@ ifconfig eth0 hw ether AA:BB:CC:DD:EE:FF #MacSpoofing or تغییر مک آدر�
     * lsof -d mem → All memory map files
     * lsof -d cwd
 
-### Appendix
+### ✅️ Appendix
 
 * [+L1] → سوکت‌های فعلی سرور که به هیچ فایلی از هارد وصل نشده است - پردازه‌های موجود در رم که ممکن است ویروس باشند
     * lsof +L1
 * deletedFiles
     * sudo lsof [path] | grep deleted
 
-## ✅️ mtr
+## 🅱️ mtr
 
 ```shell
 mtr google.com
 mtr -n --report IP
 ```
 
-## ✅️ netstat
+## 🅱️ netstat
 
 * [خالی و بدون پارامتر ورودی] → By default, netstat displays a list of open sockets.
 * [-i] or [--interfaces,] → Display a table of all network interfaces
@@ -340,13 +493,13 @@ mtr -n --report IP
 * [-l] → display only listening sockets
 * [-n] → display the socket’s port number
 
-## ✅️ nmapt
+## 🅱️ nmapt
 
 * تعریف NullScan: بسته هیچ پرچمی(TCP، UDP، Sync، Http، ICMP و غیره) به خود نمی‌گیرد.
     * اگر یک سرور هیچ پاسخی نداد شما می‌توانید نوع اسکن را در وضعیت Null Scan قرار دهید که در آن صورت حتما بسته عبور می‌کند و حداقل می‌توان فهمید که سرور alive هست یا پایین است
 * تعریف Zombi Attach: همزمان به چندین سیستم زامبی‌شده(قربانی‌های بستر اینترنت) می‌گوییم که به یک سرور وصل شوند و کاری انجام دهند و گزارش خروجی حمله را در اختیارمان قرار دهند و ما ناشناخته خواهیم ماند
 
-### Ping
+### ✅️ Ping
 
 * nmap -Pn [target] #Dont ping
 * nmap -sP [target] #perform a Ping Only Scan
@@ -359,12 +512,12 @@ mtr -n --report IP
 * nmap -PM [target] #CMP Address Mask Ping
 * nmap -PO [target] #IP Protocol Ping
 
-### Trace
+### ✅️ Trace
 
 * nmap –traceroute     [target] #Traceroute
 * nmap --packet-trace [target] #Trace package
 
-### DNS
+### ✅️ DNS
 
 * nmap -R [target] #Force Reverse DNS Resolution
 * nmap -n [target] #Disable Reverse DNS Resolution
@@ -372,7 +525,7 @@ mtr -n --report IP
 * nmap –dns-servers [servers] [target] #Manually Specify DNS Server(s)
 * nmap -sL [targets] #Create a Host List
 
-### Advanced Scanning Options
+### ✅️ Advanced Scanning Options
 
 * nmap -sS [target] #TCP SYN Scan
 * nmap -sT [target] #TCP Connect Scan
@@ -387,7 +540,7 @@ mtr -n --report IP
 * nmap –send-eth [target] #Send Raw Ethernet Packets
 * nmap –send-ip [target] #Send IP Packets
 
-### Port Scan
+### ✅️ Port Scan
 
 * nmap -F [target] #Perform a Fast Scan
 * nmap -p [port(s)] [target] #Scan Specific Ports
@@ -400,7 +553,7 @@ mtr -n --report IP
 * nmap –top-ports [number] [target] #Scan Top Ports
 * nmap -r [target] #Perform a Sequential Port Scan
 
-### Version Detection
+### ✅️ Version Detection
 
 * nmap -O [target] #Operating System Detection
 * nmap -O –osscan guess [target] #Attempt to Guess an Unknown OS
@@ -408,7 +561,7 @@ mtr -n --report IP
 * nmap -sV –version trace [target] #Troubleshooting Version Scans
 * nmap -sR [target] #Perform a RPC Scan
 
-### Firewall Evasion Techniques
+### ✅️ Firewall Evasion Techniques
 
 * nmap -f [target] #augment Packets
 * nmap –mtu [MTU] [target] #pacify a Specific MTU
@@ -425,7 +578,7 @@ mtr -n --report IP
     * nmap –spoof-mac Cis 192.168.0.1
 * nmap –badsum [target] #Send Bad Checksums
 
-### Troubleshooting And Debugging
+### ✅️ Troubleshooting And Debugging
 
 * nmap -h #Getting Help
 * nmap -V #Display nmap Version
@@ -438,7 +591,7 @@ mtr -n --report IP
 * nmap -e [interface] [target] #Specify a Network Interface
     * nmap -e eth0 192.168.0.1
 
-### nmap Scripting Engine
+### ✅️ nmap Scripting Engine
 
 * nmap –script [script.nse] [target] #Execute Individual Scripts
 * nmap –script [expression] [target] #Execute Multiple Scripts
@@ -452,7 +605,7 @@ mtr -n --report IP
     * nmap –script banner.nse –script-trace 192.168.0.1
 * nmap –script-updatedb #Update the Script Database
 
-## ✅️ nmcli
+## 🅱️ nmcli
 
 ```shell
 nmcli connection show
@@ -477,18 +630,18 @@ nmcli general logging domains ALL
 nmcli general logging level INFO domains ALL
 ```
 
-## ✅️ nslookup
+## 🅱️ nslookup
 
 ```shell
 nslookup -querytype=mx domain.ir #پیدا کردن ایمیل‌سرور یک دامین
 nslookup <name>
 ```
 
-## ✅️ tcpdump
+## 🅱️ tcpdump
 
 دستور لینوکس برای گوش کردن به شبکه- سوییچ‌ها
 
-### Switch
+### ✅️ Switch
 
 * [-c] → Capture Only N Number of Packets
     * sudo tcpdump -c 5
@@ -536,7 +689,7 @@ nslookup <name>
 * [] →
 * [] →
 
-### Examples
+### ✅️ Examples
 
 * tcpdump src NUMBER && dst port NUMBER
 * tcpdump dst ff:ff:ff:ff:ff:ff
