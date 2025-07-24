@@ -49,11 +49,41 @@ rename "s/jpeg$/jpg/" *.jpeg  # convert all jpeg to jpg
 
 </div>
 
-# 🅰️Accessibility
+# 🅰️ Accessibility
 
 - در نسخه لینوکس‌های کوچک دستور adduser وجود دارد(توزیع لینوکس alpine) و دستور useradd دستور بزرگتری و با ابزارهای بیشتری است.
 
+```shell
+who #Current Login Users
+who -a #نمایش تمامی اطلاعات
+who -b #زمان بوت شدن سیستم
+who -r #نمایش ران لول فعلی
+who -q #تعداد کاربران لاگین و نام آنها
 
+/sbin/usermod -s /sbin/nologin Behrooz #change user to nonlogin user
+```
+
+## 🅱️ Sudo
+
+```shell
+sudo
+sudo -u <USER> whoami #اجرای دستور با کاربر خاص
+sudo -- bash -c 'pwd; hostname; whoami' #Execute Multiple command
+sudo cat /etc/sudoers.d/Behrooz
+    user    ALL=NOPASSWD: /usr/bin/nmap 
+    user    ALL=NOPASSWD: /usr/bin/apt 
+    user    ALL=NOPASSWD: /usr/bin/sudo 
+    user    ALL=NOPASSWD: /usr/bin/chmod 
+    user    ALL=NOPASSWD: /usr/bin/chown 
+    user    ALL=NOPASSWD: /usr/bin/vim 
+    user    ALL=NOPASSWD: /usr/bin/systemctl 
+    user    ALL=NOPASSWD: /usr/bin/updatedb 
+    user    ALL=NOPASSWD: /usr/bin/dpkg 
+    user    ALL=NOPASSWD: /usr/sbin/shutdown 
+    user    ALL=NOPASSWD: /usr/bin/killall 
+    user    ALL=NOPASSWD: /usr/bin/kill 
+    behrooz ALL=(ALL) NOPASSWD: ALL # Run sudo command without password
+```
 
 # 🅰️SpecialAttributes
 
@@ -84,7 +114,7 @@ chattr -a file.txt
 # a → ALL
 ```
 
-## 🅱️SUID
+## 🅱️ SUID
 
 اگر فایلی این دسترسی را داشته باشد یعنی استفاده از این فایل با دسترسی مشابه روت صورت خواهد گرفت
 
@@ -220,7 +250,7 @@ tar xf /dev/st0 /home/restorMyData #بازیابی بک‌آپ از نوار
 
 </div>
 
-# 🅰️FileNames
+# 🅰️ FileNames
 
 ## 📁️ /sbin/init
 
@@ -254,21 +284,15 @@ tar xf /dev/st0 /home/restorMyData #بازیابی بک‌آپ از نوار
 * /proc/<PID>/limits: مشاهده محدودیت‌های یک پردازه
 * /proc/sys/fs/file-max: # مشاهده محدودیت مجموع فایل‌های باز در سیستم یعنی حداکثر تعداد فایل‌هایی است که می‌توانند به طور همزمان در سیستم باز باشند
 
-
-
-
-
-
-
 # 🅰️Command
 
-## ✅️ fio
+## 🅱️ fio
 
 ```shell
 fio --name=Rand_RW_100_8K --rw=randrw --direct=1 --rwmixwrite=100  --ioengine=windowsaio --time_based  --runtime=1800  --size=30tib --blocksize=8k  --numjobs=8 --filesize=4tib --thread --group_reporting --filename="\\.\PhysicalDrive2"  --output="c:\1403-08-29-TestRand100Write-T2.txt"
 ```
 
-## ✅️ tree
+## 🅱️ tree
 
 نمایش فایل‌های بصورت درختی
 
@@ -276,7 +300,7 @@ fio --name=Rand_RW_100_8K --rw=randrw --direct=1 --rwmixwrite=100  --ioengine=wi
 tree -fi #نمایش تنها لیست فایل‌ها بصورت نام کامل
 ```
 
-## ✅️ ulimit
+## 🅱️ ulimit
 
 get and set user limits
 
@@ -286,3 +310,23 @@ ulimit -n #مشاهده محدودیت تعداد فایل‌های باز بر�
 ulimit -n <new_limit> #Temprory #the maximum number of open file
 vim /etc/security/limits.conf # اگر بخواهیم بصورت دائمی باشد
 ```
+
+# 🅰️ Hash
+
+* هش همواره یک طرفه است و مانند کدینگ نیست که امکان دیکد داشته باشد
+
+
+```shell
+echo -n <STRING>|md5sum # linux
+certutil -hashfile <file> MD5 # MicrosoftWindows
+# [Server1: find ./backup -type f -print0 | xargs -0 md5sum > /checksums_backup.md5] && [Server2: md5sum -c checksums_backup.md5] → checksum
+```
+
+## 🅱️ 
+
+
+## 🅱️ 
+
+
+
+## 🅱️ 
