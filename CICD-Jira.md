@@ -1,4 +1,27 @@
-# Agile
+# 🅰️ CICI(ContinuousIntegration and ContinuousDelivery[Deployment])
+
+- Continuous Integration
+    - Dev
+    - ApplicationTest
+    - Intergration Test
+- Continuous Delivery
+    - Dev
+    - ApplicationTest
+    - Intergration Test
+    - Acceptance Test
+- Continuous Deployment
+    - Dev
+    - ApplicationTest
+    - Intergration Test
+    - Acceptance Test
+    - Production
+
+![CICD3.png](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/CICD3.png "CICD3.png")
+![CICD2.jpg](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/CICD2.jpg "CICD2.jpg")
+
+# 🅰️ JIRA
+
+## 🅱️ Agile
 
 رویکرد مدیریت توسعه‌نرم‌افزار است که برپایه اصولی ۱۲گانه استوار است(توسط گروهی توسعه‌دهنده در سال ۲۰۰۱)
 
@@ -15,12 +38,12 @@
 11. Regular reflection and adjustment
 12. Attention to good design and technical excellence
 
-# JQL(JiraQueryLanguage)
+## 🅱️ JQL(JiraQueryLanguage)
 
 sprint in openSprints() AND assignee = currentUser() AND (status="In Progress" OR status="To Do")
 [Pycharm]:assignee=currentUser() and resolution=Unresolved order by updated
 
-# مفاهیم و توضیحات
+## 🅱️ مفاهیم و توضیحات
 
 <div dir="rtl">
 

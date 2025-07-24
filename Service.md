@@ -1,6 +1,23 @@
 <div dir="rtl">
 
-# 📍️ Bind|DNS
+# 🅰️ Systemd
+
+## 🅱️ sysctl
+
+```shell
+sysctl -a #view all current kernel parameters
+sysctl -n net.ipv4.ip_forward #print only values and do nothing
+sysctl -w net.ipv4.ip_forward=1 #temporary until reboot, enable IPv4 packet forwardingecho 1 > /proc/sys/net/ipv4/ip_forward #(same above) enable IPv4 packet forwarding
+sysctl -p #reload all configure even new custom configure /etc/sysctl.conf
+sysctl –w net.ipv4.ip_forward=1 || echo 1> /proc/sys/net/ipv4/ip_forward #ایجاد قابلیت فوروارد نمودن یک بسته به یک ریموت هاست
+sysctl -w net.ipv6.conf.all.forwarding=1 || echo 1 > /proc/sys/net/ipv6/conf/all/forwarding #ایجاد قابلیت فوروارد نمودن یک بسته به یک ریموت هاست
+```
+
+## 📁️ /etc/sysctl.conf
+
+`fs.file-max = <new_limit> #حداکثر تعداد فایل‌هایی است که می‌توانند به طور همزمان در سیستم باز باشند`
+
+# 🅰️ Bind|DNS
 
 - Top Level Domain یا TLD : سطح com یا ir یا net یا org در DNS
 - First Level Domain یا FLD : نام itsee در دامنه itsee.ir
@@ -18,9 +35,9 @@
 ![Bind9.png](_srcFiles/Images/Bind9.png "Bind9.png")
 ![Bind9_Zone.png](_srcFiles/Images/Bind9_Zone.png "Bind9_Zone.png")
 
-# 📍️ Email
+# 🅰️ Email
 
-## Concepts
+## 🅱️Concepts
 
 - ایمیل سرور در لینوکس به ۳نقش اساسی تقسیم می‌شوند(مرز آنها نزدیک‌به هم هستند و ممکن است یک برنامه کار دیگری را نیز انجام دهد)
     - [MTA]: مخفف MailTransferAgent است و کار آن ارسال ایمیل است
@@ -114,7 +131,7 @@ sudo /etc/init.d/postfix reload
 systemctl reload postfix
 ```
 
-## IMAP(Internet Message Access Protocol)
+## 🅱️IMAP(Internet Message Access Protocol)
 
 - دریافت ایمیل تحت پروتکل imap از طریق کامند‌لاین که از پورت ۱۴۳ استفاده می‌کند
 
@@ -158,7 +175,7 @@ UNSUBSCRIBE Removes a mailbox from the list of active mailboxes
 
 ```
 
-## POP(Post Office Protocol)
+## 🅱️POP(Post Office Protocol)
 
 - دریافت ایمیل POP3 از طریق کامند لاین که از پورت ۱۱۰ استفاده میکند
 
@@ -189,7 +206,7 @@ RSET Resets the session back to the start
 QUIT Terminates the POP3 session
 ```
 
-## SMTP(Simple Mail Transport Protocol)
+## 🅱️SMTP(Simple Mail Transport Protocol)
 
 - پروتکلی برای ارسال ایمیل بین کلاینت و سرور یا بین سرورهای ایمیل سرور که از پورت ۲۵ استفاده می‌کند که دستورات ابتدایی پروتکل SMTP به شرح زیر است
     - HELO: Opening greeting from client
@@ -292,9 +309,9 @@ rich@myhost:~$
 
 [Link](https://www.arclab.com/en/kb/email/list-of-smtp-and-pop3-servers-mailserver-list.html)
 
-# 📍️ Samba
+# 🅰️ Samba
 
-## Concept
+## 🅱️Concept
 
 * Samba: سرویس لینوکسی و openSource برای پروتکل SMB که قابلیت هماهنگی سرورهای لینوکسی را با ویندوزی میسر می‌سازد تا این دو سرور متفاوت بتوانند از share یکدیگر استفاده نمایند
 * به‌صورت سنتی از سه بخش اصلی(تحت عنوان daemon) تشکیل شده است۱-nmbd برای مدیریت NetBIOS ۲-smbd برای اشتراک فایل۳-webbindd برای authentication کاربران که مثلا بتواند بین اکتیو دایرکتوری و کاربران لینوکس ارتباط برقرار نماید
@@ -308,7 +325,7 @@ rich@myhost:~$
 * SMB: ServiceMessageBlock
 *
 
-## Ports
+## 🅱️Ports
 
 * 53 [TCP,UDP]: Internal DNS only
 * 88 [TCP,UDP]: Kerberos
@@ -360,7 +377,7 @@ password=<password>
     * [testparm]: بررسی سینکس فایل smb.conf
     * [wbinfo]: نمایش اظلاعات سرویس (دیمن) winbindd از سامبا
 
-## PasswordSet
+## 🅱️PasswordSet
 
 ```shell
 #می‌توانیم برای یک یوزر سیستمی (که خود صاحب پسورد سیستمی است) یک پسورد از نوع سامبا هم بدهیم پس یک کاربر جدید ایجاد می‌کنیم
@@ -373,7 +390,7 @@ pdbedit -Lv          #مشاهده جزئیات از یک یوزر در سامب
 
 ```
 
-## SecurityLevelMode
+## 🅱️SecurityLevelMode
 
 * این ویژگی توسط پارامتر security موجود در بخش global تنظیم می‌شود که نحوه authenticate نمودن کلاینت‌ها را تعیین می‌نماید که شامل موارد زیر می‌شود
     * ads:به سرور سامبا اجازه می‌دهد که به اکتیودایرکتوری متصل شود و authentication را از طریق Kerberos انجام دهد. در این حالت الزاما باید realm و password server در بخش [global] تنظیم شوند. وقتی تعداد کاربران بیشتر از ۲۵۰ باشد توصیه میشود
@@ -382,7 +399,7 @@ pdbedit -Lv          #مشاهده جزئیات از یک یوزر در سامب
     * share(منسوخ شده وکسی استفاده نمی‌کند): برای هر کدام از share ها پسورد جداگانه قرار دهیم
     * user: پسورد و نام کاربری در لاگین به سامبا سرور و هنگام استفاده از سرویس نیاز می‌باشد و این اطلاعات در دیتابیس tdbsam در سرور موجود است. (در ورژن‌های قبلی smbpasswd) زمانی توصیه می‌شود که کاربران بیشتر از ۲۵۰ نفر باشند
 
-## UsernameMap
+## 🅱️UsernameMap
 
 * این امکان وجود دارد که در یک سرور لینوکسی بگوییم اگر کاربری با نام x آمد آن را معادل کاربر y قرار بده
 
@@ -478,7 +495,7 @@ writable = yes
 #
 ```
 
-## ✅️ smbclient
+## 🅱️ smbclient
 
 اتصال یا نمایش لیست فایل‌های به اشتراک گذاشته شده که وقتی به یک فولدر از سروری متصل می‌شویم آنگاه با دستورات همانند FTP می‌توانیم با فایل‌ها کارکنیم
 
@@ -489,7 +506,7 @@ smbclient -L //localhost -U <user> #مشاهده موارد به اشتراک گ
 smbclient //localhost/<PATH> -U <user> # اتصال به دیتای اشتراک گذاشته شده(share) و ادامه کار با فایل‌ها(دریافت وآپلود و غیره) همانند دستور اف تی پی خواهد بود
 ```
 
-# 📍️ FTP
+# 🅰️ FTP
 
 * مخفف FileTransferProtocol است
 * توصیه می‌شود که همیشه ftp را خاموش کنید و وقتی می‌خواهید استفاده نمایید آن را روشن نمایید
@@ -501,7 +518,9 @@ smbclient //localhost/<PATH> -U <user> # اتصال به دیتای اشتراک
 ![ftpactivemode.png](_srcFiles/Images/ftpactivemode.png "حالت اکتیو")
 ![ftppassivemode.png](_srcFiles/Images/ftppassivemode.png "حالت پسیو")
 
-# 📍️ Apache
+# 🅰️ WebServer
+
+## 🅱️ Apache
 
 * آبلود فایل با سایز بزرگ: در تنظیمات Apache داخل فایل php.ini مقادیر post_max_size و upload_max_filesize را افزایش دهید.(دقت شود که مقدار post_max_size بیشتر ازupload_max_filesize باشد)
 * این سرویس در دبیان بانام apache2 و در ردهت httpd (درنهایت همان آپاچی است)شناخته می‌شود
@@ -522,7 +541,7 @@ sudo apachectl -V          [Check Apache Version]
 sudo apachectl status      [Check Apache Status]
 ```
 
-## ConfigFile
+### ✅️ConfigFile
 
 ```
 AllowOverride None #افزودن این پارامتر موجب سلب مجوز استفاده از فایل مخفی htaccess می‌شود.
@@ -540,7 +559,7 @@ Require all granted
 
 ```
 
-## AccessRestriction.mod_access(IPBase)
+### ✅️ AccessRestriction.mod_access(IPBase)
 
 * در این محدودیت برحسب آی‌پی کلاینت اعمال می‌شود و در آن از گزینه Allow و Deny استفاده می‌شود
 
@@ -555,7 +574,7 @@ DocumentRoot /var/www/html
 </Directory>
 ```
 
-## AccessRestriction.mod_auth(user Pass)
+### ✅️ AccessRestriction.mod_auth(user Pass)
 
 - دسترسی به سایت نیاز به وارد کردن نام کاربری و پسورد باشد
 - نیازبه یک فایل پسورد با محتوی هش وجود دارد
@@ -590,7 +609,7 @@ Require valid-user
 
 گام چهارم: ریست آپاچی
 
-## htaccess
+### ✅️ htaccess
 
 * فایل مخفی «اِچ‌تی‌اکسس» سبب اعمال برخی تنظیمات در برخی مسیر‌ها و دایرکتوری‌ها می‌شود
 * خطوط زیر در فایل htaccess قرار داده شود
@@ -604,7 +623,7 @@ IndexIgnore *.zip *.txt   #نادیده گرفتن پسوند خاص
 DirectoryIndex Home.html #تعیین نوع پرونده پیش‌فرض
 ```
 
-## LimitForUpload
+### ✅️ LimitForUpload
 
 افزایش مقادیر پارامتر post_max_size و upload_max_filesize در فایل php.ini (دقت شود که مقدار post_max_size بیشتر از upload_max_filesize باشد)
 
@@ -616,7 +635,7 @@ upload_max_filesize=
 sudo service apache2 restart 
 ```
 
-## VirtualHost.IPBase
+### ✅️ VirtualHost.IPBase
 
 - ارائه چندین وب‌سرور روی یک سرور از این طریق صورت می‌گیرد.هر نام در DNS به یک آی‌پی متفاوت خواهد رسید و هرگاه نام مربوطه به وب‌سرور داده شده تنظیمات مربوط به آن سایت را نمایش خواهد داد
 
@@ -643,7 +662,7 @@ sudo service apache2 restart
 4. توسط دستور apache2ctl configtestتنظیمات را چک می‌کنیم
 5. این نام باید در DNS یا فایل hosts موجود باشد
 
-## VirtualHost.NameBase
+### ✅️VirtualHost.NameBase
 
 سبب می‌شود تا در یک آی‌پی چندین دامنه را به مسیرهای متفاوت(سایت‌های متفاوت) وصل کنیم
 
@@ -672,7 +691,7 @@ sudo service apache2 restart
 4. توسط دستور apache2ctl configtestتنظیمات را چک می‌کنیم
 5. -این نام باید در DNS یا فایل hosts موجود باشد
 
-# 📍️ NginX
+## 🅱️ NginX
 
 - معمولا بعنوان ReverseProxyServer استفاده می‌شود و LoadBalance ایجاد نماید
 - سرویس NginX یک ReverseProxy خیلی ساده است
@@ -692,13 +711,15 @@ include /etc/nginx/proxy_params;
 - ۲-توسط proxy_pass درخواست ها را به یک آدرس هدایت می‌کنیم
 - مسیر پیش‌فرض /usr/share/nginx/html است
 
-# 📍️ Squid
+## 🅱️ Squid
 
 یک وب سرور است که معمولا بعنوان پروکسی در مرورگرها تنظیم می‌شود و همه از طریق او به اینترنت وصل می‌شوند و میتواند صفحات را کش نماید.(از دردسرهای کش سرور رهایی یابیم)
 
-# 📍️ rSyslog
+# 🅰️ LOG
 
-## Options
+## 🅱️ rSyslog
+
+### ✅️ Options
 
 Facility.[priority|severity] action
 
@@ -750,7 +771,7 @@ Facility.[priority|severity] action
     - username1, username2, etc → Log to these users' screens
     - \* → Log to all users' screens
 
-## 📁️ /etc/rsyslog.conf
+### 📁️ /etc/rsyslog.conf
 
 ```shell
 sudo vim /etc/rsyslog.conf
@@ -824,7 +845,7 @@ user.=warn /var/log/beh_user_warn.log
    sudo ufw reload 
    ```
 
-# 📍️ LogRotate
+## 🅱️ LogRotate
 
 * هنگامی که در یک سرور لاگ به تعداد زیاد تولید م‌شود ممکن است یک فایل لاگ حجیم شده و سبب کندی سرور گردد. به همین جهت لاگ‌های قدیمی تر را برحسب سفارشی سازی از فایل اصلی لاگ جدا می‌نماییم
 
@@ -835,7 +856,7 @@ logrotate [--force] [--debug] [--state file] [--skip-state-lock] [--verbose] [--
 #   [-v,--verbose]: Turns on verbose mode, for example to display messages during rotation
 ```
 
-## Options
+### ✅️ Options
 
 `- FullFileName { # مسیر کامل فایل لاگ که قرار است آن را روتیت کنیم
 
@@ -884,7 +905,7 @@ vim /etc/logrotate.d/apache2
 }
 ```
 
-## [server](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/deployment_guide/s1-basic_configuration_of_rsyslog)
+### ✅️ [server](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/deployment_guide/s1-basic_configuration_of_rsyslog)
 
 ```
 $template RemoteLogs,"/var/log/%fromhost-ip%_%HOSTNAME%/%PROGRAMNAME%.log"
@@ -892,7 +913,7 @@ $template RemoteLogs,"/var/log/%fromhost-ip%_%HOSTNAME%/%PROGRAMNAME%.log"
 & STOP
 ```
 
-## tag
+### ✅️ tag
 
 ```
 1-add end of [/etc/rsyslog.conf]: # ریختن تمام لاگ‌ها که تگ آن سلام باشد به درون یک فایل خاص
@@ -901,7 +922,7 @@ $template RemoteLogs,"/var/log/%fromhost-ip%_%HOSTNAME%/%PROGRAMNAME%.log"
 3-tail -f /var/log/behroooz.log
 ```
 
-## Template
+### ✅️ Template
 
 * [MessageProperties](https://www.rsyslog.com/doc/v8-stable/configuration/properties.html)
     * [msg]: the MSG part of the message (aka “the message” ;))
@@ -948,6 +969,29 @@ $template RemoteLogs,"/var/log/%fromhost-ip%_%HOSTNAME%/%PROGRAMNAME%.log"
         * The timereported property is usually older than timegenerated, but may be totally different due to differences in time and time zone configuration between systems
     * [$bom]: The UTF-8 encoded Unicode byte-order mask (BOM). This may be useful in templates for RFC5424 support, when the character set is know to be Unicode.
     * [$myhostname]: The name of the current host as it knows itself (probably useful for filtering in a generic way)
+
+# 🅰️ Monitoring
+
+## 🅱️ Glance
+
+```shell
+apt install glances python-bottle
+glances #standalone mode
+glances -w #Web server mode
+glance -s #client/server mode
+glances -c <ip> #on the server side
+glances --browser #display all Glances servers available on network or defined in the configuration file
+```
+
+## 🅱️ Zabbix
+
+## 🅱️ Prometheus
+
+* طراحی برای محیط‌های میکروسرویس و ابری
+* زبان پرسجوی PromQL
+* بیشتر در محیط‌های مدرن و میکروسرویس‌ها استفاده می‌شود و به خوبی با ابزارهایی مانند کوبرنتیز یکپارچه می‌شود
+
+## 🅱️
 
 </div>
 

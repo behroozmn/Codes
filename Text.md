@@ -1,4 +1,4 @@
-# 📍️ REGEX
+# 🅰️ REGEX
 
 <div dir="rtl">
 
@@ -38,7 +38,7 @@ cat /etc/passwd | grep [abc]$ #تمام خط‌هایی که آخر آن a یا 
 cat /etc/passwd | grep [a-h]$ #تمام خط‌هایی که آخر آن a تا h باشد
 ```
 
-# 📍️ Fonts
+# 🅰️ Fonts
 
 <div dir="rtl">
 
@@ -76,9 +76,9 @@ Web Open Font Format2    font/woff2
 ![SanAndSansSerifs.png](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/SanAndSansSerifs.png "SanAndSansSerifs.png")
 ![Kerning.png](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/Kerning.png "Kerning.png")
 
-# 📍️ Commands
+# 🅰️ Commands
 
-## ✅️ awk
+## 🅱️ awk
 
 ### Concepts
 
@@ -167,7 +167,7 @@ Web Open Font Format2    font/woff2
 
 [OnlineTools](https://awk.js.org)
 
-## ✅️ cat
+## 🅱️ cat
 
 * [-E]: نمایش انتهای خط که مثلا کاراکتر دالر باشد
 
@@ -175,13 +175,13 @@ Web Open Font Format2    font/woff2
 cat -E fileName
 ```
 
-## ✅️ dos2unix
+## 🅱️ dos2unix
 
 ```shell
 dos2unix filedos.txt fileUnix.txt #تبدیل فرمت یک فایل متنی از سیستم ام اس داس به سیتمس یونیکس
 ```
 
-## ✅️ echo
+## 🅱️ echo
 
 * `echo -e`: Display a message containing special characters
 
@@ -204,7 +204,7 @@ echo -e 'Here \vthe \vspaces \vhave \vvertical \vtab \vspaces.'
 
 ```
 
-## ✅️ find
+## 🅱️ find
 
 ### Time
 
@@ -273,7 +273,7 @@ echo -e 'Here \vthe \vspaces \vhave \vvertical \vtab \vspaces.'
 * [find . -type f | xargs grep "example"]
 * [] →
 
-## ✅️ grep
+## 🅱️ grep
 
 ### Switchs
 
@@ -326,7 +326,7 @@ echo -e 'Here \vthe \vspaces \vhave \vvertical \vtab \vspaces.'
 * grep "^<PATTERN>" File → هرچیزی که شروع خط با یک الگو باشد
 * grep "<PATTERN>$" File → هرچیزی که پایان خط با یک الگو باشد
 
-## ✅️ sed
+## 🅱️ sed
 
 * برای Not کردن یک علامت تعجب قبل از d یا s یا غیره قرار دهید
 * برای در نظر نگرفتن case sensitive تنها کنار g یک آی بزرگ قرار دهید(یا تنها فقط یک آی قرار دهید)
@@ -394,7 +394,7 @@ echo -e 'Here \vthe \vspaces \vhave \vvertical \vtab \vspaces.'
 
 * sed '!s/day/night/g'
 
-## ✅️ tail
+## 🅱️ tail
 
 * [-<n>]
     * نمایش تعداد خط آخر
@@ -420,7 +420,7 @@ echo -ne "1 one\n2 two\n3 three\n4 four\n5 five\n6 six\n7 seven\n8 eight\n9 nine
 10 ten
 ```
 
-## ✅️ tr
+## 🅱️ tr
 
 ‌تبدیل کاراکتر به کاراکتر دیگر
 
@@ -432,13 +432,13 @@ echo -ne "1 one\n2 two\n3 three\n4 four\n5 five\n6 six\n7 seven\n8 eight\n9 nine
 echo behrooz | tr 'o' 'u' #--> out: behruuz
 ```
 
-## ✅️ unix2dos
+## 🅱️ unix2dos
 
 ```shell
 unix2dos fileUnix.txt filedos.txt #تبدیل فرمت یک فایل متنی از سیستم ام اس داس به سیتمس یونیکس 
 ```
 
-## ✅️ vim
+## 🅱️ vim
 
 ### C → Change
 
@@ -1075,7 +1075,7 @@ au BufRead,BufNewFile *.qss set filetype=css
 
 ```
 
-## ✅️ logger
+## 🅱️ logger
 
 ```
 -i, --id              log the process ID too
@@ -1093,11 +1093,39 @@ au BufRead,BufNewFile *.qss set filetype=css
 -V, --version         output version information and exit
 ```
 
-
 Example:
+
 ```shell
 echo "MESSAGES" | logger -p user.warn
 logger -p auth.info "MESSAGES"
 Command | logger
 Command | logger -t salamm
+```
+
+## 🅱️ banner
+
+وقتی شخصی لاگین می‌کند، برای او پیام ارسال گردد
+
+
+```
+/etc/motd # Mesage Of The Day #هر چیزی که می‌خواهید به کاربر نمایش داده شود یعنی پیام روز
+/etc/issue
+/etc/issue.net #در موارد شبکه نمایش داده می‌شود و باید در تنظیمات اس اس اچ این موضوع کانفیگ گردد
+```
+## 🅱️ Notify-send
+
+```shell
+sudo apt-get install libnotify-bin
+notify-send -t 1000 "title" "TEXT"                      #نمایش به اندازه ۵ ثانیه
+notify-send ---icon ~/APP/icon/1.ico "title" "TEXT"     #نمایش آیکن
+notify-send -u [low | normal | critical] "title" "TEXT" #سطح مهم بودن
+
+```
+
+## 🅱️ Display
+
+```shell
+Display=:0 sudo su -c "Command" #اجرای دستور در محیط گرافیکی یک شخص دیگر
+DISPLAY=:0.0 XAUTHORITY=~/.Xauthority notify-send -u critical -i /usr/share/icons/Adwaita/scalable/status/battery-level-0-symbolic.svg "Title" "Message"
+
 ```

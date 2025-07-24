@@ -5,6 +5,18 @@
 * شبکه تحویل محتوا یا CDN[ContentDeliveryNetwork]: بهینه‌سازی شبکه‌ جهت کاهش زمان تحویل محتوا به مصرف‌کننده علی رغم توزیع سرورها در نقاط جغرافیایی گوناگون
     * highly-distributed platform of servers that helps minimize delays in loading web page content by reducing the physical distance between the server and the user. This helps users around the world view the same high-quality content without slow loading times
 
+
+
+```shell
+iftop
+iptraf-ng
+nload
+tcpflow
+
+```
+
+
+
 # 📍️ WEB
 
 ![httpBasicSession.png](_srcFiles/Images/httpBasicSession.png "httpBasicSession.png")
@@ -14,16 +26,31 @@
 
 PacketTracer: نرم‌افزار سیسکو برای شبیه سازی محیط واقعی شبکه
 
+# 📍️ Switch
 
 
+* سوییچ لایه۲هست(مفاهیم مک و جدولarp)
+* با گذر ایام، سوییچ در لایه۳ورود کرد(مفاهیم روتینگ) و آی‌پی
+* VLAN: در VLAN گویی یک سوییچ‌کامل را دو تکه می‌کنیم
+* TrunkPort
+    * پورت ترانک بین دو سوییچ معنی پیدا می‌کند
+    * پورتی که وظیفه انتقال ترافیک بین VLAN ها در سوییچ را دارد
+    * در دو سوییچ‌کامل‌ از وسط شکسته شده(۴تکه شبکه مجزا) این تکه شبکه‌ها از طریق پورت ترانکیت به هم وصل می‌شوند
+* StackableSwitch:
+* Port Group: یک مفهوم در مجازی‌سازی شبکه است که به مجموعه‌ای از پورت‌های شبکه مجازی اشاره دارد. این گروه به ماشین‌های مجازی (VMs) اجازه می‌دهد تا به یکدیگر و به شبکه‌های خارجی متصل شوند.
+
+
+![trunk.jpg](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/trunk.jpg "trunk.jpg")
+
+> StackableSwitch
+![switch-stack.png](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/switch-stack.png "switch-stack.png")
 
 
 # 📍️ Proxy
 
 * سایت‌های زیر برای تست پروکسی مفید است
-  * ifconfig.me
-  * ping.eu
-
+    * ifconfig.me
+    * ping.eu
 
 ## Tor
 

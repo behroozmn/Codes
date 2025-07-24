@@ -1,6 +1,6 @@
-# 📍️ Application
+# 🅰️ Application
 
-## General
+## 🅱️ General
 
 * GeneralShortcut(AllApps)
     * [Shift+F10]: در هر برنامه‌ای همانند راست کلیک عمل خواهد کرد
@@ -8,12 +8,17 @@
     * [Alt+F] : نمایش منوها
     * F6: change to sidebar
 
-## goldendict
+
+* BigBlueButton:سامانه ویدئوکنفرانس متن‌باز بابت انجام امور مجازی(راه اندازی شده در داتشگاه علامه طباطبایی)
+* Moodle: آموزش از راه دور(حضورغیاب و کلاس بندی و مدیریت کلاسا) که علامه طباطبایی راه اندازی کرده(برای کلاس مجازی در دوران کرونا)(طرح مصباح حوزه مشکات پلائین)
+
+
+## 🅱️ goldendict
 
 * -no-bidi:سبب راست چین شدن نوشته در افزونه گنوم می‌شود
     * trans -b -s en -t fa -no-bidi -- LDWORD
 
-## Eitaa
+## 🅱️ Eitaa
 
 * رزولیشن و سایز استیکر در ایتا
     * ← سایز ۵۱۲ * ۵۱۲
@@ -30,7 +35,7 @@ trans -e google -s en -t fa -show-original n -show-original-phonetics n -show-tr
 trans -e google -s ar -t fa -show-original n -show-original-phonetics n -show-translation y -no-ansi -show-translation-phonetics n -show-prompt-message n -show-languages n -show-original-dictionary n -show-dictionary n -show-alternatives n "%GDWORD%" -no-bidi
 ```
 
-## Firefox
+## 🅱️ Firefox
 
 * Shortcut
     * [ctrl+sift+b]: Hide|Show BookmarksMenu
@@ -114,7 +119,7 @@ trans -e google -s ar -t fa -show-original n -show-original-phonetics n -show-tr
         * services.sync.engine.tabs: همگام‌سازی تب‌ها
         * services.sync.prefs.sync.*: همگام‌سازی تنظیمات خاص با حساب فایرفاکس
 
-## [jetbrains]
+## 🅱️ [jetbrains]
 
 * Name
     * IntlliJ → JAVA
@@ -131,7 +136,7 @@ trans -e google -s ar -t fa -show-original n -show-original-phonetics n -show-tr
     * [ALT+Insert]:‌ autoGenerate[Getter , Setter,Tostring, ...]
     * [psvm]: تمام ساختار تابع مین را خوکار ایجاد میکند
 
-## VScode
+## 🅱️ VScode
 
 * Extension
     * javaScript
@@ -155,7 +160,7 @@ trans -e google -s ar -t fa -show-original n -show-original-phonetics n -show-tr
 * shellcheck
     * shellcheck disable=SC2207,SC2128,SC2116,SC1072
 
-## Eclips
+## 🅱️ Eclips
 
 * ctrl+H=search
 * ctrl+Shift+R=search in resource
@@ -172,9 +177,9 @@ trans -e google -s ar -t fa -show-original n -show-original-phonetics n -show-tr
 * ctrl+(-)=collapse
 * ctrl+(+)=Expand block
 
-## Gnome
+## 🅱️ Gnome
 
-### GnomeShellExtensions
+### ✅️GnomeShellExtensions
 
 - ~/.local/share/gnome-shell/extensions/
 - **extension.js**: This is the main extension file and contains three main functions:
@@ -205,15 +210,29 @@ trans -e google -s ar -t fa -show-original n -show-original-phonetics n -show-tr
     - `journalctl -f -o cat /usr/bin/gnome-shell-extension-prefs` #To Debug the Extension Preferences (prefs)
     - log('Message'); #To log a message use log:
 
-## Gimp
+
+### ✅️ تغییرات مربوطه در زمینه بک‌گراند گنوم
+
+```shell
+gsettings set org.gnome.desktop.background picture-uri none
+gsettings set org.gnome.desktop.background primary-color '#e8e8e8'
+gsettings set org.gnome.desktop.background color-shading-type 'solid'
+gsettings list-keys org.gnome.desktop.background
+gsettings get org.gnome.desktop.background picture-options
+gsettings get org.gnome.desktop.background picture-uri
+
+```
+
+
+## 🅱️ Gimp
 
 * در گیمپ درحین رنگ‌آمیزی اگر شیفت را بگیری رنگ بک‌گراند را درنظر می‌گیرد(که شرت‌کات آن می‌شود کنترل و نقطه) و فورگران می‌شود شرت‌کات کنترل و کاما
 
-# 📍️ group:PackageManagements
+# 🅰️ group:PackageManagements
 
-## Debian
+## 🅱️ Debian
 
-### source.list
+### ✅️ source.list
 
 ```shell
 part1 part2 part3 part4
@@ -257,7 +276,7 @@ part1 part2 part3 part4
 
 ```
 
-### ✅️ apt
+### ✅️apt
 
 * [install] PackageName
     * install --fix-broken
@@ -272,7 +291,7 @@ part1 part2 part3 part4
 * sudo apt download $(sudo apt-cache depends php7.0 | awk '{print$2}'|grep -v ">"|grep -v "<") # DownloadAllDependency
 * apt --option Acquire::HTTP::Proxy="socks5h://127.0.0.1:9150" update
 
-### ✅️ apt-get
+### ✅️apt-get
 
 * [install] PackageName #نصب بسته
     * [install] PackageName --print-urls #نمایش آدرس دانلود بسته‌ها
@@ -288,15 +307,15 @@ part1 part2 part3 part4
 
 * sudo apt-get download php && apt-cache depends -i php |awk '/Depends:/ {print $2}' | xargs apt-get download # DownloadAllDependency
 
-### ✅️ apt-cache
+### ✅️apt-cache
 
 * apt-cache search PackageName #جستجوی بسته موردنظر
 
-### ✅️ ap-cdrom
+### ✅️ap-cdrom
 
 ap-cdrom install PackageName #نصب یا آپگرید یک بسته باپسوند دب از روی سی‌دی‌رام
 
-### ✅️ dpkg
+### ✅️dpkg
 
 * [-i PackageName.deb] # نصب آپگرید یک بسته
 * [-r <Package>] #حذف یک بسته نصب شده
@@ -308,17 +327,17 @@ ap-cdrom install PackageName #نصب یا آپگرید یک بسته باپسو�
 * [--contents PackageName.deb] # نمایش لیست فایل‌های مربوط به یک بسته که هنوز نصب نشده
 * [-S /bin/ping] # بررسی اینکه فایل موردنظر به کدام بسته تعلق دارد
 
-### ✅️ dpkg-query
+### ✅️dpkg-query
 
 * dpkg-query -L <PackageName> # نمایش تمام فایل‌ها و فولدرهای نصب شده از یک بسته
 * dpkg-query --list # نمایش لیست تمام برنامه‌های نصب شده با جزئیات آن
 
-### ✅️ dpkg-deb
+### ✅️dpkg-deb
 
 * dpkg-deb -c <PackageName>.deb # تمام فایل‌هایی که قرار است با این بسته در سیستم نصب شود
 * dpkg-deb -I FileName.deb # دریافت اطلاعات فایل به همراه تمامی دیپندنسی های این بسته(آی بزرگ)
 
-### LocalRepository[DVD]
+### ✅️LocalRepository[DVD]
 
 1. download DVD From Debian website
 2. sudo vim /etc/apt/sources.list
@@ -333,7 +352,7 @@ ap-cdrom install PackageName #نصب یا آپگرید یک بسته باپسو�
 7. lsblk
    dpkg -S /bin/ping # بررسی اینکه فایل موردنظر به کدام بسته تعلق دارد
 
-### LocalRepository[WEB]
+### ✅️LocalRepository[WEB]
 
 1. apt-get install build-essential apache2
 2. mkdir /var/www/html/packages /var/www/html/packages/amd64
@@ -349,9 +368,9 @@ ap-cdrom install PackageName #نصب یا آپگرید یک بسته باپسو�
 * CLIENT
     * vim /etc/apt/sources.list: `deb <http://192.168.1.150/packages/amd64/> /`
 
-## CentOS
+## 🅱️ CentOS
 
-### ✅️ yum
+### ✅️yum
 
 * yum whatprovides "*CA.pl" #چه بسته‌هایی این نام را درون خود دارند
 * yum -y install PackageName #دانلود و نصب یک بسته «آرپی‌ام»از مخازن
@@ -365,7 +384,7 @@ ap-cdrom install PackageName #نصب یا آپگرید یک بسته باپسو�
 * yum clean headers #پاک کردن همه فایل‌های هِدِر که سیستم برای حل پیش‌نیازها از آنها استفاده می‌کند
 * yum clean all #پاک کردن همه فایل‌های هِدِر و کش
 
-### ✅️ rpm
+### ✅️rpm
 
 * rpm -ivh Package.rpm #نصب یک بسته جدید
 * rpm -ivh nodeeps Package.rpm #نصب یک بسته بدون درنظر گرفتن بسته‌های پیش‌نیاز
@@ -391,7 +410,7 @@ ap-cdrom install PackageName #نصب یا آپگرید یک بسته باپسو�
 * rpm -Vp PackageName.rpm #جک کردن حجم و هش «ام‌دی‌فایو» و سایر مشخصات یک بسته «آرپی‌ام» نصب نشده
 * rpm -ivh /usr/src/redhat/RPMS/`arch`/PackageName.rpm #نصب یک بسته ساخته‌شده از سورس یک‌بسته «آرپی‌ام» مدنظر
 
-### EPEL
+### ✅️EPEL
 
 Epel: Extra Packages for Enterprise Linux
 
@@ -404,11 +423,11 @@ Epel: Extra Packages for Enterprise Linux
 * configFile
     * /etc/yum.repos.d/epel.repo
 
-### ✅️ rpmbuld
+### ✅️rpmbuld
 
 * rpmbuild -rebuild PackageName.src.rpm #ساختن یک فایل «آرپی‌ام» از روی سورس یک بسته «آرپی‌ام»
 
-### ✅️ rpm2cpio
+### ✅️rpm2cpio
 
 ```shell
 rpm2cpio PackageName | cpio -extract -make directories *bin* #استخراج فایل‌های اجرایی از یک بسته «آرپی‌ام»
