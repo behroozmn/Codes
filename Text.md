@@ -1112,6 +1112,17 @@ Command | logger -t salamm
 /etc/issue
 /etc/issue.net #در موارد شبکه نمایش داده می‌شود و باید در تنظیمات اس اس اچ این موضوع کانفیگ گردد
 ```
+## 🅱️ funCommands
+
+
+```shell
+1-while true; do echo "$(date '+%D %T' | toilet -f term -F border --gay)"; sleep 1; done #نمایش زمان در حالت ترمینال
+2- :(){ :|: & };:   #ForkBomb
+3-rev behrooz #برگرداندن متن
+4-cowsay
+```
+
+
 ## 🅱️ Notify-send
 
 ```shell

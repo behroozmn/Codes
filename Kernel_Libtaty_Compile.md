@@ -1,10 +1,10 @@
-# 📍️ COMPILE
+# 🅰️COMPILE
 
-## Compile Proces steps
+## 🅱️Compile Proces steps
 
 برنامه GCC یک برنامه نوشته شده به زبان C یا C++ را در ۴ مرحله اجرا می کند به عنوان مثال، `gcc -o hello.exe hello.c` به صورت زیر انجام می شود
 
-## 1️⃣️:PreProcessing[پیش‌پردازش]
+### 1️⃣️:PreProcessing[پیش‌پردازش]
 
 * فایل‌های پیش‌پردازش شده دارای پسوند “i.” هستند.
 * مشمول کلیه خطوط در زبان C است که با علامت # شروع می‌شوند.
@@ -41,7 +41,7 @@ printf("5 * 2 = %d", A);
 
 `gcc -DA=100 metech3.c -o output`
 
-## 2️⃣️:Compilling[کامپایل]
+### 2️⃣️:Compilling[کامپایل]
 
 * در این مرحله کد پیش‌پردازش شده کامپایل می‌شود یعنی کد زبان C به یک کد اسمبلی تبدیل می‌شود
 * زبان اسمبلی: یکی از زبان‌های سطح پایین محسوب می‌شود که در آن ما معمولاً مستقیماً با رجیسترهای پردازنده درگیر هستیم(عملیات ریاضی و منطقی از طریق کار روی رجیسترها)
@@ -52,7 +52,7 @@ printf("5 * 2 = %d", A);
 
 `gcc -S metech2.c -o assembled.s` # as -o hello.o hello.s → The assembler (as.exe) converts the assembly code into machine code
 
-## 3️⃣️:CreatingObjectFile[تبدیل کداسمبلی به زبان‌ماشین]
+### 3️⃣️:CreatingObjectFile[تبدیل کداسمبلی به زبان‌ماشین]
 
 * Object fileها:
     * کدهای صفر و یک هستند که توسط پردازنده قابل‌فهم و اجراست.(دستورالعمل اجرایی پردازنده)
@@ -64,7 +64,7 @@ printf("5 * 2 = %d", A);
 * یکی از راه‌های Close source کردن کد ، تبدیل آن به یک Object file است که عملاً قابلیت تغییر ندارد
 * در این مرحله کد اسمبلی به کد زبان ماشین(Object file) تبدیل می‌شود
 
-### Commands
+#### ✳️Commands
 
 `gcc -c [Name of Source Code] -o [Name of Output file]`
 `gcc -c metech2.c -o ObjectFile.o`
@@ -81,7 +81,7 @@ make install  #کپی فایل‌های کامپایل شده در مسیرها�
 nm ObjectFile.so # مشاهده توابع داخل یک آبجکت فایل
 ```
 
-### Create ObjectFile.so
+#### ✳️Create ObjectFile.so
 
 **مرحله اول:** یک فایل با پسوند سی ایجاد نمایید که حاوی کد زبان سی باشد
 
@@ -114,7 +114,7 @@ gcc main.c -o app -L. -lhello
 # output: Hello from .so file!
 ```
 
-## 4️⃣️:Linker[لینک‌کردن]
+### 4️⃣️:Linker[لینک‌کردن]
 
 * لینک کردن فرآیند ترکیب چندین فایل object و کتابخانه‌ها (libraries) برای ایجاد یک فایل اجرایی (executable)، کتابخانه به اشتراک گذاری شده (shared library) یا کتابخانه استاتیک (static library) است.
 * دو نوع لینک کردن داریم:
@@ -123,7 +123,7 @@ gcc main.c -o app -L. -lhello
 * تجمیع فایل‌های مستقل کنار هم که بعضا با هم ارتباط دارند(همانند includeهایی که در کد سبب فراخوانی یک فایل دیگر می‌شود)
 * لینکر یک مرحله ضروری در کامپایل است و فایل object تنها نیمی از کار است و بدون لینک کردن با کتابخانه‌ها،نمی‌توان یک برنامه کامل و اجراپذیر ساخت.
 
-### Commands
+#### ✳️ Commands
 
 در عمل، مردم اغلب مستقیماً از gcc برای لینک کردن استفاده می‌کنند، چون gcc خودش می‌داند چه کتابخانه‌ها و فایل‌های اولیه‌سازی را باید به ld بدهد و نیاز نیست مانند دستور ld آن را مستقیمان وارد نماییم
 
@@ -132,7 +132,7 @@ gcc main.c -o app -L. -lhello
 * این برنامه `ld` است که فایل‌های object (مثل hello.o) و کتابخانه‌ها (مثل libc.a) را با هم ترکیب می‌کند و یک فایل اجرایی می‌سازد.
 * عبارت `libraries`  را باید وارد نماییم یعنی کتابخانه‌های لازم (مانند libc.a یا libm.so) را هم به لینکر بدهیم.
 
-### example1
+#### ✳️ example1
 
 فرض کنید شما یک فایل C دارید به نام hello.c:
 
@@ -163,7 +163,7 @@ ld -o hello.exe hello.o /usr/lib/x86_64-linux-gnu/crt0.o -lc # لینک کردن
 * بخش /usr/lib/.../crt0.o: فایل اولیه‌سازی برنامه
 * بخش -lc: کتابخانه استاندارد C (libc.a)
 
-### example2
+#### ✳️ example2
 
 فرض کنید دو فایل داریم:فایل‌اول `main.c` که شامل تابع main و فایل‌دوم `helper.c`که شامل تابع addاست
 
@@ -203,29 +203,34 @@ gcc main.o helper.o -o program # لینک کردن آبجکت‌فایل‌ها
 # output: Sum: 12
 ```
 
-## Images
+### ✅️Images
+
+<div style="display: flex; flex-direction: column; align-items: center;">
+
 
 ![installSteps.jpg](_srcFiles/Images/install.jpg "installSteps.jpg")
-<br>
+
 ![Linker.jpg](_srcFiles/Images/Linker.jpg "Linker.jpg")
-<br>
+
 ![compilation.jpg](_srcFiles/Images/compilation.jpg "compilation.jpg")
-<br>
+
 ![CompilePhase.jpg](_srcFiles/Images/CompilePhase.jpg "CompilePhase.jpg")
 
-# 📍️ LIBRARY
+</div>
 
-## Library
+# 🅰️LIBRARY
+
+## 🅱️ Library
 
 * معمولا نام فایل های کتابخانه با پیشوند lib شروع می شوند و با پسوند .a یا so تمام می شوند. این موضوع در مورد تمام کتابخانه های استاندارد سی حتمی است
 * درزمان کامپایل(دربرنامه) هنگام لینک دادن به کتابخانه پسوند و پیشوند آورده نمی شود و خود کامپایلر میداند که باید آنها را اضافه کند
 
-## Static Library
+## 🅱️ Static Library
 
 * بیشتر با پسوند a دیده‌می‌شوند
 * یک بخش از برنامه هستند و به برنامه لینک شده است
 
-## Dynamic Library
+## 🅱️ Dynamic Library
 
 * بیشتر با پسوند *.so دیده‌می‌شوند که مخفف SharedObject می‌باشند
 * کتابخانه های اشتراکی در برنامه اجرایی ادغام نمی شوند اما به برنامه اجرایی متصل هستند.
@@ -237,13 +242,13 @@ gcc main.o helper.o -o program # لینک کردن آبجکت‌فایل‌ها
 معمولا نام فایل های کتابخانه با پیشوند lib شروع می شوند و با پسوند .a یا so تمام می شوند. این موضوع در مورد تمام کتابخانه های استاندارد سی حتمی است.
 درزمان کامپایل(دربرنامه) هنگام لینک دادن به کتابخانه پسوند و پیشوند آورده نمی شود و خود کامپایلر میداند که باید آنها را اضافه کند
 
-## Commands
+## 🅱️ Commands
 
 ```shell
 nm ObjectFile.so # مشاهده توابع داخل یک آبجکت فایل
 ```
 
-# 📍️ MAKEFILE
+# 🅰️MAKEFILE
 
 ## 1️⃣️.Concept
 
@@ -349,7 +354,7 @@ cc -o edit $(objects)
 * تقریباً تمام Makefileها متغیری با نامی شبیه به objects یا OBJECTS یا objs یا OBJS یا obj یا OBJ دارند که فهرستی از نام تمام آبجکت‌های مورد نیاز در پروژه را در خود نگه داشته‌است
 * متغیر می‌تواند شامل کاراکتر فاصله باشد. یعنی موارد را توسط فاصله از هم جدا نماید
 
-### 4.1.GeneralVariable
+### ✅️ GeneralVariable
 
 <div style="direction: rtl">
 
@@ -492,7 +497,7 @@ all: main.o
 main.o:
 ```
 
-### 4.2.Automatic variables[متغیرهای خودکار]
+### ✅️ Automatic variables[متغیرهای خودکار]
 
 متغیرهایی هستند که توسط make به صورت خودکار وقتی یک قاعده(rule) با یک هدف(target) و وابستگی‌های(prerequisites) آن مطابقت پیدا می‌کند ، تنظیم می‌شوند
 این متغیرها بسیار مفید هستند زیرا به شما اجازه می‌دهند بدون نوشتن دوباره مسیرها و نام فایل‌ها، در دستورات build استفاده کنید.
@@ -526,7 +531,7 @@ main.o: main.c defs.h
 * بنابراین
     * $? = main.c
 
-### 4.3.Examples
+### ✅️ Examples
 
 **Example1️⃣️:**
 
@@ -628,7 +633,7 @@ vpath %.c src
 vpath %.h include
 ```
 
-## 6️⃣️.Functions
+### 6️⃣️.Functions
 
 * همه انواع داده از نوع رشته است و عدد هم رشته محسوب می‌شود
 * باعلامت `$(n)` به آرگومان‌ها دسترسی امکان پذیر می‌شود
@@ -817,7 +822,7 @@ all:
 
 ## 7️⃣️.Conditions
 
-### 7.1.ifeq | ifneq
+### ✅️ feq | ifneq
 
 Equality Conditions
 
@@ -845,7 +850,7 @@ else
 endif
 ```
 
-### 7.2.ifdef | ifndef
+### ✅️ ifdef | ifndef
 
 Variable Definition Checks
 
@@ -869,7 +874,7 @@ else
 endif
 ```
 
-### 7.3.Pattern Matching
+### ✅️ Pattern Matching
 
 **$(filter pattern...,text)**
 
@@ -882,7 +887,7 @@ SOURCES = main.c util.c helper.cpp
         @echo "Skipping non-C file: $<")
 ```
 
-### 7.4.Conditional Variable Assignment
+### ✅️ Conditional Variable Assignment
 
 * = → Immediate value Assignment
     * از = وقتی نیاز دارید متغیرها دینامیک باشند
@@ -988,11 +993,139 @@ clean:
 * مورد $@: اسم هدف (target) فعلی است (مانند myprogram).
 * مورد $<: اولین وابستگی (dependency) است (مانند main.c در حین کامپایل main.o).
 
-# 📍️ Commands
+# 🅰️ BOOT
 
-## ✅️ dd
+* FromNetwork
+    * ابتدا باید در بایوس گزینه pxe را فعال نموده سپس توسط DHCP شبکه اخذ آی‌پی صورت گرفته و سپس از یک ایمیج سرور را بوت کنیم(توسط ایزوی winpe که کارش بالا و نصب ویندوز است)
+* USB-Ventoy
+    * [download](https://www.ventoy.net/en/download.html)
+    * `tar -xvzf ventoy-*.tar.gz`
+    * `cd ventoy-*`
+    * `sudo fdisk -l` یا `lsblk`
+    * `sudo ./Ventoy2Disk.sh -i /dev/sdX`
+* پس از روشن شدن کامپیوتر، BIOS یا UEFI (در سیستم‌های جدیدتر) به دنبال بوت لودر در دیسک می‌گردد. بوت لودر سپس هسته سیستم‌عامل را بارگذاری می‌کند و به آن کنترل می‌دهد.
 
-### Switchs
+## 🅱️ UEFI(Unified Extensible Firmware Interface)
+
+* UEFI
+    * تکنولوژی که بتواند از هرکجای هارد بوت نماید.
+    * قابلیت لود مستقیم کرنل بدون بوت‌لودر[یعنی به یکباره کل سیستم عامل را بدون نقش بوت لودر ، بوت نماید]
+    * پشتیبانی از بوت‌لودر
+    * `/boot/efi` : Directory of UEFI
+* ESP یا Efi System Partition: پارتیشن استفاده شونده در تکنولوژی UEFI که معمولا FAT است و برای اینکه بتواند کرنل یا بوت لودر را فراخوانی نماید
+    * از نسخه کرنل 3.3.0 به بعد قابلیت بوت شدن توسط UEFI قرار داده شد ولی استفاده نمی‌شود و ترجیح بر قرار دادن گراب در UEFI است تا گراب مدیریت چندین سیستم عامل را انجام دهد
+
+## 🅱️ RamDisk
+
+* initrd(initial ramdisk)
+* فضای رم که بعنوان یک دیسک موقت شناخته می‌شود
+* فایل‌های مقدماتی که برای بالا آمدن کرنل نیاز دارد درون آن قرار می‌گیرد. مثل: ۱-خواندن درایور دیسک که از آنجا می‌خواند
+* ملاحظات بالا آمدن کرنل نظیر firmware و غیره را handle می‌نماید.
+* هر image کرنل یک initrd برای خودش دارد
+
+```
+cat /boot/grub/grub.cfg
+menuentry 'Debian GNU/Linux, with Linux 4.19.0-16-amd64......'{....
+initrd /boot/initrd.img-4.19.0-16-amd64
+}
+```
+
+## 🅱️ SecureBoot
+
+* فقط سیستم‌عامل‌های sign شده قابلیت بالا آمدن داشته باشند و ویروس‌ها نتوانند بوت شوند
+* ویندوز چون ثابت است sign دارد اما کرنل لینوکس متغیر است پس یک miniBootLoader ساخته شده که sign است
+* به secureBoot میگوییم MiniBootLoader را بوت کن و سپس آنها لینوکس را بوت خواهند کرد
+
+![boot-bootseq1.jpg](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/boot-bootseq1.jpg "boot-bootseq1.jpg")
+
+# 🅰️ GRUB(Grand Unified Bootloader)
+
+* BootLoader: بوت لودر مسئول بارگذاری هسته سیستم‌عامل (Kernel) به حافظه و انتقال کنترل به آن است. این برنامه معمولاً در اولین مرحله از فرآیند بوت اجرا می‌شود.
+    * در سیستم‌های با جدول پارتیشن GPT، بوت لودر معمولاً در پارتیشن EFI (در سیستم‌های UEFI) یا در پارتیشن خاصی که برای بارگذاری سیستم‌عامل اختصاص داده شده است، ذخیره می‌شود.
+    * بوت لودر به جدول پارتیشن مراجعه می‌کند تا بفهمد کدام پارتیشن حاوی سیستم‌عامل است. این اطلاعات به بوت لودر اجازه می‌دهد تا به درستی پارتیشن را شناسایی و بارگذاری کند.
+    * گراب یکی از محبوب‌ترین و قدرتمندترین بوت لودرها در سیستم‌عامل‌های لینوکس است.
+    * MiniBootLoader:
+        1. shim(create for fedora)
+        2. preLoader(create by LinuxFoundation)
+* recoveryMode: همان حالت singleMode است
+    * برای بالا آمدن سیستم در وضعیت single Mode: بجای عدد ۱ در آخر خط شروع شونده با vmlinuz می‌توانیم از کلمه single نیز استفاده نماییم
+
+
+* URLs
+    * [URL](https://www.linux.com/training-tutorials/how-rescue-non-booting-grub-2-linux)
+    * [URL](https://askubuntu.com/questions/232215/stuck-in-grub-rescue-mode)
+    * [URL](https://www.gnu.org/software/grub/manual/grub/grub.html)
+    * [URL](https://www.gnu.org/software/grub/manual/grub/grub.html)
+    * [URL](https://unix.stackexchange.com/questions/329926/grub-starts-in-command-line-after-reboot)
+    * [URL](https://www.cyberciti.biz/faq/linux-how-to-uninstall-grub)
+    * [URL](https://www.gnu.org/software/grub/manual/grub/grub.html#linux)
+    * [URL](https://www.gnu.org/software/grub/manual/grub/html_node/Invoking-grub_002dinstall.html#Invoking-grub_002dinstall)
+    * [URL](https://www.gnu.org/software/grub/manual/grub/html_node/Installing-GRUB-using-grub_002dinstall.html)
+
+```
+rootnoverify (hd0,0) #برور از پارتیشن اول هارد اول بوت کن و کاری نداشته باش که چه ملاحظاتی دارد
+
+/boot/grub/grub.cfg #config file
+/etc/grub # Common variables and configuration who ussing in grub.cfg
+
+grub-install /dev/sda # نصب گراب در یک هارد
+grub-mkconfig # probe all over hard and write find OS on output
+grub-mkconfig > /boot/grub/grub.cfg # # probe all over hard and write find OS on /boot/grub/grub.cfg
+grub2-mkconfig -o /boot/grub2/grub.cfg
+```
+
+## 🅱️ Get Bash
+
+```shell
+press e
+linux /boot/vmlinuz-4.8.0 root=/dev/sda7 ro init=/bin/bash
+ctrl+x
+su root
+mount -rw -o remount /
+```
+
+## 🅱️ change Background
+
+```shell
+sudo vim /etc/default/grub
+GRUB_BACKGROUND="~/Pictures/grass.png"
+sudo update-grub
+sudo grub-mkconfig > /boot/grub/grub.cfg
+```
+
+## 🅱️ PasswordProtected
+
+1. generate password hash
+2. Define GRUB user (milosz in the following example) using generated hash and declare it as a superuser inside /etc/grub.d/40_custom configuration file.
+3. Install modified configuration and test it afterward
+
+```shell
+#1)
+grub-mkpasswd-pbkdf2
+Enter password: ********
+Reenter password: ********
+PBKDF2 hash of your password is grub.pbkdf2.sha512.10000.800E[..].79C[..]
+
+#2)
+ #!/bin/sh
+exec tail -n +3 $0
+# This file provides an easy way to add custom menu entries. Simply type the
+# menu entries you want to add after this comment. Be careful not to change
+# the 'exec tail' line above.
+# define superusers
+set superusers="milosz"
+#define users
+password_pbkdf2 milosz grub.pbkdf2.sha512.10000.800EF[..].7977C[..]
+
+#3)
+sudo grup-update
+```
+
+# 🅰️ Commands
+
+## 🅱️ dd
+
+### ✅️ Switchs
 
 * if: Input File
     * if=IMAGE.img
@@ -1018,7 +1151,7 @@ clean:
         * dd if=textfile.ascii of=textfile.ebcdic conv=ebcdic
 * count: تعداد انجام عملیات
 
-### Examples
+### ✅️ Examples
 
 * dd if=/dev/sda1 of=/dev/sdb1 bs=4096 conv=noerror,sync
     * Note: برای کپی یک پارتیشن رو یک پارتیشن دیگر از دستور زیر استفاده می کنیم
@@ -1027,7 +1160,7 @@ clean:
 * dd if=debian.iso of=/dev/sda bs=4M conv=fdatasync status=progress # ساخت یک فلش با قابلیت بوت
 * dd if=/dev/da0 conv=sync,noerror bs=128K | gzip -c | ssh behrooz@server1 dd of=centos-core-7.gz # نبودن فضا کافی و ذخیره در ریموت
 
-## ✅️ gcc
+## 🅱️ gcc
 
 * عبارت GCC مخفف GNU Compiler Collection می‌باشد
 * توسط ریچارد استالمن توسعه داده شده است
@@ -1038,7 +1171,7 @@ clean:
 
 **CommandSyntax:** gcc Options Files
 
-### options:
+### ✅️ options:
 
 * [-o Output]: ایجاد فایل باینتری خروجی
 * [-D<NameofConstant>=Value]: بجای تعریف ثابت‌ها تحت عنوان «دیفاین» مقادیر را درهنگام کامپایل مقدار دهی کرد
@@ -1051,7 +1184,7 @@ clean:
 gcc main.c -o outpu_bin_file
 ```
 
-### Environment Variables
+### ✅️ Environment Variables
 
 [//]: # (Todo: Need to Review)
 GCC uses the following environment variables:
@@ -1063,17 +1196,17 @@ GCC uses the following environment variables:
 * **LIBRARY_PATH**: For searching library-paths for link libraries.
     * It is searched after paths specified in -L<dir> options.
 
-## ✅️ g++
+## 🅱️ g++
 
 Syntax: g++ [options] [files]
 
-### options
+### ✅️ options
 
 * [-o]: specifies the output executable filename.
 * [-g]: generates additional symbolic debuggging information for use with gdb debugger.
 * [-Wall]: prints "all" warning messages. نمایش تمام هشدار ها
 
-### Examples
+### ✅️ Examples
 
 ```shell
 g++ -o myCode.exe file.cpp  # تک فایل
@@ -1081,9 +1214,9 @@ g++ -o myCode file1.cpp file2.cpp # چند فایل
 g++ -c file1.cpp && g++ -c file2.cpp  &&   g++ -o myprog.exe file1.o file2.o # چند فایل
 ```
 
-## ✅️ udevadm
+## 🅱️ udevadm
 
-### 1.Concepts
+### ✅️ Concepts
 
 * در سیستم‌عامل لینوکس مبحث udev عاملی برای مدیریت سیستم و دستگاه است که به طور خودکار دستگاه‌های متصل به سیستم را شناسایی و پیکربندی می‌کند.
 * در سیستم‌عامل‌های لینوکسی دستور udevadm برای فعال‌سازی مجدد رویدادهای udev استفاده می‌شود
@@ -1093,9 +1226,9 @@ g++ -c file1.cpp && g++ -c file2.cpp  &&   g++ -o myprog.exe file1.o file2.o # �
     * حاصل نمودن اطمینان از صحت إعمال تغییرات در پیکربندی دستگاه‌ها یا قوانین udev
     * تغیین کلاس خاصی از دیوایس‌ها(مثلا فقط بلاک‌ها و غیره) که بخواهیم تحت تأثیر قرار بگیرند با سوییچ subsystem-match
 
-### 2.Switch
+### ✅️ Switch
 
-### trigger
+### ✅️ trigger
 
 udevadm **trigger** [options] [devpath(such as /dev/sda)|file|unit]
 
@@ -1130,7 +1263,7 @@ udevadm **trigger** [options] [devpath(such as /dev/sda)|file|unit]
         * برای مشاهده لیست کامل(البته وابسته به توزیع لینوکس و سخت‌افزار) از دستور زیر استفاده نمایید
             * ls /sys/class/
 
-### 3.info
+### ✅️ info
 
 Query the udev database for device information
 
@@ -1142,7 +1275,7 @@ udevadm **info** [options] [devpath(such as /dev/sda)|file|unit]
     * توصیه‌می‌شوددر ادامه دستور زیر را بزنید
     * sudo udevadm trigger /dev/sdb
 
-### 4.Examples
+### ✅️ Examples
 
 * `udevadm trigger  --subsystem-match=block --action=add $disk`
 * `sudo udevadm info /dev/sda`
@@ -1153,7 +1286,7 @@ udevadm **info** [options] [devpath(such as /dev/sda)|file|unit]
   ```
 * `sudo udevadm info /dev/sdb`
 
-## ✅️ uname
+## 🅱️ uname
 
 نمایش اطلاعات کرنل و سیستمی
 

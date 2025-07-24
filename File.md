@@ -1,6 +1,6 @@
 <div dir="rtl">
 
-# Concepts
+# 🅰️Concepts
 
 * فایل: مجموعه‌ای از سری داده که به‌صورت یک واحد ذخیره‌سازی(در حافظه اصلی یا جانبی یا حافظه موقت) شوند
   *RawData:
@@ -49,7 +49,13 @@ rename "s/jpeg$/jpg/" *.jpeg  # convert all jpeg to jpg
 
 </div>
 
-# SpecialAttributes
+# 🅰️Accessibility
+
+- در نسخه لینوکس‌های کوچک دستور adduser وجود دارد(توزیع لینوکس alpine) و دستور useradd دستور بزرگتری و با ابزارهای بیشتری است.
+
+
+
+# 🅰️SpecialAttributes
 
 * a: تنها در حالت اضافه شدن(الحاقی) قابلیت تغییر خواهد داشت.یعنی فایل کم نمی‌شود ولی زیاد می‌شود
 * c: اجازه فشرده‌سازی و بازکردن خودکار یک فایل را به کرنل می‌دهد
@@ -66,7 +72,7 @@ chattr +a file.txt
 chattr -a file.txt
 ```
 
-# Permission
+# 🅰️Permission
 
 ```shell
 # r → Read
@@ -78,7 +84,7 @@ chattr -a file.txt
 # a → ALL
 ```
 
-## SUID
+## 🅱️SUID
 
 اگر فایلی این دسترسی را داشته باشد یعنی استفاده از این فایل با دسترسی مشابه روت صورت خواهد گرفت
 
@@ -112,7 +118,7 @@ chmode u=rw,g=rwx,o=r file.txt
 chmod u+x file.txt → add EXECUTE to USER group
 ```
 
-# Backup
+# 🅰️Backup
 
 * برای بک‌آپ گرفتن مهم است که دیتای خود را دسته‌بندی کرده باشید
 * انواع بک‌آپ گیری
@@ -121,7 +127,7 @@ chmod u+x file.txt → add EXECUTE to USER group
     * Differential: نسبت به یک نسخه خاص هرچی تفاوت دارد را بک‌آپ می‌گیرد
     * snapshot: همانند differential است
 
-## Apps
+## 🅱️ Apps
 
 * backula یک برنامه فوق‌العاده قوی برای بک آپ از هر چیزی است که هم کامند و هم دسکتاپ و هم وب ارائه داده است
 
@@ -131,7 +137,7 @@ cp /Path/FileName{,.Backup} #CreateBackup
 
 ---
 
-### rsync
+### ✅️rsync
 
 سوییج‌های دستور آرسینک
 
@@ -145,7 +151,7 @@ rsync -avh /home/behrooz/dire /tmp
 rsync -avh /home/behrooz/dire behrooz@192.168.10.88:/home/SecondCopy
 ```
 
-## Archive and Compressing
+## 🅱️ Archive and Compressing
 
 ```shell
 tar -czvf Directory.tar.gz Directory --remove-files
@@ -155,7 +161,7 @@ tar Uf File.tar Dir #آپدیت کن از فایل‌های جدید
 
 ```
 
-# Tape
+# 🅰️Tape
 
 * برای ذخیره‌سازی بک‌آپ از نوار استفاده می‌شود
 * opration در دستور mt موارد زیر را شامل می‌شود:
@@ -199,7 +205,7 @@ tar xf /dev/st0 /home/restorMyData #بازیابی بک‌آپ از نوار
 
 </div>
 
-# ExtensionType OR FileType
+# 🅰️ExtensionType OR FileType
 
 * [*.so]: فایل‌های کتابخانه‌ای داینامیک در لینوکس
     * فایل‌های SharedObject در لینوکس dynamic library می‌باشند که معادل DLL در ویندوز هستند
@@ -214,15 +220,15 @@ tar xf /dev/st0 /home/restorMyData #بازیابی بک‌آپ از نوار
 
 </div>
 
-# FileNames
+# 🅰️FileNames
 
-## 📍️ /sbin/init
+## 📁️ /sbin/init
 
 * اولین برنامه ایکه برای اجرای دیگر پردازه‌ها به اجرا درمی‌آید
 * اول می‌رود سراغ /sbin/init اگرنبود می‌رود سراغ /etc/init و اگر نبود میرود سراغ /bin/sh
 * سه برنامه برای initiate کردن پردزه ‌ها وجود دارد:۱-sysV که سیستم۵ هم نامیده می‌شود ۲-systemdجدید است۳-upstart برای اوبونتو بود که استفبال نشد
 
-## 📍️ /proc
+## 📁️ /proc
 
 تمام محتویات مسیر آن توسط کرنل[kernel] پر می‌شود
 
@@ -254,7 +260,7 @@ tar xf /dev/st0 /home/restorMyData #بازیابی بک‌آپ از نوار
 
 
 
-# 📍️ Command
+# 🅰️Command
 
 ## ✅️ fio
 
