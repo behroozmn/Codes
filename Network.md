@@ -10,6 +10,7 @@
 * TTL(TimeToLeave)
     * یکی از پارامترهای پینگ که وقتی از هر روتر عبور کند یک عدد از ttl کاهش پیدا خواهد کرد
     * معمولا روترها از ۳۰ تا هاب بیشتر که ttl کم شود بسته شبکه را drop می‌کنندمقدار ttl در دیوایس‌ها متفاوت است:۱-دیوایس‌های اپن‌سورس 64 ۲-دیوایس‌های ماکروسافتی128 ۳-دیوایس‌های بر پایه سیسکو ۲۵۵ می‌باشند
+* در لینوکس سوکت‌ها هم نوعی فایل هستند(در لینوکس همه چی فایل است)
 
 ```shell
 iftop
@@ -18,6 +19,12 @@ nload
 tcpflow
 
 ```
+
+![IP.png](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/IP.png "IP.png")
+![fundamentalip-ipv4oct1.jpg](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/fundamentalip-ipv4oct1.jpg "fundamentalip-ipv4oct1.jpg")
+![fundamentalip-ipv6oct1.jpg](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/fundamentalip-ipv6oct1.jpg "fundamentalip-ipv6oct1.jpg")
+![fundamentalip-ositcp1.jpg](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/fundamentalip-ositcp1.jpg "fundamentalip-ositcp1.jpg")
+![MTU2.jpg](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/MTU2.jpg "MTU2.jpg")
 
 # 🅰️ WEB
 
@@ -235,13 +242,10 @@ torsocks curl https://showip.net # Test Ip Adderess
 
 # 🅰️ SNMP
 
-
 ## 🅱️ مفاهیم و نکات عمومی
 
 * برای تنظیم اطلاعات community باید فایل snmpd.conf اصلاح شود[فایل snmp.conf را دستکاری نکنید]
-* 
-
-
+*
 
 ```shell
 # on server 10.0.20.7 set this config:
@@ -253,8 +257,7 @@ sudo vim /etc/snmp/snmpd.conf
 systemctl restart snmpd
 ```
 
-* rocommunity  public default -V systemonly #سبب محدود شدن تعداد رکوردهای مانیتور شده از حدود ۷هزارتا به ۳۰ عدد از موارد خیلی عمومی
-
+* rocommunity public default -V systemonly #سبب محدود شدن تعداد رکوردهای مانیتور شده از حدود ۷هزارتا به ۳۰ عدد از موارد خیلی عمومی
 
 # 🅰️ Commands
 
@@ -736,6 +739,7 @@ nslookup <name>
 ```shell
 traceroute google.com
 ```
+
 ## 🅱️ wget
 
 - [-b] → قرار دادن پروسه دانلود در بک‌گراند و عدم نمایش و این معمولا برای فایل‌های بزرگ کاربرد دارد
@@ -771,6 +775,28 @@ traceroute google.com
 - `wget --mirror --convert-links --page-requisites --no-parent -P documents/websites/ URL` #می توان از دستور wget برای دانلود محتوای کل سایت استفاده کرد
 - `wget -r -np -R "index.html*" https://shop.hemat-elec.ir/wp-content/themes/irankala/assets/fonts` # Note: دانلود فایل های مشخص شده
     - wget -r -A.pdf
+
+## 🅱️ Hosname
+
+```shell
+#show
+hostnamectl #Show change config
+hostname
+hostname -s #displayed the computer short name
+hostname -f #displays the computer FQDN in the network
+cat /etc/hostname
+
+#Change
+روش اول:#
+hostnamectl set-hostname NAME
+
+روش دوم:#
+vim /etc/hosts #Add new hostname
+vim /etc/hostname 
+vim /etc/sysconfig/network
+hostname XXXXX
+/etc/init.d/hostname.sh start
+```
 
 # 🅰️ Connection
 
