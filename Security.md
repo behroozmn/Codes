@@ -152,7 +152,7 @@ nc -lvp 4444 # Attacker(10.0.20.206)
 
 ---
 
-#### ✳️ proxy
+#### ✳❇️ proxy
 
 <div dir="ltr">
 
@@ -183,7 +183,7 @@ nc -lvp 4444 # Attacker(10.0.20.206)
 
 ---
 
-#### ✳️ proxy
+#### ❇️ proxy
 
 <div dir="ltr">
 

@@ -90,7 +90,7 @@ view-timeline
 
 ### ✅️ border-*
 
-#### ✳️ border-bottom
+#### ❇️ border-bottom
 
 ```css
 li:last-child {
@@ -100,7 +100,7 @@ li:last-child {
 
 ### ✅️ margin-*
 
-#### ✳️ margin
+#### ❇️ margin
 
 ```css
 p {
@@ -110,7 +110,7 @@ p {
 
 ### ✅️ text-*
 
-#### ✳️ text-decoration
+#### ❇️ text-decoration
 
 * مورد none: سبب می‌شود که با نگه داشتن روی لینک زیر آن لینک خط نیافتد
 
@@ -122,7 +122,7 @@ p {
 
 ### ✅️ transition-*
 
-#### ✳️ transition[[url]](https://developer.mozilla.org/en-US/docs/Web/CSS/transition)
+#### ❇️ transition[[url]](https://developer.mozilla.org/en-US/docs/Web/CSS/transition)
 
 ```css
 li a {
@@ -158,7 +158,7 @@ header nav {
 }
 ```
 
-#### ✳️ flex
+#### ❇️ flex
 
 > در حالت عادی دو اِلِمان ۱-تصویر ۲-محتوی(عنوان و متن) زیر هم قرار می‌گیرند
 
@@ -198,7 +198,7 @@ header nav {
 
 ### ✅️ list-*
 
-#### ✳️ list-style-type
+#### ❇️ list-style-type
 
 ```css
 ul {
@@ -208,7 +208,7 @@ ul {
 
 ### ✅️ font-*
 
-#### ✳️ font-family
+#### ❇️ font-family
 
 ```css
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,900&display=swap');
@@ -228,7 +228,7 @@ p {
 
 ### ✅️ box-*
 
-#### ✳️ box-shadow[[url]](https://developer.mozilla.org/en-US/docs/Web/CSS/box-shadow)
+#### ❇️ box-shadow[[url]](https://developer.mozilla.org/en-US/docs/Web/CSS/box-shadow)
 
 ```css
 p {
