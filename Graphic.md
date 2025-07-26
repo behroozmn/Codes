@@ -58,5 +58,5 @@ Ignoring XDG_SESSION_TYPE=wayland on Gnome. Use QT_QPA_PLATFORM=wayland to run o
 
 
 
-![1.jpg](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/1.jpg "1.jpg")
-![dvi-port.jpg](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/dvi-port.jpg "dvi-port.jpg")
+![1.jpg](./_srcFiles/Images/1.jpg "1.jpg")
+![dvi-port.jpg](./_srcFiles/Images/dvi-port.jpg "dvi-port.jpg")

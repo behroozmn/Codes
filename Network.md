@@ -20,11 +20,11 @@ tcpflow
 
 ```
 
-![IP.png](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/IP.png "IP.png")
-![fundamentalip-ipv4oct1.jpg](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/fundamentalip-ipv4oct1.jpg "fundamentalip-ipv4oct1.jpg")
-![fundamentalip-ipv6oct1.jpg](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/fundamentalip-ipv6oct1.jpg "fundamentalip-ipv6oct1.jpg")
-![fundamentalip-ositcp1.jpg](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/fundamentalip-ositcp1.jpg "fundamentalip-ositcp1.jpg")
-![MTU2.jpg](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/MTU2.jpg "MTU2.jpg")
+![IP.png](./_srcFiles/Images/IP.png "IP.png")
+![fundamentalip-ipv4oct1.jpg](./_srcFiles/Images/fundamentalip-ipv4oct1.jpg "fundamentalip-ipv4oct1.jpg")
+![fundamentalip-ipv6oct1.jpg](./_srcFiles/Images/fundamentalip-ipv6oct1.jpg "fundamentalip-ipv6oct1.jpg")
+![fundamentalip-ositcp1.jpg](./_srcFiles/Images/fundamentalip-ositcp1.jpg "fundamentalip-ositcp1.jpg")
+![MTU2.jpg](./_srcFiles/Images/MTU2.jpg "MTU2.jpg")
 
 # 🅰️ WEB
 
@@ -104,7 +104,7 @@ tcpflow
 * Port: 443
 * پروتکل http که با ssl امنیت آن افزایش یافته است
 
-![httpsBasicSession.png](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/httpsBasicSession.png "httpsBasicSession.png")
+![httpsBasicSession.png](./_srcFiles/Images/httpsBasicSession.png "httpsBasicSession.png")
 
 ## 🅱️ CGI(Common Gateway Interface)
 
@@ -187,7 +187,7 @@ exit 0
 ```
 
 > تصویر نمایی از حالت قدیمی را نمایش میدهد
-![cgi.jpg](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/cgi.jpg "cgi.jpg")
+![cgi.jpg](./_srcFiles/Images/cgi.jpg "cgi.jpg")
 
 # 🅰️ CISCO
 
@@ -205,10 +205,10 @@ PacketTracer: نرم‌افزار سیسکو برای شبیه سازی محیط
 * StackableSwitch:
 * Port Group: یک مفهوم در مجازی‌سازی شبکه است که به مجموعه‌ای از پورت‌های شبکه مجازی اشاره دارد. این گروه به ماشین‌های مجازی (VMs) اجازه می‌دهد تا به یکدیگر و به شبکه‌های خارجی متصل شوند.
 
-![trunk.jpg](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/trunk.jpg "trunk.jpg")
+![trunk.jpg](./_srcFiles/Images/trunk.jpg "trunk.jpg")
 
 > StackableSwitch
-![switch-stack.png](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/switch-stack.png "switch-stack.png")
+![switch-stack.png](./_srcFiles/Images/switch-stack.png "switch-stack.png")
 
 # 🅰️ Proxy
 

@@ -330,7 +330,7 @@ nc <IPserver1> 55000 < File.txt # server2
 
 مثال۱: در پروسه لاگین(یعنی یک اپلیکیشن بنام login که منظور همان پروسه لاگین لینوکس است) که از نوع uthentication کردن کاربران و بررسی دسترسی است از نوع required یعنی حتما باید بتواند لاگین کند وگرنه fail برمیگرداند و از ماژول pam_unix.so استفاده می‌گردد یعنی باید براساس فایل /etc/passwd و /etc/shadow عمل authenticate را انجام بده
 
-![PAM.png](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/PAM.png "PAM.png")
+![PAM.png](./_srcFiles/Images/PAM.png "PAM.png")
 
 # 🅰️ iptable
 
@@ -434,8 +434,8 @@ sudo firewall-cmd --info-zone public
 
 [URL](https://www.tecmint.com/install-configure-firewalld-in-centos-ubuntu)
 
-![route-netfilter.jpg](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/route-netfilter.jpg "route-netfilter.jpg")
-![iptable.png](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/iptable.png "iptable.png")
+![route-netfilter.jpg](./_srcFiles/Images/route-netfilter.jpg "route-netfilter.jpg")
+![iptable.png](./_srcFiles/Images/iptable.png "iptable.png")
 
 
 </div>

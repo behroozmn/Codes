@@ -16,8 +16,8 @@
     - Acceptance Test
     - Production
 
-![CICD3.png](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/CICD3.png "CICD3.png")
-![CICD2.jpg](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/CICD2.jpg "CICD2.jpg")
+![CICD3.png](./_srcFiles/Images/CICD3.png "CICD3.png")
+![CICD2.jpg](./_srcFiles/Images/CICD2.jpg "CICD2.jpg")
 
 # 🅰️ JIRA
 

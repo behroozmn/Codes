@@ -28,7 +28,7 @@
 <div style="display: flex; flex-direction: column; align-items: center;">
 
 
-![dhtml.png](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/dhtml.png "dhtml.png")
+![dhtml.png](./_srcFiles/Images/dhtml.png "dhtml.png")
 
 </div>
 

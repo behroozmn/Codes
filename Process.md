@@ -143,4 +143,4 @@ ss -utlpn | grep <PIDnumber>
 
 
 
-![DistributePic.png](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/DistributePic.png "DistributePic.png")
+![DistributePic.png](./_srcFiles/Images/DistributePic.png "DistributePic.png")

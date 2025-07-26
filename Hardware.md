@@ -72,8 +72,8 @@ pmap <id of process> #دقیقا از چه مموری‌هایی درحال اس
 sudo ipcs #نمایش قطعات رم که برنامه‌ها به صورت اشتراکی از آن استفاده می‌کنند
 ```
 
-![Memory.jpg](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/Memory.jpg "Memory.jpg")
-![MemoryStackOverFlow.jpg](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/MemoryStackOverFlow.jpg "MemoryStackOverFlow.jpg")
+![Memory.jpg](./_srcFiles/Images/Memory.jpg "Memory.jpg")
+![MemoryStackOverFlow.jpg](./_srcFiles/Images/MemoryStackOverFlow.jpg "MemoryStackOverFlow.jpg")
 
 # 🅰️ Battery
 

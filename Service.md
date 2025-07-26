@@ -2,7 +2,7 @@
 
 # 🅰️ Init
 
-![systemd-vs-sysVinit-cheatsheet.jpg](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/systemd-vs-sysVinit-cheatsheet.jpg "systemd-vs-sysVinit-cheatsheet.jpg")
+![systemd-vs-sysVinit-cheatsheet.jpg](./_srcFiles/Images/systemd-vs-sysVinit-cheatsheet.jpg "systemd-vs-sysVinit-cheatsheet.jpg")
 
 ## 🅱️ SingleUserMode(Rescue)
 
@@ -1147,7 +1147,7 @@ midnight #→ (same as daily)
     * export DISKPLAY=:0 && COMMAND
     * export DISKPLAY=:0.0&& COMMAND
 
-![Crontab.png](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/Crontab.png "Crontab.png")
+![Crontab.png](./_srcFiles/Images/Crontab.png "Crontab.png")
 
 ## 🅱️ At
 

@@ -1036,7 +1036,7 @@ initrd /boot/initrd.img-4.19.0-16-amd64
 * ویندوز چون ثابت است sign دارد اما کرنل لینوکس متغیر است پس یک miniBootLoader ساخته شده که sign است
 * به secureBoot میگوییم MiniBootLoader را بوت کن و سپس آنها لینوکس را بوت خواهند کرد
 
-![boot-bootseq1.jpg](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/boot-bootseq1.jpg "boot-bootseq1.jpg")
+![boot-bootseq1.jpg](./_srcFiles/Images/boot-bootseq1.jpg "boot-bootseq1.jpg")
 
 # 🅰️ GRUB(Grand Unified Bootloader)
 

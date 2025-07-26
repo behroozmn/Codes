@@ -74,8 +74,8 @@ Web Open Font Format 	 font/woff
 Web Open Font Format2    font/woff2
 ```
 
-![SanAndSansSerifs.png](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/SanAndSansSerifs.png "SanAndSansSerifs.png")
-![Kerning.png](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/Kerning.png "Kerning.png")
+![SanAndSansSerifs.png](./_srcFiles/Images/SanAndSansSerifs.png "SanAndSansSerifs.png")
+![Kerning.png](./_srcFiles/Images/Kerning.png "Kerning.png")
 
 # 🅰️ Commands
 
