@@ -330,7 +330,7 @@ sudo mount -t tmpfs -o size=12M,mode=700 <MountPoint>
 
 <div style="display: flex; flex-direction: column; align-items: center;">
 
-![ObjectStorage-vs-Block-Storage-Services.jpg](_srcFiles/Images/ObjectStorage-vs-Block-Storage-Services.jpg "ObjectStorage-vs-Block-Storage-Services.jpg")
+![ObjectStorage-vs-Block-Storage-Services.jpg](./_srcFiles/Images/ObjectStorage-vs-Block-Storage-Services.jpg "ObjectStorage-vs-Block-Storage-Services.jpg")
 
 </div>
 
@@ -365,10 +365,10 @@ echo 1 | sudo tee /sys/class/block/sdX/device/rescan
 
 <div style="display: flex; flex-direction: column; align-items: center;">
 
-![MBR.png](_srcFiles/Images/MBR.png "MBR.png")
-![createpartition-mbrpart2.jpg](_srcFiles/Images/createpartition-mbrpart2.jpg "createpartition-mbrpart2.jpg")
-![boot-mbr2.jpg](_srcFiles/Images/boot-mbr2.jpg "boot-mbr2.jpg")
-![bootloader-mbr2.jpg](_srcFiles/Images/bootloader-mbr2.jpg "bootloader-mbr2.jpg")
+![MBR.png](./_srcFiles/Images/MBR.png "MBR.png")
+![createpartition-mbrpart2.jpg](./_srcFiles/Images/createpartition-mbrpart2.jpg "createpartition-mbrpart2.jpg")
+![boot-mbr2.jpg](./_srcFiles/Images/boot-mbr2.jpg "boot-mbr2.jpg")
+![bootloader-mbr2.jpg](./_srcFiles/Images/bootloader-mbr2.jpg "bootloader-mbr2.jpg")
 
 </div>
 
@@ -430,8 +430,8 @@ lvmcreate -L 100m -s -n <Name> /dev/VG>/<LV>lvscan #اسنپ‌شات باید �
 
 <div style="display: flex; flex-direction: column; align-items: center;">
 
-![LVM.jpg](_srcFiles/Images/LVM.jpg "LVM.jpg")
-![disklayout-lvmdetails2.jpg](_srcFiles/Images/disklayout-lvmdetails2.jpg "disklayout-lvmdetails2.jpg")
+![LVM.jpg](./_srcFiles/Images/LVM.jpg "LVM.jpg")
+![disklayout-lvmdetails2.jpg](./_srcFiles/Images/disklayout-lvmdetails2.jpg "disklayout-lvmdetails2.jpg")
 
 
 </div>
@@ -444,19 +444,19 @@ lvmcreate -L 100m -s -n <Name> /dev/VG>/<LV>lvscan #اسنپ‌شات باید �
 
 ---
 > کابل سَس مینی اِچ‌دی اینترنال
-![کابل سَس مینی اِچ‌دی اینترنال](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/SAS-MiniHD-cable.png "SAS-MiniHD-cable.png")
+![کابل سَس مینی اِچ‌دی اینترنال](./_srcFiles/Images/SAS-MiniHD-cable.png "SAS-MiniHD-cable.png./")
 
 ---
 > پورت سَس مینی اِچ‌دی‌ اینترنال که در روی کارت (اَدَپتِر) سوار شده است
-![پورت سَس مینی اِچ‌دی‌ اینترنال که در روی کارت (اَدَپتِر) سوار شده است](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/SAS-MiniHD-Internal-port.png "SAS-MiniHD-Internal-port.png")
+![پورت سَس مینی اِچ‌دی‌ اینترنال که در روی کارت (اَدَپتِر) سوار شده است](./_srcFiles/Images/SAS-MiniHD-Internal-port.png "SAS-MiniHD-Internal-port.png./")
 ---
 
 > کارت سَس مینی اِچ‌دی‌
-![کارت سَس مینی اِچ‌دی‌](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/SAS-MiniHD-Adapter.png "SAS-MiniHD-Adapter.png")
+![کارت سَس مینی اِچ‌دی‌](./_srcFiles/Images/SAS-MiniHD-Adapter.png "SAS-MiniHD-Adapter.png")
 
 ---
 > کابل سَس مینی اِچ‌دی‌ اکسترنال
-![کابل سَس مینی اِچ‌دی‌ اکسترنال](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/SAS-MiniHD-External.png "SAS-MiniHD-External.png")
+![کابل سَس مینی اِچ‌دی‌ اکسترنال](./_srcFiles/Images/SAS-MiniHD-External.png "SAS-MiniHD-External.png")
 
 ---
 
@@ -486,7 +486,7 @@ lvmcreate -L 100m -s -n <Name> /dev/VG>/<LV>lvscan #اسنپ‌شات باید �
 *
 
 > کارت سَس مینی اِچ‌دی‌
-![کارت سَس مینی اِچ‌دی‌](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/SAS-MiniHD-Adapter.png "SAS-MiniHD-Adapter.png")
+![کارت سَس مینی اِچ‌دی‌](./_srcFiles/Images/SAS-MiniHD-Adapter.png "SAS-MiniHD-Adapter.png")
 
 # 🅰️ JBOD
 
