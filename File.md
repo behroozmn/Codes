@@ -61,6 +61,8 @@ who -r #نمایش ران لول فعلی
 who -q #تعداد کاربران لاگین و نام آنها
 
 /sbin/usermod -s /sbin/nologin Behrooz #change user to nonlogin user
+
+sudo last reboot #مشاهده ریبوت‌های انجام شده در سیستم در گذشته
 ```
 
 ## 🅱️ Sudo
@@ -315,18 +317,14 @@ vim /etc/security/limits.conf # اگر بخواهیم بصورت دائمی با
 
 * هش همواره یک طرفه است و مانند کدینگ نیست که امکان دیکد داشته باشد
 
-
 ```shell
 echo -n <STRING>|md5sum # linux
 certutil -hashfile <file> MD5 # MicrosoftWindows
 # [Server1: find ./backup -type f -print0 | xargs -0 md5sum > /checksums_backup.md5] && [Server2: md5sum -c checksums_backup.md5] → checksum
 ```
 
-## 🅱️ 
+## 🅱️
 
-
-## 🅱️ 
-
-
+## 🅱️
 
 ## 🅱️ 
