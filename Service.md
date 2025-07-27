@@ -85,6 +85,7 @@
 ### ✅️ sysctl
 
 * عامل کنترلی سرویس Systemd دستور sysctl است
+* دستور sysctl برای اصلاح تنظیمات کرنلی موجود در proc
 
 ```shell
 sysctl -a #view all current kernel parameters
