@@ -997,7 +997,7 @@ clean:
 
 * FromNetwork
     * ابتدا باید در بایوس گزینه pxe را فعال نموده سپس توسط DHCP شبکه اخذ آی‌پی صورت گرفته و سپس از یک ایمیج سرور را بوت کنیم(توسط ایزوی winpe که کارش بالا و نصب ویندوز است)
-* USB-Ventoy
+* USB-Ventory
     * [download](https://www.ventoy.net/en/download.html)
     * `tar -xvzf ventoy-*.tar.gz`
     * `cd ventoy-*`
