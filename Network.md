@@ -257,6 +257,12 @@ sudo vim /etc/snmp/snmpd.conf
 systemctl restart snmpd
 ```
 
+
+```shell
+net-snmp-config --version
+snmpd -V
+```
+
 * rocommunity public default -V systemonly #سبب محدود شدن تعداد رکوردهای مانیتور شده از حدود ۷هزارتا به ۳۰ عدد از موارد خیلی عمومی
 
 # 🅰️ Commands
