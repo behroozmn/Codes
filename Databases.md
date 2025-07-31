@@ -1,4 +1,4 @@
-# 🅰️ مفاهیم و نکات
+# 1. 🅰️ مفاهیم و نکات
 
 * **دیتابیس** : پایگاه‌داده فیزیکی که شامل تمام داده‌ها و فایل‌های مرتبط آن است
     * یک دیتابیس می‌تواند شامل چندین Schema باشد
@@ -19,13 +19,20 @@
     * optimizing database management systems by separating the rows or columns of a larger database table into multiple smaller tables
 * **Database partition**:خرد کردن دیتا(از بزرگ به کوچک)
     * division of a logical database into distinct independent parts
+* Java Embeded Database:   
+  * Derbi
+  * JavaDB
+  * H2
+* statementها: از نوع ریسورس هستند و هنگامی که باز می‌شوند حتما باید بسته شوند
+
+
 
 ![DatabaseSharding.jpg](../_srcFiles/Images/DatabaseSharding.jpg "DatabaseSharding.jpg")
 ![DatabasePartition.jpg](../_srcFiles/Images/DatabasePartition.jpg "DatabasePartition.jpg")
 
-# 🅰️ SQLCommands
+# 2. 🅰️ SQLCommands
 
-## 🅱️ select
+## 2.1. 🅱️ select
 
 * GROUP BY: گروه‌بندی اطلاعات
     * برای گروه‌بندی کردن (سورت) کوئری استفاده می‌شود اما به نحوی که از توابع ۱-کانت ۲-ماکس ۳-مین ۴-سام استفاده شود
@@ -59,7 +66,7 @@ SELECT column_1, column_2 FROM table ORDER BY column_1 DESC # ترتیب نزو�
 SELECT column FROM tableName1 UNION SELECT column FROM tableName2; #ترکیب خروجی دو یا چند سِلِکت  از جدول (حتی جداول‌ متفاوت)
 ```
 
-## 🅱️ INSERT
+## 2.2. 🅱️ INSERT
 
 ```shell
 INSERT INTO tableName VALUES ( 'data_A', 'data_B', 'data_C' );
@@ -67,31 +74,31 @@ INSERT INTO tableName ( column_A, column_B, column_C ) VALUES ( 'data_1A', 'data
 INSERT INTO tableName ( column_A, column_B, column_C ) VALUES ( 'data_A', 'data_B', 'data_C' );
 ```
 
-## 🅱️ UPDATE
+## 2.3. 🅱️ UPDATE
 
 ```shell
 UPDATE tableName SET column_1 = value_1, column_2 = value_2 WHERE column_A=value;
 
 ```
 
-## 🅱️ DELETE
+## 2.4. 🅱️ DELETE
 
 ```shell
 DELETE FROM tableName WHERE column='value';
 DELETE FORM tableName WHERE column=’value’ limit 1; #حذف رکورد از جدول [حذف تنها یک مورد درصورت وجود چندین رکورد]
 ```
 
-## 🅱️ REPLACE
+## 2.5. 🅱️ REPLACE
 
 ```shell
 REPLACE INTO tableName (primaryKey, column1, column2) VALUES ('abc', 1, 2); #اگر رکورد وجود داشت تغییر میکند ودرغیر اینصورت به جدول اضافه می‌شود
 Replace Into configuration(`Group`,`Name`,`Value`) Values('sadr','debug','Dashboard'); #اگر رکورد وجود داشت تغییر میکند ودرغیر اینصورت به جدول اضافه می‌شود
 ```
 
-## 🅱️ Operator
+## 2.6. 🅱️ Operator
 
 | Operator      | What it does                                                          |
-|---------------|-----------------------------------------------------------------------|
+| ------------- | --------------------------------------------------------------------- |
 | `=`           | tests for equality                                                    |
 | `!=`          | tests for inequality                                                  |
 | `<`           | tests for less-than                                                   |
@@ -105,20 +112,20 @@ Replace Into configuration(`Group`,`Name`,`Value`) Values('sadr','debug','Dashbo
 | `IS NULL`     | tests for NULL values                                                 |
 | `IS NOT NULL` | tests for all values other than NULL                                  |
 
-## 🅱️ Functions
+## 2.7. 🅱️ Functions
 
-| نام تابع         | توضیحات                                                           | مثال                                        |
-|------------------|-------------------------------------------------------------------|---------------------------------------------|
-| `COUNT()`        | تعداد رکوردهای مورد نظر را برمی‌گرداند                            | `SELECT COUNT(name) FROM employees;`        |
-| `AVG()`          | میانگین مقادیر یک ستون عددی را محاسبه می‌کند                      | `SELECT AVG(salary) FROM employees;`        |
-| `SUM()`          | مجموع مقادیر یک ستون عددی را برمی‌گرداند                          | `SELECT SUM(quantity) FROM orders;`         |
-| `MAX()`          | بزرگترین مقدار یک ستون را برمی‌گرداند                             | `SELECT MAX(price) FROM products;`          |
-| `MIN()`          | کوچکترین مقدار یک ستون را برمی‌گرداند                             | `SELECT MIN(age) FROM users;`               |
+| نام تابع         | توضیحات                                                         | مثال                                        |
+| ---------------- | --------------------------------------------------------------- | ------------------------------------------- |
+| `COUNT()`        | تعداد رکوردهای مورد نظر را برمی‌گرداند                           | `SELECT COUNT(name) FROM employees;`        |
+| `AVG()`          | میانگین مقادیر یک ستون عددی را محاسبه می‌کند                     | `SELECT AVG(salary) FROM employees;`        |
+| `SUM()`          | مجموع مقادیر یک ستون عددی را برمی‌گرداند                         | `SELECT SUM(quantity) FROM orders;`         |
+| `MAX()`          | بزرگترین مقدار یک ستون را برمی‌گرداند                            | `SELECT MAX(price) FROM products;`          |
+| `MIN()`          | کوچکترین مقدار یک ستون را برمی‌گرداند                            | `SELECT MIN(age) FROM users;`               |
 | `GROUP_CONCAT()` | مقادیر یک ستون را در یک گروه به صورت رشته‌ای ادغام می‌کند (MySQL) | `SELECT GROUP_CONCAT(name) FROM employees;` |
-| `FIRST()`        | اولین مقدار یک ستون را برمی‌گرداند                                | `SELECT FIRST(order_date) FROM orders;`     |
-| `LAST()`         | آخرین مقدار یک ستون را برمی‌گرداند                                | `SELECT LAST(login_time) FROM users;`       |
-| `STDDEV()`       | انحراف معیار مقادیر یک ستون عددی را محاسبه می‌کند                 | `SELECT STDDEV(score) FROM results;`        |
-| `VARIANCE()`     | واریانس مقادیر یک ستون عددی را محاسبه می‌کند                      | `SELECT VARIANCE(age) FROM patients;`       |
+| `FIRST()`        | اولین مقدار یک ستون را برمی‌گرداند                               | `SELECT FIRST(order_date) FROM orders;`     |
+| `LAST()`         | آخرین مقدار یک ستون را برمی‌گرداند                               | `SELECT LAST(login_time) FROM users;`       |
+| `STDDEV()`       | انحراف معیار مقادیر یک ستون عددی را محاسبه می‌کند                | `SELECT STDDEV(score) FROM results;`        |
+| `VARIANCE()`     | واریانس مقادیر یک ستون عددی را محاسبه می‌کند                     | `SELECT VARIANCE(age) FROM patients;`       |
 
 **نکته‌ها**:
 
@@ -126,16 +133,16 @@ Replace Into configuration(`Group`,`Name`,`Value`) Values('sadr','debug','Dashbo
 * توابع FIRST() و LAST() در تمام سیستم‌های SQL وجود ندارند و بیشتر در MS Access استفاده می‌شوند. در MySQL و PostgreSQL از LIMIT یا DISTINCT ON استفاده می‌شود.
 * این توابع زمانی قدرتمندتر می‌شوند که با دستوراتی مانند GROUP BY و WHERE ترکیب شوند.
 
-# 🅰️ MYSQL
+# 3. 🅰️ MYSQL
 
-## 🅱️ Install
+## 3.1. 🅱️ Install
 
 ```shell
 sudo apt install mysql- server #Installation
 sudo mysql_secure_installation #ایجاد تنظیمات اولیه
 ```
 
-## 🅱️ Login
+## 3.2. 🅱️ Login
 
 ```shell
 
@@ -145,7 +152,7 @@ mysql -u <USER> -p <DataBaseName> # → then !EnterPassword
 mysql> quite #خروج
 ```
 
-## 🅱️ DataBase
+## 3.3. 🅱️ DataBase
 
 ```shell
 mysql> CREATE DATABASE <database_name>;
@@ -156,7 +163,7 @@ mysql> DROP DATABASE IF EXISTS database;
 mysql> DROP DATABASE <db_name>;
 ```
 
-## 🅱️ user
+## 3.4. 🅱️ user
 
 ```shell
 #create
@@ -173,7 +180,7 @@ mysql> DROP USER 'jeffrey'@'localhost';
 mysql> DROP USER IF EXISTS username;
 ```
 
-### ✅️ Permision
+### 3.4.1. ✅️ Permision
 
 **typeOfPermission**
 
@@ -186,7 +193,7 @@ mysql> DROP USER IF EXISTS username;
 * **UPDATE**: allow them to update table rows
 * **GRANT OPTION**: allows them to grant or remove other users' privileges
 
-### ✅️ Assigne permission
+### 3.4.2. ✅️ Assigne permission
 
 ```shell
 mysql> GRANT [typeOfPermission] ON [databaseName].[tableName] TO '[username]'@'localhost’;
@@ -195,14 +202,14 @@ mysql> GRANT ALL PRIVILEGES ON *.* TO 'newusername'@'localhost';
 mysql> GRANT ALL PRIVILEGES ON *.* TO 'newusername'@'localhost' WITH GRANT OPTION;
 ```
 
-### ✅️ Revoke permission
+### 3.4.3. ✅️ Revoke permission
 
 ```shell
 mysql > REVOKE [typeOfPermission] ON [databaseName].[tableName] FROM '[username]'@'localhost’;
 mysql> REVOKE ALL ON [database name].[table name] FROM '[username]'@'localhost'
 ```
 
-## 🅱️ Table
+## 3.5. 🅱️ Table
 
 ```shell
 #Create:
@@ -220,7 +227,7 @@ mysql> ALTER TABLE table DROP COLUMN column; #حذف ستون از جدول
 mysql> DROP TABLE IF EXISTS table #حذف یک جدول
 ```
 
-# 🅰️ Reddis
+# 4. 🅰️ Reddis
 
 * دیتا را بصورت Key-Value ذخیره می‌کند
 * تمام دیتا را در حافظه نگه‌داری می‌کند یعنی سریع است
