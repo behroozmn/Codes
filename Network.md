@@ -14,6 +14,10 @@
 * **Transparency**: استقلال مکان کاربر و مکان قرارگیری منابع، سرویس مورد نظر
     * کاربران از مکان‌های مختلف، به یک پوشه دسترسی داشته باشد در حالی که داده‌های موجود در پوشه در مکان های فیزیکی مجزا بر روی هارددیسک کامپیوترهای متفاوت بر روی شبکه قرار دارند و برای کاربران(هر مکانی) قابل لمس نمی‌باشد
     * The main benefit of location transparency is that it no longer matters where the resource is located.Depending on how the network is set, the user may be able to obtain files that reside on another computer connected to the particular network
+* مفهوم Scale-Up(Vertical Scaling):افزودن منابع سخت‌افزاری قوی‌تر مثل رم یا پردازنده(خرید سرور جدید وقوی)
+* مفهوم Scale-Out (Horizontal Scaling): افزودن سرورهای جدید به یک خوشه و افزایش ظرفیت Cluster از طریق شبکه
+* NOC مخفف Network Opration Center است
+
 
 ```shell
 iftop

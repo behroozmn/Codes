@@ -165,3 +165,10 @@ echo "proxy=socks5h://localhost:xxxx" >> /etc/yum.conf
 * Gatewayports yes
 
 ![sshR.jpg](_srcFiles/Images/sshR.jpg "sshR.jpg")
+
+
+
+---
+
+![ssh-portfwl1.jpg](_srcFiles/Images/ssh-portfwl1.jpg "ssh-portfwl1.jpg")
+![ssh-portfwlr1.jpg](_srcFiles/Images/ssh-portfwlr1.jpg "ssh-portfwlr1.jpg")

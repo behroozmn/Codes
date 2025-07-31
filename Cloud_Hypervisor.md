@@ -1,3 +1,8 @@
+# 🅰️ Concept
+
+* Hypervisor: فراهم کننده قابلیت مجازی‌سازی مثل ESXI یا KVM یا HyperV
+
+
 # 🅰️ Cloud
 
 <div dir="rtl">

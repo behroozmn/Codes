@@ -1374,3 +1374,5 @@ udevadm **info** [options] [devpath(such as /dev/sda)|file|unit]
 * [-p] OR [--processor] → print the processor type or “unknown”
 * [-i] OR [--hardware-platform] → print the hardware platform or “unknown”
 * [-o] OR [--operating-system] → print the operating system
+
+![hw-udev1.jpg](./_srcFiles/Images/hw-udev1.jpg "hw-udev1.jpg")

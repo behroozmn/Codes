@@ -1,4 +1,14 @@
-# 📍️ Environment or Variables
+# 🅰️ Desktop Environments
+
+* GTK: فریم‌ورک برای توسعه رابط کاربری گرافیکی (GUI) در برنامه‌های نرم‌افزاری هستند
+    * عمدتاً با زبان C توسعه یافته است
+    * بیشتر بر روی لینوکس و سیستم‌عامل‌های مبتنی بر UNIX متمرکز است، از طراحی متریال و GNOME پیروی می‌کند و بیشتر برای برنامه‌های دسکتاپ GNOME استفاده می‌شود.
+    * نیز دارای ابزار طراحی گرافیکی به نام Glade است که به توسعه‌دهندگان کمک می‌کند تا رابط‌های کاربری را طراحی کنند.
+    * تحت مجوز LGPL منتشر شده است.
+    * کتابخانه‌های PyGTK و PyGObject برای زبان پایتون و کتابخانه PHP-GTK برای زبان PHP و کتابخانه gtkmm برای زبان ++C و غیره در دسترس است
+
+
+# 🅰️ Environment or Variables
 
 ```shell
 printenv # نمایش
@@ -12,7 +22,7 @@ echo $$ # PID
 echo $_ # Note: آرگومان ورودی دستور قبل
 ```
 
-## IFS
+## 🅱️ IFS
 
 مواردی که شل بعنوان جداکننده در نظر خواهد گرفت
 
@@ -27,7 +37,7 @@ echo "Hello $i"
 done
 ```
 
-## @|*
+## 🅱️ @|*
 
 - هردوی کاراکترهای @ یا * تمامی آرگومان‌های ورودی یک اسکریپت را برمی‌گرداند
 - تفاوت: در حلقه @ به دفعات اجرا می‌شود ولی در * حلقه تنها یکبار اجرا می‌شود
@@ -65,7 +75,7 @@ output:
  Hello Mohamad Ali Fatemeh Hassan Hossein
 ```
 
-## HISTORY
+## 🅱️ HISTORY
 
 * HISTSIZE: is the number of lines or commands that are stored in memory in a history list while your bash session is ongoing.
 * HISTFILESIZE: is the number of lines or commands that (a) are allowed in the history file at startup time of a session, and (b) are stored in the history file at the end of your bash session for use in future sessions.
@@ -101,7 +111,7 @@ output:
   8. You now have 5 commands in your history - the last 5 that you just typed in the session you just finished
   9. When you start a new session, you start over at step 1 with a HISTFILE of HISTFILESIZE=5
 
-# 📍️ TTY|PTS
+### ✅️ TTY|PTS
 
 - TTY: شخصی مستقیم بصورت interactive بر سر سیستم لاگین کرده است
 - PTS: تریمنال باز شده در محیط گرافیکی
@@ -114,7 +124,7 @@ write <username> <[pts/0] or [pts/1]> #Ending with CTRL+D #ارسال نوشته
 who -a #فهمیدن کاربران و ترمینال‌ها
 ```
 
-# 📍️ tput
+## 🅱️ tput
 
 - Tput: دستوری که دیتا پیرامون بش به ما میدهد
 - initialize a terminal or query terminfo database
@@ -124,7 +134,7 @@ tput lines # نمایش تعداد خط‌های یک شل که هم‌اکنو�
 tput cols # نمایش تعداد ستون‌های(اشاره به کاراکتر دارد) یک شل که هم‌اکنون باز است
 ```
 
-# 📍️ Clipboard
+## 🅱️ Clipboard
 
 ارسال خروجی به حافظه clipBoard
 
@@ -134,7 +144,7 @@ Terminal: Command | xclip -selection clipboard
 
 ```
 
-# 📍️ Files
+# 🅰️ Files
 
 ## 📁️ ~/.bash_aliases
 
@@ -207,9 +217,9 @@ WHITE='\033[1;37m'
 
 
 
-# 📍️ Commands
+# 🅰️ Commands
 
-## ✅️ yad
+## 🅱️ yad
 
 نمایش یک پنجره به سبک برنامه نویسی ویژوال:
 
@@ -236,7 +246,7 @@ yad \
 --button="gtk-cancel:1"
 ```
 
-## ✅️ Whiptail
+## 🅱️ Whiptail
 
 اگر بخواهیم در یک متن با خاصیت بلی ویا خیر در قلب ترمینال نمایش شود (همانند ok و Cancell در حین نصب آپاچی) از دستور زیر استفاده می‌نماییم:
 
@@ -251,7 +261,7 @@ whiptail --title "<message box title>" --msgbox "<text to show>" <height> <width
 [url5](http://jamesslocum.com/post/55694754191)
 [url6](http://xmodulo.com/create-dialog-boxes-interactive-shell-script.html)
 
-### [Yes/No]Box
+### ✅️ [Yes/No]Box
 
 ```shell
 whiptail --title "<dialog box title>" --yesno "<text to show>" <height> <width>
@@ -277,7 +287,7 @@ fi
 
 ```
 
-### ChecklistDialog
+### ✅️ ChecklistDialog
 
 ```shell
 whiptail --title "<checklist title>" --checklist "<text to show>" <height> <width> <list height> [ <tag> <item> <status> ] . . .
@@ -300,7 +310,7 @@ fi
 
 ```
 
-### FormInput
+### ✅️ FormInput
 
 ```shell
 whiptail --title "<input box title>" --inputbox "<text to show>" <height> <width> <default-text>
@@ -318,7 +328,7 @@ else
 fi
 ```
 
-### MenuBox
+### ✅️ MenuBox
 
 ```shell
 whiptail --title "<menu title>" --menu "<text to show>" <height> <width> <menu height> [ <tag> <item> ] . . .
@@ -341,7 +351,7 @@ fi
 
 ```
 
-### MessageBox
+### ✅️ MessageBox
 
 ```shell
 whiptail --title "<message box title>" --msgbox "<text to show>" <height> <width>
@@ -352,7 +362,7 @@ whiptail --title "<message box title>" --msgbox "<text to show>" <height> <width
 whiptail --title "Test Message Box" --msgbox "Create a message box with whiptail. Choose Ok to continue." 10 60
 ```
 
-### PasswordBox
+### ✅️ PasswordBox
 
 ```shell
 whiptail --title "<password box title>" --passwordbox "<text to show>" <height> <width>
@@ -370,7 +380,7 @@ else
 fi
 ```
 
-### ProgressBar
+### ✅️ ProgressBar
 
 ```shell
 whiptail --gauge "<test to show>" <height> <width> <inital percent>
@@ -386,7 +396,7 @@ whiptail --gauge "<test to show>" <height> <width> <inital percent>
 } | whiptail --gauge "Please wait while installing" 6 60 0
 ```
 
-### RadiolistDialog
+### ✅️ RadiolistDialog
 
 ```shell
 whiptail --title "<radiolist title>" --radiolist "<text to show>" <height> <width> <list height> [ <tag> <item> <status> ] . . .
@@ -408,7 +418,7 @@ else
 fi
 ```
 
-## ✅️ zenity
+## 🅱️ zenity
 
 ```shell
 zenity --timeout=180 --notification --text "salam behrooooooooooooooz"
@@ -444,7 +454,7 @@ zenity --calendar
 ```
 
 
-# Terminal Shortcuts
+# 🅰️ Terminal Shortcuts
 
 
 * [Ctrl+A]:jump to start of the line
