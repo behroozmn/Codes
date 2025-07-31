@@ -1312,7 +1312,6 @@ at 21:30 2014-07-1
       1711454945
       UTC
       ```
-    * 
 
 ## 12.1. 🅱️ [NTP(Network Time Protocol)](https://docs.redhat.com/En/Documentation/Red_Hat_Enterprise_Linux/7/Html/System_Administrators_Guide/Ch-Configuring_Ntp_Using_Ntpd#S2-Ntpd_Useful-Websites)
 
