@@ -1,6 +1,6 @@
 <div dir="rtl">
 
-# 🅰️ Concepts
+# 1. 🅰️ Concepts
 
 * شبکه تحویل محتوا یا CDN[ContentDeliveryNetwork]: بهینه‌سازی شبکه‌ جهت کاهش زمان تحویل محتوا به مصرف‌کننده علی رغم توزیع سرورها در نقاط جغرافیایی گوناگون
     * highly-distributed platform of servers that helps minimize delays in loading web page content by reducing the physical distance between the server and the user. This helps users around the world view the same high-quality content without slow loading times
@@ -19,6 +19,21 @@
 * NOC مخفف Network Opration Center است
 
 
+# 2. 🅰️ IO Connector
+
+* RG45
+  * در بعضی از مدل‌های ارتقاءیافته آن سرعت 10Gb هم ارائه می‌دهد
+
+## 2.1. 🅱️ Fiber Ethernet
+
+همان سازوکار RG45 که به فیبر تبدیل شده است و با IP کارمیکند
+
+* Fiber Ethernet Card
+  * دو عدد چراغ LED دارد
+  * ساپورت کننده پروتکل اترنت و نه «پروتکل اف‌سی»
+  * Speed: 10G or 40G or 100G or 200G
+  * Uniq Identify: IP
+
 ```shell
 iftop
 iptraf-ng
@@ -33,11 +48,11 @@ tcpflow
 ![fundamentalip-ositcp1.jpg](./_srcFiles/Images/fundamentalip-ositcp1.jpg "fundamentalip-ositcp1.jpg")
 ![MTU2.jpg](./_srcFiles/Images/MTU2.jpg "MTU2.jpg")
 
-# 🅰️ WEB
+# 3. 🅰️ WEB
 
 ![uri.png](_srcFiles/Images/uri.png "uri.png")
 
-## 🅱️ HTTP(Hypertext Transfer Protocol)
+## 3.1. 🅱️ HTTP(Hypertext Transfer Protocol)
 
 * Port:80
 * پروتکل http بهترین ابزار دسترسی فایل بدون داشتن دسترسی public برای عموم است
@@ -46,7 +61,7 @@ tcpflow
 * وب اپلیکیشن: یک برنامه سازمانی است که درقالب وب به نمایش درمی‌آید
 *
 
-### ✅️ HTTP Methods
+### 3.1.1. ✅️ HTTP Methods
 
 * Get: همواره پارامترها را در یوآرآل می‌فرستد
     * Selectation
@@ -67,7 +82,7 @@ tcpflow
 * Connect(Establishes a tunnel to a server)
     * ارتباط تونل
 
-### ✅️ Headers.Request
+### 3.1.2. ✅️ Headers.Request
 
 * Get:
 * Host:
@@ -89,7 +104,7 @@ tcpflow
 * Upgrade-Insecure-Requests
     * 1
 
-### ✅️ Headers.Response
+### 3.1.3. ✅️ Headers.Response
 
 * ServerResponseCode(Status):
     * 200:OK
@@ -106,14 +121,14 @@ tcpflow
 
 ![httpBasicSession.png](_srcFiles/Images/httpBasicSession.png "httpBasicSession.png")
 
-## 🅱️ HTTPS(Secure Hypertext Transfer Protocol)
+## 3.2. 🅱️ HTTPS(Secure Hypertext Transfer Protocol)
 
 * Port: 443
 * پروتکل http که با ssl امنیت آن افزایش یافته است
 
 ![httpsBasicSession.png](./_srcFiles/Images/httpsBasicSession.png "httpsBasicSession.png")
 
-## 🅱️ CGI(Common Gateway Interface)
+## 3.3. 🅱️ CGI(Common Gateway Interface)
 
 * CGI یا Common Gateway Interface: استانداردی برای تولید صفحات پویای وب توسط سرور که حاوی مشکلاتی بود:
 * تاخیر در تعداد کلاینت زیاد
@@ -196,11 +211,11 @@ exit 0
 > تصویر نمایی از حالت قدیمی را نمایش میدهد
 ![cgi.jpg](./_srcFiles/Images/cgi.jpg "cgi.jpg")
 
-# 🅰️ CISCO
+# 4. 🅰️ CISCO
 
 PacketTracer: نرم‌افزار سیسکو برای شبیه سازی محیط واقعی شبکه
 
-# 🅰️ Switch
+# 5. 🅰️ Switch
 
 * سوییچ لایه۲هست(مفاهیم مک و جدولarp)
 * با گذر ایام، سوییچ در لایه۳ورود کرد(مفاهیم روتینگ) و آی‌پی
@@ -217,23 +232,23 @@ PacketTracer: نرم‌افزار سیسکو برای شبیه سازی محیط
 > StackableSwitch
 ![switch-stack.png](./_srcFiles/Images/switch-stack.png "switch-stack.png")
 
-# 🅰️ Gateway|router
+# 6. 🅰️ Gateway|router
 
 * **RoutingTable**: اگر یک لینوکس روتر شد و تعدا کارت‌شبکه زیاد باشد پس لینوکس باید در خاطر خودش نگهداری نماید که برای ارسال بسته به هاست از چه اینترفیسی استفاده کرده است. بنابراین نیاز به یک routing table دارد تا نشان دهد که از کدام اینترفیس برای ارسال بسته به هاست استفاده کرده است
 * **RIP(Router Information Protocol)**: لینوکس برای ساپورت کردن RoutingTable این پروتکل را ایجاد کرده است تا کارهای روت را انجام دهد. زمانی که یک بسته RIP رسید آنگاه لینوکس RoutingTable را بروزرسانی می‌کند. لینوکس از برنامه routed برای Listen کردن بسته‌های RIP و بروزرسانی جدول استفاده می‌کند
 
-## 🅱️ LinuxRouter
+## 6.1. 🅱️ LinuxRouter
 
 * اگر پارامتر کرنلی System.Net.Route و net.ipv6.conf.all.forwarding برابر ۱ باشند و در iptables در chain بنام FORWARD قانون اضافه کردیم آنگاه لینوکس قابلیت روتر شدن پیدا خواهد کرد یعنی بسته‌ها را از یک اینترفیس به اینترفیس دیگر انتقال دهد
 *
 
-# 🅰️ Proxy
+# 7. 🅰️ Proxy
 
 * سایت‌های زیر برای تست پروکسی مفید است
     * ifconfig.me
     * ping.eu
 
-## 🅱️ OpenVPN
+## 7.1. 🅱️ OpenVPN
 
 * یکی از روش‌های وی‌پی‌ان زدن است که باید اول بسته آن را نصب نماییم و پس از نصب دو فال در مسیر های etc/openvpn/server.conf و etc/openvpn/client.conf ایجاد می‌نماید که تنظیمات اصلی این فایل‌ها به شرح زیر است:[config]: استفاده از فایل برای نگهداری تنظیمات
     * [dev]: نام دیوایس مجازی که در دستور ifconfig نمایش داده خواهد شد
@@ -261,7 +276,7 @@ PacketTracer: نرم‌افزار سیسکو برای شبیه سازی محیط
 
 ![openvpn.png](./_srcFiles/Images/openvpn.png "openvpn.png")
 
-## 🅱️ Tor
+## 7.2. 🅱️ Tor
 
 * از موارد مشابه تور می‌توان به proxychains4 و privoxy اشاره کرد که همانند torsocks در ابتدای دستورات قرار می‌دهیم.
 * پورت پیش‌فرض تور 9050 است
@@ -285,9 +300,9 @@ torsocks curl https://showip.net # Test Ip Adderess
 
 ```
 
-# 🅰️ SNMP
+# 8. 🅰️ SNMP
 
-## 🅱️ مفاهیم و نکات عمومی
+## 8.1. 🅱️ مفاهیم و نکات عمومی
 
 * برای تنظیم اطلاعات community باید فایل snmpd.conf اصلاح شود[فایل snmp.conf را دستکاری نکنید]
 *
@@ -309,9 +324,9 @@ snmpd -V
 
 * rocommunity public default -V systemonly #سبب محدود شدن تعداد رکوردهای مانیتور شده از حدود ۷هزارتا به ۳۰ عدد از موارد خیلی عمومی
 
-# 🅰️ Commands
+# 9. 🅰️ Commands
 
-## 🅱️ arp
+## 9.1. 🅱️ arp
 
 * پروتکل arp: چه مک‌آدرس به چه آی‌پی متصل است
 * بسته‌های پروتکل ARP از روتر عبور نمی‌کنند
@@ -322,7 +337,7 @@ snmpd -V
 * [-n|--numeric]:don't resolve names
     * `sudo arp -n`
 
-## ✅️curl
+## 9.2. ✅️curl
 
 دستورات یا مرورگر‌های مشابه متنی ترمینال: links و links2 و lynx(دستور www-browser)
 
@@ -331,32 +346,32 @@ curl -I itsee.ir #نمایش هدرهای یک سایت
 curl -u username:password -T file.tar.gz ftp://ftp_server
 ```
 
-## 🅱️ ethtool
+## 9.3. 🅱️ ethtool
 
 ```shell
 dig <name>
 dig +short <Name>  #اطلاعات اضافه نشان نده و فقط آی‌پی را نمایش بده
 ```
 
-## 🅱️ ethtool
+## 9.4. 🅱️ ethtool
 
 ```shell
 sudo ethtool enp5s0 # اطلاعات فوق‌العاده زیاد بابت کارت شبکه
 
 ```
 
-## 🅱️ fping
+## 9.5. 🅱️ fping
 
 `fping -g 192.168.10.1 192.168.10.5 #alive hosts`
 
-## 🅱️ host
+## 9.6. 🅱️ host
 
 ```shell
 host -la domain.local # نمایش تمام رکوردهای یک دامنه
 host <name[google.com]>
 ```
 
-## 🅱️ hostname
+## 9.7. 🅱️ hostname
 
 * [-I] or [--all-ip-addresses] → All IP addresses for the host
 
@@ -364,7 +379,7 @@ host <name[google.com]>
 hostname -I # show all ip address
 ```
 
-## 🅱️ iwlist|iwconfig
+## 9.8. 🅱️ iwlist|iwconfig
 
 wifi|wireless|وای‌فای
 
@@ -373,7 +388,7 @@ iwlist <nic> scan #بررسی وایرلس‌های اطراف سیستم که �
 iwconfig wlp4s0 essid "<Name>" key s:<Pass> #اتصال به یک وایرلس
 ```
 
-## 🅱️ ip
+## 9.9. 🅱️ ip
 
 Usage: ip OPTIONS OBJECT COMMAND
 
@@ -447,7 +462,7 @@ Usage: ip OPTIONS OBJECT COMMAND
     * ip addr del x.x.x.x/Y dev <NIC> → del IP
     * ip link del <nic> down → up/down NIC
 
-### ✅️ [Gateway|Routr] Commands
+### 9.9.1. ✅️ [Gateway|Routr] Commands
 
 * show
     * ip route
@@ -457,16 +472,16 @@ Usage: ip OPTIONS OBJECT COMMAND
 * remove
     * ip route del 192.168.0.150/24 #Removing a static route
 
-## 🅱️ ifconfig
+## 9.10. 🅱️ ifconfig
 
 ```shell
 ifconfig eth0:0 xxx.xxx.xxx.xxx #set [Additional ip] or [VirtualIp]
 ifconfig eth0 hw ether AA:BB:CC:DD:EE:FF #MacSpoofing or تغییر مک آدرس
 ```
 
-## 🅱️ lsof
+## 9.11. 🅱️ lsof
 
-### ✅️ Concept
+### 9.11.1. ✅️ Concept
 
 * COMMAND: The command name
 * PID: Process ID (PID) of the process
@@ -503,7 +518,7 @@ ifconfig eth0 hw ether AA:BB:CC:DD:EE:FF #MacSpoofing or تغییر مک آدر�
 * NODE: Node description of the local file; this could be the number of the local file, TCP, UDP, or STR (stream)
 * NAME: The name of the mount point where the file resides
 
-### ✅️ Switch
+### 9.11.2. ✅️ Switch
 
 * [-i] → List all network connecttion
     * tcp|udp:
@@ -547,21 +562,21 @@ ifconfig eth0 hw ether AA:BB:CC:DD:EE:FF #MacSpoofing or تغییر مک آدر�
     * lsof -d mem → All memory map files
     * lsof -d cwd
 
-### ✅️ Appendix
+### 9.11.3. ✅️ Appendix
 
 * [+L1] → سوکت‌های فعلی سرور که به هیچ فایلی از هارد وصل نشده است - پردازه‌های موجود در رم که ممکن است ویروس باشند
     * lsof +L1
 * deletedFiles
     * sudo lsof [path] | grep deleted
 
-## 🅱️ mtr
+## 9.12. 🅱️ mtr
 
 ```shell
 mtr google.com
 mtr -n --report IP
 ```
 
-## 🅱️ netstat
+## 9.13. 🅱️ netstat
 
 * [خالی و بدون پارامتر ورودی] → By default, netstat displays a list of open sockets.
 * [-i] or [--interfaces,] → Display a table of all network interfaces
@@ -573,13 +588,13 @@ mtr -n --report IP
 * [-l] → display only listening sockets
 * [-n] → display the socket’s port number
 
-## 🅱️ nmapt
+## 9.14. 🅱️ nmap
 
 * تعریف NullScan: بسته هیچ پرچمی(TCP، UDP، Sync، Http، ICMP و غیره) به خود نمی‌گیرد.
     * اگر یک سرور هیچ پاسخی نداد شما می‌توانید نوع اسکن را در وضعیت Null Scan قرار دهید که در آن صورت حتما بسته عبور می‌کند و حداقل می‌توان فهمید که سرور alive هست یا پایین است
 * تعریف Zombi Attach: همزمان به چندین سیستم زامبی‌شده(قربانی‌های بستر اینترنت) می‌گوییم که به یک سرور وصل شوند و کاری انجام دهند و گزارش خروجی حمله را در اختیارمان قرار دهند و ما ناشناخته خواهیم ماند
 
-### ✅️ Ping
+### 9.14.1. ✅️ Ping
 
 * nmap -Pn [target] #Dont ping
 * nmap -sP [target] #perform a Ping Only Scan
@@ -592,12 +607,12 @@ mtr -n --report IP
 * nmap -PM [target] #CMP Address Mask Ping
 * nmap -PO [target] #IP Protocol Ping
 
-### ✅️ Trace
+### 9.14.2. ✅️ Trace
 
 * nmap –traceroute     [target] #Traceroute
 * nmap --packet-trace [target] #Trace package
 
-### ✅️ DNS
+### 9.14.3. ✅️ DNS
 
 * nmap -R [target] #Force Reverse DNS Resolution
 * nmap -n [target] #Disable Reverse DNS Resolution
@@ -605,7 +620,7 @@ mtr -n --report IP
 * nmap –dns-servers [servers] [target] #Manually Specify DNS Server(s)
 * nmap -sL [targets] #Create a Host List
 
-### ✅️ Advanced Scanning Options
+### 9.14.4. ✅️ Advanced Scanning Options
 
 * nmap -sS [target] #TCP SYN Scan
 * nmap -sT [target] #TCP Connect Scan
@@ -620,7 +635,7 @@ mtr -n --report IP
 * nmap –send-eth [target] #Send Raw Ethernet Packets
 * nmap –send-ip [target] #Send IP Packets
 
-### ✅️ Port Scan
+### 9.14.5. ✅️ Port Scan
 
 * nmap -F [target] #Perform a Fast Scan
 * nmap -p [port(s)] [target] #Scan Specific Ports
@@ -633,7 +648,7 @@ mtr -n --report IP
 * nmap –top-ports [number] [target] #Scan Top Ports
 * nmap -r [target] #Perform a Sequential Port Scan
 
-### ✅️ Version Detection
+### 9.14.6. ✅️ Version Detection
 
 * nmap -O [target] #Operating System Detection
 * nmap -O –osscan guess [target] #Attempt to Guess an Unknown OS
@@ -641,7 +656,7 @@ mtr -n --report IP
 * nmap -sV –version trace [target] #Troubleshooting Version Scans
 * nmap -sR [target] #Perform a RPC Scan
 
-### ✅️ Firewall Evasion Techniques
+### 9.14.7. ✅️ Firewall Evasion Techniques
 
 * nmap -f [target] #augment Packets
 * nmap –mtu [MTU] [target] #pacify a Specific MTU
@@ -658,7 +673,7 @@ mtr -n --report IP
     * nmap –spoof-mac Cis 192.168.0.1
 * nmap –badsum [target] #Send Bad Checksums
 
-### ✅️ Troubleshooting And Debugging
+### 9.14.8. ✅️ Troubleshooting And Debugging
 
 * nmap -h #Getting Help
 * nmap -V #Display nmap Version
@@ -671,7 +686,7 @@ mtr -n --report IP
 * nmap -e [interface] [target] #Specify a Network Interface
     * nmap -e eth0 192.168.0.1
 
-### ✅️ nmap Scripting Engine
+### 9.14.9. ✅️ nmap Scripting Engine
 
 * nmap –script [script.nse] [target] #Execute Individual Scripts
 * nmap –script [expression] [target] #Execute Multiple Scripts
@@ -685,7 +700,7 @@ mtr -n --report IP
     * nmap –script banner.nse –script-trace 192.168.0.1
 * nmap –script-updatedb #Update the Script Database
 
-## 🅱️ nmcli
+## 9.15. 🅱️ nmcli
 
 ```shell
 nmcli connection show
@@ -710,18 +725,18 @@ nmcli general logging domains ALL
 nmcli general logging level INFO domains ALL
 ```
 
-## 🅱️ nslookup
+## 9.16. 🅱️ nslookup
 
 ```shell
 nslookup -querytype=mx domain.ir #پیدا کردن ایمیل‌سرور یک دامین
 nslookup <name>
 ```
 
-## 🅱️ tcpdump
+## 9.17. 🅱️ tcpdump
 
 دستور لینوکس برای گوش کردن به شبکه- سوییچ‌ها
 
-### ✅️ Switch
+### 9.17.1. ✅️ Switch
 
 * [-c] → Capture Only N Number of Packets
     * sudo tcpdump -c 5
@@ -769,7 +784,7 @@ nslookup <name>
 * [] →
 * [] →
 
-### ✅️ Examples
+### 9.17.2. ✅️ Examples
 
 * tcpdump src NUMBER && dst port NUMBER
 * tcpdump dst ff:ff:ff:ff:ff:ff
@@ -784,13 +799,13 @@ nslookup <name>
 * tcpdump -i any -c5 -nn "port 80 and (src 192.168.122.98 or src 54.204.39.132)" → #filtering packets for HTTP service
   only (port 80) and source IP addresses 192.168.122.98 or 54.204.39.132
 
-## 🅱️ traceroute
+## 9.18. 🅱️ traceroute
 
 ```shell
 traceroute google.com
 ```
 
-## 🅱️ wget
+## 9.19. 🅱️ wget
 
 - [-b] → قرار دادن پروسه دانلود در بک‌گراند و عدم نمایش و این معمولا برای فایل‌های بزرگ کاربرد دارد
 - [-c] → اگر دانلود متوقف شد مجددا ادامه دانلود را از سر گیرد
@@ -826,7 +841,7 @@ traceroute google.com
 - `wget -r -np -R "index.html*" https://shop.hemat-elec.ir/wp-content/themes/irankala/assets/fonts` # Note: دانلود فایل های مشخص شده
     - wget -r -A.pdf
 
-## 🅱️ Hosname
+## 9.20. 🅱️ Hosname
 
 ```shell
 #show
@@ -848,9 +863,9 @@ hostname XXXXX
 /etc/init.d/hostname.sh start
 ```
 
-# 🅰️ Connection
+# 10. 🅰️ Connection
 
-## 🅱️ Bonding
+## 10.1. 🅱️ Bonding
 
 * این قابلیت امکان مجتمع شدن چند کارت شبکه و استفاده از آنها به صورت یک کارت شبکه را فراهم می کند. نام دیگر آن NIC Teaming و Link Aggregate است. این روش دارای مدهای مختلفی است که عبارتند از:
 * mode=0(balance-rr) – mode=1(active-backup) – mode=2(balance-xor) – mode=3(broadcast) – mode=4(802.3ad) – mode=5(balance-tlb) – mode=6(balance-alb)
@@ -861,7 +876,7 @@ hostname XXXXX
     * Generic Modes: در مد broadcast تمامی ترافیک از تمامی پورتهای عضو گروه خارج می شوند. در مد balance-tlb ترافیک خروجی load balance می شود اما ترافیک ورودی فقط از یک لینک می آید. در مد balance-alb نیز تمامی ترافیک ارسالی و دریافتی load balance می شود و از روش change MAC address استفاده می گردد.
 * سخن آخر اینکه اگر شما در محیطی کار می کنید که سوئیچ ها از ۸۰۲.۳ad یا همان LACP پشتیبانی می کنند، بهترین روش همین مد است. اما اگر ساپورت سوئیچی ندارید و هم می خواهید load balance داشته باشید و هم fault tolerance بهترین روش balance-alb است. در نهایت اگر می خواهید فقط بین دو سرور replication داشته باشید، مد balance-rr برای شما بهتر است.
 
-## 🅱️ بررسی سرعت لینک شبکه
+## 10.2. 🅱️ بررسی سرعت لینک شبکه
 
 ```shell
 node1: iperf -s

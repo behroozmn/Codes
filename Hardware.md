@@ -1,10 +1,10 @@
 <div dir="rtl">
 
-# 🅰️ General
+# 1. 🅰️ General
 
 * دیوایس‌های شبکه‌ای در آینده از نوع SDN یعنی software define network خواهند بود که بتوانند برحسب نیازمندی‌های شبکه برنامه ریزی شوند
 
-## 🅱️ Commands
+## 1.1. 🅱️ Commands
 
 ```shell
 #Get UUID
@@ -23,13 +23,13 @@ lsusb #show all usb
 udevadm # monitoring kernel udevd events
 ```
 
-## 🅱️ Benchmark
+## 1.2. 🅱️ Benchmark
 
 * GraphicCard: [URL](http://gpuboss.com)
 * Monitor: [URL](* Monitor: https://www.displayspecifications.com/en/comparison/97f830fe5c)
 * CPU: [URL](http://cpuboss.com)
 
-## 🅱️ Test Health
+## 1.3. 🅱️ Test Health
 
 بررسی سلامت قطعه سخت‌افزار
 
@@ -44,7 +44,7 @@ udevadm # monitoring kernel udevd events
     * Disk
         * `sudo smartctl -A /dev/sda` #Power_On_Hours نمایش میزان ساعت کارکرد
 
-# 🅰️ MEMORY|Ram
+# 2. 🅰️ MEMORY|Ram
 
 * «DMA» یا «DirectAccessMemory»: اجازه دسترسی خواندن و نوشتن مستقیما روی رَم بدون دخالت «سی‌پی‌یو» یعنی بخشی از هارد را به مموری انتقال دادن
 
@@ -75,9 +75,14 @@ sudo ipcs #نمایش قطعات رم که برنامه‌ها به صورت ا�
 ![Memory.jpg](./_srcFiles/Images/Memory.jpg "Memory.jpg")
 ![MemoryStackOverFlow.jpg](./_srcFiles/Images/MemoryStackOverFlow.jpg "MemoryStackOverFlow.jpg")
 
-# 🅰️ Battery
+# 3. 🅰️ Battery
 
 * CMD(Windows)
     * `powercfg/batteryreport` #get all information about battery in microsoft surface
 
 </div>
+
+
+
+
+![MotherBoard-PCIE.jpg](./_srcFiles/Images/MotherBoard-PCIE.jpg "MotherBoard-PCIE.jpg")

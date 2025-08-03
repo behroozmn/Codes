@@ -1,6 +1,6 @@
-# 1.Commands
+# 1. 1.Commands
 
-## 1.1.pip
+## 1.1. pip
 
 > pip commnad options
 
@@ -37,7 +37,7 @@
 
 </div>
 
-## 1.2.python
+## 1.2. python
 
 > python Command option
 
@@ -48,7 +48,7 @@
     * [-m pipe]
         * `python3 -m pip --version`
 
-## 1.3.pythom3
+## 1.3. pythom3
 
 > python3 Command option
 
@@ -66,9 +66,9 @@
                 * `python3 manage.py migrate` [Django]  اعمال تغییرات مدل در دیتابیس
                     * تمامی ماگریشن های ایجاد شده را در دیتابیس اعمال نماییم
             * `python3 manage.py shell` [Django]  دسترسی به شل یا همان پایتون کنسول
-            * `python manage.py createsuperuser` [Django] ایجاد یوزر ادمین جنگو
+            * `python3 manage.py createsuperuser` [Django] ایجاد یوزر ادمین جنگو
 
-## 1.4.django-admin
+## 1.4. django-admin
 
 * [Command]
     * [] اگر خالی باشد نمایش لیستی از دستورات در دسترس از جنگو
@@ -76,7 +76,7 @@
     * [startproject name]
         * ```django-admin startproject MyProject < Director >``` Create DjangoTemplate
 
-## 1.5.apt
+## 1.5. apt
 
 > apt command options
 
@@ -84,17 +84,17 @@
     * install # نصب
         * `sudo apt install python3-PackageName` #نصب بسته در محدوده سیستمی و نه یک پروژه یعنی همه جای سیستم عامل دسترس خواهد بود
 
-## 1.6.pipdeptree
+## 1.6. pipdeptree
 
 > pipdeptree|nl #نمایش وابستگی‌ها در فرمت فایل نیازمندی‌ها
 
 ---
 
-# 2.Install Offline
+# 2. Install Offline
 
-## 2.1.[install from local Archive](https://packaging.python.org/en/latest/tutorials/installing-packages/#installing-from-local-archives)
+## 2.1. [install from local Archive](https://packaging.python.org/en/latest/tutorials/installing-packages/#installing-from-local-archives)
 
-### 2.1.1.روش اول
+### 2.1.1. روش اول
 
 1. mkdir <span style="color:red;">/tmp/</span><span style="color:purple;">download</span>
 2. vim <span style="color:red;">/tmp/</span><span style="color:lightgreen;">requirements.txt</span>
@@ -107,7 +107,7 @@
 4. pip download -r <span style="color:red;">/tmp/</span><span style="color:lightgreen;">requirements.txt</span>
 5. python3 -m pip install --no-index --find-links=file://<span style="color:red;">/tmp/</span><span style="color:purple;">download</span> wadllib webcolors webencodings websocket-client Werkzeug
 
-### 2.1.2.روش دوم
+### 2.1.2. روش دوم
 
 - python3 -m pip install <span style="color:lightgreen;">./downloads/SomeProject-1.0.4.tar.gz</span>
 - python3 -m pip install --no-index --find-links=<span style="color:lightgreen;">file:///local/dir/ </span><span style="color:purple;">SomeProject</span>
