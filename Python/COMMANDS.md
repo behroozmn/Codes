@@ -18,6 +18,7 @@
     * check #بررسی سلامت سازگاری و وابستگی‌های یک بسته
     * uninstall #حذف بسته
     * show #نمایش اطلاعات یک بسته نصب شده
+      * `pip show drf-spectacular`
     * search #Search PyPI for packages
     * inspect #show Details about Environment
     * config #Manage local and global configuration

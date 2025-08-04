@@ -6,7 +6,7 @@
 
 ## 2. Setting.py
 
-* `INSTALL_APPS=[... , 'drf-spectacular' ,...]` # Swagget
+* `INSTALL_APPS=[... , 'drf_spectacular' ,...]` # Swagget
 * `REST_FRAMEWORK = {... , 'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema' , ...}`
 * Add this line
   ```python
@@ -16,7 +16,7 @@
   'VERSION': '1.0.0',
   'SERVE_INCLUDE_SCHEMA': False,
   # OTHER SETTINGS
-  # }
+  }
   ```
 
 # 3.chnage  `urls.py` #global urls.py
