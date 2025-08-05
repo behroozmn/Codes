@@ -1,10 +1,13 @@
+# 🅰️ مفاهیم
+
 * Display(Resolution)
     * FHD    [1920*1080]
     * 2K(QHD)[2560x1440] Quad
-    * 4K(UHD)[3840*2160] 
+    * 4K(UHD)[3840*2160]
     * 4K     [5120*2880]
     * 8K     [7680*4320]
-*
+
+![HEIGHT-SWIVEL-PIVOT-TILT.jpg](./_srcFiles/Images/HEIGHT-SWIVEL-PIVOT-TILT.jpg "HEIGHT-SWIVEL-PIVOT-TILT.jpg")
 
 # 🅰️ wayland
 
@@ -42,12 +45,7 @@ export QT_QPA_PLATFORMTHEME=qt5ct
 
 Ignoring XDG_SESSION_TYPE=wayland on Gnome. Use QT_QPA_PLATFORM=wayland to run on Wayland anyway.
 
-
-
-
-
 # 🅰️ Connector
-
 
 ## 🅱️ DVI(Digital Visual Interface)
 
@@ -56,7 +54,9 @@ Ignoring XDG_SESSION_TYPE=wayland on Gnome. Use QT_QPA_PLATFORM=wayland to run o
 - در درگاه DVI-D حرف D مخفف Digital است و برای انتقال داده های دیجیتال طراحی شده است
 - در درگاه DVI-I حرف i مخفف Integrated است و برای انتقال داده های دیجیتال و آنالوگ به صورت همزمان طراحی شده است
 
-
-
 ![1.jpg](./_srcFiles/Images/1.jpg "1.jpg")
 ![dvi-port.jpg](./_srcFiles/Images/dvi-port.jpg "dvi-port.jpg")
+
+
+
+
