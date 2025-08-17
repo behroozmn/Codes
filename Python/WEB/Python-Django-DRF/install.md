@@ -30,6 +30,7 @@ INSTALL_APPS = [..., 'rest_framework', ...]
 File: `urls.py`
 
 ```python
+from django.urls import path, include
 
 urlpatterns = [
     ...

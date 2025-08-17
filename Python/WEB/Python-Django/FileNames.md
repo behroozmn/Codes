@@ -62,3 +62,5 @@
         * `'DESCRIPTION': 'Your project description'`
         * `'VERSION': '1.0.0'`
         * `'SERVE_INCLUDE_SCHEMA': False`
+    * `ALLOWED_HOSTS = ['*']` # Need to run `python3 manage.py runserver 0.0.0.0:8000`
+        * `ALLOWED_HOSTS = ['192.168.1.100', 'example.com', '127.0.0.1']`
