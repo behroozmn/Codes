@@ -55,9 +55,19 @@ gnome-system-monitor
 
 ## ✅️ kill
 
+```shell
+sudo kill -9 "$(pgrep processName)" # kill process by name
+```
+
 بصورت پیش فرض اگر هیچ سیگنالی نزنید از سیگنال ۱۵ استفاده می نماید
 
 ## ✅️ lscpu
+
+```shell
+processorArchitecture=$(lscpu | grep 'Architecture' |awk '{print $2}' | head -n 1)
+processorCounter=$(lscpu | grep 'CPU(s)' |awk '{print $2}' | head -n 1)
+processorModelName=$(lscpu | grep 'Model name' |cut -d ' ' -f 3- | sed -e 's/^[[:space:]]*//')
+```
 
 ## ✅️ mpstat
 
@@ -77,6 +87,12 @@ nice -n 10 apt-get upgrade
 ```
 
 ## ✅️ pgrep
+
+## ✅️ ps
+
+```shell
+ps -A # list processes
+```
 
 ## ✅️ pidof
 
@@ -124,8 +140,6 @@ renice -10 -p 22678
         * کرنل در حالت فوق می‌تواند این اولویت را تغییر دهد
             * کاهش اولویت: استفاده بلند مدت از «سی‌پی‌یو» توسط یک پروسه
             * افزایش اولیت:پروسه در طولانی مدت از «سی‌پی‌یو» استفاده نکرده باشد
-
-## ✅️ global
 
 ## ✅️ shutdown
 
