@@ -1,3 +1,53 @@
+# 🅰️ CheetSeet
+
+```
+~     Home directory
+$     Denote a variable (as in $HOME or $USER)
+&     Run a command in the background
+;     Command termination
+&&    Continue to the next command upon success (AND)
+||    Continue to the next command upon failure (OR)
+|     Use output of the first command as input for the next
+'     Treat all contents as literal
+"     Treat spaces as literal, but expand variables 
+\     Treat the next character as literal
+( )   Execute contents in a subshell
+{ ;}  Execute in current shell (terminate with semi-colon)
+[  ]  Test expression
+(( )) Evaluate contents as a mathematical expression
+[[ ]] Test expression, returning 0 or 1
+
+>  Overwrite existing content
+<  Overwrite existing content
+>> Append to existing content
+<< Append to existing content
+
+?  Match exactly one of any character
+*  Match zero or more of any character
+
+[0-9]    Any digit
+[a-z]    Any lowercase alpha
+[A-Z]    Any uppercase alpha
+[a-zA-Z] Any lowercase or uppercase alpha
+[abc]    Only a, b, and c
+[!a-z]   No lowercase alpha
+[!1-3]   No 1, 2, or 3, but all other digits
+[b-hot]  Lowercase b through h, and the letter o and the letter t
+[A-M0-9] Uppercase alpha A through M, and any digit
+
+\b     Backspace
+\e     Escape
+\f     Form feed (like a non-returning newline)
+\n     Newline
+\r     Carriage return
+\t     Horizontal tab
+\v     Vertical tab
+\\     Backslash
+\cH    Control-H
+\uHHHH Unicode character of hexadecimal value HHHH
+\NNN   8-bit character with octal value NNN
+```
+
 # 🅰️ String
 
 ```shell
@@ -122,8 +172,6 @@ echo "$(tput setaf 7)"white text")(tput sgr0)"
 
 
 ```
-
-
 
 # 🅰️ Function
 
@@ -335,7 +383,6 @@ echo "${myArray[@]:2:4}" # نمایش عضو دوم تا چهارم
 echo "${myArray[@]:1}" # نمایش عضو اول تا آخر
 ```
 
-
 ## 🅱️ Expand variable names dynamically
 
 ```shell
@@ -360,13 +407,16 @@ OR
         echo "${!name}"
 ```
 
-
 # 🅰️ DataBase
 
 ```shell
 mysql -u root -p1234567890  -h localhost -e "USE MyDatabaseName;SELECT * FROM raiddisk;"
 mysql -u root -p1234567890 "MyDatabaseName" -h localhost -e "SELECT * FROM raiddisk;"
 /usr/local/mysql/bin/mysql -u root -p123456789 "MyDatabaseName" -h localhost -Bse "SELECT * FROM raiddisk INTO OUTFILE '/tmp/myfilename.csv' FIELDS TERMINATED BY ','  ENCLOSED BY '\"' LINES TERMINATED BY '\n'"
+
+echo "select * from resyncrate;" > /tmp/behrooz.sql
+mysql --user=root --password=123456789 MyDatabaseName < /tmp/behrooz.sql
+
 ```
 
 ```shell
@@ -656,6 +706,68 @@ case $CHOICE in
 esac
 ```
 
+## 🅱️ Menu-DialogBlue
+
+```shell
+#/bin/bash
+# by oToGamez
+# www.pro-toolz.net
+
+      E='echo -e';e='echo -en';trap "R;exit" 2
+    ESC=$( $e "\e")
+   TPUT(){ $e "\e[${1};${2}H";}
+  CLEAR(){ $e "\ec";}
+  CIVIS(){ $e "\e[?25l";}
+   DRAW(){ $e "\e%@\e(0";}
+  WRITE(){ $e "\e(B";}
+   MARK(){ $e "\e[7m";}
+ UNMARK(){ $e "\e[27m";}
+      R(){ CLEAR ;stty sane;$e "\ec\e[37;44m\e[J";};
+   HEAD(){ DRAW
+           for each in $(seq 1 13);do
+           $E "   x                                          x"
+           done
+           WRITE;MARK;TPUT 1 5
+           $E "BASH SELECTION MENU                       ";UNMARK;}
+           i=0; CLEAR; CIVIS;NULL=/dev/null
+   FOOT(){ MARK;TPUT 13 5
+           printf "ENTER - SELECT,NEXT                       ";UNMARK;}
+  ARROW(){ read -s -n3 key 2>/dev/null >&2
+           if [[ $key = $ESC[A ]];then echo up;fi
+           if [[ $key = $ESC[B ]];then echo dn;fi;}
+     M0(){ TPUT  4 20; $e "Login info";}
+     M1(){ TPUT  5 20; $e "Network";}
+     M2(){ TPUT  6 20; $e "Disk";}
+     M3(){ TPUT  7 20; $e "Routing";}
+     M4(){ TPUT  8 20; $e "Time";}
+     M5(){ TPUT  9 20; $e "ABOUT  ";}
+     M6(){ TPUT 10 20; $e "EXIT   ";}
+      LM=6
+   MENU(){ for each in $(seq 0 $LM);do M${each};done;}
+    POS(){ if [[ $cur == up ]];then ((i--));fi
+           if [[ $cur == dn ]];then ((i++));fi
+           if [[ $i -lt 0   ]];then i=$LM;fi
+           if [[ $i -gt $LM ]];then i=0;fi;}
+REFRESH(){ after=$((i+1)); before=$((i-1))
+           if [[ $before -lt 0  ]];then before=$LM;fi
+           if [[ $after -gt $LM ]];then after=0;fi
+           if [[ $j -lt $i      ]];then UNMARK;M$before;else UNMARK;M$after;fi
+           if [[ $after -eq 0 ]] || [ $before -eq $LM ];then
+           UNMARK; M$before; M$after;fi;j=$i;UNMARK;M$before;M$after;}
+   INIT(){ R;HEAD;FOOT;MENU;}
+     SC(){ REFRESH;MARK;$S;$b;cur=`ARROW`;}
+     ES(){ MARK;$e "ENTER = main menu ";$b;read;INIT;};INIT
+  while [[ "$O" != " " ]]; do case $i in
+        0) S=M0;SC;if [[ $cur == "" ]];then R;$e "\n$(w        )\n";ES;fi;;
+        1) S=M1;SC;if [[ $cur == "" ]];then R;$e "\n$(ifconfig )\n";ES;fi;;
+        2) S=M2;SC;if [[ $cur == "" ]];then R;$e "\n$(df -h    )\n";ES;fi;;
+        3) S=M3;SC;if [[ $cur == "" ]];then R;$e "\n$(route -n )\n";ES;fi;;
+        4) S=M4;SC;if [[ $cur == "" ]];then R;$e "\n$(date     )\n";ES;fi;;
+        5) S=M5;SC;if [[ $cur == "" ]];then R;$e "\n$($e by oTo)\n";ES;fi;;
+        6) S=M6;SC;if [[ $cur == "" ]];then R;exit 0;fi;;
+ esac;POS;done
+```
+
 # 🅰️ User
 
 ```shell
@@ -668,6 +780,7 @@ fi
 read -rep "Question here? " -i "Default answer" answer
 echo "${answer}"
 ```
+
 # 🅰️ JSON
 
 ```shell
@@ -678,6 +791,7 @@ cat test.json | python -m json.tool
 cat test.json | jq
 
 ```
+
 # 🅰️ Shebang
 
 ```shell
@@ -706,6 +820,7 @@ cat test.json | jq
 #  the exit on error will be ignored.
 
 ```
+
 # 🅰️ Socket
 
 ```shell
@@ -750,7 +865,6 @@ echo "$2" | socat -t $timeOut - TCP:$1:$Port,connect-timeout=$timeOut
 # ✅️ ############################################PEER###########################
 
 ```
-
 
 # 🅰️ File
 
@@ -808,3 +922,210 @@ tar -C /extract/to/path -xf /path/to/archive.tar.xz
 # File.RemoveExtraCharacter
 dos2unix <FileName>
 ```
+
+# 🅰️ Exit
+
+## 🅱️ Command.Exit.WhenFailed.EvenPipeline
+
+```shell
+set -o pipefail
+
+#EXAMPLE
+# >>>>>>>>>>>>>>>>>>>>>>>> Before >>>>>>>>>>>>>>>>>>>>>>>>
+#!/bin/bash
+set -e
+foo | echo "a"
+echo "bar"
+
+# [output]
+# →
+# → a
+# → line 5: foo: command not found
+# → bar
+
+
+# >>>>>>>>>>>>>>>>>>>>>>>> After >>>>>>>>>>>>>>>>>>>>>>>>
+#!/bin/bash
+set -eo pipefail
+foo | echo "a"
+echo "bar"
+
+# [output]
+# → a
+# → line 5: foo: command not found
+```
+
+## 🅱️ Command.Exit.WhenFailed
+
+```shell
+
+set -o errexit
+[or]
+set -e
+
+
+#EXAMPLE
+# >>>>>>>>>>>>>>>>>>>>>>>> Before >>>>>>>>>>>>>>>>>>>>>>>>
+#!/bin/bash
+foo
+echo "bar"
+
+#[output]
+# → line 4: foo: command not found
+# → bar
+
+# >>>>>>>>>>>>>>>>>>>>>>>> After >>>>>>>>>>>>>>>>>>>>>>>>
+#!/bin/bash
+set -e
+foo
+echo "bar"
+
+#[output]
+# → line 5: foo: command not found
+
+# >>>>>>>>>>>>>>>>>>>>>>>> PreventImmediateExit >>>>>>>>>>>>>>>>>>>>>>>>
+#!/bin/bash
+set -e
+foo || true
+echo "bar"
+
+#[output]
+# → line 5: foo: command not found
+# → bar
+````
+
+## 🅱️ Exit.WhenUseUndeclaredVariables
+
+```shell
+set -o nounset
+[or]
+set -u
+
+#EXAMPLE
+# >>>>>>>>>>>>>>>>>>>>>>>> Before >>>>>>>>>>>>>>>>>>>>>>>>
+#!/bin/bash
+set -e
+echo $a
+echo "bar"
+
+# [output]
+# →
+# → bar
+
+
+# >>>>>>>>>>>>>>>>>>>>>>>> After >>>>>>>>>>>>>>>>>>>>>>>>
+#!/bin/bash
+set -eu
+echo $a
+echo "bar"
+
+# [output]
+# → line 5: a: unbound variable
+
+
+```
+
+# 🅰️ Math
+
+```shell
+# add two variables
+result=$((int1 + int2))
+
+# increment integer variable by 1
+((int++)) #→  such as ((x++))
+((++int))
+((x+=5))  #→  افزودن عدد ۵ به عدد
+# add int1 and int2 and assign the result to int1
+((int1 += int2))
+
+# exponentiate base to power
+result=$((base ** power)) [or] echo $RANDOM
+
+
+
+# EXPR
+result=\((expr \){int1} + ${int2})
+result=expr 1 + 1 #result: 2
+```
+
+# 🅰️ Code and Decode
+
+```shell
+# -*- coding: utf-8 -*-
+# Or
+# -*- coding: ascii -*-
+# Or
+# -*- coding: latin-1 -*-
+
+# Encod.Hash
+hash=\((echo -n "\)variableToHash" | md5sum | cut -f1 -d ' ')
+
+# Encode.base64
+base64Encoded=$(echo -n "String" | base64)
+
+#  Decode.base64
+base64Encoded=$(echo -n "String" | base64)
+base64Decoded=$(echo -n "<Hash>" | base64 -d)
+
+Decode_CodeToString() {
+    Code=$1
+    local msg=\((base64 -d <<<"\)Code")
+}
+```
+
+# 🅰️ Debugging
+
+```shell
+set -o xtrace
+[or]
+set -x
+
+#EXAMPLE
+# >>>>>>>>>>>>>>>>>>>>>>>> Before >>>>>>>>>>>>>>>>>>>>>>>>
+#!/bin/bash
+set -x
+a=5
+echo $a
+echo "bar"
+
+# [output]
+# → + a=5
+# → + echo 5
+# → 5
+# → + echo bar
+# → bar
+
+```
+
+# 🅰️ mapfile
+
+```shell
+diskGetAllDisksWWN() {
+    # [https://github.com/koalaman/shellcheck/wiki/SC2207]
+    # روش اول
+    mapfile -t Disks < <(find /dev/disk/by-id/wwn* -print0 | xargs -0 -n1 basename | awk -F '-part' '{print $1}' | sort | uniq) # خروجی دستورات توسط خط جدید از هم جدا شده است
+    echo "${Disks[@]}"
+
+    # روش دوم
+    # cd "/dev/disk/by-id" || exit 1
+    # Disks=($(find ./wwn* | tr -d './' | awk -F '-part' '{print $1}' | sort | uniq))
+    # echo "${Disks[@]}"
+}
+
+#دو دستور زیر یکسان هستند
+IFS=" " read -r -a all <<<"$(diskGetAllDisksWWN)" #آرایه با فاصله از هم جدا شده اند
+all=($(diskGetAllDisksWWN))
+
+```
+
+# 🅰️
+
+# 🅰️
+
+# 🅰️
+
+# 🅰️
+
+# 🅰️
+
+# 🅰️ 
