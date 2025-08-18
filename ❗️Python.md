@@ -35,6 +35,232 @@
     from __future__ import unicode_literals
     ```
 
+# 🅰️ VirtualEnvironment
+
+* محیط مجازی (Virtual Environment): امکان ایجاد فضا مستقل و جداگانه پروژه‌ها از هم(جلوگیری از تداخل) در وابستگی‌های نصب بسته‌ها و کتابخانه‌ها را فراهم می‌آورد
+* هر پروژه می‌تواند نسخه‌های خاص خود از کتابخانه‌ها را داشته باشد بدون اینکه بر روی پروژه‌های دیگر تأثیر بگذارد.
+* نکته: در محیط venv نیاز به زدن دستور ```python3 -m pip install requests``` نیست و تنها نوشتن ```pip install``` کار میکند
+* حتما باید بسته virtualenv در سیستم نصب باشد تا بتوانین مجیط مجازی virtualEnvironment بوجود بیاورید(یعنی در خروجی دستور `pip freeze` این بسته موجود باشد)
+
+## 🅱️ تفاوت virtualenv  و  venv
+
+| ویژگی           | virtualenv                   | venv                                                                                     |
+|-----------------|------------------------------|------------------------------------------------------------------------------------------|
+| **ابزار**       | ابزار مستقل                  | ماژول داخلی پایتون(built-in)                                                             |
+| **نسخه پایتون** | پایتون 2.x و 3.x             | فقط پایتون 3.3 به بعد                                                                    |
+| **سرعت**        | کمی کندتر                    | سریع‌تر                                                                                  |
+| **قابلیت‌ها**   | قابلیت‌های پیشرفته‌تر        | ساده و کم‌حجم                                                                            |
+| **نصب**         | `pip install virtualenv`     | `apt install python3.11-venv` or `apt install python3-venv` یا به صورت پیش‌فرض موجود است |
+| **استفاده**     | `python3 -m virtualenv venv` | `python3 -m venv venv`                                                                   |
+
+```shell
+apt install python3.11-virtualenv #معمولا در پایتون نسخه۳ نصب می‌شود
+
+# پس از زدن دستور زیر یک فولدر در مسیر کنونی ایجاد می‌شود که حاوی زیرفولدرهایی برای نگهداری ساختار بسته‌های نصبی خواهد بود
+python3 -m venv myenv # Alternative(windows): python3 -m vitrualenv venv #ایجاد محیط مجازی با نام دلخواه
+
+# فعال‌سازی محیط مجازی مختص به پروژه‌خاص
+source myenv/bin/activate # Alternatives(windows): .\MyVenv\Scripts\activate 
+ 
+pip install package_name
+
+deactivate #غیر فعال سازی و خروج از محیط مجازی
+```
+
+# 🅰️ Logical Operand
+
+```python
+# AND
+print("---------AND----------")
+
+print(f"True and True : {True and True}")
+print(f"False and True : {False and True}")
+print(f"True and False : {True and False}")
+print(f"False and False : {False and False}")
+
+userAge = 17
+userGender = "female"
+if userAge >= 18 and userGender == "male":
+    print("you have to go to soldiery")
+else:
+    print("you can stay at home")
+
+# OR
+print("---------OR----------")
+print(f"True or True : {True or True}")
+print(f"False or True : {False or True}")
+print(f"True or False : {True or False}")
+print(f"False or False : {False or False}")
+
+weather = "sunny"
+if weather == "sunny" or weather == "cloudy":
+    print("we can travel")
+else:
+    print("we can not travel")
+
+# NOT
+print("--------NOT-----------")
+print(f"not True : {not True}")
+print(f"not False : {not False}")
+
+isBrotherComming = False
+if not isBrotherComming:
+    print("my sister said : i wont come")
+
+# Combine
+print("-------Combine------------")
+age = 50
+if (0 <= age <= 2) or (8 <= age < 65):
+    print("you should pay 10 dollars")
+if not ((2 < age < 8) or age >= 65):
+    print("you should pay 10 dollars")
+
+```
+
+# 🅰️ exception
+
+## 🅱️ Error
+
+```python
+try:
+    pass
+    # Code
+except NameError as NameE:  # Handle NameError Error
+    print(NameE)
+    print(NameE.message)
+    pass
+    # مدیریت ارور NameEror در این بلاک صورت می‌گیرد
+except IOError as IOE:  # Handle NameError Error
+    print(IOE)
+    print(IOE.message)
+    # مدیریت ارور IOError در این بلاک صورت می‌گیرد
+
+except:  # ErrorHandler of each other error type
+    pass
+    # مدیریت ارور IOError در این بلاک صورت می‌گیرد
+else:
+    pass
+    # اگر قسمت ترای بدون ارور اجرا شود این بلاک اجرا می‌شود
+finally:
+    pass
+    # در هر صورت این بلاک اجرا خواهد شد
+
+```
+
+## 🅱️ Error-Raise
+
+```python
+# print(test)
+# None = 1
+
+# raise IndexError('throw index error')
+# raise ValueError('invalid value')
+
+
+def print_with_custom_color(text, color):
+    colors = ('red', 'green', 'blue')
+    if type(text) is not str:
+        raise TypeError("text must be a string")
+    elif color not in colors:
+        raise ValueError(f"{color} is not in colors")
+    else:
+        print(f"printed {text} in {color}")
+
+
+print_with_custom_color("Behrooz", 'red')
+print_with_custom_color(2, 'red')
+print_with_custom_color("Behrooz", 'redd')
+
+```
+
+## 🅱️ Debug(pdb)
+
+```python
+# import pdb
+
+# pdb.set_trace()
+
+# number1 = int(input('please enter a number: '))
+# number2 = int(input('please enter a number: '))
+# result = number1 + number2
+# print(f"result is {result}")
+
+
+# common pdb commands
+# l -> your commands list
+# n -> next line
+# c -> continue -> finished debugging
+# p -> print
+
+def add_numbers(a, b, c, d):
+    import pdb;
+    pdb.set_trace()
+    return a + b + c + d
+
+
+res = add_numbers(1, 2, 3, 4)
+print(res)
+
+```
+
+# 🅰️ JSON
+
+```python
+import json
+from json2html import *
+
+
+def createJson(obj):
+    # obj = {
+    #             "word": "behroooz",
+    #             "type": "behrooz"
+    #         }
+    jsonStr = json.dumps(obj, ensure_ascii=False).encode('utf-8').decode()
+    print(jsonStr)
+
+
+def importFromFile(filename):
+    f = open('/tmp/json.json')
+    jData = json.load(f)
+    return jData
+
+
+def EditJson(filename):
+    f = open('/tmp/Quran/Input.json')
+    jData = json.load(f)
+    # print(jData)
+
+    for x in range(0, 6236):
+        if jData[x]['SuraNumber'] == "003" and jData[x]['VerseNumber'] == "003":
+            jData[x]['Farsi'] = "NewData"
+
+    json_str = json.dumps(jData, ensure_ascii=False).encode('utf-8').decode()
+    with open('/tmp/Quran/Output.json', 'w') as ff:
+        ff.write(json_str)
+    f.close()
+    ff.close()
+
+
+def toHtml(inputFileName, outputFileName):
+    f = open(inputFileName)
+    jData = json.load(f)
+    data = json2html.convert(json={"data": jData})
+    with open(outputFileName, 'w') as ff:
+        ff.write(json.dumps(data, ensure_ascii=False).encode('utf-8').decode())
+    f.close()
+    ff.close()
+
+
+# toHtml("/tmp/All.json", "/tmp/All.html")
+
+
+def showData():
+    json_string = '{ "1":"Red", "2":"Blue", "3":"Green"}'
+    parsed_json = json.loads(json_string)
+    print(parsed_json['2'])
+
+```
+
 # 🅰️Database
 
 ## 🅱️ SQLlight
@@ -386,150 +612,6 @@ root.mainloop()
 
 ```
 
-# 🅰️ exception
-
-## 🅱️ Error
-
-```python
-try:
-    pass
-    # Code
-except NameError as NameE:  # Handle NameError Error
-    print(NameE)
-    print(NameE.message)
-    pass
-    # مدیریت ارور NameEror در این بلاک صورت می‌گیرد
-except IOError as IOE:  # Handle NameError Error
-    print(IOE)
-    print(IOE.message)
-    # مدیریت ارور IOError در این بلاک صورت می‌گیرد
-
-except:  # ErrorHandler of each other error type
-    pass
-    # مدیریت ارور IOError در این بلاک صورت می‌گیرد
-else:
-    pass
-    # اگر قسمت ترای بدون ارور اجرا شود این بلاک اجرا می‌شود
-finally:
-    pass
-    # در هر صورت این بلاک اجرا خواهد شد
-
-```
-
-## 🅱️ Error-Raise
-
-```python
-# print(test)
-# None = 1
-
-# raise IndexError('throw index error')
-# raise ValueError('invalid value')
-
-
-def print_with_custom_color(text, color):
-    colors = ('red', 'green', 'blue')
-    if type(text) is not str:
-        raise TypeError("text must be a string")
-    elif color not in colors:
-        raise ValueError(f"{color} is not in colors")
-    else:
-        print(f"printed {text} in {color}")
-
-
-print_with_custom_color("Behrooz", 'red')
-print_with_custom_color(2, 'red')
-print_with_custom_color("Behrooz", 'redd')
-
-```
-
-## 🅱️ Debug(pdb)
-
-```python
-# import pdb
-
-# pdb.set_trace()
-
-# number1 = int(input('please enter a number: '))
-# number2 = int(input('please enter a number: '))
-# result = number1 + number2
-# print(f"result is {result}")
-
-
-# common pdb commands
-# l -> your commands list
-# n -> next line
-# c -> continue -> finished debugging
-# p -> print
-
-def add_numbers(a, b, c, d):
-    import pdb;
-    pdb.set_trace()
-    return a + b + c + d
-
-
-res = add_numbers(1, 2, 3, 4)
-print(res)
-
-```
-
-# 🅰️ JSON
-
-```python
-import json
-from json2html import *
-
-
-def createJson(obj):
-    # obj = {
-    #             "word": "behroooz",
-    #             "type": "behrooz"
-    #         }
-    jsonStr = json.dumps(obj, ensure_ascii=False).encode('utf-8').decode()
-    print(jsonStr)
-
-
-def importFromFile(filename):
-    f = open('/tmp/json.json')
-    jData = json.load(f)
-    return jData
-
-
-def EditJson(filename):
-    f = open('/tmp/Quran/Input.json')
-    jData = json.load(f)
-    # print(jData)
-
-    for x in range(0, 6236):
-        if jData[x]['SuraNumber'] == "003" and jData[x]['VerseNumber'] == "003":
-            jData[x]['Farsi'] = "NewData"
-
-    json_str = json.dumps(jData, ensure_ascii=False).encode('utf-8').decode()
-    with open('/tmp/Quran/Output.json', 'w') as ff:
-        ff.write(json_str)
-    f.close()
-    ff.close()
-
-
-def toHtml(inputFileName, outputFileName):
-    f = open(inputFileName)
-    jData = json.load(f)
-    data = json2html.convert(json={"data": jData})
-    with open(outputFileName, 'w') as ff:
-        ff.write(json.dumps(data, ensure_ascii=False).encode('utf-8').decode())
-    f.close()
-    ff.close()
-
-
-# toHtml("/tmp/All.json", "/tmp/All.html")
-
-
-def showData():
-    json_string = '{ "1":"Red", "2":"Blue", "3":"Green"}'
-    parsed_json = json.loads(json_string)
-    print(parsed_json['2'])
-
-```
-
 # 🅰️ Regex
 
 *Need
@@ -640,11 +722,11 @@ if re.match('^[\w\.-]+@([\w-]+\.)+[\w-]{2,4}$', text):
     print('email is valid')
 ```
 
-
 ## 🅱️ Search
 
 ```python
 import re
+
 # Behrooz: regexr.com
 
 names = [
@@ -670,7 +752,6 @@ for item in os.walk('/Learning-Concept'):
             print(file)
 
 ```
-
 
 # 🅰️ Thread
 
@@ -700,8 +781,6 @@ Waiter().start()
 print("Done")
 
 ```
-
-# 🅰️
 
 # 🅰️
 
