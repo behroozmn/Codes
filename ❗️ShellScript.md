@@ -94,6 +94,33 @@ echo $$                # → Pid of current shell
   # گسترش غیرمستقیم
   echo ${!var2}  # این خط "Hello" را چاپ می‌کند
 
+
+
+# ✅️ bold
+echo -e "\e[1mbold\e[0m"
+
+# ✅️ italic
+echo -e "\e[3mitalic\e[0m"
+
+# ✅️ bold italic
+echo -e "\e[3m\e[1mbold italic\e[0m"
+
+# ✅️ underline
+echo -e "\e[4munderline\e[0m"
+
+# ✅️ strikethrough
+echo -e "\e[9mstrikethrough\e[0m"
+
+echo "$(tput setaf 0)"black text")(tput sgr0)"
+echo "$(tput setaf 1)"red text")(tput sgr0)"
+echo "$(tput setaf 2)"green text")(tput sgr0)"
+echo "$(tput setaf 3)"yellow text")(tput sgr0)"
+echo "$(tput setaf 4)"blue text")(tput sgr0)"
+echo "$(tput setaf 5)"magenta text")(tput sgr0)"
+echo "$(tput setaf 6)"cyan text")(tput sgr0)"
+echo "$(tput setaf 7)"white text")(tput sgr0)"
+
+
 ```
 
 
@@ -650,4 +677,134 @@ cat test.json
 cat test.json | python -m json.tool
 cat test.json | jq
 
+```
+# 🅰️ Shebang
+
+```shell
+# -*- coding: utf-8 -*-
+
+# Or
+
+#!/usr/bin/bash
+# -*- coding: ascii -*-
+
+# Or
+
+#!/usr/bin/bash
+# -*- coding: latin-1 -*-
+
+
+
+#!/usr/bin/env
+#!/bin/bash
+
+#Notice
+#1-[/usr/bin/env] bash is more portable than [/bin/bash]
+
+#2-Avoid using #!/usr/bin/env bash -e (vs set -e),
+#  because when someone runs your script as bash ./script.sh,
+#  the exit on error will be ignored.
+
+```
+# 🅰️ Socket
+
+```shell
+# ✅️ Send
+echo "behrooz" | socat - TCP4:127.0.0.1:1234
+echo "behrooz" | socat - TCP:127.0.0.1:1234
+echo "behrooz" | socat - TCP:127.0.0.1:1234
+
+# ✅️ Listen.Recieve
+socat - TCP-LISTEN:1234,reuseaddr,fork
+socat - TCP4-LISTEN:1234,reuseaddr,fork
+socat TCP-LISTEN:1234,reuseaddr,fork EXEC:"/tmp/salam/myscript.sh"
+socat tcp-l:1234,reuseaddr,fork system:'cat >> /tmp/log.txt',nofork
+socat - TCP-LISTEN:1234,reuseaddr,fork | tee -a /tmp/log.txt #سوکت TIME_WAIT بوجود میآورد و بعد از یک دقیقه آن را می‌بندد
+
+# ✅️ ################################################LOCAL###########################
+export Port="55055"
+export ScriptName="02-Script.sh"
+
+# ✅️ Listen
+/usr/bin/nohup /usr/bin/socat TCP4-LISTEN:"$Port",reuseaddr,fork,ignoreeof,keepalive EXEC:$(/usr/bin/dirname "$0")/"$ScriptName" &
+/usr/bin/nohup /usr/bin/socat TCP4-LISTEN:"$Port",reuseaddr,fork,ignoreeof,keepalive EXEC:/bin/MyScript.sh &
+
+# ✅️ MyScript
+read MESSAGE
+
+peerServer="$SOCAT_PEERADDR"
+peerSendServerIP=$PeerServer
+peerSendServerIP=$SOCAT_PEERPORT
+
+localRecieveServerIP=$SOCAT_SOCKADDR
+localRecieveServerPort=$SOCAT_SOCKPORT
+localParentPid=$SOCAT_PPID
+localScriptPid:$$
+
+# ✅️ ################################################LOCAL###########################
+
+# ✅️ ################################################PEER###########################
+#send
+echo "check" | socat -t 3 - TCP:127.0.0.1:55055,connect-timeout=3
+echo "$2" | socat -t $timeOut - TCP:$1:$Port,connect-timeout=$timeOut
+# ✅️ ############################################PEER###########################
+
+```
+
+
+# 🅰️ File
+
+```shell
+__dirname="$(cd "\)(dirname "${BASH_SOURCE[0]}")" && pwd)"
+__filename="$(${__dirname})(basename "${BASH_SOURCE[0]}")"
+__basename=$(basename "){BASH_SOURCE[0]}")
+
+echo "DireName: $__dirname"
+echo "BaseName: $__basename"
+echo "FileName: $__filename"
+
+# ✅️ Rename all files in a directory
+ls | xargs -i mv {} {}.old
+
+# ✅️ File.ReadLines
+while read line; do
+    # ← put the command that you want to run on each line here
+done < <() # ← put the command that generates the lines you want to process inside the parentheses
+
+# ✅️ Read line by line From text file
+{
+    while IFS= read -r "lineNum"; do
+        echo "${lineNum}"
+    done
+} <"FILE_NAME"
+
+# ✅️ File.write.multipleLines
+#!/bin/bash
+cat >"/path/to/file" <<EOF
+first line
+second line
+...
+EOF
+
+# ✅️ File.write.multipleLines.sudoPermissionRequired
+#!/bin/bash
+cat <<EOF | sudo tee "/path/to/file" >/dev/null
+first line
+second line
+...
+EOF
+
+# ✅️ File.CompressionOrDecompression
+zip -rq /path/to/archive.zip /path/to/directory-or-file
+tar -czvf /path/to/archive.tar.gz /path/to/directory-or-file
+tar -cJf /path/to/archive.tar.xz /path/to/directory-or-file
+
+unzip -q /path/to/archive.zip -d /extract/to/path
+tar -C /extract/to/path -xzvf /path/to/archive.tar.gz
+tar -C /extract/to/path -xf /path/to/archive.tar.xz
+
+
+# ✅️ دستوری برای حذف کاراکترهای اضافی انتهای خط در اسکریپت‌های شل‌اسکریپت
+# File.RemoveExtraCharacter
+dos2unix <FileName>
 ```
