@@ -1,4 +1,4 @@
-# 🅰️ CheetSeet
+# 🅰️ CheetSeet And General
 
 ```
 ~     Home directory
@@ -48,6 +48,75 @@ $     Denote a variable (as in $HOME or $USER)
 \NNN   8-bit character with octal value NNN
 ```
 
+- Indention: در شل اسکریپت به هیچ عنوان از تب استفاده نشود و تنها از اسپیس استفاده شود و اگر بخواهیم بحث indentation را رعایت نماییم از دو اسپیس استفاده مینماییم
+- Note: فرق sh و bash این است که گاهی ممکن است لینوکس آنقدر کوچک شده باشد که برنامه bash را نداشته باشد و تنها یک شل Customشده کوچک داشته باشد و این شل توسط دستور sh شناخته می شود و در این صورت اگر بجای /bin/sh عبارت /bin/bash قرار بدید ممکن است اسکریپت نتواند شل را اجرا نماید.(معمولا sh به bash اشاره دارد)
+
+```shell
+# ✅️Command.returnCode.Check.success
+#!/bin/bash
+if command >/dev/null 2>&1; then
+    echo "succeed"
+else
+    echo "failed"
+fi
+
+# ✅️Command.returnCode.Check.failed
+#!/bin/bash
+# check if last command failed
+if ! command >/dev/null 2>&1; then
+    echo "failed"
+else
+    echo "succeed"
+fi
+
+# ✅️Command.ReturnCode
+# برای صحت سنجی اجرای یک دستور ، استفاده از دو بلاک [] پشت سر هم غلط است
+# 1-هرچیزی که در قسمت [ ] قرار بگیرد به مثابه یک دستور مستقل که دارای returnCode است در نظر گرفته خواهد شد
+# 2-در صورت صحیح بودن[ شرط] اول، Command1 یک returnCode جدید صادر خواهد کرد
+[1]
+x=0
+[ "$x == "0" ] && command1 (exitCode is 0)
+[ "$x == "1" ] && command2
+echo $?
+
+output: command1
+returnCode 1
+
+[2]
+[ "$?" == "0" ] && Command1
+[ "$?" == "10" ] && Command2
+
+# ✅️Command.output
+#!/bin/bash
+cd /tmp
+result="$(pwd)"
+echo "$result" #[output] → /tmp
+
+# ✅️Command.GetPassword
+# get text as input from user without showing
+echo "Please enter your password: "
+read -rs password
+echo "${password}"
+
+# ✅️ Port Scan
+host=$1
+port_first=1
+port_last=65535
+echo >/dev/tcp/$host/$port >/dev/null 2>&1 && echo "$port open"
+
+```
+* بررسی اتصال به اینترنت
+```shell
+while true; do ping 8.8.8.8 -c 2 > /tmp/ping.log  && zenity --info --text="$(date +%T).\n\nInternet is OK." --title="Coffee time" --ok-label="exit" && exit; sleep 2; done;
+
+```
+
+```shell
+_time=$(date +%Y/%m/%d-%H:%M:%S)
+if /usr/bin/zenity --question --title="یادآوری" --text="${_time}\nثبت فعالیت کنونی :" --ok-label="ثبت" --cancel-label="عدم ثبت"; then
+	echo "${_time}-Registry successfully done" >>"/tmp/Behrooz.log"
+fi
+```
 # 🅰️ String
 
 ```shell
@@ -173,6 +242,35 @@ echo "$(tput setaf 7)"white text")(tput sgr0)"
 
 ```
 
+## 🅱️ differentStarAndAtsign
+
+```shell
+echo "Using \"\$*\":"
+for a in "$*"; do
+    echo $a;
+done
+
+echo -e "\nUsing \$*:"
+for a in $*; do
+    echo $a;
+done
+
+echo -e "\nUsing \"\$@\":"
+for a in "$@"; do
+    echo $a;
+done
+
+echo -e "\nUsing \$@:"
+for a in $@; do
+    echo $a;
+done
+
+# ussing format
+#./script.sh  one two "three four"
+# نکته: همواره اگر از دابل کوت استفاده شود سبب می‌شود که اسپیس دیتِکت شود
+
+```
+
 # 🅰️ Function
 
 ```shell
@@ -243,8 +341,6 @@ echo Your argument was $ARG
 | -z        | condition.String.isEmpty         | `if [[ -z "${string}" ]]; then echo "empty string" fi`                  |                                                              |
 | -n        | condition.String.NotEmpty        | `if [[ -n "${string}" ]]; then echo "string is not empty" fi`           |                                                              |
 
-
-
 ```shell
 # Compaire
 man test
@@ -282,8 +378,6 @@ if [ -d "/../dir/.." ]   # → If Dir  Exist
 if [ -f "/../file.txt" ] # → If file Exist
 if [ -z "$variable" ]    # → وقتی متغیر تهی باشد
 ```
-
-
 
 ## 🅱️ CommandSwitch Conditional
 
@@ -326,6 +420,21 @@ echo "valueZ:${valueZ} "
 # valueN:2
 # valueV:3
 # valueZ:1
+```
+
+## 🅱️ Select
+
+```shell
+echo "choose one of them"
+select x in one two three; do
+    if [ -n "$x" ]; then
+        echo "Have you selected :$x"
+        break
+    else
+        echo 'invalid choice'
+    fi
+done
+
 ```
 
 # 🅰️ List
@@ -908,6 +1017,75 @@ echo "$2" | socat -t $timeOut - TCP:$1:$Port,connect-timeout=$timeOut
 
 ```
 
+
+```shell
+# sending:
+echo "salam"|socat - TCP4:127.0.0.1:1234
+
+listening:
+socat tcp-l:1234,reuseaddr,fork system:'cat >> /tmp/log.txt',nofork
+or
+socat - TCP-LISTEN:1234,reuseaddr,fork |tee -a /tmp/log.txt
+سوکت TIME_WAIT بوجود میآورد و بعد از یک دقیقه آن را می‌بندد
+
+
+
+# listen:
+socat - TCP-LISTEN:1234,reuseaddr,fork
+socat - TCP4-LISTEN:1234,reuseaddr,fork
+
+
+echo "behrooz"| socat -  TCP:localhost:1234
+socat TCP-LISTEN:1234,reuseaddr,fork   EXEC:"/tmp/salam/myscript.sh"
+
+
+# ###########################################
+socat  TCP4-LISTEN:1234,reuseaddr,fork EXEC:/tmp/13980215/myscript.sh 
+echo "behrooz"| socat -  TCP:localhost:1234
+
+#!/bin/bash
+read MESSAGE
+
+if [[   "$MESSAGE" == "behrooz"  ]];then
+	echo "I see behrooz";
+else
+	echo "Data:  $MESSAGE";
+fi
+
+
+```
+
+
+```shell
+####script summary
+# Title: title
+# Description: description
+# Author: author <email>
+# Date: yyyy-mm-dd
+# Version: 1.0.0
+
+# Exit codes
+# ==========
+# 0 no error
+# 1 script interrupted
+# 2 error description
+
+# >>>>>>>>>>>>>>>>>>>>>>>> ExecuteOnRecieveDataFromSocket >>>>>>>>>>>>>>>>
+read MESSAGE
+
+if [[   "$MESSAGE" == "behrooz"  ]];then
+    echo "I see behrooz";
+else
+    echo "Data:  $MESSAGE";
+fi
+# <<<<<<<<<<<<<<<<<<<<<<<< ExecuteOnRecieveDataFromSocket <<<<<<<<<<<<<<<<<<<<<<<<
+
+# Listening
+socat  TCP4-LISTEN:1234,reuseaddr,fork EXEC:/tmp/13980215/myscript.sh
+
+
+```
+
 # 🅰️ File
 
 ```shell
@@ -1063,7 +1241,20 @@ echo "bar"
 
 # [output]
 # → line 5: a: unbound variable
+```
 
+## 🅱️ Exit event handler
+
+```shell
+function on_exit() {
+    tput cnorm          # Show cursor. You need this if animation is used.
+                        # i.e. clean-up code here
+    exit 0              # Exit gracefully.
+}
+
+# Put this line at the beginning of your script (after functions used by event handlers).
+# Register exit event handler.
+trap on_exit EXIT
 
 ```
 
@@ -1160,9 +1351,58 @@ all=($(diskGetAllDisksWWN))
 
 ```
 
-# 🅰️
+# 🅰️ Event.Handler.CTRL_C
 
-# 🅰️
+```shell
+#!/bin/bash
+# register a function (handler) to run on script termination (CTRL+C)
+# CTRL+C event handler
+function on_ctrl_c() {
+    echo                # Set cursor to the next line of '^C'
+    tput cnorm          # show cursor. You need this if animation is used.
+                        # i.e. clean-up code here
+    exit 1              # Don't remove. Use a number (1-255) for error code.
+}
+
+# Put this line at the beginning of your script (after functions used by event handlers).
+# Register CTRL+C event handler
+trap on_ctrl_c SIGINT
+```
+
+# 🅰️ time
+
+```shell
+# ✅️ system uptime. -p: --pretty, -s: since
+systemUptime=$(uptime -p)
+echo "${systemUptime}"
+
+# ✅️ system uptime in seconds.
+systemUptime=$(awk '{print $1}' /proc/uptime)
+echo "${systemUptime}"
+
+# ✅️ Convert time
+timeNowSecondsEpoch=$(date +%s) #seconds since epoch (1970-01-01 00:00:00)
+timeNowLocal=$(date +%R)        #current local time (R: 24hrs, r: 12hrs)
+timeNowUTC=$(date -u +%R)       #current UTC time
+
+# ✅️ Usage: formatSeconds 70 -> 1m 10s
+# Credit: https://unix.stackexchange.com/a/27014
+function formatSeconds {
+    local T=$1
+    local D=$((T / 60 / 60 / 24))
+    local H=$((T / 60 / 60 % 24))
+    local M=$((T / 60 % 60))
+    local S=$((T % 60))
+    local result=""
+
+    ((D > 0)) && result="${D}d "
+    ((H > 0)) && result="\({result}\){H}h "
+    ((M > 0)) && result="\({result}\){M}m "
+    ((S > 0)) && result="\({result}\){S}s "
+    echo -e "\({result}" | sed -e 's/[[:space:]]*\)//'
+}
+
+```
 
 # 🅰️
 
