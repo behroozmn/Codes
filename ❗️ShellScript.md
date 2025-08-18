@@ -1,32 +1,172 @@
 # 🅰️ String
 
-
-
 ```shell
 myCustomString="  Behrooz Mohammadi Nasab Sahzabi  "
 
 lowercase="${myCustomString,,}"  # behrooz mohammadi nasab sahzabi
 uppercase="${myCustomString^^}"  # BEHROOZ MOHAMMADI NASAB SAHZABI
+trimmed_RemoveWhiteSpace_leading_and_trailing=$(echo -e "${string}" | sed -e 's/^[[:space:]]*//' | sed -e 's/[[:space:]]*$//')  
+trimmed_RemoveWhiteSpace_all=$(echo -e "${string}" | tr -d '[:space:]')
+TrimLeft_RemoveLeadingWhiteSpace=$(echo -e "${string}" | sed -e 's/^[[:space:]]*//')
+TrimRight_RemoveTrailingWhiteSpace=$(echo -e "${string}" | sed -e 's/[[:space:]]*$//')
+reverseStringCharacters=$(echo -e "${string}" | rev)
+randomString=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 8 ; echo '')
+concatenateTwoStrings="${string1}${string2}"
+
+# ✅️ check whether string contains substring
+if [[ "${string}" == *"${substring}"* ]]; then
+echo "${string} contains: ${substring}"
+fi
+
+# ✅️ get length of a variable that is a string
+behrooz=123456
+echo "${#behrooz}" output:6
+
+
+# ✅️ Structure
+${variable-name-here:index-of-character:number-of-characters-from-index-onwards-to-return}
+
+MyString="behroozMohammadiNasabSahzabi" #Example
+echo "${MyString:0:5}"   #[output] → behro
+echo "${MyString:20:6}"  #[output] → bSahza
+echo "${MyString:0:5}"   #[output] → behro
+
+
+# ✅️ Contain SubString
+
+if [[ "\({string}" == *"\){substring}"* ]]; then
+echo "\({string} contains: \){substring}"
+fi
+
+```
+
+```shell
+# ✅️ assign default value to variable if variable is empty otherwise assign null
+#اگر متغیر مقدار داشته باشد هیچ کاری نمیکند
+#اگر متغیر مقدار نداشته باشد آنگاه مقدار پیش‌فرض تعیین شده را در آن میریزد
+: "${variable:=defaultValue}"
+
+
+
+
+#✅️ حذف کاراکتر از ابتدای یک متغیر
+Name=behroozbehrooz
+echo  "${Name#b}"    # ehroozbehrooz
+echo  "${Name#be}"   # hroozbehrooz
+echo  "${Name#b*r}"  # oozbehrooz(Remove b until r) → حذف پیشامد اول
+echo  "${Name##b*r}" # ooz(Remove b until r)        → حذف بزرگترین  پیشامد
+path="/home/Files/Documents/salam.txt"
+echo ${path##*[/]}      #→ show only BaseName(FileName) # حذف بزرگترین پیشامدی که آخر آن اسلش است و قبل آن هرجیزی می‌تواند باشد
+
+#✅️ حذف کاراکتر از آخر یک متغیر
+Name=behroozbehrooz
+echo  "${Name%z}"   # behroozbehroo
+echo  "${Name%ooz}" # behroozbehr
+echo  "${Name%h*z}" # behroozbe
+echo  "${Name%%h*z}" # be            → حذف بزرگترین  پیشامد
+Filename=salam.txt
+echo "${Filename%.*}" 
+
+#✅️ تبدیل یک کاراکتر به کاراکتر دیگر از محتویات یک متغیر
+Name=behroozbehrooz
+echo  "${Name/o/t}"   #once change: o → t     (behrtozbehrooz)
+echo  "${Name//o/t}"  #All change : o → t     (behrttzbehrttz) 
+
+#✅️ نمایش از اندیس شروع تا اندیس اتمام
+Name=behrooz
+echo  "${Name:0}"      # → behrooz
+echo  "${Name:2}"      # → hrooz
+echo  "${Name:0:2}"    # → be
+echo  "${Name::2}"     # → be
+echo  "${Name:3:5}"    # → rooz
+echo  "${Name:0:-1}"   # → behroo
+echo  "${Name:0:-4}"   # → beh
+echo  "${Name::-4}"    # → beh
+
+
+echo $$                # → Pid of current shell
+
+
+#✅️ variable indirect expansion
+  #تعریف متغیرها
+  var1="Hello"
+  var2="var1"
+  # گسترش غیرمستقیم
+  echo ${!var2}  # این خط "Hello" را چاپ می‌کند
+
 ```
 
 
 
+# 🅰️ Function
 
+```shell
+# ✅️Parameters:
+name () {
+    # Body
+    echo "$@" # function all arguments array
+    echo $# # number of function arguments
+    echo "$?" # last function/command return code
+}
+
+#✅️ Local/Global
+# بعضی متغیر ها مثل x و y بسیار پراستفاده هستند و ممکن است این نام‌ها را قبلآ بعنوان تغیر سراسری استفاده کرده‌باشد
+# برای رفع تداخل این دو متغیر سراسری و لوکال(داخل تابع) همنام از دستور local در درون تابع استفاده نمایید.
+#!/bin/bash 
+x=100 
+func () { local x=1; echo $x;} 
+echo $x; #out:100 
+func #out: 1
+#local x=1
+
+
+
+# ✅️در صورتی که بخواهید یک تابع نوشته شده را محفاظت کنید, و جلوی آپدیت شدن آن را بگیرید از دستور زیر استفاده نمایید
+readonly -f Func
+
+# ✅️استفاده از تابع مِین
+#!/usr/bin/env bash
+main() {
+
+    exit 0
+}
+main "$@"
+
+
+# ✅️EqualArgsAndName
+# اگر بخواهیم آرگومان‌های مجاز ورودی یک اسکریپت را نام توابع قرار بدهیم(هیچ متنی خارج از تابع نباید نوشته شود) در این صورت: 
+# تمامی توابع و بدنه‌های آن را نوشته و در انتها کُل اسکریپت، عبارت زیر را قرار بدهید. در این صورت فقط آن تابع به اجرا در خواهد آمد
+func1 () {...} 
+func2 () {...} 
+${1}
+
+# بررسی وجود آرگومان✅️
+if [ -z $1 ];then
+    echo Please provide an argument
+fi
+echo Your argument was $ARG
+
+
+```
 
 # 🅰️ condition
 
 * `[ condition ] || command` if condition is false then run command
 * `[ condition ] && command` if condition is true then run command
 
-| #         | title                            | sample                                      | Description                                                  |
-|-----------|----------------------------------|---------------------------------------------|--------------------------------------------------------------|
-| -s        | Condition.File.Notempty          |                                             |                                                              |
-| -r        | Condition.File.Readalbe          |                                             |                                                              |
-| -w        | Condition.File.writealbe         |                                             |                                                              |
-| -ot       | Condition.if.File1OlderThanFile2 | `[ "/path/to/file1" -ot "/path/to/file2" ]` |                                                              |
-| -nt       | Condition.if.File1NewerThanFile2 | `[ "/path/to/file1" -nt "/path/to/file2" ]` | check if file1 is newer than file2                           |                         
-| =         | Condition.if.evaluating          | `[ "${NAME}" = "Kevin" ]`                   | از دو علامت مستاوی استفاده نکنید                             |                        
-| (( ... )) | Condition.if.evaluating_Integers |                                             | Use (( ... )) rather than [[ ... ]] when evaluating integers |
+| #         | title                            | sample                                                                  | Description                                                  |
+|-----------|----------------------------------|-------------------------------------------------------------------------|--------------------------------------------------------------|
+| -s        | Condition.File.Notempty          |                                                                         |                                                              |
+| -r        | Condition.File.Readalbe          |                                                                         |                                                              |
+| -w        | Condition.File.writealbe         |                                                                         |                                                              |
+| -ot       | Condition.if.File1OlderThanFile2 | `[ "/path/to/file1" -ot "/path/to/file2" ]`                             |                                                              |
+| -nt       | Condition.if.File1NewerThanFile2 | `[ "/path/to/file1" -nt "/path/to/file2" ]`                             | check if file1 is newer than file2                           |                         
+| =         | Condition.if.evaluating          | `[ "${NAME}" = "Kevin" ]`                                               | از دو علامت مستاوی استفاده نکنید                             |                        
+| !=        | Condition.if.NOTevaluating       | `[[ "${string1}" != "${string2}" ]]`                                    | if strings are not equal                                     |
+| (( ... )) | Condition.if.evaluating_Integers |                                                                         | Use (( ... )) rather than [[ ... ]] when evaluating integers |
+| -z        | condition.Arguments.zeroArgument | ` if [ -z $1 ];then echo ThereIs no argument; read ARG; else ARG=$1 fi` | بررسی برای وجود آرگومان ورودی                                |
+| -z        | condition.String.isEmpty         | `if [[ -z "${string}" ]]; then echo "empty string" fi`                  |                                                              |
+| -n        | condition.String.NotEmpty        | `if [[ -n "${string}" ]]; then echo "string is not empty" fi`           |                                                              |
 
 ## 🅱️ CommandSwitch Conditional
 
@@ -168,11 +308,52 @@ echo "${myArray[@]:2:4}" # نمایش عضو دوم تا چهارم
 echo "${myArray[@]:1}" # نمایش عضو اول تا آخر
 ```
 
+
+## 🅱️ Expand variable names dynamically
+
+```shell
+Problematic code: # ❌️ این شیوه غلط است و فقط برای راهنمایی آورده شده است
+        var_1="hello world"
+        n=1
+        echo "${var_$n}"
+
+
+Correct code:
+        # Use arrays instead of dynamic names
+        declare -a var
+        var[1]="hello world"
+        n=1
+        echo "${var[n]}"
+
+OR
+        # Expand variable names dynamically
+        var_1="hello world"
+        n=1
+        name="var_$n"
+        echo "${!name}"
+```
+
+
 # 🅰️ DataBase
 
 ```shell
-mysql -u root -p1234567890  -h localhost -e "USE sadrsds;SELECT * FROM raiddisk;"
-mysql -u root -p1234567890 "sadrsds" -h localhost -e "SELECT * FROM raiddisk;"
+mysql -u root -p1234567890  -h localhost -e "USE MyDatabaseName;SELECT * FROM raiddisk;"
+mysql -u root -p1234567890 "MyDatabaseName" -h localhost -e "SELECT * FROM raiddisk;"
+/usr/local/mysql/bin/mysql -u root -p123456789 "MyDatabaseName" -h localhost -Bse "SELECT * FROM raiddisk INTO OUTFILE '/tmp/myfilename.csv' FIELDS TERMINATED BY ','  ENCLOSED BY '\"' LINES TERMINATED BY '\n'"
+```
+
+```shell
+set -f        # disable globbing
+IFS=$'\n'     # set field separator to NL (only)
+arr=($(mysql -u root -p123456789 "MyDatabaseName" -h localhost -Bse "SELECT * FROM raiddisk;"))
+ 
+for i in "${arr[@]}"
+do
+   echo "$i"
+done
+
+
+
 ```
 
 # 🅰️ Graphical commands
@@ -446,4 +627,27 @@ case $CHOICE in
             echo "You chose Option 3"
             ;;
 esac
+```
+
+# 🅰️ User
+
+```shell
+# ✅️Am I Root
+if (( $(id -u) == 0 )); then
+    echo "I'm root"
+fi
+
+# ✅️Get data from user
+read -rep "Question here? " -i "Default answer" answer
+echo "${answer}"
+```
+# 🅰️ JSON
+
+```shell
+cat test.json
+#{"title":"Person","type":"object","properties":{"firstName":{"type":"string"},"lastName":{"type":"string"},"age":{"description":"Age in years","type":"integer","minimum":0}},"required":["firstName","lastName"]}
+
+cat test.json | python -m json.tool
+cat test.json | jq
+
 ```
