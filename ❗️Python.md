@@ -39,7 +39,7 @@
 
 * محیط مجازی (Virtual Environment): امکان ایجاد فضا مستقل و جداگانه پروژه‌ها از هم(جلوگیری از تداخل) در وابستگی‌های نصب بسته‌ها و کتابخانه‌ها را فراهم می‌آورد
 * هر پروژه می‌تواند نسخه‌های خاص خود از کتابخانه‌ها را داشته باشد بدون اینکه بر روی پروژه‌های دیگر تأثیر بگذارد.
-* نکته: در محیط venv نیاز به زدن دستور ```python3 -m pip install requests``` نیست و تنها نوشتن ```pip install``` کار میکند
+* نکته: در محیط venv نیاز به زدن دستور `python3 -m pip install requests` نیست و تنها نوشتن `pip install` کار میکند
 * حتما باید بسته virtualenv در سیستم نصب باشد تا بتوانین مجیط مجازی virtualEnvironment بوجود بیاورید(یعنی در خروجی دستور `pip freeze` این بسته موجود باشد)
 
 ## 🅱️ تفاوت virtualenv  و  venv
@@ -67,7 +67,146 @@ pip install package_name
 deactivate #غیر فعال سازی و خروج از محیط مجازی
 ```
 
-# 🅰️ Logical Operand
+# 🅰️ Variable 
+
+```python
+# CaseSensitive
+# Can insert many type of data into one variable
+# string can use one or double qoute
+
+# MyAge = 23      → upper camel case - Use for Classes
+
+x, y = 400, 500
+personChild = None  # None Means EMPTY
+BoolData = True  # first char must uppercase
+
+username = "behrooz"
+# username = input("Insert username: ")
+
+print(f"the BoolData is {BoolData}")
+print("the BoolData is {BoolData}")
+print(f"sum is : {x + y}")
+print(f"multiply 2 and 6 is : {2 * 6}")
+print(username[2])
+print("Name: " + username)
+print(round(12.2565856, 5))
+
+print(list(range(4, 10)))  # [4, 5, 6, 7, 8, 9]
+print(list(range(10)))  # [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+print(list(range(0, 15, 2)))  # [0, 2, 4, 6, 8, 10, 12, 14]
+print(list(range(10, 0, -2)))  # [10, 8, 6, 4, 2]
+
+userRank = 1
+print("you got GOLD medal") if userRank == 1 else print("no medal")
+
+```
+
+# 🅰️ Loop
+
+```python
+
+for variable in iterable:
+    if condition1:
+        # کد برای condition1
+        if condition2:
+        # کد برای condition2
+        else:
+    # کد برای حالت دیگر condition2
+    else:
+
+
+# کد برای حالت دیگر condition1
+
+
+class loop:
+
+    def forLoop1(self):
+        listOfNumbers = [23, 54, 67, 89, 34, 9]
+        for number in listOfNumbers:
+            print(number * 2)
+
+    def forLoop2(self):
+        [print(x) for x in [1, 2, 3, 4, 5, 6, 11]]
+
+    def forLoop3(self):
+        for num in range(1, 10):
+            if num % 2 == 1:
+                for star in range(1, 6):  # [1, 2, 3, 4, 5]
+                    print("*" * star)
+            else:
+                for star in range(5, 0, -1):  # [5, 4, 3, 2, 1]
+                    print("*" * star)
+
+    def whileLoop1(self):
+        password = input("what is your password : ")
+        while password != "1234":
+            print("your password is wrong!!!")
+            password = input("what is your password : ")
+            print("your password is correct !!!!")
+
+    def whileLoop2(self):
+        num = 1
+        while num < 30:
+            # if(num == 5):
+            #     break
+
+            print("\U0001f600" * num)
+            print("*" * num)
+            num += 1
+
+
+behrooz = loop()
+# behrooz.forLoop1()
+# behrooz.forLoop2()
+# behrooz.forLoop3()
+# behrooz.whileLoop1()
+behrooz.whileLoop2()
+```
+
+# 🅰️ Operation
+
+## 🅱️ OperatorsComparison
+
+```python
+# Return Boolean Value
+number_1 = -100
+number_2 = -200
+
+# == : returns true if the value of number_1 is equal to number_2
+print(f'{number_1} == {number_2} : {number_1 == number_2}')
+
+# != : returns true if the value of number_1 is not equal to number_2
+print(f'{number_1} != {number_2} : {number_1 != number_2}')
+
+# > : returns true if the value of number_1 is greater than number_2
+print(f'{number_1} > {number_2} : {number_1 > number_2}')
+
+# >= : = or >
+print(f'{number_1} >= {number_2} : {number_1 >= number_2}')
+
+# < : returns true if the value of number_1 is less than number_2
+print(f'{number_1} < {number_2} : {number_1 < number_2}')
+
+# <= : = or <
+print(f'{number_1} <= {number_2} : {number_1 <= number_2}')
+
+# is → check By ماهیت و مقدار
+# == → check By مقدار
+
+list1 = ['a', 'b', 'c']
+list2 = list1
+list3 = list(list1)
+print(list1)
+print(list2)
+print(list3)
+print(list1 == list2)
+print(list1 == list3)
+print(list1 is list2)
+print(list1 is list3)
+
+```
+
+## 🅱️ Logical Operand
 
 ```python
 # AND
@@ -114,6 +253,82 @@ if (0 <= age <= 2) or (8 <= age < 65):
     print("you should pay 10 dollars")
 if not ((2 < age < 8) or age >= 65):
     print("you should pay 10 dollars")
+
+```
+
+## 🅱️ Ternary Operator
+
+```python
+# ternary:A ternary operator exists in some programming languages, and it allows you to shorten a simple If-Else block. It takes in 3 or more operands:
+#  syntax: [value_if_true] if [condition] else [value_if_false]
+#               │                  │              │
+#               │                  │              └──> A value that's returned if the condition evaluates to False.
+#               │                  │
+#               │                  └─> A boolean condition that has to be satisfied to return value if true.
+#               │
+#               └──> A value that's returned if the condition evaluates to True.
+
+def condition1():
+    a, b = 10, 20
+    min = a if a < b else b
+    print(min)
+
+
+def condition2():
+    age = 17
+    outcome = 'Go home.' if age < 16 else 'Not sure...' if 16 <= age < 18 else 'Welcome'
+    print(outcome)
+
+
+def condition3():
+    a, b = 100, 20
+    print((b, a)[a < b])
+
+
+def condition4():
+    a, b = 10, 20
+    print((lambda: b, lambda: a)[a < b]())
+
+
+def condition5():
+    a, b = 10, 20
+    print("Both a and b are equal" if a == b else "a is greater than b"
+    if a > b else "b is greater than a")
+
+
+def condition5_Alternative():
+    a, b = 10, 20
+    if a != b:
+        if a > b:
+            print("a is greater than b")
+        else:
+            print("b is greater than a")
+    else:
+        print("Both a and b are equal")
+
+
+def condition6():
+    a, b = 5, 7
+    print(a, "is greater") if (a > b) else print(b, "is Greater")
+
+
+# ⇉ a if condition  else b
+condition1()
+condition6()
+
+print("---------Step 2------------")
+# ⇉ a if condition1 else b if condition2 else c
+condition2()
+
+# ⇉ print({True: a, False: b} [a < b])
+condition3()
+
+# ⇉ Lambda
+condition4()
+
+# ⇉ nested ternary operator
+condition5()
+condition5_Alternative()
 
 ```
 
@@ -201,6 +416,129 @@ def add_numbers(a, b, c, d):
 res = add_numbers(1, 2, 3, 4)
 print(res)
 
+```
+
+# 🅰️ Function
+
+## 🅱️ __NAME__
+
+### ✅️ `__init__`
+
+نقش تابع سازنده در هر کلاس را ایفا می‌کند
+
+```python
+class User:
+    def __init__(self, name, age):  # تابع سازنده
+        self.name = name
+        self.age = age
+
+    def show_data(self):
+        print(self.name, self.age)
+
+
+obj = User("behrooz", 33)
+obj.show_data()
+
+```
+
+### ✅️ `__len__`
+
+فقط زمانی می‌شود از این تابع استفاده کرد که فانکشن آن تعریف شده باشد یا خودمان یا ارث‌بری
+
+```python
+class Behrooz:
+    def __init__(self, _name):
+        self.name = _name
+
+    def __len__(self):
+        return 20
+
+
+obj = Behrooz("Alii")
+print(len(obj))
+```
+
+### ✅️  `__add__` و `__mul__` و `__truediv__` و `__sub__`
+
+```python
+class Behrooz:
+    def __init__(self, _name):
+        self.name = _name
+
+    # بجای عملگر  + استفاده می‌شود
+    def __add__(self, other):
+        return f"Need to plus with {self.name} or {other}"
+
+    # بجای عملگر *استفاده می‌شود
+    def __mul__(self, other):
+        return f"Need to multiplier with {self.name} or {other}"
+
+    # بجای عملگر / استفاده می‌شود
+    def __truediv__(self, other):
+        return f"Need to division with {self.name} or {other}"
+
+    # بجای عملگر - استفاده می‌شود
+    def __sub__(self, other):
+        return f"Need to minus with {self.name} or {other}"
+
+
+obj = Behrooz("Alii")
+
+print(obj)
+print(obj + "salam")
+print(obj - "salam")
+print(obj * "salam")
+print(obj / "salam")
+
+```
+
+| Function               | Oprator |
+|------------------------|---------|
+| __isub__(self,p2)      | -=      | 
+| __imul__(self,p2)      | *=      | 
+| __itruediv__(self,p2)  | \=      | 
+| __floordiv__(self,p2)  | \\      | 
+| __ifloordiv__(self,p2) | \=      | 
+
+### ✅️  `__repr__`
+
+* باتعریف این تابع سبب می‌شویم در هنگام پرینت آبجکت تهیه شده از یک کلاس تابع اجرا شود وگرنه آدرس شیء در حافظه نمایش می‌شود
+* یعنی اگر بخواهیم که بچای نمایش دیتای فنی دیتای خوانا به کاربر نمایش داده شود
+* برای نمایش "رسمی" و دقیق‌تر شیء استفاده می‌شود (معمولاً برای دیباگ یا لاگ‌گیری).
+
+```python
+class Behrooz:
+    def __init__(self, _name):
+        self.name = _name
+
+    def __repr__(self) -> str:
+        return f"behroooz class attribute is [{self.name}]"
+
+
+obj = Behrooz("Alii")
+print(obj)
+
+```
+
+### ✅️ `__str__`
+
+* برای خوانایی بیشتر EndUser از یک شیء مورد استفاده قرار می‌گیرد
+* این متد زمانی فراخوانی می‌شود که توابعی مانند print یا str برای نمایش یک شیء استفاده شود
+* این متد باید یک رشته (str) برگرداند که نماینده‌ی شیء باشد.
+* اگر __str__ تعریف نشده باشد، پایتون به جای آن از متد __repr__ استفاده می‌کند.
+
+```python
+class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    def __str__(self):
+        return f"Person(name={self.name}, age={self.age})"
+
+
+person = Person("علی", 25)
+print(person)  # output: Person(name=علی, age=25)
 ```
 
 # 🅰️ JSON
@@ -614,16 +952,11 @@ root.mainloop()
 
 # 🅰️ Regex
 
-*Need
-to
-`
-import re
-
-`
+* Need to`import re`
 
 ## 🅱️ dot
 
-```
+```shell
 # (.) -> Note: یک کاراکتر
 #     (f.n) --> کاراکتر اول «اِف» و کاراکتر دوم هر چیزی می‌تونه باشه و کاراکتر سوم «اِن» باید باشد
 #     (f..n) --> کاراکتر اول «اِف» و کاراکتر دوم و سوم هر چیزی می‌تونه باشه و کاراکتر چهارم «اِن» باید باشد
@@ -638,7 +971,7 @@ import re
 
 ## 🅱️ ^
 
-```
+```shell
 # text = 'Toplearn'
 #
 # if re.search('^Top', text):
@@ -647,7 +980,7 @@ import re
 
 ## 🅱️  $
 
-```
+```shell
 # text = 'Toplearn'
 #
 # if re.search('rn$', text):
@@ -656,7 +989,7 @@ import re
 
 ## 🅱️ escape
 
-```
+```shell
 # text = 'this is a book.'
 #
 # if re.search('book\.', text):
@@ -665,7 +998,7 @@ import re
 
 ## 🅱️ set
 
-```
+```shell
 # text = 'site'
 #
 # if re.search('si[tdz]e', text):
@@ -674,7 +1007,7 @@ import re
 
 ## 🅱️ range
 
-```
+```shell
 # text = 'c'
 #
 # if re.search('[a-f]', text):
@@ -683,7 +1016,7 @@ import re
 
 ## 🅱️ exclude
 
-```
+```shell
 # text = 'siue'
 #
 # if re.search('si[^tdz]e', text):
@@ -692,7 +1025,7 @@ import re
 
 ## 🅱️ repeat
 
-```
+```shell
 # text = '09123456789'
 #
 # if re.match('[0-9]{11}', text):
@@ -701,7 +1034,7 @@ import re
 
 ## 🅱️ other characters
 
-```
+```shell
 # decimal digits => \d
 # non decimal digits => \D
 # white space => \s
@@ -782,6 +1115,15 @@ print("Done")
 
 ```
 
-# 🅰️
+# 🅰️ Number
+
+## 🅱️ Leading Zero
+
+```python
+number = 1
+number = f"{number:03d}"
+print(number)
+
+```
 
 </div>
