@@ -28,8 +28,8 @@
 # 🅰️ Persian Tools
 
 * برای استفاده از کاراکترهای «یونیکد فارسی» یا هر زبانی در سورس کدهای پایتون، باید از این هدر در بالای کد استفاده شود
-    * `-*- coding: utf-8 -*-`
-    * در این حالت مفسر کد را به صورت یونی کد می‌خواند و می تواند فارسی در آن بنویسید
+  * `-*- coding: utf-8 -*-`
+  * در این حالت مفسر کد را به صورت یونی کد می‌خواند و می تواند فارسی در آن بنویسید
 * برای اینکه تمام رشته‌های STR در پایتون به صورت UNICODE تعریف شوند باید در ابتدای فایل این کلاس را ایمپورت کنیم
     ```python
     from __future__ import unicode_literals
@@ -67,7 +67,7 @@ pip install package_name
 deactivate #غیر فعال سازی و خروج از محیط مجازی
 ```
 
-# 🅰️ Variable 
+# 🅰️ Variable
 
 ```python
 # CaseSensitive
@@ -106,13 +106,13 @@ print("you got GOLD medal") if userRank == 1 else print("no medal")
 ```python
 
 for variable in iterable:
-    if condition1:
-        # کد برای condition1
-        if condition2:
-        # کد برای condition2
-        else:
-    # کد برای حالت دیگر condition2
+  if condition1:
+    # کد برای condition1
+    if condition2:
+    # کد برای condition2
     else:
+  # کد برای حالت دیگر condition2
+  else:
 
 
 # کد برای حالت دیگر condition1
@@ -120,39 +120,39 @@ for variable in iterable:
 
 class loop:
 
-    def forLoop1(self):
-        listOfNumbers = [23, 54, 67, 89, 34, 9]
-        for number in listOfNumbers:
-            print(number * 2)
+  def forLoop1(self):
+    listOfNumbers = [23, 54, 67, 89, 34, 9]
+    for number in listOfNumbers:
+      print(number * 2)
 
-    def forLoop2(self):
-        [print(x) for x in [1, 2, 3, 4, 5, 6, 11]]
+  def forLoop2(self):
+    [print(x) for x in [1, 2, 3, 4, 5, 6, 11]]
 
-    def forLoop3(self):
-        for num in range(1, 10):
-            if num % 2 == 1:
-                for star in range(1, 6):  # [1, 2, 3, 4, 5]
-                    print("*" * star)
-            else:
-                for star in range(5, 0, -1):  # [5, 4, 3, 2, 1]
-                    print("*" * star)
+  def forLoop3(self):
+    for num in range(1, 10):
+      if num % 2 == 1:
+        for star in range(1, 6):  # [1, 2, 3, 4, 5]
+          print("*" * star)
+      else:
+        for star in range(5, 0, -1):  # [5, 4, 3, 2, 1]
+          print("*" * star)
 
-    def whileLoop1(self):
-        password = input("what is your password : ")
-        while password != "1234":
-            print("your password is wrong!!!")
-            password = input("what is your password : ")
-            print("your password is correct !!!!")
+  def whileLoop1(self):
+    password = input("what is your password : ")
+    while password != "1234":
+      print("your password is wrong!!!")
+      password = input("what is your password : ")
+      print("your password is correct !!!!")
 
-    def whileLoop2(self):
-        num = 1
-        while num < 30:
-            # if(num == 5):
-            #     break
+  def whileLoop2(self):
+    num = 1
+    while num < 30:
+      # if(num == 5):
+      #     break
 
-            print("\U0001f600" * num)
-            print("*" * num)
-            num += 1
+      print("\U0001f600" * num)
+      print("*" * num)
+      num += 1
 
 
 behrooz = loop()
@@ -220,9 +220,9 @@ print(f"False and False : {False and False}")
 userAge = 17
 userGender = "female"
 if userAge >= 18 and userGender == "male":
-    print("you have to go to soldiery")
+  print("you have to go to soldiery")
 else:
-    print("you can stay at home")
+  print("you can stay at home")
 
 # OR
 print("---------OR----------")
@@ -233,9 +233,9 @@ print(f"False or False : {False or False}")
 
 weather = "sunny"
 if weather == "sunny" or weather == "cloudy":
-    print("we can travel")
+  print("we can travel")
 else:
-    print("we can not travel")
+  print("we can not travel")
 
 # NOT
 print("--------NOT-----------")
@@ -244,15 +244,15 @@ print(f"not False : {not False}")
 
 isBrotherComming = False
 if not isBrotherComming:
-    print("my sister said : i wont come")
+  print("my sister said : i wont come")
 
 # Combine
 print("-------Combine------------")
 age = 50
 if (0 <= age <= 2) or (8 <= age < 65):
-    print("you should pay 10 dollars")
+  print("you should pay 10 dollars")
 if not ((2 < age < 8) or age >= 65):
-    print("you should pay 10 dollars")
+  print("you should pay 10 dollars")
 
 ```
 
@@ -269,47 +269,47 @@ if not ((2 < age < 8) or age >= 65):
 #               └──> A value that's returned if the condition evaluates to True.
 
 def condition1():
-    a, b = 10, 20
-    min = a if a < b else b
-    print(min)
+  a, b = 10, 20
+  min = a if a < b else b
+  print(min)
 
 
 def condition2():
-    age = 17
-    outcome = 'Go home.' if age < 16 else 'Not sure...' if 16 <= age < 18 else 'Welcome'
-    print(outcome)
+  age = 17
+  outcome = 'Go home.' if age < 16 else 'Not sure...' if 16 <= age < 18 else 'Welcome'
+  print(outcome)
 
 
 def condition3():
-    a, b = 100, 20
-    print((b, a)[a < b])
+  a, b = 100, 20
+  print((b, a)[a < b])
 
 
 def condition4():
-    a, b = 10, 20
-    print((lambda: b, lambda: a)[a < b]())
+  a, b = 10, 20
+  print((lambda: b, lambda: a)[a < b]())
 
 
 def condition5():
-    a, b = 10, 20
-    print("Both a and b are equal" if a == b else "a is greater than b"
-    if a > b else "b is greater than a")
+  a, b = 10, 20
+  print("Both a and b are equal" if a == b else "a is greater than b"
+  if a > b else "b is greater than a")
 
 
 def condition5_Alternative():
-    a, b = 10, 20
-    if a != b:
-        if a > b:
-            print("a is greater than b")
-        else:
-            print("b is greater than a")
+  a, b = 10, 20
+  if a != b:
+    if a > b:
+      print("a is greater than b")
     else:
-        print("Both a and b are equal")
+      print("b is greater than a")
+  else:
+    print("Both a and b are equal")
 
 
 def condition6():
-    a, b = 5, 7
-    print(a, "is greater") if (a > b) else print(b, "is Greater")
+  a, b = 5, 7
+  print(a, "is greater") if (a > b) else print(b, "is Greater")
 
 
 # ⇉ a if condition  else b
@@ -338,27 +338,27 @@ condition5_Alternative()
 
 ```python
 try:
-    pass
-    # Code
+  pass
+  # Code
 except NameError as NameE:  # Handle NameError Error
-    print(NameE)
-    print(NameE.message)
-    pass
-    # مدیریت ارور NameEror در این بلاک صورت می‌گیرد
+  print(NameE)
+  print(NameE.message)
+  pass
+  # مدیریت ارور NameEror در این بلاک صورت می‌گیرد
 except IOError as IOE:  # Handle NameError Error
-    print(IOE)
-    print(IOE.message)
-    # مدیریت ارور IOError در این بلاک صورت می‌گیرد
+  print(IOE)
+  print(IOE.message)
+  # مدیریت ارور IOError در این بلاک صورت می‌گیرد
 
 except:  # ErrorHandler of each other error type
-    pass
-    # مدیریت ارور IOError در این بلاک صورت می‌گیرد
+  pass
+  # مدیریت ارور IOError در این بلاک صورت می‌گیرد
 else:
-    pass
-    # اگر قسمت ترای بدون ارور اجرا شود این بلاک اجرا می‌شود
+  pass
+  # اگر قسمت ترای بدون ارور اجرا شود این بلاک اجرا می‌شود
 finally:
-    pass
-    # در هر صورت این بلاک اجرا خواهد شد
+  pass
+  # در هر صورت این بلاک اجرا خواهد شد
 
 ```
 
@@ -373,13 +373,13 @@ finally:
 
 
 def print_with_custom_color(text, color):
-    colors = ('red', 'green', 'blue')
-    if type(text) is not str:
-        raise TypeError("text must be a string")
-    elif color not in colors:
-        raise ValueError(f"{color} is not in colors")
-    else:
-        print(f"printed {text} in {color}")
+  colors = ('red', 'green', 'blue')
+  if type(text) is not str:
+    raise TypeError("text must be a string")
+  elif color not in colors:
+    raise ValueError(f"{color} is not in colors")
+  else:
+    print(f"printed {text} in {color}")
 
 
 print_with_custom_color("Behrooz", 'red')
@@ -408,9 +408,9 @@ print_with_custom_color("Behrooz", 'redd')
 # p -> print
 
 def add_numbers(a, b, c, d):
-    import pdb;
-    pdb.set_trace()
-    return a + b + c + d
+  import pdb;
+  pdb.set_trace()
+  return a + b + c + d
 
 
 res = add_numbers(1, 2, 3, 4)
@@ -430,12 +430,12 @@ print(res)
 
 ```python
 class User:
-    def __init__(self, name, age):  # تابع سازنده
-        self.name = name
-        self.age = age
+  def __init__(self, name, age):  # تابع سازنده
+    self.name = name
+    self.age = age
 
-    def show_data(self):
-        print(self.name, self.age)
+  def show_data(self):
+    print(self.name, self.age)
 
 
 obj = User("behrooz", 33)
@@ -449,11 +449,11 @@ obj.show_data()
 
 ```python
 class Behrooz:
-    def __init__(self, _name):
-        self.name = _name
+  def __init__(self, _name):
+    self.name = _name
 
-    def __len__(self):
-        return 20
+  def __len__(self):
+    return 20
 
 
 obj = Behrooz("Alii")
@@ -464,24 +464,24 @@ print(len(obj))
 
 ```python
 class Behrooz:
-    def __init__(self, _name):
-        self.name = _name
+  def __init__(self, _name):
+    self.name = _name
 
-    # بجای عملگر  + استفاده می‌شود
-    def __add__(self, other):
-        return f"Need to plus with {self.name} or {other}"
+  # بجای عملگر  + استفاده می‌شود
+  def __add__(self, other):
+    return f"Need to plus with {self.name} or {other}"
 
-    # بجای عملگر *استفاده می‌شود
-    def __mul__(self, other):
-        return f"Need to multiplier with {self.name} or {other}"
+  # بجای عملگر *استفاده می‌شود
+  def __mul__(self, other):
+    return f"Need to multiplier with {self.name} or {other}"
 
-    # بجای عملگر / استفاده می‌شود
-    def __truediv__(self, other):
-        return f"Need to division with {self.name} or {other}"
+  # بجای عملگر / استفاده می‌شود
+  def __truediv__(self, other):
+    return f"Need to division with {self.name} or {other}"
 
-    # بجای عملگر - استفاده می‌شود
-    def __sub__(self, other):
-        return f"Need to minus with {self.name} or {other}"
+  # بجای عملگر - استفاده می‌شود
+  def __sub__(self, other):
+    return f"Need to minus with {self.name} or {other}"
 
 
 obj = Behrooz("Alii")
@@ -510,11 +510,11 @@ print(obj / "salam")
 
 ```python
 class Behrooz:
-    def __init__(self, _name):
-        self.name = _name
+  def __init__(self, _name):
+    self.name = _name
 
-    def __repr__(self) -> str:
-        return f"behroooz class attribute is [{self.name}]"
+  def __repr__(self) -> str:
+    return f"behroooz class attribute is [{self.name}]"
 
 
 obj = Behrooz("Alii")
@@ -531,18 +531,17 @@ print(obj)
 
 ```python
 class Person:
-    def __init__(self, name, age):
-        self.name = name
-        self.age = age
+  def __init__(self, name, age):
+    self.name = name
+    self.age = age
 
-    def __str__(self):
-        return f"Person(name={self.name}, age={self.age})"
+  def __str__(self):
+    return f"Person(name={self.name}, age={self.age})"
 
 
 person = Person("علی", 25)
 print(person)  # output: Person(name=علی, age=25)
 ```
-
 
 ## 🅱️ Lambda
 
@@ -581,22 +580,22 @@ users = [{'name': 'Behrooz', 'family': 'nadery', 'born': 1369, 'shopCart': []},
 
 
 def func1_get_even():
-    evens = filter(lambda num: num % 2 == 0, numbers)
-    print(f"func1:{list(evens)}")
+  evens = filter(lambda num: num % 2 == 0, numbers)
+  print(f"func1:{list(evens)}")
 
 
 def func3():  # Use with Falsyness Or Trusynes
-    result = filter(lambda user: not user['shopCart'], users)  # [not user['shopCart']] OR [len(user['shopCart']) == 0]
-    # result = filter(lambda user: len(user['shopCart']) == 0, users)
-    print(f"func3(alt):{list(result)}")
+  result = filter(lambda user: not user['shopCart'], users)  # [not user['shopCart']] OR [len(user['shopCart']) == 0]
+  # result = filter(lambda user: len(user['shopCart']) == 0, users)
+  print(f"func3(alt):{list(result)}")
 
 
 def func4_map_filter():
-    result_user = filter(lambda user: not user['shopCart'], users)
-    result_user_name = lambda user: user['name']
-    result = map(result_user_name, result_user)
-    # ALTERNATIVE =====> result = [user['name'] for user in users if len(user['shopCart']) == 0]
-    print(f"func4(filterAndMap):{list(result)}")
+  result_user = filter(lambda user: not user['shopCart'], users)
+  result_user_name = lambda user: user['name']
+  result = map(result_user_name, result_user)
+  # ALTERNATIVE =====> result = [user['name'] for user in users if len(user['shopCart']) == 0]
+  print(f"func4(filterAndMap):{list(result)}")
 
 
 func1_get_even()
@@ -629,52 +628,52 @@ users = [{'name': 'amirali', 'family': 'ojaghi', 'born': 1369, 'shopCart': []},
 
 
 def func1():
-    def square(x):
-        return x ** 2
+  def square(x):
+    return x ** 2
 
-    squared_numbers = map(square, numbers)
-    # Alternatives: squared_numbers = map(lambda x: x ** 2, numbers)
+  squared_numbers = map(square, numbers)
+  # Alternatives: squared_numbers = map(lambda x: x ** 2, numbers)
 
-    # تبدیل به لیست
-    squared_list = list(squared_numbers)
-    print(squared_list)  # خروجی: [1, 4, 9, 16, 25]
+  # تبدیل به لیست
+  squared_list = list(squared_numbers)
+  print(squared_list)  # خروجی: [1, 4, 9, 16, 25]
 
 
 def func2_map_filter():
-    result_user = filter(lambda user: not user['shopCart'], users)
-    result_user_name = lambda user: user['name']
-    result = map(result_user_name, result_user)
-    # ALTERNATIVE =====> result = [user['name'] for user in users if len(user['shopCart']) == 0]
-    print(f"func4(filterAndMap):{list(result)}")
+  result_user = filter(lambda user: not user['shopCart'], users)
+  result_user_name = lambda user: user['name']
+  result = map(result_user_name, result_user)
+  # ALTERNATIVE =====> result = [user['name'] for user in users if len(user['shopCart']) == 0]
+  print(f"func4(filterAndMap):{list(result)}")
 
 
 def func3():
-    upper_names = map(lambda name: name.upper(), names)
-    print(f"func5{list(upper_names)}")
-    print(f"func5(خالی خواهد بود زیرا یک بار پیمایش شده است){list(upper_names)}")  # خالی خواهد بود زیرا پیمایش سبب تخلیه می‌گردد
+  upper_names = map(lambda name: name.upper(), names)
+  print(f"func5{list(upper_names)}")
+  print(f"func5(خالی خواهد بود زیرا یک بار پیمایش شده است){list(upper_names)}")  # خالی خواهد بود زیرا پیمایش سبب تخلیه می‌گردد
 
 
 def func4():
-    result = map(lambda person: person['family'], users)
-    print(f"func3:{list(result)}")
-    # Alternatives:
-    #           families = []
-    #           for person in users: families.append(person['family'])
-    #           print(f"{families}")
+  result = map(lambda person: person['family'], users)
+  print(f"func3:{list(result)}")
+  # Alternatives:
+  #           families = []
+  #           for person in users: families.append(person['family'])
+  #           print(f"{families}")
 
 
 def func5():
-    def add(x, y):
-        return x + y
+  def add(x, y):
+    return x + y
 
-    list1 = [1, 2, 3]
-    list2 = [4, 5, 6]
-    added_numbers = map(add, list1, list2)
-    # ALTERNATIVE =====> added_numbers = map(lambda x, y: x + y, list1, list2)
+  list1 = [1, 2, 3]
+  list2 = [4, 5, 6]
+  added_numbers = map(add, list1, list2)
+  # ALTERNATIVE =====> added_numbers = map(lambda x, y: x + y, list1, list2)
 
-    # تبدیل به لیست
-    result_list = list(added_numbers)
-    print(result_list)  # خروجی: [5, 7, 9]
+  # تبدیل به لیست
+  result_list = list(added_numbers)
+  print(result_list)  # خروجی: [5, 7, 9]
 
 
 func1()
@@ -692,10 +691,7 @@ func5()
 
 ```
 
-
-
 ## 🅱️ Min_Max
-
 
 ```python
 list1 = [3, 6, 8, 13, 4, 90]
@@ -736,10 +732,10 @@ nameRes = ''
 print(nameRes.join(list(reversed("hello"))))
 
 for num in reversed(range(0, 10)):
-    print(num)
+  print(num)
 print("----")
 for num in range(9, -1, -1):
-    print(num)
+  print(num)
 
 ```
 
@@ -747,32 +743,32 @@ for num in range(9, -1, -1):
 
 ```python
 def func2sort_NoChange():
-    numbers = [1, 5, 8, 4, 6, 2]
-    print(f"func2(befor): {list(numbers)}")
-    result = sorted(numbers, reverse=False)
-    print(f"func2(sorted result): {result}")
-    print(f"func2(after): {list(numbers)}")
+  numbers = [1, 5, 8, 4, 6, 2]
+  print(f"func2(befor): {list(numbers)}")
+  result = sorted(numbers, reverse=False)
+  print(f"func2(sorted result): {result}")
+  print(f"func2(after): {list(numbers)}")
 
 
 def func4sort_Change():
-    numbers = [1, 5, 8, 4, 6, 2]
-    print(f"func4(befor): {list(numbers)}")
-    numbers.sort(reverse=False)
-    print(f"func4(after): {list(numbers)}")
+  numbers = [1, 5, 8, 4, 6, 2]
+  print(f"func4(befor): {list(numbers)}")
+  numbers.sort(reverse=False)
+  print(f"func4(after): {list(numbers)}")
 
 
 # لیست ها برای مرتب سازی نیاز به کلید دارند
 
 
 def func5():
-    users = [
-        {'name': 'taha', 'family': 'MohammadiNasab', 'age': 40},
-        {'name': 'mohammad', 'family': 'ketabi', 'age': 23},
-        {'name': 'sara', 'family': 'nadery', 'age': 80},
-        {'name': 'ali', 'family': 'Mohamadi', 'age': 30}
-    ]
-    print(users)
-    print(sorted(users, key=lambda user: user['age'], reverse=False))
+  users = [
+    {'name': 'taha', 'family': 'MohammadiNasab', 'age': 40},
+    {'name': 'mohammad', 'family': 'ketabi', 'age': 23},
+    {'name': 'sara', 'family': 'nadery', 'age': 80},
+    {'name': 'ali', 'family': 'Mohamadi', 'age': 30}
+  ]
+  print(users)
+  print(sorted(users, key=lambda user: user['age'], reverse=False))
 
 
 func2sort_NoChange()
@@ -792,12 +788,12 @@ users = [{'name': 'Behrooz', 'family': 'nadery', 'born': 1369, 'shopCart': []},
 
 
 def func1():
-    print(f"func1:{len(users)}")
+  print(f"func1:{len(users)}")
 
 
 def func2():
-    result = filter(lambda user: len(user['shopCart']) == 0, users)
-    print(f"func2(filter):{list(result)}")
+  result = filter(lambda user: len(user['shopCart']) == 0, users)
+  print(f"func2(filter):{list(result)}")
 
 
 func1()
@@ -819,28 +815,28 @@ func2()
 #      **kwargs => Dictionary
 
 class Functions:
-    def func1(self, num, power=2):
-        print(f"func1: {num ** power}")
+  def func1(self, num, power=2):
+    print(f"func1: {num ** power}")
 
-    def func2(self, first, last):
-        print(f"func2: {first} {last}")
+  def func2(self, first, last):
+    print(f"func2: {first} {last}")
 
-    # تبدیل می‌شود به یک تاپل
-    def func3_holico(self, *args):
-        total = 0
-        for num in args:
-            total += num
-        print(f"func3: {args}------> {total}")
+  # تبدیل می‌شود به یک تاپل
+  def func3_holico(self, *args):
+    total = 0
+    for num in args:
+      total += num
+    print(f"func3: {args}------> {total}")
 
-    # آرگومان ورودی تبدیل می‌شود به یک دیکشنری
-    def func4(self, **kwargs):
-        my_string = ""
-        for key, value in kwargs.items():
-            my_string = f"{my_string} {key}:{value} - "
-        print(f"func4: {my_string}")
+  # آرگومان ورودی تبدیل می‌شود به یک دیکشنری
+  def func4(self, **kwargs):
+    my_string = ""
+    for key, value in kwargs.items():
+      my_string = f"{my_string} {key}:{value} - "
+    print(f"func4: {my_string}")
 
-    def func5(self, a, b, *args, define_parameter="defalut", **kwargs):
-        print(f"func5: {a}, {b} {args}, {define_parameter}, {kwargs}")
+  def func5(self, a, b, *args, define_parameter="defalut", **kwargs):
+    print(f"func5: {a}, {b} {args}, {define_parameter}, {kwargs}")
 
 
 behrooz = Functions()
@@ -866,7 +862,6 @@ behrooz.func4(name="behrooz", FamilyName="Mohammadi", born=1369, mobile="0919167
 behrooz.func5(1, 2, 6, first_name="Behrooz", last_name="MohamadiNasab")
 
 ```
-
 
 ## 🅱️ TruthinessFalsiness_All
 
@@ -905,39 +900,39 @@ print(all([num % 2 == 0 for num in numbers]))
 # اگر تنها حتی یک آیتم از مواردی که به این تابع داده شده است ترو باشد مقدار ترو را برمی‌گرداند
 
 def func1():
-    numbers = [0, 0, 0, 0]
-    print(f"{numbers} --> {any(numbers)}")
+  numbers = [0, 0, 0, 0]
+  print(f"{numbers} --> {any(numbers)}")
 
 
 def func2():
-    numbers = [0, 0, 0, 1]
-    print(f"{numbers} --> {any(numbers)}")
+  numbers = [0, 0, 0, 1]
+  print(f"{numbers} --> {any(numbers)}")
 
 
 def func3():
-    data = [False, False, False, False]
-    print(f"{data} --> {any(data)}")
+  data = [False, False, False, False]
+  print(f"{data} --> {any(data)}")
 
 
 def func4():
-    data = [False, False, False, True]
-    print(f"{data} --> {any(data)}")
+  data = [False, False, False, True]
+  print(f"{data} --> {any(data)}")
 
 
 def func5():
-    print(any([]))
+  print(any([]))
 
 
 def func5():
-    numbers = [2, 4, 6, 8]
-    result = (any([num % 2 != 0 for num in numbers]))
-    print(f"{numbers} --> {result}")
+  numbers = [2, 4, 6, 8]
+  result = (any([num % 2 != 0 for num in numbers]))
+  print(f"{numbers} --> {result}")
 
 
 def func6():
-    numbers = [2, 4, 6, 7]
-    result = (any([num % 2 != 0 for num in numbers]))
-    print(f"{numbers} --> {result}")
+  numbers = [2, 4, 6, 7]
+  result = (any([num % 2 != 0 for num in numbers]))
+  print(f"{numbers} --> {result}")
 
 
 func1()
@@ -946,18 +941,531 @@ func3()
 func4()
 func5()
 func6()
+```
+
+# 🅰️ Decorator
+
+```python
+####################################################################################################################
+##################################### استفاده از تابع درون تابع دیگر به روش سنتی ###################################
+##############################3#####################################################################################
+from random import choice
+
+print("#############")
+print("### سنتی  ###")
+print("#############")
+
+
+def state():
+    def get_state():
+        msg = choice(('Good', 'Bad!', 'Fine'))
+        return msg
+
+    return get_state()
+
+
+print(f"-----> {state()}")
+print("\n")
+print("#######################################")
+print("### سنتی ###### بنوان مقدار بازگشتی ###")
+print("#######################################")
+
+
+def state():
+    def get_state():
+        msg = choice(('Good', 'Bad!', 'Fine'))
+        return msg
+
+    return get_state
+
+
+result = state()
+print("=====> ", result())
+print("\n")
+print("#######################################")
+print("### سنتی ###### بنوان آرگومان ورودی ###")
+print("#######################################")
+
+
+def sum_func(number, func):
+    total = 0
+    for num in range(1, number + 1):
+        total += func(num)
+    return total
+
+
+def square_func(number):
+    return number * number
+
+
+print("☰☰☰☰☰> ", sum_func(5, square_func))
+
+##########################################################################################
+####################### استفاده از تابع درون تابع دیگر به روش جدید #######################
+####################################### Decorator ########################################
+##########################################################################################
+#    # ۱)تکنیک Decorator یک DesignePatternاست که یک تابع را درون تابع دیگر فراخوانی میکنیم
+#                   # ۲)امکان تغییر یا گسترش رفتار یک تابع یا کلاس بدون تغییر در کد اصلی آن
+#                                                   # ۳)معمولاً به صورت یک تابع تعریف می‌شوند
+#          # ۴)یک تابع دیگر را بعنوان آرگومان ورودی می‌پذیرند و یک تابع جدید را برمی‌گردانند
+#          # ۵)این تابع جدید می‌تواند قبل یا بعد از اجرای تابع اصلی، کارهای اضافی انجام دهد
+#                                   # ۵)معمولا همراه با کاراکتر @ در بالای توابع ظاهر می‌شوند
+##########################################################################################
+print("\n#########################")
+print("### Decorate: Example ###")
+print("#########################")
+
+
+def exec_after_before(func):
+    def wrapper():
+        print("Before")
+        func()
+        print("After")
+
+    return wrapper
+
+
+@exec_after_before
+def say_hello():
+    print("Hi")
+
+
+say_hello()
 
 ```
 
-## 🅱️ 
+## 🅱️ Classmethod
 
 ```python
+# decorator
+# تغییر عملکرد یک تابع بطوریکه بجای استفاده از منابع نمونه از منابع کلاس استفاده می‌کند
+# دسترسی مستقیم به دیتای کلاس بدون ساخت شیء نمونه
+
+class User:
+    activeUsers = 0
+
+    @classmethod
+    def func1(cls):
+        return cls.activeUsers
+
+
+print("روش اول: بدون نیاز ساخت شیء از کلاس")
+print(User.func1())
+
+print("روش دوم:  الزام بر ساختن شیء از کلاس")
+
+obj1 = User()
+print(obj1.func1())
 
 ```
 
-## 🅱️ 
+## 🅱️ Property
 
 ```python
+# برای دسترسی به متد باید حتما پرانتز باز و بسته گذاشته بشود ولی برای پراپرتی نباید پرانتز گذاشت
+
+class Behrooz:
+
+    def __init__(self, name, family):
+        self.name = name
+        self.family = family
+
+    @property
+    def fullname(self):
+        return f"{self.name} {self.family}"
+
+    def show_fullname(self):
+        return f"{self.name} {self.family}"
+
+
+obj1 = Behrooz("behrooz", "MohamadiNasab")
+
+print(obj1.show_fullname())
+print(obj1.fullname)
+
+```
+
+## 🅱️ PropertyGetterSetter
+
+```python
+# Decorator
+#  => property: convert function to property or attribute such as:
+#  =======> getter[getter is func and must ussing by () ,but when use @property, it changed to attribute and () will remove]
+#
+class behrooz:
+
+    def __init__(self, _name, _family, _age):
+        self.name = _name
+        self.family = _family
+        self.age = _age
+
+    # برای دسترسی به متد باید حتما پرانتز باز و بسته گذاشته بشود ولی وقتی از تابع getter استفاده می‌کنیم با گذاشتن Decorator تحت عنوان  property نباید پرانتز گذاشت
+    @property  # اگر پراپرتی را قرار ندهیم آنگاه برای فراخوانی مقدار باید حتما پرانتز باز و بسته رو قرار دهیم
+    def age(self):
+        return self._age
+
+    # توابعی که Decorator تحت عنوان property و setter قرار دارد سبب می‌شود تا رفتارِ تابع تغییر کند و در حالت متغیر استفاده گردد
+    # نکته: کلمه age که در خط زیر است از تابع بالایی که همراه property است آمده است و باید هم‌نام آن باشد
+    @age.setter
+    def age(self, value):
+        if value >= 0:
+            self._age = value
+        else:
+            self._age = 0
+
+    @property
+    def fullName(self):  # تبدیل یک تابع به یک پراپرتی و نه متد
+        return f"{self.name} {self.family}"
+
+
+obj1 = behrooz("behrooz", "MohamadiNasab", -18)
+print(obj1.age)  # اگر پراپرتی را در بالای گِتِر متغیر قرار نمی‌دادیم باید در اینجا پرانتز باز و بسته قرار می‌دادیم
+
+obj1.age = 40
+print(obj1.age)
+
+obj1.age = -15
+print(obj1.age)
+
+obj1.age = 18
+print(obj1.age)
+
+print(obj1.fullName)  # به حالت متد فراخوانی نمیکنیم بلکه به حالت پراپرتی(خصیصه) فراخوانی می‌کنیم
+
+```
+
+## 🅱️ Advanced
+
+```python
+def before_after(func):
+    def wrapper():
+        print(f"Before={0}")
+        func()
+        print(f"After={1}")
+
+    return wrapper
+
+
+print("#########################################")
+print("######## روش اول:برگرداندن یک تابع ######")
+print("#########################################")
+
+
+def say_hello():
+    print("hello")
+
+
+tempFunc = before_after(say_hello)
+tempFunc()
+
+print("\n##################################")
+print("###  Decorator #### 0 Argument ###")
+print("##################################")
+
+
+@before_after
+def say_hello():
+    print("hello")
+
+
+say_hello()
+
+print("\n##################################")
+print("###  Decorator #### 1 Argument ###")
+print("##################################")
+
+
+# x only sent to wrapper[not sent to num_before_after]
+def one_arg_before_after(func):
+    def wrapper(x):
+        print(f"Before={x - 1}")
+        func(x)
+        print(f"After={x + 1}")
+
+    return wrapper
+
+
+@one_arg_before_after
+def say_hello(x):
+    print(f"----1arg---->hi {x}")
+    print(f"----1arg---->hi")
+
+
+say_hello(256)
+
+print("\n##################################")
+print("###  Decorator #### 2 Argument ###")
+print("##################################")
+
+
+def two_args_before_after(func):
+    def wrapper(arg1, arg2):
+        print(f"Before:      [arg1:{arg1}] - [arg2:{arg2}]")
+        func(arg1, arg2)
+        print(f"After:       [arg1:{arg1}] - [arg2:{arg2}]")
+
+    return wrapper
+
+
+@two_args_before_after
+def show_name(name, family):
+    print(f"---2arg--->  {name} {family}")
+
+
+show_name('behrooz', 'Mohamadinasab')
+
+print("\n###############################")
+print("###  Decorator ##### (*Arg) ###")
+print("###############################")
+
+
+def many_args_before_after(func):
+    def wrapper(*args):
+        print(f"Before      [{args}]")
+        func(args)
+        print(f"After       [{args}]")
+
+    return wrapper
+
+
+@many_args_before_after
+def show_data(*args):
+    print(f"---*arg---> {args}")
+
+
+show_data('Behrooz', 'MohamadiNasab', 'phone', 'male', 'address')
+
+print("\n##########################################")
+print("###  Decorator with(*Arg and **kwargs) ###")
+print("##########################################")
+
+
+def exec_before_after(func):
+    def wrapper(*args, **kwargs):
+        print(f"Before      [args:{args}]")
+        func(*args, **kwargs)
+        print(f"After       [kwargs:{kwargs}]")
+
+    return wrapper
+
+
+@exec_before_after
+def show_data(*args, **kwargs):
+    print(f"==========> {args} - {kwargs}")
+
+
+show_data('Behrooz', 'MohamadiNasab', 'phone', 'male', 'address', Fname="Behi", Lname="Mohamadi")
+print("\n\n")
+show_data('Behrooz', 'MohamadiNasab', 'phone', 'male', 'address', Fname="Behi")
+print("\n\n")
+show_data('Behrooz', 'MohamadiNasab', 'phone')
+print("\n\n")
+show_data(Fname="Behi", Lname="Mohamadi")
+print("\n\n")
+show_data('male')
+print("\n\n")
+show_data(Fname="Behi")
+
+```
+
+## 🅱️ Example
+
+```python
+from time import time
+
+def speed_test(func):
+    def wrapper(*args, **kwargs):
+        start_time = time()
+        result = func(*args, **kwargs)
+        end_time = time()
+        print(f"Time Elapsed : {end_time - start_time}")
+        return result
+
+    return wrapper
+
+
+@speed_test
+def sum_list():
+    return sum([x for x in range(40000000)])
+
+
+@speed_test
+def sum_gen():
+    return sum(x for x in range(40000000))
+
+
+sum_gen()
+sum_list()
+
+```
+
+# 🅰️ File
+
+## 🅱️ Read
+
+```python
+data = open("/etc/passwd")
+
+# 1)
+# print(data.read())
+# data.seek(2) # جابجایی کرسر به نقطه خاص از فایل
+# print(data.read())
+
+# 2)
+# textLines = data.readlines() # یک لیست از خطوط که آخر هر خط یک بک‌اسلش‌اِن قرار میدهد
+# print(textLines)
+# print(f"----> {textLines[5]}")
+
+
+# 3)
+with open("/etc/passwd", encoding='UTF-8', mode="r") as bFile:
+  for l in bFile:
+    line = l.strip()
+    # mylist = lines.rsplit(",")
+    print(line)
+
+```
+
+## 🅱️ Write
+
+```python
+# mode:
+# a: append
+# w: read
+# r: write
+
+
+with open("/tmp/salam.txt", encoding='UTF-8', mode="w") as bFile:
+  bFile.write("STRIIIIIIIIIIIIIIIIIIIIIIIIIIING\n")
+
+```
+
+## 🅱️ module os
+
+```python
+import os
+import time
+import fnmatch
+import glob
+
+print(os.listdir('/'))
+print(os.path.isdir('/'))
+
+print("---------------")
+
+result = os.scandir('/home/Files')
+for item in result:
+  if item.is_file():  # if item.is_file():
+    print(f'File {item.name}: {time.ctime(item.stat().st_mtime)}')
+
+# result = os.stat('./my_files/doc.txt')
+# print(time.ctime(result.st_mtime))
+
+# os.mkdir('test')  # 1-Error if exist 2-Error with subDirectory
+# os.makedirs('/tmp/test/sub_ddsfdsfdsfsirectory1')  # 1-Error if exist
+
+
+print('################')
+print('#### Delete ####')
+print('################')
+
+# os.remove("/tmp/test/sub_ddsfdsfdsfdsfsirectory1"); # اگر فایل موجود نباشد خطا برمی‌گرداند
+# os.unlink("/tmp/test/sub_ddsfdsfdsfsdfsdfsdfsdfdsfdsfsirectory1"); # اگر فایل موجود نباشد خطا برمی‌گرداند
+
+# os.rmdir("/tmp/test/sub_ddsfdsfdsfsdfsdfsdfsdfdsfdsfsirectory1"); # فقط پوشه های خالی رو پاک میکنه
+
+
+# ---------------------------------------------------------------------------------------------------------
+
+import fnmatch
+import glob
+import os
+
+print('################')
+print('#### Search ####')
+print('################')
+
+for file_name in os.listdir(''):
+  if file_name.endswith('.py'):
+    print(file_name)
+
+print('#### only content \'Read\'')
+for file_name in os.listdir(''):
+  if 'read' in file_name:
+    print(file_name)
+
+print('#### Search by fnmatch ####')
+
+print(fnmatch.fnmatch('/Learning-Concept/_SRCFiles/File_Pathlib.py', '*.py'))  # ‌آیا فایل با الگو تطابق دارد یا خیر
+
+for file_name in os.listdir(''):
+  if fnmatch.fnmatch(file_name, '*_*.py'):  # *[0-9][0-9]* : وجود فایل دارای دو رقم عدد
+    print(file_name)
+
+print(glob.glob('**/*[0-9][0-9]*', recursive=True))
+
+print('#### WALK: Search all directory and subDirectory####')
+for data in os.walk(''):  # os.walk('dir',topdown=False) از تویی ترین مسیر شروع میکنه و اقدام به بررسی محتویات می‌کنه
+  print(data)
+
+
+
+```
+
+## 🅱️ Module Pathlib
+
+```python
+import pathlib
+import shutil
+from pathlib import Path
+
+directory = Path('/home/Files')
+for item in directory.iterdir():
+  print(item)
+print("---------------")
+
+path = Path('/tmp/salam')
+path.mkdir(exist_ok=True)  # [false: error on exist][True: not Error on exist]
+
+print('################')
+print('#### Delete ####')
+print('################')
+
+file_path = pathlib.Path('/tmp/salam/fsdfsdfsd.txt')
+# file_path.unlink() # حذف فایل
+# file_path.rmdir() # حذف فولدر خالی
+
+print('################')
+print('#### Search ####')
+print('################')
+
+shutil.rmtree('./test', ignore_errors=True)
+
+path = Path('')  # root of projects
+data = path.glob('**/*.py')
+print(list(data))
+
+```
+
+## 🅱️ Module shutil
+
+```python
+import os
+import shutil
+
+# shutil.copy('src', 'Des') # Only copy file
+# print(os.stat('./my_files/data-1.txt'))
+# print(os.stat('./new_my_files/new-data-1.txt'))
+
+# shutil.copy2('./my_files/data-2.txt', 'Des') # copy file with metadata
+# print(os.stat('./my_files/data-2.txt'))
+# print(os.stat('./new_my_files/new-data-2.txt'))
+
+# shutil.copytree('src', 'Des') #create Backup[all _SRCFiles and subDir and Subfiles]
+
+# shutil.move('src', 'Des')
+
+# os.rename('src', 'Des')
 
 ```
 
@@ -969,53 +1477,53 @@ from json2html import *
 
 
 def createJson(obj):
-    # obj = {
-    #             "word": "behroooz",
-    #             "type": "behrooz"
-    #         }
-    jsonStr = json.dumps(obj, ensure_ascii=False).encode('utf-8').decode()
-    print(jsonStr)
+  # obj = {
+  #             "word": "behroooz",
+  #             "type": "behrooz"
+  #         }
+  jsonStr = json.dumps(obj, ensure_ascii=False).encode('utf-8').decode()
+  print(jsonStr)
 
 
 def importFromFile(filename):
-    f = open('/tmp/json.json')
-    jData = json.load(f)
-    return jData
+  f = open('/tmp/json.json')
+  jData = json.load(f)
+  return jData
 
 
 def EditJson(filename):
-    f = open('/tmp/Quran/Input.json')
-    jData = json.load(f)
-    # print(jData)
+  f = open('/tmp/Quran/Input.json')
+  jData = json.load(f)
+  # print(jData)
 
-    for x in range(0, 6236):
-        if jData[x]['SuraNumber'] == "003" and jData[x]['VerseNumber'] == "003":
-            jData[x]['Farsi'] = "NewData"
+  for x in range(0, 6236):
+    if jData[x]['SuraNumber'] == "003" and jData[x]['VerseNumber'] == "003":
+      jData[x]['Farsi'] = "NewData"
 
-    json_str = json.dumps(jData, ensure_ascii=False).encode('utf-8').decode()
-    with open('/tmp/Quran/Output.json', 'w') as ff:
-        ff.write(json_str)
-    f.close()
-    ff.close()
+  json_str = json.dumps(jData, ensure_ascii=False).encode('utf-8').decode()
+  with open('/tmp/Quran/Output.json', 'w') as ff:
+    ff.write(json_str)
+  f.close()
+  ff.close()
 
 
 def toHtml(inputFileName, outputFileName):
-    f = open(inputFileName)
-    jData = json.load(f)
-    data = json2html.convert(json={"data": jData})
-    with open(outputFileName, 'w') as ff:
-        ff.write(json.dumps(data, ensure_ascii=False).encode('utf-8').decode())
-    f.close()
-    ff.close()
+  f = open(inputFileName)
+  jData = json.load(f)
+  data = json2html.convert(json={"data": jData})
+  with open(outputFileName, 'w') as ff:
+    ff.write(json.dumps(data, ensure_ascii=False).encode('utf-8').decode())
+  f.close()
+  ff.close()
 
 
 # toHtml("/tmp/All.json", "/tmp/All.html")
 
 
 def showData():
-    json_string = '{ "1":"Red", "2":"Blue", "3":"Green"}'
-    parsed_json = json.loads(json_string)
-    print(parsed_json['2'])
+  json_string = '{ "1":"Red", "2":"Blue", "3":"Green"}'
+  parsed_json = json.loads(json_string)
+  print(parsed_json['2'])
 
 ```
 
@@ -1060,7 +1568,7 @@ sql = """
 """
 cursor.execute(sql)
 for product in cursor:
-    print(product)
+  print(product)
 ```
 
 # 🅰️ GUI
@@ -1106,7 +1614,7 @@ my_name = StringVar()
 
 
 def print_my_name():
-    my_name.set('my name is Mohammad')
+  my_name.set('my name is Mohammad')
 
 
 myFont = font.Font(family='Vazir', size=10, weight='bold')
@@ -1221,45 +1729,45 @@ top_forth.pack(side=TOP)
 # ========================== Functions ==========================
 
 def errorMsg(ms):
-    if ms == 'error':
-        tkinter.messagebox.showerror('Error', 'something went wrong')
-    elif ms == 'division zero error':
-        tkinter.messagebox.showerror('Division Error', 'Can Not Divide By 0')
+  if ms == 'error':
+    tkinter.messagebox.showerror('Error', 'something went wrong')
+  elif ms == 'division zero error':
+    tkinter.messagebox.showerror('Division Error', 'Can Not Divide By 0')
 
 
 def plus():
-    try:
-        value = float(num1.get()) + float(num2.get())
-        res_value.set(value)
-    except:
-        errorMsg('error')
+  try:
+    value = float(num1.get()) + float(num2.get())
+    res_value.set(value)
+  except:
+    errorMsg('error')
 
 
 def minus():
-    try:
-        value = float(num1.get()) - float(num2.get())
-        res_value.set(value)
-    except:
-        errorMsg('error')
+  try:
+    value = float(num1.get()) - float(num2.get())
+    res_value.set(value)
+  except:
+    errorMsg('error')
 
 
 def mul():
-    try:
-        value = float(num1.get()) * float(num2.get())
-        res_value.set(value)
-    except:
-        errorMsg('error')
+  try:
+    value = float(num1.get()) * float(num2.get())
+    res_value.set(value)
+  except:
+    errorMsg('error')
 
 
 def div():
-    if num2.get() == '0':
-        errorMsg('division zero error')
-    elif num2.get() != '0':
-        try:
-            value = float(num1.get()) / float(num2.get())
-            res_value.set(value)
-        except:
-            errorMsg('error')
+  if num2.get() == '0':
+    errorMsg('division zero error')
+  elif num2.get() != '0':
+    try:
+      value = float(num1.get()) / float(num2.get())
+      res_value.set(value)
+    except:
+      errorMsg('error')
 
 
 # ========================== Buttons ==========================
@@ -1327,7 +1835,7 @@ nameInput2.place(x=10, y=80)
 
 
 def get_name():
-    print(f"{nameInput.get()} \n{nameInput2.get()}")
+  print(f"{nameInput.get()} \n{nameInput2.get()}")
 
 
 btn = Button(root, text="Get Name", command=lambda: get_name())
@@ -1472,7 +1980,7 @@ root.mainloop()
 ```python
 text = '787jhjkj@test.com'
 if re.match('^[\w\.-]+@([\w-]+\.)+[\w-]{2,4}$', text):
-    print('email is valid')
+  print('email is valid')
 ```
 
 ## 🅱️ Search
@@ -1483,12 +1991,12 @@ import re
 # Behrooz: regexr.com
 
 names = [
-    'data.png', 'memory.txt', 'data.txt', 'image.png', 'momy.png'
+  'data.png', 'memory.txt', 'data.txt', 'image.png', 'momy.png'
 ]
 
 for item in names:
-    if re.search('m.m', item):
-        print(item)
+  if re.search('m.m', item):
+    print(item)
 
 # re.search('m.m', item): #اگر در این رشته موجود بود
 # re.match('m.m', item): # باید دقیقا این رشته مساوی الگو باشد
@@ -1500,9 +2008,9 @@ import re
 import os
 
 for item in os.walk('/Learning-Concept'):
-    for file in item[2]:
-        if re.search('\.py', file):
-            print(file)
+  for file in item[2]:
+    if re.search('\.py', file):
+      print(file)
 
 ```
 
@@ -1514,17 +2022,17 @@ from threading import Thread
 
 
 class Worker(Thread):
-    def run(self):
-        for x in range(0, 30):
-            print(f"1 → {x}")
-            time.sleep(1)
+  def run(self):
+    for x in range(0, 30):
+      print(f"1 → {x}")
+      time.sleep(1)
 
 
 class Waiter(Thread):
-    def run(self):
-        for x in range(100, 110):
-            print(f"2 ⇉⇉⇉{x}")
-            time.sleep(5)
+  def run(self):
+    for x in range(100, 110):
+      print(f"2 ⇉⇉⇉{x}")
+      time.sleep(5)
 
 
 print("Staring Worker Thread")
