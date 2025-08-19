@@ -2084,18 +2084,6 @@ print(f"staticData in two [id: {id(two.staticData)} ] ---> {two.staticData}")
 
 ```
 
-## 🅱️
-
-```python
-
-```
-
-## 🅱️
-
-```python
-
-```
-
 # 🅰️ File
 
 ## 🅱️ Read
