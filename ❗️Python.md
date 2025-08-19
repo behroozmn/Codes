@@ -420,6 +420,8 @@ print(res)
 
 # 🅰️ Function
 
+* برای یاد گیری سه مفهوم ۱-لامبدا ۲-فیلتر ۳-مَپ ،باید به ترتیب نام برده شده مطالعه شود
+
 ## 🅱️ __NAME__
 
 ### ✅️ `__init__`
@@ -539,6 +541,424 @@ class Person:
 
 person = Person("علی", 25)
 print(person)  # output: Person(name=علی, age=25)
+```
+
+
+## 🅱️ Lambda
+
+```python
+# Only in one line
+# lambda is one type of function definition
+# Second name of lambda is "Annonymous function"
+# Syntax is:
+#     lambda arg1, arg2: arg1 * arg2 + 10
+#     lambda arg1      : value_if_true if condition  else  value_if_false
+#     lambda arg1      : value_if_true if condition1 else  (value_if_true2 if condition2 else value_if_false)
+
+function1 = lambda arg1, arg2: arg1 * arg2 + 10  # !!!!!!!!! don't use [CTRL+Shift+i]
+print(function1(5, 2))
+
+function2 = lambda x: "Positive" if x > 0 else ("Zero" if x == 0 else "Negative")
+print(function2(-5))
+
+```
+
+## 🅱️ Filter
+
+```python
+# filter: choice elements by condition
+#       ---> Syntax: filter(function, iterable) ==> Return: an IterableObject
+#                                               ==> Ussing: list(IterableObject) or Tuple(IterableObject) or ...
+#       ---> Filter a iterable by condition(only apply to items which true condition on it) فیلتر روی یک ایتریبل اگر در شرط بگنجد
+#       ---> itarate Means پیمایش
+
+
+numbers = [1, 2, 3, 4, 5, 6]
+names = ["akbar", "fatemeh", "zeinab", "maryam", "Kobra"]
+users = [{'name': 'Behrooz', 'family': 'nadery', 'born': 1369, 'shopCart': []},
+         {'name': 'Alireza', 'family': 'saberi', 'born': 1400, 'shopCart': []},
+         {'name': 'Attefeh', 'family': 'Rezaie', 'born': 1372, 'shopCart': ['kotlin', 'vue']}]
+
+
+def func1_get_even():
+    evens = filter(lambda num: num % 2 == 0, numbers)
+    print(f"func1:{list(evens)}")
+
+
+def func3():  # Use with Falsyness Or Trusynes
+    result = filter(lambda user: not user['shopCart'], users)  # [not user['shopCart']] OR [len(user['shopCart']) == 0]
+    # result = filter(lambda user: len(user['shopCart']) == 0, users)
+    print(f"func3(alt):{list(result)}")
+
+
+def func4_map_filter():
+    result_user = filter(lambda user: not user['shopCart'], users)
+    result_user_name = lambda user: user['name']
+    result = map(result_user_name, result_user)
+    # ALTERNATIVE =====> result = [user['name'] for user in users if len(user['shopCart']) == 0]
+    print(f"func4(filterAndMap):{list(result)}")
+
+
+func1_get_even()
+print()
+
+func3()
+print()
+
+func4_map_filter()
+
+```
+
+## 🅱️ map
+
+```python
+# map: calls a function for all its members of iterable
+#    ---> Syntax: map(function, iterable) ==> Return: an iterable mapObject
+#                                         ==> Ussing: list(mapObject) or Tuple(mapObject) or ...
+#    ---> Note: تنها یکبار روی لیست یا غیره می‌تواند پیمایش صورت بپذیرد و در پیمایش دوم با لیست خالی مواجه می‌شود
+#    ---> itarate: پیمایش
+#    ---> iterable: هر چیزی که روی آیتم‌های آن قابلیت پیمایش وچود داشته باشد
+#    ---> Note:  به صورت «لِیزی» عمل می‌کند، به این معنی که محاسبات تنها زمانی انجام می‌شود که به نتایج آن نیاز باشد
+
+
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+names = ["akbar", "natasha", "zeinab", "maryam", "Kobra"]
+users = [{'name': 'amirali', 'family': 'ojaghi', 'born': 1369, 'shopCart': []},
+         {'name': 'mahmood', 'family': 'sabeti', 'born': 1400, 'shopCart': []},
+         {'name': 'hossein', 'family': 'taheri', 'born': 1372, 'shopCart': ['kotlin', 'vue']}]
+
+
+def func1():
+    def square(x):
+        return x ** 2
+
+    squared_numbers = map(square, numbers)
+    # Alternatives: squared_numbers = map(lambda x: x ** 2, numbers)
+
+    # تبدیل به لیست
+    squared_list = list(squared_numbers)
+    print(squared_list)  # خروجی: [1, 4, 9, 16, 25]
+
+
+def func2_map_filter():
+    result_user = filter(lambda user: not user['shopCart'], users)
+    result_user_name = lambda user: user['name']
+    result = map(result_user_name, result_user)
+    # ALTERNATIVE =====> result = [user['name'] for user in users if len(user['shopCart']) == 0]
+    print(f"func4(filterAndMap):{list(result)}")
+
+
+def func3():
+    upper_names = map(lambda name: name.upper(), names)
+    print(f"func5{list(upper_names)}")
+    print(f"func5(خالی خواهد بود زیرا یک بار پیمایش شده است){list(upper_names)}")  # خالی خواهد بود زیرا پیمایش سبب تخلیه می‌گردد
+
+
+def func4():
+    result = map(lambda person: person['family'], users)
+    print(f"func3:{list(result)}")
+    # Alternatives:
+    #           families = []
+    #           for person in users: families.append(person['family'])
+    #           print(f"{families}")
+
+
+def func5():
+    def add(x, y):
+        return x + y
+
+    list1 = [1, 2, 3]
+    list2 = [4, 5, 6]
+    added_numbers = map(add, list1, list2)
+    # ALTERNATIVE =====> added_numbers = map(lambda x, y: x + y, list1, list2)
+
+    # تبدیل به لیست
+    result_list = list(added_numbers)
+    print(result_list)  # خروجی: [5, 7, 9]
+
+
+func1()
+print()
+func2_map_filter()
+print()
+
+func3()
+print()
+
+func4()
+print()
+
+func5()
+
+```
+
+
+
+## 🅱️ Min_Max
+
+
+```python
+list1 = [3, 6, 8, 13, 4, 90]
+list2 = ['a', 't', 'z']
+list3 = "mostafa"
+list4 = ['mohammad', 'milad', 'akbar', 'sara', 'iman', 'ali']
+
+# Step 1️⃣️ - روش اول
+result = [len(name) for name in list4]
+print(f"Character lenght {list(list4)} ---> {result}")
+
+# Step 1️⃣️ - روش دوم
+print(f"Character lenght {list(list4)} ---> {[len(name) for name in list4]}")
+print("----------End1-------------")
+
+# Step 2️⃣️
+print(f"max in {list(list1)} ---> {max(list1)}")
+print(f"min in {list(list1)} ---> {min(list1)}")
+print(f"max lenght in {list(list4)} ---> {max(list4, key=lambda n: len(n))}")  # ماکزیمم را برحسب تعداد کاراکتر درنظر بگیر
+print(f"max lenght in {list(list4)} ---> {min(list4, key=lambda n: len(n))}")  # مینیمم را برحسب تعداد کاراکتر درنظر بگیر
+
+```
+
+## 🅱️ Reversed
+
+```python
+numbers = [1, 2, 3, 4, 5, 6]
+
+# numbers.reverse() #در لیست تغییر ایجاد میکند
+
+print(f"reversed in [{numbers}] ---> {list(reversed(numbers))}")
+
+chars = "hello"
+print(f"reversed in {chars} ---> {list(reversed(chars))}")
+print(f"reversed in {chars} ---> {chars[::-1]}")
+
+nameRes = ''
+print(nameRes.join(list(reversed("hello"))))
+
+for num in reversed(range(0, 10)):
+    print(num)
+print("----")
+for num in range(9, -1, -1):
+    print(num)
+
+```
+
+## 🅱️ Sort
+
+```python
+def func2sort_NoChange():
+    numbers = [1, 5, 8, 4, 6, 2]
+    print(f"func2(befor): {list(numbers)}")
+    result = sorted(numbers, reverse=False)
+    print(f"func2(sorted result): {result}")
+    print(f"func2(after): {list(numbers)}")
+
+
+def func4sort_Change():
+    numbers = [1, 5, 8, 4, 6, 2]
+    print(f"func4(befor): {list(numbers)}")
+    numbers.sort(reverse=False)
+    print(f"func4(after): {list(numbers)}")
+
+
+# لیست ها برای مرتب سازی نیاز به کلید دارند
+
+
+def func5():
+    users = [
+        {'name': 'taha', 'family': 'MohammadiNasab', 'age': 40},
+        {'name': 'mohammad', 'family': 'ketabi', 'age': 23},
+        {'name': 'sara', 'family': 'nadery', 'age': 80},
+        {'name': 'ali', 'family': 'Mohamadi', 'age': 30}
+    ]
+    print(users)
+    print(sorted(users, key=lambda user: user['age'], reverse=False))
+
+
+func2sort_NoChange()
+print("")
+func4sort_Change()
+print("")
+func5()
+
+```
+
+## 🅱️ Length
+
+```python
+users = [{'name': 'Behrooz', 'family': 'nadery', 'born': 1369, 'shopCart': []},
+         {'name': 'Alireza', 'family': 'saberi', 'born': 1400, 'shopCart': []},
+         {'name': 'Attefeh', 'family': 'Rezaie', 'born': 1372, 'shopCart': ['kotlin', 'vue']}]
+
+
+def func1():
+    print(f"func1:{len(users)}")
+
+
+def func2():
+    result = filter(lambda user: len(user['shopCart']) == 0, users)
+    print(f"func2(filter):{list(result)}")
+
+
+func1()
+func2()
+
+```
+
+## 🅱️ Input Agmuments
+
+```python
+# درصورت استفاده از همه موارد ترتیب اولیت استفاده به شکل زیر است:
+# اول: parameters
+# دوم: *args
+# سوم: default parameters
+# چهارم: **kwargs
+
+# Args: اگر در آرگومان ورودی موارد زیر را دیدید
+#      *args => Tuple
+#      **kwargs => Dictionary
+
+class Functions:
+    def func1(self, num, power=2):
+        print(f"func1: {num ** power}")
+
+    def func2(self, first, last):
+        print(f"func2: {first} {last}")
+
+    # تبدیل می‌شود به یک تاپل
+    def func3_holico(self, *args):
+        total = 0
+        for num in args:
+            total += num
+        print(f"func3: {args}------> {total}")
+
+    # آرگومان ورودی تبدیل می‌شود به یک دیکشنری
+    def func4(self, **kwargs):
+        my_string = ""
+        for key, value in kwargs.items():
+            my_string = f"{my_string} {key}:{value} - "
+        print(f"func4: {my_string}")
+
+    def func5(self, a, b, *args, define_parameter="defalut", **kwargs):
+        print(f"func5: {a}, {b} {args}, {define_parameter}, {kwargs}")
+
+
+behrooz = Functions()
+
+behrooz.func1(2, 3)  # output:8
+behrooz.func1(3)  # output:9
+
+behrooz.func2("behrooz", "mohammad")
+behrooz.func2(last="mohammad", first="behrooz")
+
+person = {"first": "behrooz", "last": "Mohamadi"}
+behrooz.func2(**person)
+behrooz.func2(*person)
+
+behrooz.func3_holico(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
+
+numbers = [1, 2, 3, 4, 5, 6]  # لیست است و میخواهیم بعنوان آرگومان ورودی به تابع بدهیم
+behrooz.func3_holico(*numbers)  # اگر ستاره نباشد ارور میدهد
+
+behrooz.func4(name="behrooz", FamilyName="Mohammadi")
+behrooz.func4(name="behrooz", FamilyName="Mohammadi", born=1369, mobile="09191671085")
+
+behrooz.func5(1, 2, 6, first_name="Behrooz", last_name="MohamadiNasab")
+
+```
+
+
+## 🅱️ TruthinessFalsiness_All
+
+```python
+# بررسی درستی یا نادرستی یا همان تروسینس یا فالسینس
+# اگر تمام آیتم‌های داده شده به این تابع درست باشد مقدار ترو را برمی‌گرداند
+# عدد صفر بطور پیش‌فرض در پایتون مقدار فالس در نظر گرفته شده است
+
+print(all([2, 3, 4, 8]))
+print("")
+
+print("-----Step2-----")
+print(all([]))  # اگر خالی باشد ترو برمی‌گرداند
+print("")
+
+print("-----Step3-----")
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+print(list(num for num in numbers if num % 2 == 0))
+print("")
+
+print("-----Step4-----")
+print([num % 2 == 0 for num in numbers])
+print("")
+
+print("-----Step5-----")
+
+# همه آیتم هایی که در نامبر هستند بر دو بخش پذیر هستند یا خیر
+print(all([num % 2 == 0 for num in numbers]))
+
+```
+
+## 🅱️ TruthinessFalsiness_Any
+
+```python
+# بررسی درستی یا نادرستی یا همان تروسینس یا فالسینس
+# اگر تنها حتی یک آیتم از مواردی که به این تابع داده شده است ترو باشد مقدار ترو را برمی‌گرداند
+
+def func1():
+    numbers = [0, 0, 0, 0]
+    print(f"{numbers} --> {any(numbers)}")
+
+
+def func2():
+    numbers = [0, 0, 0, 1]
+    print(f"{numbers} --> {any(numbers)}")
+
+
+def func3():
+    data = [False, False, False, False]
+    print(f"{data} --> {any(data)}")
+
+
+def func4():
+    data = [False, False, False, True]
+    print(f"{data} --> {any(data)}")
+
+
+def func5():
+    print(any([]))
+
+
+def func5():
+    numbers = [2, 4, 6, 8]
+    result = (any([num % 2 != 0 for num in numbers]))
+    print(f"{numbers} --> {result}")
+
+
+def func6():
+    numbers = [2, 4, 6, 7]
+    result = (any([num % 2 != 0 for num in numbers]))
+    print(f"{numbers} --> {result}")
+
+
+func1()
+func2()
+func3()
+func4()
+func5()
+func6()
+
+```
+
+## 🅱️ 
+
+```python
+
+```
+
+## 🅱️ 
+
+```python
+
 ```
 
 # 🅰️ JSON
