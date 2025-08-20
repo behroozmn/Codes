@@ -19,6 +19,7 @@
         * `pip freeze > requirements.txt`
     * install #دانلود و نصب بسته
         * `pip install PyYAML==6.0`
+        * `pip install --upgrade pip` بروزرسانی مخرن PYPI
         * `python -m pip install Django==3.0.3 --user`
         * `pip install --upgrade -r requirements.txt`
     * download #دانلود بسته
