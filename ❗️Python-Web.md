@@ -1952,7 +1952,7 @@ class ContactUsView(CreateView):  # ✅️
 
 ## 🅱️ Render
 
-*  اگر بخواهیم نوع رکوئست رو مشخص کنیم از روش زیر استفاده میکنیم تا به IntelliSence کمک کرده باشیم
+* اگر بخواهیم نوع رکوئست رو مشخص کنیم از روش زیر استفاده میکنیم تا به IntelliSence کمک کرده باشیم
 
 ```python
 def FunctionName(request: HTTPRequest):
@@ -2011,16 +2011,18 @@ def dynamic_name(request, name):
 ### ✅️ Reverse
 
 #### ❇️ Basic(NonReverse)
- 
-نمونه زیر وضعیت بدون Reverse را نشان میدهد تا در ادامه تغییرات قابل درک باشد 
+
+نمونه زیر وضعیت بدون Reverse را نشان میدهد تا در ادامه تغییرات قابل درک باشد
 
 فرض شود که فایل «یوآراِل» و «ویو» ساختار اصلی پروژه به صورت زیر باشد
 
 File: (main_url) `urls.py`
+
 ```python
 from django.contrib import admin
 from django.urls import path, include
 from . import views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.mainindex),
@@ -2028,24 +2030,27 @@ urlpatterns = [
 ]
 
 ```
+
 File: (main_view) `view.py`
+
 ```python
 from django.http import HttpResponse
 from django.shortcuts import render
+
+
 def mainindex(request):
-   # return HttpResponse("این صفحه اصلی است")
-   return render(request, 'URLs.html')
+    # return HttpResponse("این صفحه اصلی است")
+    return render(request, 'URLs.html')
  ```
 
-
 همچنین فایل «یوآراِل» و «ویو» اپلیکیش «کاربران» بصورت زیر باشد
-
 
 File: (Users) `urls.py`
 
 ```python
 from django.urls import path
 from . import views
+
 urlpatterns = [
     path('show', views.usershow),
     path('edit', views.useredit),
@@ -2059,6 +2064,7 @@ File: (Users) `view.py`
 ```python
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
+
 dic_id = {
     '0': 'بهروز',
     '1': 'Behrooz',
@@ -2069,16 +2075,24 @@ dic_id = {
     '6': 'علی',
     '7': 'Ali'
 }
+
+
 def usershow(request):
     return HttpResponse('<html lang="en"><head><meta charset="UTF-8"></head><body><ul><li>صفحه نمایش کاربران و برای ورود به صفحه اصلی لینک زیر را کلیک نمایید</li><a href="http://127.0.0.1:8000"><li>127.0.0.1:8000</li></a></ul></body></html>')
+
+
 def useredit(request):
     return HttpResponse('<html lang="en"><head><meta charset="UTF-8"></head><body><ul><li>صفحه ادیت کاربران </li><a href="http://127.0.0.1:8000"><li>127.0.0.1:8000</li></a></ul></body></html>')
+
+
 def dynamic_id(request, ids):
     dic_values = list(dic_id.values())
     data = dic_values[ids]
     if data is not None:
         return HttpResponseRedirect(f'/users/{data}')
     return HttpResponseNotFound('ids does not exists')
+
+
 def dynamic_name(request, name):
     dic_keys = list(dic_id.keys())
     dic_values = list(dic_id.values())
@@ -2091,14 +2105,11 @@ def dynamic_name(request, name):
     return HttpResponseNotFound('name does not exists')
 ```
 
-
 #### ❇️ Reverse
 
 اصلاح عبارت و کلمات «یوآراِل» هنگامی که صفحات زیاد داشته‌باشیم کار دشواری خواهد بود. بنابراین توصیه می‌شود برای هر مجموعه صفحاتِ «یوآراِل»، یک نام منحصربفرد اختصاص بدهیم تا بااستفاده از آن نام، بصورت خوکار تمام مسیرهای زیرین در دسترس قرار بگیرد
 
-
-
-##### Ⓜ️ مثال اول 
+##### Ⓜ️ مثال اول
 
 File: `View.py`
 
@@ -2174,8 +2185,7 @@ File: `index.html` in Templates Folder
 </html>
 ```
 
-
-##### Ⓜ️ مثال دوم 
+##### Ⓜ️ مثال دوم
 
 File: `url.py`
 
@@ -2189,8 +2199,11 @@ urlpatterns = [
 ```
 
 File: (newApplication) `view.py`
+
 ```python
 from django.urls import reverse
+
+
 # ...
 def dynamic_id(request, ids):
     dic_values = list(dic_id.values())
@@ -2238,6 +2251,7 @@ def device_details(request, product_id):
 File: `device_details.html`
 
 ```html
+
 <ul style="direction: rtl">
     {% for device in devices %}
     <li>
@@ -2261,7 +2275,6 @@ urlpatterns = [
     path('/<int:product_id>', views.device_details, name='device_details')
 ]
 ```
-
 
 File: `models.py`
 
@@ -2301,14 +2314,9 @@ File: `device_details.html`
 </ul>
 ```
 
-
-
-
-
-
 ### ✅️ DTL(Django Template Language) with CONTEXT
 
-[built-In Templates](https://docs.djangoproject.com/en/5.1/ref/templates/builtins/) 
+[built-In Templates](https://docs.djangoproject.com/en/5.1/ref/templates/builtins/)
 [URL](https://docs.djangoproject.com/en/5.1/ref/templates/builtins/#url)
 
 به استفاده از قعطه کد پایتون در داخل صفحات «اچ‌تی‌ام‌ال» که سیتنکس آن مشابه خطوط زیر است
@@ -2316,7 +2324,6 @@ File: `device_details.html`
 ```html
 {% PYTHON_SYNTAX_CODE %}
 ```
-
 
 #### ❇️ basic
 
@@ -2672,8 +2679,6 @@ class TodosGenericDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 ### ✅️ TokenAuthentication[ذخیره توکن در دیتابیس]
 
-#### ❇️ Configure
-
 1. File: `setting.py`
     ```python
    INSTALL_APPS = [... ,'rest_framework.authtoken', ... ]
@@ -2683,10 +2688,10 @@ class TodosGenericDetailView(generics.RetrieveUpdateDestroyAPIView):
     'DEFAULT_PERMISSION_CLASSES':     ['rest_framework.permissions.IsAuthenticated']
    }
    ```
-2. migrations Command `python manage.py migration`
+2. migrations Command `python3 manage.py migrate`
 
 3. File: `/config/urls.py` # Main urls
-   ```
+   ```python
    from rest_framework.authtoken.views import obtain_auth_token # ✅️
    
    urlpatterns = [
@@ -2694,33 +2699,28 @@ class TodosGenericDetailView(generics.RetrieveUpdateDestroyAPIView):
       path('', include('home.urls')),
       path('todos/', include('todo.urls')),
       path('api-auth/', include('rest_framework.urls')),
-      path('auth-token/', obtain_auth_token, name='generate_auth_token')# ✅️
+      path('auth-token/', obtain_auth_token, name='generate_auth_token'),# ✅️
    ```
-
-#### ❇️ Intro
-
-* ابتدا به یک آدرس دلخواه نظیر «auth-token» با مقادیر username و password در body ارسال می‌کنیم
-
-```
-URL: http://127.0.0.1:8000/auth-token[POST]
-{
-   "username":"USERNAME",
-   "password":"PASS"
-}
-```
-
-* سپس یک token برای کاربر ساخته می‌شود و در دیتابیس برای همان کاربر با نگهداری زمان ایجاد token ذخیره می‌شود و بعنوان response برمیگرداند تا کدنویس آن را نگهداری و استفاده نماید
-
-```
-#response
-{
-    "token": "<Token>", 
-}
-```
+4. ابتدا به یک آدرس دلخواه نظیر «auth-token» با مقادیر username و password در body بعنوان RawData ارسال می‌کنیم.[نکته:در پارامتر و در هدر ارسال نکنید]
+   ```json
+   "POST":"http://127.0.0.1:8000/auth-token",
+   {
+      "username":"USERNAME",
+      "password":"PASS"
+   }
+   ```
+5. سپس یک token برای کاربر ساخته می‌شود و در دیتابیس برای همان کاربر با نگهداری زمان ایجاد token ذخیره می‌شود و بعنوان response برمیگرداند تا کدنویس آن را نگهداری و استفاده نماید
+   ```json
+   {
+       "token": "<Token>", 
+   }
+   ```
 
 * از آن پس هرگاه بخواهیم دیتا در آدرس‌های دیگر ارسال کنیم باید در header درخواست‌هایمان مقدار زیر را نیز وارد نمایید
 
-```Authentication: Token <TOKEN>```# ✅️
+```http request
+Authentication: Token <TOKEN>
+```
 
 ### ✅️ JWT(JsonWebToken)[عدم ذخیره توکن در دیتابیس]
 
@@ -3722,7 +3722,7 @@ from rest_framework import serializers
 
 File: `/todo/models.py`
 
-* IF Changing must to execute `python3 manage.py migrations` command
+* IF Changing must to execute `python3 manage.py migrate` command
 
 ```python
 from django.db import models
