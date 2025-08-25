@@ -1,6 +1,6 @@
 <div dir="rtl">
 
-# 🅰️ Django
+# 1. 🅰️ Django
 
 File: `main_urls.py`
 
@@ -25,9 +25,9 @@ def mainindex(request):
     return HttpResponse("index page(صفحه اصلی)")
 ```
 
-## 🅱️ pages
+## 1.1. 🅱️ pages
 
-### ✅️ 404
+### 1.1.1. ✅️ 404
 
 > نام فایل باید دقیقا ۴۰۴ باشد و اگر نام دیگری باشد مورد پذیرش نیست و باید داخل مسیر تمپلیت باشد
 
@@ -65,7 +65,7 @@ def dynamic_days(reqeust, day):
     return render(reqeust, 'challenges/challenge.html', context)
 ```
 
-### ✅️ masterPage or MainPage or BasePage or LayoutePage
+### 1.1.2. ✅️ masterPage or MainPage or BasePage or LayoutePage
 
 با هدف ایجاد یک صفحه اصلی که بعنوان صفحه پیش‌فرض مد نظر قرار گیرد و بقیه صفحات از آن مشتق شده و هر صفحه بتواند تگ های سفارشی خود را داشته باشد
 
@@ -117,7 +117,7 @@ def dynamic_days(reqeust, day):
 
 Note: [URL](https://docs.djangoproject.com/en/5.1/ref/templates/builtins/#block)
 
-### ✅️ Include
+### 1.1.3. ✅️ Include
 
 تهیه بخش های متفاوت از تکه‌ها صفحه و استفاده در صفحه اصلی
 
@@ -146,7 +146,7 @@ File: `index.html`
 {% endblock %}
 ```
 
-### ✅️ Include by `send Parameter`
+### 1.1.4. ✅️ Include by `send Parameter`
 
 تهیه بخش های متفاوت از تکه‌ها صفحه و استفاده در صفحه اصلی
 
@@ -194,7 +194,7 @@ File: `page2.html`
 {% endblock  %}
 ```
 
-### ✅️ استفاده از جاوااسکریپ در برخی از صفحات
+### 1.1.5. ✅️ استفاده از جاوااسکریپ در برخی از صفحات
 
 ```python
 { % block
@@ -208,7 +208,7 @@ console.log('hello')
 
 > Note: میتوان در تکه صفحه‌ها تگ اسکریپت یعنی جاوا اسکریپت را هم درج نماییم
 
-## 🅱️ StaticFiles
+## 1.2. 🅱️ StaticFiles
 
 1. مسیر فایل‌های استاتیک پروژه باید درفایل تنظیمات تعریف شده باشد
    `INSTALLED_APPS = [ ...'django.contrib.staticfiles' ... ]`
@@ -239,11 +239,11 @@ console.log('hello')
 
 > اگر اپلیکیشن بالا بود و با ارور ۴۰۴ مواجه شدیم باید سرویس جنگو را ریست نماییم
 
-## 🅱️ File
+## 1.3. 🅱️ File
 
-### ✅️ Upload
+### 1.3.1. ✅️ Upload
 
-#### ❇️ Legacy
+#### 1.3.1.1. ❇️ Legacy
 
 Files: `views.py`
 
@@ -308,9 +308,9 @@ Files: `create_profile_page.html`
 {% endblock %}
 ```
 
-#### ❇️ Upload [By Class]]
+#### 1.3.1.2. ❇️ Upload [By Class]]
 
-#### ❇️ Upload [By Class]]
+#### 1.3.1.3. ❇️ Upload [By Class]]
 
 save name in Database and save in custome dir
 
@@ -409,7 +409,7 @@ File: `setting.py`
 
 * بدلیل تغییرات در دیتابیس باید دستورات تغییرات در دیتابیس زده شود
 
-#### ❇️ Filter[Upload Only Image]
+#### 1.3.1.4. ❇️ Filter[Upload Only Image]
 
 1. `python -m pip install pillow`
 2. Files: `forms.py`
@@ -423,7 +423,7 @@ File: `setting.py`
       image = models.ImageField(upload_to='images')  # درفایل تنظیمات تصریح شده است که این فولدر «ایمیچ» باید در داخل کدام مسیر ایجاد شود و سبب نگهداری فایل‌ها گردد
    ```
 
-#### ❇️ Upload [By CreateView]
+#### 1.3.1.5. ❇️ Upload [By CreateView]
 
 1. Files: `views.py`
    ```python
@@ -447,7 +447,7 @@ File: `setting.py`
       user_image = forms.ImageField() # ❌ به این نیازی نخواهد بود
    ```
 
-### ✅️ Show
+### 1.3.2. ✅️ Show
 
 1. Files: `views.py`
    ```python
@@ -514,9 +514,9 @@ File: `setting.py`
    urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
    ```
 
-## 🅱️ Database Model
+## 1.4. 🅱️ Database Model
 
-### ✅️ Info
+### 1.4.1. ✅️ Info
 
 * نکته: به هیچ عنوان به محتویات پوشه «ماگریشن» دستکاری نکنید و این موارد باید اتوماتیک ساخته شوند
 * اگر تغییراتی در مدل داده شد نیاز به بازسازی است و گرنه اگر در بدنه و دستورات پایتون بود نیازی نیست
@@ -529,7 +529,7 @@ python3 manage.py shell # دسترسی به شل یا همان پایتون کن
 
 ```
 
-### ✅️ Models
+### 1.4.2. ✅️ Models
 
 Example1️⃣️: File: `models.py`
 
@@ -634,18 +634,18 @@ product.objects.filter(id__exact=14)
 product.objects.filter(title__contains='متن')
 product.objects.filter(title__icontains='متن')  # ignore case sensitive
 
-# OR
+# 2. OR
 >> from django.db.models import Q
 
 product.objects.filter(Q(is_active=True) | Q(rating__gte=4))
 product.objects.filter(Q(is_active=True) | Q(rating__gte=4), rating__lt=5)
 
-# کاهش کانکشن به دیتابیس در فیلترهای متعدد
+# 3. کاهش کانکشن به دیتابیس در فیلترهای متعدد
 >> active_products = Product.objects.filter(is_active=True)  # کوئری ایجاد می‌شود
 >> active_products = Product.objects.filter(price__gt=50000)  # کوئری آپدیت مي‌شود
 >> active_products = Product.objects.filter(rating__gt=4)  # کوئری آپدیت مي‌شود
 >> print(active_products)  # فقط یک بار کانکشن میزند
-# اگر دوباره پرینت کنیم دیتا کش می‌شود و مجدد کوئری نخواهد زد
+# 4. اگر دوباره پرینت کنیم دیتا کش می‌شود و مجدد کوئری نخواهد زد
 
 
 products = list(Product.objects.all().order_by('-price')[:5])
@@ -793,7 +793,7 @@ File: `view.py`
 from django.shortcuts import render
 from datetime import date
 
-# Create your views here.
+# 5. Create your views here.
 
 posts_database = [
     {
@@ -1626,9 +1626,9 @@ Files: `views.py`
 from django.views.generic.base import TemplateView  # ✅️ 
 
 
-# class HomeView(View): # 📌️ Without TemplateView
-#     def get(self, request):
-#         return render(request, 'home_module/index_page.html')
+# 6. class HomeView(View): # 📌️ Without TemplateView
+# 7. def get(self, request):
+# 8. return render(request, 'home_module/index_page.html')
 
 
 class HomeView(TemplateView):  # ✅️ 
@@ -1852,7 +1852,7 @@ urlpatterns = [
 ]
 ```
 
-##### Ⓜ️ DetailView
+##### 8.1. Ⓜ️ DetailView
 
 File: `views.py`
 
@@ -1914,7 +1914,7 @@ class Product(models.Model):
         verbose_name_plural = 'محصولات'
 ```
 
-##### Ⓜ️ FormView
+##### 8.2. Ⓜ️ FormView
 
 Files: `views.py`
 
@@ -1933,7 +1933,7 @@ class ContactUsView(FormView):
         return super().form_valid(form)
 ```
 
-##### Ⓜ️ CreateView
+##### 8.3. Ⓜ️ CreateView
 
 Files: `views.py`
 

@@ -1,12 +1,12 @@
 <div dir="rtl">
 
-# 🅰️ `__init__.py`
+# 1. 🅰️ `__init__.py`
 
 * یک فولدر(دایرکتوری) حاوی فایل __init__.py بعنوان یک package(بسته) شناخته می‌شود و بدون این فایل پایتون نمی‌تواند دایرکتوری را به‌عنوان یک بسته شناسایی کند
 * هرگاه یک بسته(ماژول) import شود، آنگاه کد داخل این فایل به منظور راه‌انداز(پیکربندی ماژول‌ها) اجرا می‌شود
 * وقتی یک package ایمپورت می‌شود، فایل __init__.py اولین چیزی است که اجرا می‌شود
 
-## 🅱️ مزیت‌های Package بودن یک دایرکتوری
+## 1.1. 🅱️ مزیت‌های Package بودن یک دایرکتوری
 
 * فولدر می‌تواند شامل ماژول‌های دیگر یعنی FileName.py های دیگر باشد
 * فولدر می‌تواند حاوی sub-packageهای دیگر باشد
@@ -19,7 +19,7 @@
 * یک فولدر حتی بدون __init__.py هم می‌تواند package باشد (implicit namespace package) که در پایتون 3.3 به بعد ممکن شده است اما در این صورت import نسبی (from . import ...) کار نمی‌کند.
 * نمی‌توانید از __all__ کدهای اولیه‌سازی استفاده کنید.
 
-## 🅱️ Example
+## 1.2. 🅱️ Example
 
 فرض کنید دایرکتوری حاوی نظام و ساختارفایل زیر است
 
@@ -47,7 +47,7 @@ from . import module_b  # import نسبی
 
 💡 بدون __init__.py، این . (نقطه) در import نسبی کار نمی‌کند.
 
-## 🅱️ کدنویسی دراین فایل
+## 1.3. 🅱️ کدنویسی دراین فایل
 
 * هر بار این بسته مورد استفاده قرار بگیرد آنگاه لاگ بیاندازد که فلان بسته مورد استفاده قرار گرفته است
 
@@ -55,7 +55,7 @@ from . import module_b  # import نسبی
 print("Package is being imported!")
 ```
 
-# 🅰️ `__all__`
+# 2. 🅰️ `__all__`
 
 * یک لیست از رشته‌ها (strings)  است که نام متغیرها، توابع، یا کلاس‌هایی هستند که وقتی از یک ماژول یا package از طریق import * استفاده می‌کنید، وارد می‌شوند
 * قابلیت تعریف کردن در ۱-فایل‌های .py (ماژول) و ۲-در فایل __init__.py (package)
@@ -69,7 +69,7 @@ print("Package is being imported!")
     * وقتی import * می‌کنید، تمام نام‌ها به scope فعلی وارد می‌شوند. این می‌تونه باعث تداخل نام‌ها بشه.
     * با استفاده از __all__ می‌تونی دقیق مشخص کنی که چه چیزهایی قراره وارد بشن.
 
-## 🅱️ نحوه تعریف
+## 2.1. 🅱️ نحوه تعریف
 
 * عبارت __all__ حتما باید در انتها تعریف شود
 
@@ -101,7 +101,7 @@ from mymodule import *
 
 فقط greet و Person ایمپورت می‌شوند.
 
-# 🅰️ mathGraph
+# 3. 🅰️ mathGraph
 
 ```python
 import matplotlib.pyplot as plot
@@ -112,7 +112,7 @@ plot.plot(xs, ys)
 plot.show()
 ```
 
-# 🅰️ pyfiglet
+# 4. 🅰️ pyfiglet
 
 - نمایش متن بصورت AsciiArt یعنی همانند خروجی دستور cowsay در لینوکس
 - ترکیب آن با termcolor بسیار مفید خواهد شد
@@ -133,7 +133,7 @@ ascii_art = colored(ascii_art, color="red")
 print(ascii_art)
 ```
 
-# 🅰️ termcolor
+# 5. 🅰️ termcolor
 
 * ماژولی برای رنگ آمیزی خروجی
 
@@ -149,7 +149,7 @@ print(termcolor.colored('python course', color="cyan"))
 
 ```
 
-# 🅰️ JsonResponse
+# 6. 🅰️ JsonResponse
 
 ```
 return JsonResponse(Items.to_dict(), safe=False)
@@ -161,11 +161,11 @@ return JsonResponse(Items.to_dict(), safe=False)
         * آنگاه اجازه می‌دهیم هر نوع object قابل سریالایز شدن JSON (مثل لیست , namedtuple , custom class ) را هم برگردانیم.
         * در این حالت، JsonResponse فرض می‌کند که شما مسئول مدیریت خروجی هستید.
 
-# 🅰️ Install Offline
+# 7. 🅰️ Install Offline
 
-## 🅱️  [install from local Archive](https://packaging.python.org/en/latest/tutorials/installing-packages/#installing-from-local-archives)
+## 7.1. 🅱️  [install from local Archive](https://packaging.python.org/en/latest/tutorials/installing-packages/#installing-from-local-archives)
 
-### ✅️ روش اول
+### 7.1.1. ✅️ روش اول
 
 ```shell
 mkdir /tmp/download
@@ -181,7 +181,7 @@ python3 -m pip install --no-index --find-links=file:///tmp/download wadllib webc
 
 ```
 
-### ✅️ روش دوم
+### 7.1.2. ✅️ روش دوم
 
 ```shell
 python3 -m pip install ./downloads/SomeProject-1.0.4.tar.gz
@@ -190,9 +190,9 @@ python3 -m pip install --no-index --find-links=/local/dir/ SomeProject
 python3 -m pip install --no-index --find-links=relative/dir/ SomeProject
 ```
 
-# 🅰️ requests
+# 8. 🅰️ requests
 
-## 🅱️ Get
+## 8.1. 🅱️ Get
 
 ```python
 import requests
@@ -215,7 +215,7 @@ print(f"[res2.json()]: {res2.json()}")
 
 ```
 
-## 🅱️ Post
+## 8.2. 🅱️ Post
 
 ```python
 import requests
@@ -231,7 +231,7 @@ for data in res1.json():
 
 ```
 
-# 🅰️ BaseHTTPRequestHandler and HTTPServer
+# 9. 🅰️ BaseHTTPRequestHandler and HTTPServer
 
 ```python
 from http.server import BaseHTTPRequestHandler, HTTPServer

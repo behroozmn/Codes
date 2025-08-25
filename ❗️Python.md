@@ -1,6 +1,6 @@
 <div dir="rtl">
 
-# 🅰️ Commands
+# 1. 🅰️ Commands
 
 * پایتون و تعامل با زبان‌های دیگر
     * CPython: تعامل با تمام کدهایC
@@ -20,7 +20,7 @@
     ```python
     python setup.py install --user --prefix=~
     ```
-## 🅱️ pip
+## 1.1. 🅱️ pip
 
 - ریپوزیتوری pypi یا Python Package Index مخزن رسمی بسته‌های نرم‌افزاری پایتون می‌باشد که با دستور pip می‌توان از آن استفاده کرد
 - در پایتون در pip3 منظور از آرگومان -m این است که یک ماژول را به عنوان یک برنامه اجرایی، اجرا کن!
@@ -55,7 +55,7 @@
         * `pip install --upgrade PyYAML`
         * `pip install --upgrade pip` بروز رسانی ماژول‌های پیپ
 
-## 🅱️ python
+## 1.2. 🅱️ python
 
 > python Command option
 
@@ -66,7 +66,7 @@
     * [-m pipe]
         * `python3 -m pip --version`
 
-## 🅱️ pythom3
+## 1.3. 🅱️ pythom3
 
 > python3 Command option
 
@@ -86,7 +86,7 @@
             * `python3 manage.py shell` [Django]  دسترسی به شل یا همان پایتون کنسول
             * `python3 manage.py createsuperuser` [Django] ایجاد یوزر ادمین جنگو
 
-## 🅱️ django-admin
+## 1.4. 🅱️ django-admin
 
 * [Command]
     * [] اگر خالی باشد نمایش لیستی از دستورات در دسترس از جنگو
@@ -94,7 +94,7 @@
     * [startproject name]
         * ```django-admin startproject MyProject < Director >``` Create DjangoTemplate
 
-## 🅱️ apt
+## 1.5. 🅱️ apt
 
 > apt command options
 
@@ -102,11 +102,11 @@
     * install # نصب
         * `sudo apt install python3-PackageName` #نصب بسته در محدوده سیستمی و نه یک پروژه یعنی همه جای سیستم عامل دسترس خواهد بود
 
-## 🅱️ pipdeptree
+## 1.6. 🅱️ pipdeptree
 
 > pipdeptree|nl #نمایش وابستگی‌ها در فرمت فایل نیازمندی‌ها
 
-# 🅰️ Name Conventions
+# 2. 🅰️ Name Conventions
 
 * جدولNaming Conventions برای نامگذاری عناصر استفاده شونده در کدنویسی
 
@@ -131,7 +131,7 @@
 | متغیرهای دیتابیس          | `db_`, `cursor`, `conn`        | نام‌های استاندارد برای متغیرهای دیتابیس                   | `db_connection`, `cursor.execute()`    | واضح‌سازی منبع داده                            |
 | متغیرهای JSON / API       | `payload`, `response`, `data`  | نام‌های استاندارد برای مدیریت داده‌های JSON و API         | `payload = {'name': 'Ali'}`            | سازگاری با API ها                              |
 
-# 🅰️ Persian Tools
+# 3. 🅰️ Persian Tools
 
 * برای استفاده از کاراکترهای «یونیکد فارسی» یا هر زبانی در سورس کدهای پایتون، باید از این هدر در بالای کد استفاده شود
     * `-*- coding: utf-8 -*-`
@@ -141,14 +141,14 @@
     from __future__ import unicode_literals
     ```
 
-# 🅰️ VirtualEnvironment
+# 4. 🅰️ VirtualEnvironment
 
 * محیط مجازی (Virtual Environment): امکان ایجاد فضا مستقل و جداگانه پروژه‌ها از هم(جلوگیری از تداخل) در وابستگی‌های نصب بسته‌ها و کتابخانه‌ها را فراهم می‌آورد
 * هر پروژه می‌تواند نسخه‌های خاص خود از کتابخانه‌ها را داشته باشد بدون اینکه بر روی پروژه‌های دیگر تأثیر بگذارد.
 * نکته: در محیط venv نیاز به زدن دستور `python3 -m pip install requests` نیست و تنها نوشتن `pip install` کار میکند
 * حتما باید بسته virtualenv در سیستم نصب باشد تا بتوانین مجیط مجازی virtualEnvironment بوجود بیاورید(یعنی در خروجی دستور `pip freeze` این بسته موجود باشد)
 
-## 🅱️ تفاوت virtualenv  و  venv
+## 4.1. 🅱️ تفاوت virtualenv  و  venv
 
 | ویژگی           | virtualenv                   | venv                                                                                     |
 |-----------------|------------------------------|------------------------------------------------------------------------------------------|
@@ -173,7 +173,7 @@ pip install package_name
 deactivate #غیر فعال سازی و خروج از محیط مجازی
 ```
 
-# 🅰️ Variable
+# 5. 🅰️ Variable
 
 ```python
 # CaseSensitive
@@ -207,7 +207,7 @@ print("you got GOLD medal") if userRank == 1 else print("no medal")
 
 ```
 
-# 🅰️ Loop
+# 6. 🅰️ Loop
 
 ```python
 
@@ -269,9 +269,9 @@ behrooz = loop()
 behrooz.whileLoop2()
 ```
 
-# 🅰️ Operation
+# 7. 🅰️ Operation
 
-## 🅱️ OperatorsComparison
+## 7.1. 🅱️ OperatorsComparison
 
 ```python
 # Return Boolean Value
@@ -312,7 +312,7 @@ print(list1 is list3)
 
 ```
 
-## 🅱️ Logical Operand
+## 7.2. 🅱️ Logical Operand
 
 ```python
 # AND
@@ -362,7 +362,7 @@ if not ((2 < age < 8) or age >= 65):
 
 ```
 
-## 🅱️ Ternary Operator
+## 7.3. 🅱️ Ternary Operator
 
 ```python
 # ternary:A ternary operator exists in some programming languages, and it allows you to shorten a simple If-Else block. It takes in 3 or more operands:
@@ -438,9 +438,9 @@ condition5_Alternative()
 
 ```
 
-# 🅰️ exception
+# 8. 🅰️ exception
 
-## 🅱️ Error
+## 8.1. 🅱️ Error
 
 ```python
 try:
@@ -468,7 +468,7 @@ finally:
 
 ```
 
-## 🅱️ Error-Raise
+## 8.2. 🅱️ Error-Raise
 
 ```python
 # print(test)
@@ -494,7 +494,7 @@ print_with_custom_color("Behrooz", 'redd')
 
 ```
 
-## 🅱️ Debug(pdb)
+## 8.3. 🅱️ Debug(pdb)
 
 ```python
 # import pdb
@@ -524,7 +524,7 @@ print(res)
 
 ```
 
-# 🅰️ Function
+# 9. 🅰️ Function
 
 * برای یاد گیری سه مفهوم ۱-لامبدا ۲-فیلتر ۳-مَپ ،باید به ترتیب نام برده شده مطالعه شود
 
@@ -559,9 +559,9 @@ degrees(x) #اگر ایکس رادیان باشد مقدار زاویه را ب�
 
 ![Fibonatchi](./_srcFiles/Images/07.gif "07.gif")
 
-## 🅱️ __NAME__
+## 9.1. 🅱️ __NAME__
 
-### ✅️ `__init__`
+### 9.1.1. ✅️ `__init__`
 
 نقش تابع سازنده در هر کلاس را ایفا می‌کند
 
@@ -580,7 +580,7 @@ obj.show_data()
 
 ```
 
-### ✅️ `__len__`
+### 9.1.2. ✅️ `__len__`
 
 فقط زمانی می‌شود از این تابع استفاده کرد که فانکشن آن تعریف شده باشد یا خودمان یا ارث‌بری
 
@@ -597,7 +597,7 @@ obj = Behrooz("Alii")
 print(len(obj))
 ```
 
-### ✅️  `__add__` و `__mul__` و `__truediv__` و `__sub__`
+### 9.1.3. ✅️  `__add__` و `__mul__` و `__truediv__` و `__sub__`
 
 ```python
 class Behrooz:
@@ -639,7 +639,7 @@ print(obj / "salam")
 | __floordiv__(self,p2)  | \\      | 
 | __ifloordiv__(self,p2) | \=      | 
 
-### ✅️  `__repr__`
+### 9.1.4. ✅️  `__repr__`
 
 * باتعریف این تابع سبب می‌شویم در هنگام پرینت آبجکت تهیه شده از یک کلاس تابع اجرا شود وگرنه آدرس شیء در حافظه نمایش می‌شود
 * یعنی اگر بخواهیم که بچای نمایش دیتای فنی دیتای خوانا به کاربر نمایش داده شود
@@ -659,7 +659,7 @@ print(obj)
 
 ```
 
-### ✅️ `__str__`
+### 9.1.5. ✅️ `__str__`
 
 * برای خوانایی بیشتر EndUser از یک شیء مورد استفاده قرار می‌گیرد
 * این متد زمانی فراخوانی می‌شود که توابعی مانند print یا str برای نمایش یک شیء استفاده شود
@@ -680,7 +680,7 @@ person = Person("علی", 25)
 print(person)  # output: Person(name=علی, age=25)
 ```
 
-## 🅱️ Lambda
+## 9.2. 🅱️ Lambda
 
 ```python
 # Only in one line
@@ -699,7 +699,7 @@ print(function2(-5))
 
 ```
 
-## 🅱️ Filter
+## 9.3. 🅱️ Filter
 
 ```python
 # filter: choice elements by condition
@@ -745,7 +745,7 @@ func4_map_filter()
 
 ```
 
-## 🅱️ map
+## 9.4. 🅱️ map
 
 ```python
 # map: calls a function for all its members of iterable
@@ -828,7 +828,7 @@ func5()
 
 ```
 
-## 🅱️ Min_Max
+## 9.5. 🅱️ Min_Max
 
 ```python
 list1 = [3, 6, 8, 13, 4, 90]
@@ -852,7 +852,7 @@ print(f"max lenght in {list(list4)} ---> {min(list4, key=lambda n: len(n))}")  #
 
 ```
 
-## 🅱️ Reversed
+## 9.6. 🅱️ Reversed
 
 ```python
 numbers = [1, 2, 3, 4, 5, 6]
@@ -876,7 +876,7 @@ for num in range(9, -1, -1):
 
 ```
 
-## 🅱️ Sort
+## 9.7. 🅱️ Sort
 
 ```python
 def func2sort_NoChange():
@@ -916,7 +916,7 @@ func5()
 
 ```
 
-## 🅱️ Length
+## 9.8. 🅱️ Length
 
 ```python
 users = [{'name': 'Behrooz', 'family': 'nadery', 'born': 1369, 'shopCart': []},
@@ -938,7 +938,7 @@ func2()
 
 ```
 
-## 🅱️ Input Agmuments
+## 9.9. 🅱️ Input Agmuments
 
 ```python
 # درصورت استفاده از همه موارد ترتیب اولیت استفاده به شکل زیر است:
@@ -1000,7 +1000,7 @@ behrooz.func5(1, 2, 6, first_name="Behrooz", last_name="MohamadiNasab")
 
 ```
 
-## 🅱️ TruthinessFalsiness_All
+## 9.10. 🅱️ TruthinessFalsiness_All
 
 ```python
 # بررسی درستی یا نادرستی یا همان تروسینس یا فالسینس
@@ -1030,7 +1030,7 @@ print(all([num % 2 == 0 for num in numbers]))
 
 ```
 
-## 🅱️ TruthinessFalsiness_Any
+## 9.11. 🅱️ TruthinessFalsiness_Any
 
 ```python
 # بررسی درستی یا نادرستی یا همان تروسینس یا فالسینس
@@ -1080,7 +1080,7 @@ func5()
 func6()
 ```
 
-# 🅰️ Decorator
+# 10. 🅰️ Decorator
 
 ```python
 ####################################################################################################################
@@ -1171,7 +1171,7 @@ say_hello()
 
 ```
 
-## 🅱️ Classmethod
+## 10.1. 🅱️ Classmethod
 
 ```python
 # decorator
@@ -1196,7 +1196,7 @@ print(obj1.func1())
 
 ```
 
-## 🅱️ Property
+## 10.2. 🅱️ Property
 
 ```python
 # برای دسترسی به متد باید حتما پرانتز باز و بسته گذاشته بشود ولی برای پراپرتی نباید پرانتز گذاشت
@@ -1222,7 +1222,7 @@ print(obj1.fullname)
 
 ```
 
-## 🅱️ PropertyGetterSetter
+## 10.3. 🅱️ PropertyGetterSetter
 
 ```python
 # Decorator
@@ -1271,7 +1271,7 @@ print(obj1.fullName)  # به حالت متد فراخوانی نمیکنیم ب�
 
 ```
 
-## 🅱️ Advanced
+## 10.4. 🅱️ Advanced
 
 ```python
 def before_after(func):
@@ -1405,7 +1405,7 @@ show_data(Fname="Behi")
 
 ```
 
-## 🅱️ Example
+## 10.5. 🅱️ Example
 
 ```python
 from time import time
@@ -1437,7 +1437,7 @@ sum_list()
 
 ```
 
-# 🅰️ Iterate
+# 11. 🅰️ Iterate
 
 ```python
 # iterate: پیمایش یا تکرار کردن
@@ -1477,7 +1477,7 @@ print(next(iterName))
 
 ```
 
-## 🅱️ Dictionary
+## 11.1. 🅱️ Dictionary
 
 ```python
 # List       → []
@@ -1601,7 +1601,7 @@ behrooz.func4(name="behrooz", FamilyName="Mohammadi", born=1369, mobile="0919167
 
 ```
 
-## 🅱️ Set
+## 11.2. 🅱️ Set
 
 ```python
 # List       → []
@@ -1652,7 +1652,7 @@ print(SetClass._set5)
 
 ```
 
-## 🅱️ Tupple
+## 11.3. 🅱️ Tupple
 
 ```python
 # List       → []
@@ -1694,7 +1694,7 @@ obj.func1(*numbers)  # اگر ستاره نباشد ارور میدهد
 
 ```
 
-## 🅱️ List
+## 11.4. 🅱️ List
 
 ```python
 # List       → []
@@ -1803,7 +1803,7 @@ def search(self, mylist):
 
 ```
 
-## 🅱️ Generator_Expression
+## 11.5. 🅱️ Generator_Expression
 
 ```python
 # Generator: create function as sequentional lazy items
@@ -1920,7 +1920,7 @@ print(f"---------->  Time(s): {end_time - start_time}\n")
 
 ```
 
-## 🅱️ Zip
+## 11.6. 🅱️ Zip
 
 ```python
 # تلفیق دو ایتِرِیت با یکدیگر تبدیل به یک ایتریت جدید که شامل هردوی آن‌ها می‌باشد
@@ -2012,7 +2012,7 @@ func7_avg_WithIndex()
 
 ```
 
-## 🅱️ Iterate_class_example
+## 11.7. 🅱️ Iterate_class_example
 
 ```python
 # example 1️⃣️
@@ -2092,7 +2092,7 @@ for item in User('ali', 60):
 
 ```
 
-# 🅰️ OOP(Object Oriented Programming)
+# 12. 🅰️ OOP(Object Oriented Programming)
 
 * در کلاس‌ها درحین تعریف یک تابع در داخل آن تابع اگر از کلمه کلیدی self استفاده نشود آنگاه متغیرهای کلاس همراه آورده نمی‌شود
 * کلمه پارامتر بعنوان ورودی در وقت استفاده از تابع است و کلمه آرگومان بعنوان ورودی‌های یک تابع در بدنه یک فانکشن است
@@ -2125,7 +2125,7 @@ print("آیا شیء یک نمونه از کلاس است؟", isinstance(obj, Us
 
 ```
 
-## 🅱️ NameMangling
+## 12.1. 🅱️ NameMangling
 
 ```python
 # _name    => define local variable
@@ -2159,7 +2159,7 @@ print(obj._User__password)  # وقتی یک پارامتر را با دوتا آ
 
 ```
 
-## 🅱️ Override
+## 12.2. 🅱️ Override
 
 ```python
 class Animal:
@@ -2184,7 +2184,7 @@ print(worm.makeSound())
 
 ```
 
-## 🅱️ Static
+## 12.3. 🅱️ Static
 
 * اگر یک متغیر را در داخل کلاس و خارج توابع تعریف کنیم آنگاه آن را استاتیک خواندنی درنظر می‌گیرد
 * یعنی با تغییر در شیء‌نمونه‌ها ازین پس مقادیر آنها مستقل خواهند شد
@@ -2225,9 +2225,9 @@ print(f"staticData in two [id: {id(two.staticData)} ] ---> {two.staticData}")
 
 ```
 
-# 🅰️ File
+# 13. 🅰️ File
 
-## 🅱️ Read
+## 13.1. 🅱️ Read
 
 ```python
 data = open("/etc/passwd")
@@ -2252,7 +2252,7 @@ with open("/etc/passwd", encoding='UTF-8', mode="r") as bFile:
 
 ```
 
-## 🅱️ Write
+## 13.2. 🅱️ Write
 
 ```python
 # mode:
@@ -2266,7 +2266,7 @@ with open("/tmp/salam.txt", encoding='UTF-8', mode="w") as bFile:
 
 ```
 
-## 🅱️ module os
+## 13.3. 🅱️ module os
 
 ```python
 import os
@@ -2338,7 +2338,7 @@ for data in os.walk(''):  # os.walk('dir',topdown=False) از تویی ترین 
 
 ```
 
-## 🅱️ Module Pathlib
+## 13.4. 🅱️ Module Pathlib
 
 ```python
 import pathlib
@@ -2373,7 +2373,7 @@ print(list(data))
 
 ```
 
-## 🅱️ Module shutil
+## 13.5. 🅱️ Module shutil
 
 ```python
 import os
@@ -2395,7 +2395,7 @@ import shutil
 
 ```
 
-# 🅰️ JSON
+# 14. 🅰️ JSON
 
 ```python
 import json
@@ -2453,9 +2453,9 @@ def showData():
 
 ```
 
-# 🅰️Database
+# 15. 🅰️Database
 
-## 🅱️ SQLlight
+## 15.1. 🅱️ SQLlight
 
 ```python
 import sqlite3
@@ -2497,11 +2497,11 @@ for product in cursor:
     print(product)
 ```
 
-# 🅰️ GUI
+# 16. 🅰️ GUI
 
-## 🅱️ tkinter
+## 16.1. 🅱️ tkinter
 
-### ✅️ Lable
+### 16.1.1. ✅️ Lable
 
 ```python
 from tkinter import *
@@ -2520,7 +2520,7 @@ root.mainloop()
 
 ```
 
-### ✅️ Button
+### 16.1.2. ✅️ Button
 
 ```python
 from tkinter import *
@@ -2554,7 +2554,7 @@ tkWnd.mainloop()
 
 ```
 
-### ✅️ Calculator پوسته
+### 16.1.3. ✅️ Calculator پوسته
 
 ```python
 from tkinter import *
@@ -2618,7 +2618,7 @@ root.mainloop()
 
 ```
 
-### ✅️ Calculator
+### 16.1.4. ✅️ Calculator
 
 ```python
 from tkinter import *
@@ -2738,7 +2738,7 @@ root.mainloop()
 
 ```
 
-### ✅️ Entry
+### 16.1.5. ✅️ Entry
 
 ```python
 from tkinter import *
@@ -2771,7 +2771,7 @@ root.mainloop()
 
 ```
 
-### ✅️ Frame
+### 16.1.6. ✅️ Frame
 
 ```python
 from tkinter import *
@@ -2804,11 +2804,11 @@ root.mainloop()
 
 ```
 
-# 🅰️ Regex
+# 17. 🅰️ Regex
 
 * Need to`import re`
 
-## 🅱️ dot
+## 17.1. 🅱️ dot
 
 ```shell
 # (.) -> Note: یک کاراکتر
@@ -2823,7 +2823,7 @@ root.mainloop()
 #
 ```
 
-## 🅱️ ^
+## 17.2. 🅱️ ^
 
 ```shell
 # text = 'Toplearn'
@@ -2832,7 +2832,7 @@ root.mainloop()
 #     print('this is ok')
 ```
 
-## 🅱️  $
+## 17.3. 🅱️  $
 
 ```shell
 # text = 'Toplearn'
@@ -2841,7 +2841,7 @@ root.mainloop()
 #     print('this is ok')
 ```
 
-## 🅱️ escape
+## 17.4. 🅱️ escape
 
 ```shell
 # text = 'this is a book.'
@@ -2850,7 +2850,7 @@ root.mainloop()
 #     print('this is ok')
 ```
 
-## 🅱️ set
+## 17.5. 🅱️ set
 
 ```shell
 # text = 'site'
@@ -2859,7 +2859,7 @@ root.mainloop()
 #     print('this is ok')
 ```
 
-## 🅱️ range
+## 17.6. 🅱️ range
 
 ```shell
 # text = 'c'
@@ -2868,7 +2868,7 @@ root.mainloop()
 #     print('this is ok')
 ```
 
-## 🅱️ exclude
+## 17.7. 🅱️ exclude
 
 ```shell
 # text = 'siue'
@@ -2877,7 +2877,7 @@ root.mainloop()
 #     print('this is ok')
 ```
 
-## 🅱️ repeat
+## 17.8. 🅱️ repeat
 
 ```shell
 # text = '09123456789'
@@ -2886,7 +2886,7 @@ root.mainloop()
 #     print('this is ok')
 ```
 
-## 🅱️ other characters
+## 17.9. 🅱️ other characters
 
 ```shell
 # decimal digits => \d
@@ -2901,7 +2901,7 @@ root.mainloop()
 #     print('this is ok')
 ```
 
-## 🅱️ email regex
+## 17.10. 🅱️ email regex
 
 ```python
 text = '787jhjkj@test.com'
@@ -2909,7 +2909,7 @@ if re.match('^[\w\.-]+@([\w-]+\.)+[\w-]{2,4}$', text):
     print('email is valid')
 ```
 
-## 🅱️ Search
+## 17.11. 🅱️ Search
 
 ```python
 import re
@@ -2940,7 +2940,7 @@ for item in os.walk('/Learning-Concept'):
 
 ```
 
-# 🅰️ Thread
+# 18. 🅰️ Thread
 
 ```python
 import time
@@ -2969,9 +2969,9 @@ print("Done")
 
 ```
 
-# 🅰️ Number
+# 19. 🅰️ Number
 
-## 🅱️ Leading Zero
+## 19.1. 🅱️ Leading Zero
 
 ```python
 number = 1
