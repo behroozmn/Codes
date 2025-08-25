@@ -64,7 +64,7 @@ The Design Patterns are descriptions of communicating objects and class that are
     * متد Constructor آن را در حالت Private قرار می‌دهیم تا به هیچ عنوان قابلیت ساخت آبجکت جدید نداشته باشد، مگر از طریق ساخته شدن داخل خود کلاس آن
     * در آخر یک متد نهایی داریم که از نوع Public هست و همه از طریق آن به سینگلتون دسترسی دارند با نامی مثلاً GetInstance
 
-![DesignPatternSingleton.png](./_srcFiles/Images/DesignPattern.png "DesignPatternSingleton.png")
+![DesignPatternSingleton.png](./_srcFiles/Images/DesignPatternSingleton.png "DesignPatternSingleton.png")
 
 در قطعه کد زیر اگر هش‌کد دو نمونه مساوی باشند آنگاه در خروجی تصریح خواهد شد
 
