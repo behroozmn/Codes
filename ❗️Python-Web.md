@@ -523,7 +523,7 @@ File: `setting.py`
 * گزینه db_index را وقتی در ورودی تابع قرار می‌دهیم یعنی آن مشخصه مورد ایندکس گذاری قرار گیرد
 
 ```shell
-python3 manage.py makemigrations # جستجوی تغییرات مدل
+python3 manage.py makemigrations # جستجوی تغییرات مدل 
 python3 manage.py migrate # اعمال تغییرات مدل در دیتابیس
 python3 manage.py shell # دسترسی به شل یا همان پایتون کنسول
 

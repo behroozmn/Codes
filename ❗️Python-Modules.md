@@ -189,6 +189,19 @@ python3 -m pip install --no-index --find-links=file:///local/dir/ SomeProject
 python3 -m pip install --no-index --find-links=/local/dir/ SomeProject
 python3 -m pip install --no-index --find-links=relative/dir/ SomeProject
 ```
+### 7.1.3. ✅️ روش سوم
+
+* برای نصب دستی یک بسته ابتدا آن را دانلود کرده و سپس به پوشه مورد نظر رفته و مطابق دستور زیر نصب نمایید(به فایل توضیحی همراه بسته توجه گردد)
+    ```python
+    python setup.py install --user --prefix=~
+    ```
+
+## 7.2. 🅱️ Installer
+
+* تولید یک فایل اجرایی برنامه پایتون(اکسپورت فایل اجرایی از تمام پکیج‌ها و لایبرری‌ها و مشتقات برنامه نوشته شده)
+    ```python
+    pyinstaller --onefile --windowed <MainScript.py>
+    ```
 
 # 8. 🅰️ requests
 

@@ -12,14 +12,6 @@
 * نصب
     * همواره برای نصب تیک گزینه "add python to path" را بزنید
     * تابع پرینت از نسخه شماره ۳ به بعد در پایتون اضافه شده است
-* تولید یک فایل اجرایی برنامه پایتون(اکسپورت فایل اجرایی از تمام پکیج‌ها و لایبرری‌ها و مشتقات برنامه نوشته شده)
-    ```python
-    pyinstaller --onefile --windowed <MainScript.py>
-    ```
-* برای نصب دستی یک بسته ابتدا آن را دانلود کرده و سپس به پوشه مورد نظر رفته و مطابق دستور زیر نصب نمایید(به فایل توضیحی همراه بسته توجه گردد)
-    ```python
-    python setup.py install --user --prefix=~
-    ```
 
 ## 1.1. 🅱️ pip
 
@@ -30,82 +22,86 @@
 
 > pip commnad options
 
-* [Command]
-    * list # لیستی از بسته‌های نصب شده با ورژن
-        * `pip list`
-    * freeze # لیستی از بسته‌های نصب شده با ورژن
-        * `pip freeze`
-        * `pip freeze > requirements.txt`
-    * install #دانلود و نصب بسته
-        * `pip install PyYAML==6.0`
-        * `pip install --upgrade pip` بروزرسانی مخرن PYPI
-        * `python -m pip install Django==3.0.3 --user`
-        * `pip install --upgrade -r requirements.txt`
-    * download #دانلود بسته
-    * check #بررسی سلامت سازگاری و وابستگی‌های یک بسته
-    * uninstall #حذف بسته
-    * show #نمایش اطلاعات یک بسته نصب شده
-        * `pip show drf-spectacular`
-    * search #Search PyPI for packages
-    * inspect #show Details about Environment
-    * config #Manage local and global configuration
-* [Optional]
-    * [-r filename.txt] # خواندن از یک فایل که حاوی وابستگی‌های ماژول یا برنامه است
-        * `pip download -r ./requirements.txt`
-    * [--upgrade]
-        * `pip install --upgrade PyYAML`
-        * `pip install --upgrade pip` بروز رسانی ماژول‌های پیپ
+```shell
+pip list # لیستی از بسته‌های نصب شده با ورژن
+pip list
 
-## 1.2. 🅱️ python
+pip freeze # لیستی از بسته‌های نصب شده با ورژن
+pip freeze
+pip freeze > requirements.txt
 
-> python Command option
+pip install #دانلود و نصب بسته
+pip install PyYAML==6.0
+pip install --upgrade pip بروزرسانی مخرن PYPI
+python -m pip install Django==3.0.3 --user
+pip install --upgrade -r requirements.txt
 
-* [command]
-    * version
-        * `python3 --version`
-* [optional]
-    * [-m pipe]
-        * `python3 -m pip --version`
+pip download #دانلود بسته
 
-## 1.3. 🅱️ pythom3
+pip check #بررسی سلامت سازگاری و وابستگی‌های یک بسته
 
-> python3 Command option
+pip uninstall #حذف بسته
 
-* [command]
-    * manage.py #Django commands
-        * `python3 manage.py` [Django]show help and SubCommands
-        * `python3 manage.py runserver` [Django]Boot and startup Django project on port 8000
-            * `python3 manage.py runserver 8001`  [Django] change port
-            * `python manage.py startapp myNewApp` [Django]
-                * افزودن یک ماژول یا به‌اصلاح یک اپلیکیشن(یک پوشه)جدید به‌پروژه
-                * ولی همچنان مدیریت اصلی برنامه با پوشه اصلی است
-                * شکستن پروژه بزرگ به ماژول یا برنامه کوچک‌تر تا بتوانیم هر کدام از قسمت‌ها را مستقل مدیریت کنیم
-            * `python3 manage.py makemigrations` [Django]  جستجوی تغییرات مدل
-              #نکته: به هیچ عنوان به محتویات پوشه «ماگریشن» دستکاری نکنید و این موارد باید اتوماتیک ساخته شوند
-                * `python3 manage.py migrate` [Django]  اعمال تغییرات مدل در دیتابیس
-                    * تمامی ماگریشن های ایجاد شده را در دیتابیس اعمال نماییم
-            * `python3 manage.py shell` [Django]  دسترسی به شل یا همان پایتون کنسول
-            * `python3 manage.py createsuperuser` [Django] ایجاد یوزر ادمین جنگو
+pip show #نمایش اطلاعات یک بسته نصب شده
+pip show drf-spectacular`
 
-## 1.4. 🅱️ django-admin
+pip search #Search PyPI for packages
 
-* [Command]
-    * [] اگر خالی باشد نمایش لیستی از دستورات در دسترس از جنگو
-        * `django-admin`
-    * [startproject name]
-        * ```django-admin startproject MyProject < Director >``` Create DjangoTemplate
+pip inspect #show Details about Environment
 
-## 1.5. 🅱️ apt
+pip config #Manage local and global configuration
 
-> apt command options
+#################
+#### Options #### 
+#################
+# -r filename.txt  خواندن از یک فایل که حاوی وابستگی‌های ماژول یا برنامه است
+pip download -r ./requirements.txt
 
-* [commands]
-    * install # نصب
-        * `sudo apt install python3-PackageName` #نصب بسته در محدوده سیستمی و نه یک پروژه یعنی همه جای سیستم عامل دسترس خواهد بود
+# --upgrade
+pip install --upgrade PyYAML
+pip install --upgrade pip # بروز رسانی ماژول‌های پیپ
+```
 
-## 1.6. 🅱️ pipdeptree
+## 1.2. 🅱️ python3
 
-> pipdeptree|nl #نمایش وابستگی‌ها در فرمت فایل نیازمندی‌ها
+```shell
+python3 --version
+python3 -m pip --version
+
+python3 manage.py #[Django]show help and SubCommands 
+python3 manage.py runserver #[Django]Boot and startup Django project on Default port 8000
+python3 manage.py runserver 8001
+python3 manage.py startapp myNewApp #[Django]: add new application to django main project
+python3 manage.py makemigrations #[Django]: جستجوی تغییرات مدل
+python3 manage.py migrate #[Django]: اعمال تغییرات مدل در دیتابیس
+python3 manage.py shell #[Django] دسترسی به شل یا همان پایتون کنسول
+python3 manage.py createsuperuser` #[Django] ایجاد یوزر ادمین جنگو
+
+#################
+#### Options #### 
+#################
+-m module-name #Searches sys.path for the named module and runs the corresponding .py file as a script
+
+```
+
+## 1.3. 🅱️ django-admin
+
+```shell
+django-admin #اگر بدون پارامتر باشد نمایش لیستی از دستورات در دسترس از جنگو
+django-admin startproject MyProject <Director> #Create DjangoTemplate
+```
+
+## 1.4. 🅱️ apt
+
+```shell
+sudo apt install python3-PackageName #نصب بسته در محدوده سیستمی و نه یک پروژه یعنی همه جای سیستم عامل دسترس خواهد بود
+```
+
+## 1.5. 🅱️ pipdeptree
+
+```shell
+pipdeptree | nl #نمایش وابستگی‌ها در فرمت فایل نیازمندی‌ها
+```
 
 # 2. 🅰️ Name Conventions
 
@@ -115,13 +111,13 @@
 |---------------------------|--------------------------------|-----------------------------------------------------------|----------------------------------------|------------------------------------------------|
 | متغیرهای معمولی           | `snake_case`                   | حروف کوچک، جداکننده با `_`                                | `user_name`, `total_price`             | برای متغیرهای محلی و عمومی                     |
 | توابع                     | `snake_case`                   | مشابه متغیرها، حروف کوچک و جداکننده با `_`                | `calculate_tax()`, `load_data()`       | همواره از فعل استفاده کنید                     |
-| کلاس‌ها                   | `CamelCase`                    | تمام کلمات با حرف بزرگ شروع می‌شوند (UpperCamelCase)      | `UserProfile`, `DatabaseManager`       | اسم‌ها هستند، نه فعل                           |
+| کلاس‌ها                   | `UpperCamelCase`               | تمام کلمات با حرف بزرگ شروع می‌شوند (UpperCamelCase)      | `UserProfile`, `DatabaseManager`       | اسم‌ها هستند، نه فعل                           |
 | ثابت‌ها                   | `UPPER_SNAKE_CASE`             | تمام حروف بزرگ، جداکننده با `_`                           | `MAX_USERS`, `DEFAULT_TIMEOUT`         | مقدارهای غیرقابل تغییر                         |
 | ماژول‌ها                  | `snake_case`                   | نام فایل‌های `.py` باید کوچک و بدون خطوط تیره (`-`) باشد  | `utils.py`, `data_parser.py`           | اجتناب از حروف بزرگ                            |
 | پکیج‌ها                   | `snake_case`                   | مشابه ماژول‌ها، نام پکیج‌ها نیز باید کوچک باشد            | `mypackage/`, `app_helpers/`           | از `_` در صورت نیاز استفاده کنید               |
-| متغیرهای خصوصی            | `_single_leading_underscore`   | یک `_` در ابتدای نام = قرارداد خصوصی بودن                 | `_internal_value`                      | فقط درون ماژول/کلاس استفاده شود                |
+| متغیرهای خصوصی            | `_single_leading_underscore`   | یک `_` در ابتدای نام(قراردادی برای خصوصی بودن)            | `_internal_value`                      | فقط درون ماژول/کلاس استفاده شود                |
 | متغیرهای خصوصی قوی        | `__double_leading_underscore`  | دو `_` در ابتدای نام = Name Mangling در کلاس‌ها           | `__secret_key`                         | برای جلوگیری از تداخل در کلاس‌های فرزند        |
-| متغیرهای خصوصی و داخلی    | `_single_trailing_underscore_` | یک `_` در انتهای نام = حل تداخل با کلمات کلیدی پایتون     | `class_`, `type_`                      | مثل وقتی که نمی‌توانید از `class` استفاده کنید |
+| متغیرهای خصوصی و داخلی    | `_single_trailing_underscore_` | یک `_` در انتهای نام(حل تداخل با کلمات کلیدی پایتون)      | `class_`, `type_`                      | مثل وقتی که نمی‌توانید از `class` استفاده کنید |
 | متغیرهای موقت / لوپ       | `i`, `j`, `k`                  | برای شمارنده‌های ساده حلقه                                | `for i in range(10):`                  | فقط در حلقه‌های کوتاه                          |
 | متغیرهای محاسباتی         | `x`, `y`, `z`                  | برای مقادیر عددی ساده و محاسباتی                          | `x = 5`, `coordinates = (x, y)`        | مخصوص متغیرهای ریاضی                           |
 | متغیرهای بولی             | `is_`, `has_`, `should_`       | ابتدا با افعال منفی/مثبت شروع می‌شوند                     | `is_valid`, `has_permission`           | جواب بله/خیر دارند                             |
@@ -163,10 +159,10 @@
 ```shell
 apt install python3.11-virtualenv #معمولا در پایتون نسخه۳ نصب می‌شود
 
-# پس از زدن دستور زیر یک فولدر در مسیر کنونی ایجاد می‌شود که حاوی زیرفولدرهایی برای نگهداری ساختار بسته‌های نصبی خواهد بود
+# 2. پس از زدن دستور زیر یک فولدر در مسیر کنونی ایجاد می‌شود که حاوی زیرفولدرهایی برای نگهداری ساختار بسته‌های نصبی خواهد بود
 python3 -m venv myenv # Alternative(windows): python3 -m vitrualenv venv #ایجاد محیط مجازی با نام دلخواه
 
-# فعال‌سازی محیط مجازی مختص به پروژه‌خاص
+# 3. فعال‌سازی محیط مجازی مختص به پروژه‌خاص
 source myenv/bin/activate # Alternatives(windows): .\MyVenv\Scripts\activate 
  
 pip install package_name
@@ -176,27 +172,31 @@ deactivate #غیر فعال سازی و خروج از محیط مجازی
 
 # 5. 🅰️ Variable
 
+* متغیرها در پایتون CaseSensitive می‌باشند
+* این قابلیت در پایتون وجود دارد که انواع نوع را در یک متغیر وارد نماییم
+* مقدار None برابر است با Empty یعنی اگر مقدار `myCount = None` را دیدیم یعنی مقدار myCount برابر است با Empty
+* توسط دستور input می‌توان مقدار اولیه برای یک متغیر قرار داد
+   ```python
+   username = "behrooz"
+   username = input("Insert username: ")
+   ```
+* اگر در تابع print یک fقبل از علامت کوتیشن قرار دهید آنگاه مقادیر قابلیت تفکیک پیدا می‌کنند 
+   ```python
+   # 1️⃣️
+   BoolData = True
+   print(f"the BoolData is {BoolData}") # the BoolData is True
+   print("the BoolData is {BoolData}")  # the BoolData is {BoolData}
+   # 2️⃣️
+   x, y = 400, 500
+   print(f"sum is : {x + y}")
+   print(f"multiply 2 and 6 is : {2 * 6}")
+   ```
+
 ```python
-# CaseSensitive
-# Can insert many type of data into one variable
-# string can use one or double qoute
-
-# MyAge = 23      → upper camel case - Use for Classes
-
-x, y = 400, 500
-personChild = None  # None Means EMPTY
-BoolData = True  # first char must uppercase
-
 username = "behrooz"
-# username = input("Insert username: ")
+print("Name: " + username) # Name: behrooz
 
-print(f"the BoolData is {BoolData}")
-print("the BoolData is {BoolData}")
-print(f"sum is : {x + y}")
-print(f"multiply 2 and 6 is : {2 * 6}")
-print(username[2])
-print("Name: " + username)
-print(round(12.2565856, 5))
+print(round(12.2565856, 5)) # 12.25659
 
 print(list(range(4, 10)))  # [4, 5, 6, 7, 8, 9]
 print(list(range(10)))  # [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -222,7 +222,7 @@ for variable in iterable:
     else:
 
 
-# کد برای حالت دیگر condition1
+# 9. کد برای حالت دیگر condition1
 
 
 class loop:
@@ -263,10 +263,10 @@ class loop:
 
 
 behrooz = loop()
-# behrooz.forLoop1()
-# behrooz.forLoop2()
-# behrooz.forLoop3()
-# behrooz.whileLoop1()
+# 10. behrooz.forLoop1()
+# 11. behrooz.forLoop2()
+# 12. behrooz.forLoop3()
+# 13. behrooz.whileLoop1()
 behrooz.whileLoop2()
 ```
 
@@ -275,30 +275,30 @@ behrooz.whileLoop2()
 ## 7.1. 🅱️ OperatorsComparison
 
 ```python
-# Return Boolean Value
+# 14. Return Boolean Value
 number_1 = -100
 number_2 = -200
 
-# == : returns true if the value of number_1 is equal to number_2
+# 15. == : returns true if the value of number_1 is equal to number_2
 print(f'{number_1} == {number_2} : {number_1 == number_2}')
 
-# != : returns true if the value of number_1 is not equal to number_2
+# 16. != : returns true if the value of number_1 is not equal to number_2
 print(f'{number_1} != {number_2} : {number_1 != number_2}')
 
-# > : returns true if the value of number_1 is greater than number_2
+# 17. > : returns true if the value of number_1 is greater than number_2
 print(f'{number_1} > {number_2} : {number_1 > number_2}')
 
-# >= : = or >
+# 18. >= : = or >
 print(f'{number_1} >= {number_2} : {number_1 >= number_2}')
 
-# < : returns true if the value of number_1 is less than number_2
+# 19. < : returns true if the value of number_1 is less than number_2
 print(f'{number_1} < {number_2} : {number_1 < number_2}')
 
-# <= : = or <
+# 20. <= : = or <
 print(f'{number_1} <= {number_2} : {number_1 <= number_2}')
 
-# is → check By ماهیت و مقدار
-# == → check By مقدار
+# 21. is → check By ماهیت و مقدار
+# 22. == → check By مقدار
 
 list1 = ['a', 'b', 'c']
 list2 = list1
@@ -316,7 +316,7 @@ print(list1 is list3)
 ## 7.2. 🅱️ Logical Operand
 
 ```python
-# AND
+# 23. AND
 print("---------AND----------")
 
 print(f"True and True : {True and True}")
@@ -331,7 +331,7 @@ if userAge >= 18 and userGender == "male":
 else:
     print("you can stay at home")
 
-# OR
+# 24. OR
 print("---------OR----------")
 print(f"True or True : {True or True}")
 print(f"False or True : {False or True}")
@@ -344,7 +344,7 @@ if weather == "sunny" or weather == "cloudy":
 else:
     print("we can not travel")
 
-# NOT
+# 25. NOT
 print("--------NOT-----------")
 print(f"not True : {not True}")
 print(f"not False : {not False}")
@@ -353,7 +353,7 @@ isBrotherComming = False
 if not isBrotherComming:
     print("my sister said : i wont come")
 
-# Combine
+# 26. Combine
 print("-------Combine------------")
 age = 50
 if (0 <= age <= 2) or (8 <= age < 65):
@@ -366,14 +366,14 @@ if not ((2 < age < 8) or age >= 65):
 ## 7.3. 🅱️ Ternary Operator
 
 ```python
-# ternary:A ternary operator exists in some programming languages, and it allows you to shorten a simple If-Else block. It takes in 3 or more operands:
-#  syntax: [value_if_true] if [condition] else [value_if_false]
-#               │                  │              │
-#               │                  │              └──> A value that's returned if the condition evaluates to False.
-#               │                  │
-#               │                  └─> A boolean condition that has to be satisfied to return value if true.
-#               │
-#               └──> A value that's returned if the condition evaluates to True.
+# 27. ternary:A ternary operator exists in some programming languages, and it allows you to shorten a simple If-Else block. It takes in 3 or more operands:
+# 28. syntax: [value_if_true] if [condition] else [value_if_false]
+# 29. │                  │              │
+# 30. │                  │              └──> A value that's returned if the condition evaluates to False.
+# 31. │                  │
+# 32. │                  └─> A boolean condition that has to be satisfied to return value if true.
+# 33. │
+# 34. └──> A value that's returned if the condition evaluates to True.
 
 def condition1():
     a, b = 10, 20
@@ -419,21 +419,21 @@ def condition6():
     print(a, "is greater") if (a > b) else print(b, "is Greater")
 
 
-# ⇉ a if condition  else b
+# 35. ⇉ a if condition  else b
 condition1()
 condition6()
 
 print("---------Step 2------------")
-# ⇉ a if condition1 else b if condition2 else c
+# 36. ⇉ a if condition1 else b if condition2 else c
 condition2()
 
-# ⇉ print({True: a, False: b} [a < b])
+# 37. ⇉ print({True: a, False: b} [a < b])
 condition3()
 
-# ⇉ Lambda
+# 38. ⇉ Lambda
 condition4()
 
-# ⇉ nested ternary operator
+# 39. ⇉ nested ternary operator
 condition5()
 condition5_Alternative()
 
@@ -472,11 +472,11 @@ finally:
 ## 8.2. 🅱️ Error-Raise
 
 ```python
-# print(test)
-# None = 1
+# 40. print(test)
+# 41. None = 1
 
-# raise IndexError('throw index error')
-# raise ValueError('invalid value')
+# 42. raise IndexError('throw index error')
+# 43. raise ValueError('invalid value')
 
 
 def print_with_custom_color(text, color):
@@ -498,21 +498,21 @@ print_with_custom_color("Behrooz", 'redd')
 ## 8.3. 🅱️ Debug(pdb)
 
 ```python
-# import pdb
+# 44. import pdb
 
-# pdb.set_trace()
+# 45. pdb.set_trace()
 
-# number1 = int(input('please enter a number: '))
-# number2 = int(input('please enter a number: '))
-# result = number1 + number2
-# print(f"result is {result}")
+# 46. number1 = int(input('please enter a number: '))
+# 47. number2 = int(input('please enter a number: '))
+# 48. result = number1 + number2
+# 49. print(f"result is {result}")
 
 
-# common pdb commands
-# l -> your commands list
-# n -> next line
-# c -> continue -> finished debugging
-# p -> print
+# 50. common pdb commands
+# 51. l -> your commands list
+# 52. n -> next line
+# 53. c -> continue -> finished debugging
+# 54. p -> print
 
 def add_numbers(a, b, c, d):
     import pdb;
@@ -689,10 +689,10 @@ print(person)  # output: Person(name=علی, age=25)
 * به «توابع یک خطی» یا «Annonymous function» معروف هستند
 
 ```python
-# Syntax is:
-#     lambda arg1, arg2: arg1 * arg2 + 10
-#     lambda arg1      : value_if_true if condition  else  value_if_false
-#     lambda arg1      : value_if_true if condition1 else  (value_if_true2 if condition2 else value_if_false)
+# 55. Syntax is:
+# 56. lambda arg1, arg2: arg1 * arg2 + 10
+# 57. lambda arg1      : value_if_true if condition  else  value_if_false
+# 58. lambda arg1      : value_if_true if condition1 else  (value_if_true2 if condition2 else value_if_false)
 
 function1 = lambda arg1, arg2: arg1 * arg2 + 10  # !!!!!!!!! don't use [CTRL+Shift+i]
 print(function1(5, 2))
@@ -710,15 +710,15 @@ print(function2(-5))
 * itarate: پیمایش
 
 ```python
-# Syntax:                        filter(function, iterable)
-# return:                        IterableObject
-# How ussing IterableObject:     list(IterableObject) or  Tuple(IterableObject)
+# 59. Syntax:                        filter(function, iterable)
+# 60. return:                        IterableObject
+# 61. How ussing IterableObject:     list(IterableObject) or  Tuple(IterableObject)
 ```
 
 ```python
 
-#       --->  
-#       ---> 
+# 62. --->
+# 63. --->
 
 
 numbers = [1, 2, 3, 4, 5, 6]
@@ -760,13 +760,13 @@ func4_map_filter()
 ## 9.4. 🅱️ map
 
 ```python
-# map: calls a function for all its members of iterable
-#    ---> Syntax: map(function, iterable) ==> Return: an iterable mapObject
-#                                         ==> Ussing: list(mapObject) or Tuple(mapObject) or ...
-#    ---> Note: تنها یکبار روی لیست یا غیره می‌تواند پیمایش صورت بپذیرد و در پیمایش دوم با لیست خالی مواجه می‌شود
-#    ---> itarate: پیمایش
-#    ---> iterable: هر چیزی که روی آیتم‌های آن قابلیت پیمایش وچود داشته باشد
-#    ---> Note:  به صورت «لِیزی» عمل می‌کند، به این معنی که محاسبات تنها زمانی انجام می‌شود که به نتایج آن نیاز باشد
+# 64. map: calls a function for all its members of iterable
+# 65. ---> Syntax: map(function, iterable) ==> Return: an iterable mapObject
+# 66. ==> Ussing: list(mapObject) or Tuple(mapObject) or ...
+# 67. ---> Note: تنها یکبار روی لیست یا غیره می‌تواند پیمایش صورت بپذیرد و در پیمایش دوم با لیست خالی مواجه می‌شود
+# 68. ---> itarate: پیمایش
+# 69. ---> iterable: هر چیزی که روی آیتم‌های آن قابلیت پیمایش وچود داشته باشد
+# 70. ---> Note:  به صورت «لِیزی» عمل می‌کند، به این معنی که محاسبات تنها زمانی انجام می‌شود که به نتایج آن نیاز باشد
 
 
 numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -848,15 +848,15 @@ list2 = ['a', 't', 'z']
 list3 = "mostafa"
 list4 = ['mohammad', 'milad', 'akbar', 'sara', 'iman', 'ali']
 
-# Step 1️⃣️ - روش اول
+# 71. Step 1️⃣️ - روش اول
 result = [len(name) for name in list4]
 print(f"Character lenght {list(list4)} ---> {result}")
 
-# Step 1️⃣️ - روش دوم
+# 72. Step 1️⃣️ - روش دوم
 print(f"Character lenght {list(list4)} ---> {[len(name) for name in list4]}")
 print("----------End1-------------")
 
-# Step 2️⃣️
+# 73. Step 2️⃣️
 print(f"max in {list(list1)} ---> {max(list1)}")
 print(f"min in {list(list1)} ---> {min(list1)}")
 print(f"max lenght in {list(list4)} ---> {max(list4, key=lambda n: len(n))}")  # ماکزیمم را برحسب تعداد کاراکتر درنظر بگیر
@@ -869,7 +869,7 @@ print(f"max lenght in {list(list4)} ---> {min(list4, key=lambda n: len(n))}")  #
 ```python
 numbers = [1, 2, 3, 4, 5, 6]
 
-# numbers.reverse() #در لیست تغییر ایجاد میکند
+# 74. numbers.reverse() #در لیست تغییر ایجاد میکند
 
 print(f"reversed in [{numbers}] ---> {list(reversed(numbers))}")
 
@@ -906,7 +906,7 @@ def func4sort_Change():
     print(f"func4(after): {list(numbers)}")
 
 
-# لیست ها برای مرتب سازی نیاز به کلید دارند
+# 75. لیست ها برای مرتب سازی نیاز به کلید دارند
 
 
 def func5():
@@ -953,15 +953,15 @@ func2()
 ## 9.9. 🅱️ Input Agmuments
 
 ```python
-# درصورت استفاده از همه موارد ترتیب اولیت استفاده به شکل زیر است:
-# اول: parameters
-# دوم: *args
-# سوم: default parameters
-# چهارم: **kwargs
+# 76. درصورت استفاده از همه موارد ترتیب اولیت استفاده به شکل زیر است:
+# 77. اول: parameters
+# 78. دوم: *args
+# 79. سوم: default parameters
+# 80. چهارم: **kwargs
 
-# Args: اگر در آرگومان ورودی موارد زیر را دیدید
-#      *args => Tuple
-#      **kwargs => Dictionary
+# 81. Args: اگر در آرگومان ورودی موارد زیر را دیدید
+# 82. *args => Tuple
+# 83. **kwargs => Dictionary
 
 class Functions:
     def func1(self, num, power=2):
@@ -1015,9 +1015,9 @@ behrooz.func5(1, 2, 6, first_name="Behrooz", last_name="MohamadiNasab")
 ## 9.10. 🅱️ TruthinessFalsiness_All
 
 ```python
-# بررسی درستی یا نادرستی یا همان تروسینس یا فالسینس
-# اگر تمام آیتم‌های داده شده به این تابع درست باشد مقدار ترو را برمی‌گرداند
-# عدد صفر بطور پیش‌فرض در پایتون مقدار فالس در نظر گرفته شده است
+# 84. بررسی درستی یا نادرستی یا همان تروسینس یا فالسینس
+# 85. اگر تمام آیتم‌های داده شده به این تابع درست باشد مقدار ترو را برمی‌گرداند
+# 86. عدد صفر بطور پیش‌فرض در پایتون مقدار فالس در نظر گرفته شده است
 
 print(all([2, 3, 4, 8]))
 print("")
@@ -1037,7 +1037,7 @@ print("")
 
 print("-----Step5-----")
 
-# همه آیتم هایی که در نامبر هستند بر دو بخش پذیر هستند یا خیر
+# 87. همه آیتم هایی که در نامبر هستند بر دو بخش پذیر هستند یا خیر
 print(all([num % 2 == 0 for num in numbers]))
 
 ```
@@ -1045,8 +1045,8 @@ print(all([num % 2 == 0 for num in numbers]))
 ## 9.11. 🅱️ TruthinessFalsiness_Any
 
 ```python
-# بررسی درستی یا نادرستی یا همان تروسینس یا فالسینس
-# اگر تنها حتی یک آیتم از مواردی که به این تابع داده شده است ترو باشد مقدار ترو را برمی‌گرداند
+# 88. بررسی درستی یا نادرستی یا همان تروسینس یا فالسینس
+# 89. اگر تنها حتی یک آیتم از مواردی که به این تابع داده شده است ترو باشد مقدار ترو را برمی‌گرداند
 
 def func1():
     numbers = [0, 0, 0, 0]
@@ -1194,10 +1194,10 @@ class User:
         return cls.activeUsers
 
 
-# روش 1️⃣️: بدون نیاز ساخت شیء از کلاس
+# 90. روش 1️⃣️: بدون نیاز ساخت شیء از کلاس
 print(User.func1())
 
-# روش 2️⃣️: الزام بر ساختن شیء از کلاس"
+# 91. روش 2️⃣️: الزام بر ساختن شیء از کلاس"
 
 obj1 = User()
 print(obj1.func1())
@@ -1323,7 +1323,7 @@ print("###  Decorator #### 1 Argument ###")
 print("##################################")
 
 
-# x only sent to wrapper[not sent to num_before_after]
+# 92. x only sent to wrapper[not sent to num_before_after]
 def one_arg_before_after(func):
     def wrapper(x):
         print(f"Before={x - 1}")
@@ -1451,20 +1451,20 @@ sum_list()
 # 11. 🅰️ Iterate
 
 ```python
-# iterate: پیمایش یا تکرار کردن
-#
-# iterable: Objects which can iterate and can convert to iterator
-#      ---> iterableObjects: Lists, Tuples, Dictionaryes, Sets, Strings
-#      ---------> iterableObject is not a iterator[but by function it can chage to iterator]
-#      ---> Note: we can not iterate on iterableObjects first. It should be converted to iterator and then iterate on it
-#      ---> Note: موضوع توالی و پشت سر هم بودن، جزء مهمترین مولفه در این ساختار است
-#      ---> Generally ussing with loops(for and ...)
-#      ---> next(): ussing next function for access to next item
-#
-# iterator: object that can iterate on items by itself, and It can sequentially access the elements of an iterable
-#      ---> iterator=iterableObjects.iter();
-#      ---> class who must define __iter__() to  return iterator [Obj.iter()]
-#      ---> class who must define __next__() to  return next item and if nextItem is not available, return [StopIteration exception]) [Obj.next()]
+# 93. iterate: پیمایش یا تکرار کردن
+# 94. 
+# 95. iterable: Objects which can iterate and can convert to iterator
+# 96. ---> iterableObjects: Lists, Tuples, Dictionaryes, Sets, Strings
+# 97. ---------> iterableObject is not a iterator[but by function it can chage to iterator]
+# 98. ---> Note: we can not iterate on iterableObjects first. It should be converted to iterator and then iterate on it
+# 99. ---> Note: موضوع توالی و پشت سر هم بودن، جزء مهمترین مولفه در این ساختار است
+# 100. ---> Generally ussing with loops(for and ...)
+# 101. ---> next(): ussing next function for access to next item
+# 102. 
+# 103. iterator: object that can iterate on items by itself, and It can sequentially access the elements of an iterable
+# 104. ---> iterator=iterableObjects.iter();
+# 105. ---> class who must define __iter__() to  return iterator [Obj.iter()]
+# 106. ---> class who must define __next__() to  return next item and if nextItem is not available, return [StopIteration exception]) [Obj.next()]
 
 
 numbers = [1, 2, 3]  # iterableObjects
@@ -1477,7 +1477,7 @@ print(iterator)  # output: <list_iterator object at 0x7fb1fd78e8f0>
 print(next(iterator))  # output: 1
 print(next(iterator))  # output: 2
 print(next(iterator))  # output: 3
-# print(next(iterator)) # output: Exception(StopIteration) [only 3 items is Exist in iterableObjects]
+# 107. print(next(iterator)) # output: Exception(StopIteration) [only 3 items is Exist in iterableObjects]
 
 
 iterName = iter(name)
@@ -1491,14 +1491,14 @@ print(next(iterName))
 ## 11.1. 🅱️ Dictionary
 
 ```python
-# List       → []
-# Dictionary → { key1: value1, key2: value2 }
-# Set        → {} 1-All Items must be uniq (No repeat)
-#                 2-without sort
-#                 3-without index #اندیس ناپذیر
-#                 4-without call # نمی‌توانیم فراخوانی داشته باشیم
-#
-# Tuple      → () 1-Items cannot change(immutable)
+# 108. List       → []
+# 109. Dictionary → { key1: value1, key2: value2 }
+# 110. Set        → {} 1-All Items must be uniq (No repeat)
+# 111. 2-without sort
+# 112. 3-without index #اندیس ناپذیر
+# 113. 4-without call # نمی‌توانیم فراخوانی داشته باشیم
+# 114. 
+# 115. Tuple      → () 1-Items cannot change(immutable)
 
 class DictionaryClass:
     Dic1 = {
@@ -1585,24 +1585,24 @@ class DictionaryClass:
 
 
 behrooz = DictionaryClass()
-# behrooz.printValuesByFor()
-# behrooz.printKeysByFor()
-# behrooz.printKeyValuesByFor()
-# behrooz.isExist("name")
-# behrooz.clearData()
+# 116. behrooz.printValuesByFor()
+# 117. behrooz.printKeysByFor()
+# 118. behrooz.printKeyValuesByFor()
+# 119. behrooz.isExist("name")
+# 120. behrooz.clearData()
 
-# print(behrooz.copyData().get("age"))
-# print(behrooz.copyData() == one)
-# print(behrooz.copyData() is one)
+# 121. print(behrooz.copyData().get("age"))
+# 122. print(behrooz.copyData() == one)
+# 123. print(behrooz.copyData() is one)
 
-# behrooz.popLastItem()
-# behrooz.printKeyValuesByFor()
+# 124. behrooz.popLastItem()
+# 125. behrooz.printKeyValuesByFor()
 
-# behrooz.concatenateDictionary()
-# behrooz.printKeyValuesByFor()
+# 126. behrooz.concatenateDictionary()
+# 127. behrooz.printKeyValuesByFor()
 
-# value1, value2, value3 = behrooz.returnValue()
-# print(f"name:{value1}\n\nfamily:{value2}\n\nage:{value3}")
+# 128. value1, value2, value3 = behrooz.returnValue()
+# 129. print(f"name:{value1}\n\nfamily:{value2}\n\nage:{value3}")
 
 behrooz.printAll()
 
@@ -1615,14 +1615,14 @@ behrooz.func4(name="behrooz", FamilyName="Mohammadi", born=1369, mobile="0919167
 ## 11.2. 🅱️ Set
 
 ```python
-# List       → []
-# Dictionary → { key1: value1, key2: value2 }
-# Set        → {} 1-All Items must be uniq (No repeat)
-#                 2-without sort
-#                 3-without index #اندیس ناپذیر
-#                 4-without call # نمی‌توانیم فراخوانی داشته باشیم
-#
-# Tuple      → () 1-Items cannot change(immutable)
+# 130. List       → []
+# 131. Dictionary → { key1: value1, key2: value2 }
+# 132. Set        → {} 1-All Items must be uniq (No repeat)
+# 133. 2-without sort
+# 134. 3-without index #اندیس ناپذیر
+# 135. 4-without call # نمی‌توانیم فراخوانی داشته باشیم
+# 136. 
+# 137. Tuple      → () 1-Items cannot change(immutable)
 
 
 class SetClass:
@@ -1666,14 +1666,14 @@ print(SetClass._set5)
 ## 11.3. 🅱️ Tupple
 
 ```python
-# List       → []
-# Dictionary → { key1: value1, key2: value2 }
-# Set        → {} 1-All Items must be uniq (No repeat)
-#                 2-without sort
-#                 3-without index #اندیس ناپذیر
-#                 4-without call # نمی‌توانیم فراخوانی داشته باشیم
-#
-# Tuple      → () 1-Items cannot change(immutable)
+# 138. List       → []
+# 139. Dictionary → { key1: value1, key2: value2 }
+# 140. Set        → {} 1-All Items must be uniq (No repeat)
+# 141. 2-without sort
+# 142. 3-without index #اندیس ناپذیر
+# 143. 4-without call # نمی‌توانیم فراخوانی داشته باشیم
+# 144. 
+# 145. Tuple      → () 1-Items cannot change(immutable)
 
 
 class TuppleClass:
@@ -1708,14 +1708,14 @@ obj.func1(*numbers)  # اگر ستاره نباشد ارور میدهد
 ## 11.4. 🅱️ List
 
 ```python
-# List       → []
-# Dictionary → { key1: value1, key2: value2 }
-# Set        → {} 1-All Items must be uniq (No repeat)
-#                 2-without sort
-#                 3-without index #اندیس ناپذیر
-#                 4-without call # نمی‌توانیم فراخوانی داشته باشیم
-#
-# Tuple      → () 1-Items cannot change(immutable)
+# 146. List       → []
+# 147. Dictionary → { key1: value1, key2: value2 }
+# 148. Set        → {} 1-All Items must be uniq (No repeat)
+# 149. 2-without sort
+# 150. 3-without index #اندیس ناپذیر
+# 151. 4-without call # نمی‌توانیم فراخوانی داشته باشیم
+# 152. 
+# 153. Tuple      → () 1-Items cannot change(immutable)
 
 class ListClass:
     def __init__(self):
@@ -1798,19 +1798,19 @@ def search(self, mylist):
     tmp = '.'.join(['ab', 'pq', 'rs'])
     print(tmp)
 
-# behrooz.getDataAll(list._list8)
-# behrooz.getDataAllByCount(list._list2)
-# behrooz.fillList()
-# behrooz.getDataAll(list._list4)
-# behrooz.getDataAll_Revese(list._list1)
-# behrooz.get_select_item(list.list1)
-# print(list._list10_nestedList[1][2])  # output: 6
-# [[print(x) for x in y] for y in list._list10_nestedList] # output: 1 NewLine 2 NewLine 3 NewLine 4 NewLine 5 NewLine 6
-# behrooz.listFunctions(list._list1)
-# behrooz.search(list._list1)
-# print(list._list11)
+# 154. behrooz.getDataAll(list._list8)
+# 155. behrooz.getDataAllByCount(list._list2)
+# 156. behrooz.fillList()
+# 157. behrooz.getDataAll(list._list4)
+# 158. behrooz.getDataAll_Revese(list._list1)
+# 159. behrooz.get_select_item(list.list1)
+# 160. print(list._list10_nestedList[1][2])  # output: 6
+# 161. [[print(x) for x in y] for y in list._list10_nestedList] # output: 1 NewLine 2 NewLine 3 NewLine 4 NewLine 5 NewLine 6
+# 162. behrooz.listFunctions(list._list1)
+# 163. behrooz.search(list._list1)
+# 164. print(list._list11)
 
-# behrooz = list()
+# 165. behrooz = list()
 
 ```
 
@@ -1871,7 +1871,7 @@ counter = func_generator(3)  # استفاده از حالت جنریتور
 print(next(counter))  # -> 1
 print(next(counter))  # -> 2
 print(next(counter))  # -> 3
-# print(next(counter))  # if run error
+# 166. print(next(counter))  # if run error
 ```
 
 ### 11.5.4. ✅️ Example4️⃣️: Fibunachi()
@@ -1931,8 +1931,8 @@ print(f"---------->  Time(s): {end_time - start_time}\n")
 ## 11.6. 🅱️ Zip
 
 ```python
-# تلفیق دو ایتِرِیت با یکدیگر تبدیل به یک ایتریت جدید که شامل هردوی آن‌ها می‌باشد
-# اگر یک بار پیمایش شود خالی خواهد شد
+# 167. تلفیق دو ایتِرِیت با یکدیگر تبدیل به یک ایتریت جدید که شامل هردوی آن‌ها می‌باشد
+# 168. اگر یک بار پیمایش شود خالی خواهد شد
 
 from unittest import result
 
@@ -2023,7 +2023,7 @@ func7_avg_WithIndex()
 ## 11.7. 🅱️ Iterate_class_example
 
 ```python
-# example 1️⃣️
+# 169. example 1️⃣️
 class MyIterator:
     def __init__(self, limit):
         self.limit = limit
@@ -2040,13 +2040,13 @@ class MyIterator:
             raise StopIteration
 
 
-# استفاده از iterator
+# 170. استفاده از iterator
 my_iter = MyIterator(5)
 for number in my_iter:
     print(number)
 
 
-# example 2️⃣️
+# 171. example 2️⃣️
 class Counter:
     def __init__(self, start, end, step=1):
         self.current = start
@@ -2069,7 +2069,7 @@ print("------")
 for num in Counter(10, 20): print(num)
 
 
-# example 3️⃣️
+# 172. example 3️⃣️
 class User:
     ActiveUsers = []
 
@@ -2106,15 +2106,15 @@ for item in User('ali', 60):
 * کلمه پارامتر بعنوان ورودی در وقت استفاده از تابع است و کلمه آرگومان بعنوان ورودی‌های یک تابع در بدنه یک فانکشن است
 
 ```python
-# import random
-# import random as rand
-# from random import *
-# from random import randint, choice
-# from random import randint as r_i, choice as r_ch
+# 173. import random
+# 174. import random as rand
+# 175. from random import *
+# 176. from random import randint, choice
+# 177. from random import randint as r_i, choice as r_ch
 
-# vsCode--> python: select interpreter #تغییر در ورژن‌های پایتون در ویژوآل استودیو کد
-# encapsulation: توابع و متغیرها و موارد را در یک کلاس قرار بدهیم
-# __name__ --> name of the module(file)
+# 178. vsCode--> python: select interpreter #تغییر در ورژن‌های پایتون در ویژوآل استودیو کد
+# 179. encapsulation: توابع و متغیرها و موارد را در یک کلاس قرار بدهیم
+# 180. __name__ --> name of the module(file)
 
 
 class User:
@@ -2135,14 +2135,14 @@ print("آیا شیء یک نمونه از کلاس است؟", isinstance(obj, Us
 ## 12.1. 🅱️ NameMangling
 
 ```python
-# _name    => define local variable
-#             Note: در پایتون هیچ قلمرویی تحت عنوان پرایویت نداریم
-#             Note: استفاده از یک آندرلاین قبل متغیر تنها یک قرارداد است ولی باز در هرکجا به پرایویت می‌توان دسترسی داشت
+# 181. _name    => define local variable
+# 182. Note: در پایتون هیچ قلمرویی تحت عنوان پرایویت نداریم
+# 183. Note: استفاده از یک آندرلاین قبل متغیر تنها یک قرارداد است ولی باز در هرکجا به پرایویت می‌توان دسترسی داشت
 
-# __name   => name mangling: available only with _classname__variable in use time
-#             Note: در پایتون همه نامگذاری‌ها قراردادی است ولی تنها نِیم‌مَنگِلینگ است که سبب تغییر در نام آیتم می‌شود
+# 184. __name   => name mangling: available only with _classname__variable in use time
+# 185. Note: در پایتون همه نامگذاری‌ها قراردادی است ولی تنها نِیم‌مَنگِلینگ است که سبب تغییر در نام آیتم می‌شود
 
-# __name__ => in python special function define in this form such as __init__ as construction
+# 186. __name__ => in python special function define in this form such as __init__ as construction
 
 
 class User:
@@ -2239,18 +2239,18 @@ print(f"staticData in two [id: {id(two.staticData)} ] ---> {two.staticData}")
 ```python
 data = open("/etc/passwd")
 
-# 1)
-# print(data.read())
-# data.seek(2) # جابجایی کرسر به نقطه خاص از فایل
-# print(data.read())
+# 187. 1)
+# 188. print(data.read())
+# 189. data.seek(2) # جابجایی کرسر به نقطه خاص از فایل
+# 190. print(data.read())
 
-# 2)
-# textLines = data.readlines() # یک لیست از خطوط که آخر هر خط یک بک‌اسلش‌اِن قرار میدهد
-# print(textLines)
-# print(f"----> {textLines[5]}")
+# 191. 2)
+# 192. textLines = data.readlines() # یک لیست از خطوط که آخر هر خط یک بک‌اسلش‌اِن قرار میدهد
+# 193. print(textLines)
+# 194. print(f"----> {textLines[5]}")
 
 
-# 3)
+# 195. 3)
 with open("/etc/passwd", encoding='UTF-8', mode="r") as bFile:
     for l in bFile:
         line = l.strip()
@@ -2262,10 +2262,10 @@ with open("/etc/passwd", encoding='UTF-8', mode="r") as bFile:
 ## 13.2. 🅱️ Write
 
 ```python
-# mode:
-# a: append
-# w: read
-# r: write
+# 196. mode:
+# 197. a: append
+# 198. w: read
+# 199. r: write
 
 
 with open("/tmp/salam.txt", encoding='UTF-8', mode="w") as bFile:
@@ -2291,24 +2291,24 @@ for item in result:
     if item.is_file():  # if item.is_file():
         print(f'File {item.name}: {time.ctime(item.stat().st_mtime)}')
 
-# result = os.stat('./my_files/doc.txt')
-# print(time.ctime(result.st_mtime))
+# 200. result = os.stat('./my_files/doc.txt')
+# 201. print(time.ctime(result.st_mtime))
 
-# os.mkdir('test')  # 1-Error if exist 2-Error with subDirectory
-# os.makedirs('/tmp/test/sub_ddsfdsfdsfsirectory1')  # 1-Error if exist
+# 202. os.mkdir('test')  # 1-Error if exist 2-Error with subDirectory
+# 203. os.makedirs('/tmp/test/sub_ddsfdsfdsfsirectory1')  # 1-Error if exist
 
 
 print('################')
 print('#### Delete ####')
 print('################')
 
-# os.remove("/tmp/test/sub_ddsfdsfdsfdsfsirectory1"); # اگر فایل موجود نباشد خطا برمی‌گرداند
-# os.unlink("/tmp/test/sub_ddsfdsfdsfsdfsdfsdfsdfdsfdsfsirectory1"); # اگر فایل موجود نباشد خطا برمی‌گرداند
+# 204. os.remove("/tmp/test/sub_ddsfdsfdsfdsfsirectory1"); # اگر فایل موجود نباشد خطا برمی‌گرداند
+# 205. os.unlink("/tmp/test/sub_ddsfdsfdsfsdfsdfsdfsdfdsfdsfsirectory1"); # اگر فایل موجود نباشد خطا برمی‌گرداند
 
-# os.rmdir("/tmp/test/sub_ddsfdsfdsfsdfsdfsdfsdfdsfdsfsirectory1"); # فقط پوشه های خالی رو پاک میکنه
+# 206. os.rmdir("/tmp/test/sub_ddsfdsfdsfsdfsdfsdfsdfdsfdsfsirectory1"); # فقط پوشه های خالی رو پاک میکنه
 
 
-# ---------------------------------------------------------------------------------------------------------
+# 207. ---------------------------------------------------------------------------------------------------------
 
 import fnmatch
 import glob
@@ -2365,8 +2365,8 @@ print('#### Delete ####')
 print('################')
 
 file_path = pathlib.Path('/tmp/salam/fsdfsdfsd.txt')
-# file_path.unlink() # حذف فایل
-# file_path.rmdir() # حذف فولدر خالی
+# 208. file_path.unlink() # حذف فایل
+# 209. file_path.rmdir() # حذف فولدر خالی
 
 print('################')
 print('#### Search ####')
@@ -2386,19 +2386,19 @@ print(list(data))
 import os
 import shutil
 
-# shutil.copy('src', 'Des') # Only copy file
-# print(os.stat('./my_files/data-1.txt'))
-# print(os.stat('./new_my_files/new-data-1.txt'))
+# 210. shutil.copy('src', 'Des') # Only copy file
+# 211. print(os.stat('./my_files/data-1.txt'))
+# 212. print(os.stat('./new_my_files/new-data-1.txt'))
 
-# shutil.copy2('./my_files/data-2.txt', 'Des') # copy file with metadata
-# print(os.stat('./my_files/data-2.txt'))
-# print(os.stat('./new_my_files/new-data-2.txt'))
+# 213. shutil.copy2('./my_files/data-2.txt', 'Des') # copy file with metadata
+# 214. print(os.stat('./my_files/data-2.txt'))
+# 215. print(os.stat('./new_my_files/new-data-2.txt'))
 
-# shutil.copytree('src', 'Des') #create Backup[all _SRCFiles and subDir and Subfiles]
+# 216. shutil.copytree('src', 'Des') #create Backup[all _SRCFiles and subDir and Subfiles]
 
-# shutil.move('src', 'Des')
+# 217. shutil.move('src', 'Des')
 
-# os.rename('src', 'Des')
+# 218. os.rename('src', 'Des')
 
 ```
 
@@ -2450,7 +2450,7 @@ def toHtml(inputFileName, outputFileName):
     ff.close()
 
 
-# toHtml("/tmp/All.json", "/tmp/All.html")
+# 219. toHtml("/tmp/All.json", "/tmp/All.html")
 
 
 def showData():
@@ -2470,7 +2470,7 @@ import sqlite3
 connection = sqlite3.connect("/tmp//my-database.db")
 cursor = connection.cursor()
 
-# 1️⃣️
+# 220. 1️⃣️
 sql = """
     CREATE TABLE IF NOT EXISTS user (
         userId INTEGER ,
@@ -2484,7 +2484,7 @@ cursor.execute(sql)
 connection.commit()
 connection.close()
 
-# 2️⃣️ Multiple sql command
+# 221. 2️⃣️ Multiple sql command
 
 sql = """
     INSERT INTO Product VALUES (2,'kotlin course',3000,'this is kotlin course');
@@ -2494,7 +2494,7 @@ sql = """
 cursor.execute(sql)
 cursor.executescript(sql)
 
-# 3️⃣️
+# 222. 3️⃣️
 
 sql = """
     SELECT * FROM Product WHERE description LIKE "%python%"
@@ -2539,8 +2539,8 @@ tkWnd = Tk()
 tkWnd.title("button")
 tkWnd.geometry('400x300')
 tkWnd.resizable(width=False, height=False)
-# tkWnd.configure(bg='white')
-# tkWnd['bg']='green'
+# 223. tkWnd.configure(bg='white')
+# 224. tkWnd['bg']='green'
 tkWnd['bg'] = '#FFFFFF'
 
 my_name = StringVar()
@@ -2566,7 +2566,7 @@ tkWnd.mainloop()
 ```python
 from tkinter import *
 
-# ========================== settings ========================
+# 225. ========================== settings ========================
 root = Tk()
 root.geometry('400x200')
 root.title('calculator')
@@ -2574,7 +2574,7 @@ root.resizable(width=False, height=False)
 color = 'gray'
 root.configure(bg=color)
 
-# ========================== frames ==========================
+# 226. ========================== frames ==========================
 top_first = Frame(root, width=400, height=50, bg=color)
 top_first.pack(side=TOP)
 
@@ -2587,7 +2587,7 @@ top_third.pack(side=TOP)
 top_forth = Frame(root, width=400, height=50, bg=color)
 top_forth.pack(side=TOP)
 
-# ========================== Buttons ==========================
+# 227. ========================== Buttons ==========================
 
 btn_plus = Button(top_third, text="+", width=10, highlightbackground=color)
 btn_plus.pack(side=LEFT, padx=10, pady=10)
@@ -2601,7 +2601,7 @@ btn_mul.pack(side=LEFT, padx=10, pady=10)
 btn_div = Button(top_third, text="/", width=10, highlightbackground=color)
 btn_div.pack(side=LEFT, padx=10, pady=10)
 
-# ========================== Entries and Labels ==========================
+# 228. ========================== Entries and Labels ==========================
 
 label_first_num = Label(top_first, text='Input Number 1: ', bg=color)
 label_first_num.pack(side=LEFT, pady=10, padx=10)
@@ -2631,7 +2631,7 @@ root.mainloop()
 from tkinter import *
 import tkinter.messagebox
 
-# ========================== settings ========================
+# 229. ========================== settings ========================
 root = Tk()
 root.geometry('400x200')
 root.title('calculator')
@@ -2639,13 +2639,13 @@ root.resizable(width=False, height=False)
 color = 'gray'
 root.configure(bg=color)
 
-# ========================== variables ==========================
+# 230. ========================== variables ==========================
 
 num1 = StringVar()
 num2 = StringVar()
 res_value = StringVar()
 
-# ========================== frames ==========================
+# 231. ========================== frames ==========================
 top_first = Frame(root, width=400, height=50, bg=color)
 top_first.pack(side=TOP)
 
@@ -2659,7 +2659,7 @@ top_forth = Frame(root, width=400, height=50, bg=color)
 top_forth.pack(side=TOP)
 
 
-# ========================== Functions ==========================
+# 232. ========================== Functions ==========================
 
 def errorMsg(ms):
     if ms == 'error':
@@ -2703,7 +2703,7 @@ def div():
             errorMsg('error')
 
 
-# ========================== Buttons ==========================
+# 233. ========================== Buttons ==========================
 
 btn_plus = Button(top_third, text="+", width=10,
                   highlightbackground=color, command=lambda: plus())
@@ -2721,7 +2721,7 @@ btn_div = Button(top_third, text="/", width=10,
                  highlightbackground=color, command=lambda: div())
 btn_div.pack(side=LEFT, padx=10, pady=10)
 
-# ========================== Entries and Labels ==========================
+# 234. ========================== Entries and Labels ==========================
 
 label_first_num = Label(top_first, text='Input Number 1: ', bg=color)
 label_first_num.pack(side=LEFT, pady=10, padx=10)
@@ -2783,7 +2783,7 @@ root.mainloop()
 ```python
 from tkinter import *
 
-# ========================== settings ========================
+# 235. ========================== settings ========================
 root = Tk()
 root.geometry('800x500')
 root.title('calculator')
@@ -2791,7 +2791,7 @@ root.resizable(width=False, height=False)
 color = 'gray'
 root.configure(bg=color)
 
-# ========================== frames ==========================
+# 236. ========================== frames ==========================
 top_first = Frame(root, width=400, height=50, bg='red')
 top_first.pack(side=TOP)
 
@@ -2818,94 +2818,94 @@ root.mainloop()
 ## 17.1. 🅱️ dot
 
 ```shell
-# (.) -> Note: یک کاراکتر
-#     (f.n) --> کاراکتر اول «اِف» و کاراکتر دوم هر چیزی می‌تونه باشه و کاراکتر سوم «اِن» باید باشد
-#     (f..n) --> کاراکتر اول «اِف» و کاراکتر دوم و سوم هر چیزی می‌تونه باشه و کاراکتر چهارم «اِن» باید باشد
-#
-# dot (.)
-# text = 'this is fun'
-# if re.search('f.n', text):
-#     print('this is ok')
-#
-#
+# 237. (.) -> Note: یک کاراکتر
+# 238. (f.n) --> کاراکتر اول «اِف» و کاراکتر دوم هر چیزی می‌تونه باشه و کاراکتر سوم «اِن» باید باشد
+# 239. (f..n) --> کاراکتر اول «اِف» و کاراکتر دوم و سوم هر چیزی می‌تونه باشه و کاراکتر چهارم «اِن» باید باشد
+# 240. 
+# 241. dot (.)
+# 242. text = 'this is fun'
+# 243. if re.search('f.n', text):
+# 244. print('this is ok')
+# 245. 
+# 246. 
 ```
 
 ## 17.2. 🅱️ ^
 
 ```shell
-# text = 'Toplearn'
-#
-# if re.search('^Top', text):
-#     print('this is ok')
+# 247. text = 'Toplearn'
+# 248. 
+# 249. if re.search('^Top', text):
+# 250. print('this is ok')
 ```
 
 ## 17.3. 🅱️  $
 
 ```shell
-# text = 'Toplearn'
-#
-# if re.search('rn$', text):
-#     print('this is ok')
+# 251. text = 'Toplearn'
+# 252. 
+# 253. if re.search('rn$', text):
+# 254. print('this is ok')
 ```
 
 ## 17.4. 🅱️ escape
 
 ```shell
-# text = 'this is a book.'
-#
-# if re.search('book\.', text):
-#     print('this is ok')
+# 255. text = 'this is a book.'
+# 256. 
+# 257. if re.search('book\.', text):
+# 258. print('this is ok')
 ```
 
 ## 17.5. 🅱️ set
 
 ```shell
-# text = 'site'
-#
-# if re.search('si[tdz]e', text):
-#     print('this is ok')
+# 259. text = 'site'
+# 260. 
+# 261. if re.search('si[tdz]e', text):
+# 262. print('this is ok')
 ```
 
 ## 17.6. 🅱️ range
 
 ```shell
-# text = 'c'
-#
-# if re.search('[a-f]', text):
-#     print('this is ok')
+# 263. text = 'c'
+# 264. 
+# 265. if re.search('[a-f]', text):
+# 266. print('this is ok')
 ```
 
 ## 17.7. 🅱️ exclude
 
 ```shell
-# text = 'siue'
-#
-# if re.search('si[^tdz]e', text):
-#     print('this is ok')
+# 267. text = 'siue'
+# 268. 
+# 269. if re.search('si[^tdz]e', text):
+# 270. print('this is ok')
 ```
 
 ## 17.8. 🅱️ repeat
 
 ```shell
-# text = '09123456789'
-#
-# if re.match('[0-9]{11}', text):
-#     print('this is ok')
+# 271. text = '09123456789'
+# 272. 
+# 273. if re.match('[0-9]{11}', text):
+# 274. print('this is ok')
 ```
 
 ## 17.9. 🅱️ other characters
 
 ```shell
-# decimal digits => \d
-# non decimal digits => \D
-# white space => \s
-# non white space => \S
-# word => \w
-# non word => \W
+# 275. decimal digits => \d
+# 276. non decimal digits => \D
+# 277. white space => \s
+# 278. non white space => \S
+# 279. word => \w
+# 280. non word => \W
 
-# text = 'abcdef'
-# if re.match('(abc|cde)', text):
-#     print('this is ok')
+# 281. text = 'abcdef'
+# 282. if re.match('(abc|cde)', text):
+# 283. print('this is ok')
 ```
 
 ## 17.10. 🅱️ email regex
@@ -2921,7 +2921,7 @@ if re.match('^[\w\.-]+@([\w-]+\.)+[\w-]{2,4}$', text):
 ```python
 import re
 
-# Behrooz: regexr.com
+# 284. Behrooz: regexr.com
 
 names = [
     'data.png', 'memory.txt', 'data.txt', 'image.png', 'momy.png'
@@ -2931,8 +2931,8 @@ for item in names:
     if re.search('m.m', item):
         print(item)
 
-# re.search('m.m', item): #اگر در این رشته موجود بود
-# re.match('m.m', item): # باید دقیقا این رشته مساوی الگو باشد
+# 285. re.search('m.m', item): #اگر در این رشته موجود بود
+# 286. re.match('m.m', item): # باید دقیقا این رشته مساوی الگو باشد
 
 ```
 
