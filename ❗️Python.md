@@ -582,17 +582,12 @@ print(function2(4)) # Output: Positive
 
 * اگر در هنگام تعریف بدنه یک تابع همه موارد parameters و args و defaultParameters و kwargs داشته باشیم ترتیب اولویت به شکل زیر است
    * 1️⃣️ `parameters`
-   * 2️⃣️ `*args`
+   * 2️⃣️ `*args` => Tuple
    * 3️⃣️ `default parameters`
-   * 4️⃣️ `**kwargs`
+   * 4️⃣️ `**kwargs` => Dictionary
 * 
 * 
 ```python
-
-# 81. Args: اگر در آرگومان ورودی موارد زیر را دیدید
-# 82. *args => Tuple
-# 83. **kwargs => Dictionary
-
 class Functions:
     def func1(self, num, power=2):
         print(f"func1: {num ** power}")
