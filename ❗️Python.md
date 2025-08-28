@@ -172,7 +172,7 @@ deactivate #غیر فعال سازی و خروج از محیط مجازی
 
 # 5. 🅰️ Variable
 
-* متغیرها در پایتون CaseSensitive می‌باشند
+* متغیرها در پایتون CaseSensitive هستند
 * این قابلیت در پایتون وجود دارد که انواع نوع را در یک متغیر وارد نماییم
 * مقدار None برابر است با Empty یعنی اگر مقدار `myCount = None` را دیدیم یعنی مقدار myCount برابر است با Empty
 * توسط دستور input می‌توان مقدار اولیه برای یک متغیر قرار داد
@@ -191,10 +191,13 @@ deactivate #غیر فعال سازی و خروج از محیط مجازی
    print(f"sum is : {x + y}")
    print(f"multiply 2 and 6 is : {2 * 6}")
    ```
+* می‌توان در خروجی چند متغیر را الحاق کرد
+   ```python
+   username = "behrooz"
+   print("Name: " + username) # Name: behrooz
+   ```
 
 ```python
-username = "behrooz"
-print("Name: " + username) # Name: behrooz
 
 print(round(12.2565856, 5)) # 12.25659
 
@@ -562,395 +565,7 @@ degrees(x)  # اگر ایکس رادیان باشد مقدار زاویه را �
 
 ![Fibonatchi](./_srcFiles/Images/07.gif "07.gif")
 
-## 9.1. 🅱️ __NAME__
-
-### 9.1.1. ✅️ `__init__`
-
-نقش تابع سازنده در هر کلاس را ایفا می‌کند
-
-```python
-class User:
-    def __init__(self, name, age):  # تابع سازنده
-        self.name = name
-        self.age = age
-
-    def show_data(self):
-        print(self.name, self.age)
-
-
-obj = User("behrooz", 33)
-obj.show_data()
-
-```
-
-### 9.1.2. ✅️ `__len__`
-
-فقط زمانی می‌شود از این تابع استفاده کرد که فانکشن آن تعریف شده باشد یا خودمان یا ارث‌بری
-
-```python
-class Behrooz:
-    def __init__(self, _name):
-        self.name = _name
-
-    def __len__(self):
-        return 20
-
-
-obj = Behrooz("Alii")
-print(len(obj))
-```
-
-### 9.1.3. ✅️  `__add__` و `__mul__` و `__truediv__` و `__sub__`
-
-```python
-class Behrooz:
-    def __init__(self, _name):
-        self.name = _name
-
-    # بجای عملگر  + استفاده می‌شود
-    def __add__(self, other):
-        return f"Need to plus with {self.name} or {other}"
-
-    # بجای عملگر *استفاده می‌شود
-    def __mul__(self, other):
-        return f"Need to multiplier with {self.name} or {other}"
-
-    # بجای عملگر / استفاده می‌شود
-    def __truediv__(self, other):
-        return f"Need to division with {self.name} or {other}"
-
-    # بجای عملگر - استفاده می‌شود
-    def __sub__(self, other):
-        return f"Need to minus with {self.name} or {other}"
-
-
-obj = Behrooz("Alii")
-
-print(obj)
-print(obj + "salam")
-print(obj - "salam")
-print(obj * "salam")
-print(obj / "salam")
-
-```
-
-| Function               | Oprator |
-|------------------------|---------|
-| __isub__(self,p2)      | -=      | 
-| __imul__(self,p2)      | *=      | 
-| __itruediv__(self,p2)  | \=      | 
-| __floordiv__(self,p2)  | \\      | 
-| __ifloordiv__(self,p2) | \=      | 
-
-### 9.1.4. ✅️  `__repr__`
-
-* باتعریف این تابع سبب می‌شویم در هنگام پرینت آبجکت تهیه شده از یک کلاس تابع اجرا شود وگرنه آدرس شیء در حافظه نمایش می‌شود
-* یعنی اگر بخواهیم که بچای نمایش دیتای فنی دیتای خوانا به کاربر نمایش داده شود
-* برای نمایش "رسمی" و دقیق‌تر شیء استفاده می‌شود (معمولاً برای دیباگ یا لاگ‌گیری).
-
-```python
-class Behrooz:
-    def __init__(self, _name):
-        self.name = _name
-
-    def __repr__(self) -> str:
-        return f"behroooz class attribute is [{self.name}]"
-
-
-obj = Behrooz("Alii")
-print(obj)
-
-```
-
-### 9.1.5. ✅️ `__str__`
-
-* برای خوانایی بیشتر EndUser از یک شیء مورد استفاده قرار می‌گیرد
-* این متد زمانی فراخوانی می‌شود که توابعی مانند print یا str برای نمایش یک شیء استفاده شود
-* این متد باید یک رشته (str) برگرداند که نماینده‌ی شیء باشد.
-* اگر __str__ تعریف نشده باشد، پایتون به جای آن از متد __repr__ استفاده می‌کند.
-
-```python
-class Person:
-    def __init__(self, name, age):
-        self.name = name
-        self.age = age
-
-    def __str__(self):
-        return f"Person(name={self.name}, age={self.age})"
-
-
-person = Person("علی", 25)
-print(person)  # output: Person(name=علی, age=25)
-```
-
-## 9.2. 🅱️ Lambda
-
-* لامبدا در اصل یک تابع است(نوعی از تعریف تابع است) که تنها در یک خط تعریف می‌شود
-* به «توابع یک خطی» یا «Annonymous function» معروف هستند
-
-```python
-# 55. Syntax is:
-# 56. lambda arg1, arg2: arg1 * arg2 + 10
-# 57. lambda arg1      : value_if_true if condition  else  value_if_false
-# 58. lambda arg1      : value_if_true if condition1 else  (value_if_true2 if condition2 else value_if_false)
-
-function1 = lambda arg1, arg2: arg1 * arg2 + 10  # !!!!!!!!! don't use [CTRL+Shift+i]
-print(function1(5, 2))
-
-function2 = lambda x: "Positive" if x > 0 else ("Zero" if x == 0 else "Negative")
-print(function2(-5))
-
-```
-
-## 9.3. 🅱️ Filter
-
-* انتخاب یک المان تحت شرایط
-* فیلتر روی یک ایتریبل اگر در شرط بگنجد
-    * Filter a iterable by condition(only apply to items which true condition on it)
-* itarate: پیمایش
-
-```python
-# 59. Syntax:                        filter(function, iterable)
-# 60. return:                        IterableObject
-# 61. How ussing IterableObject:     list(IterableObject) or  Tuple(IterableObject)
-```
-
-```python
-
-# 62. --->
-# 63. --->
-
-
-numbers = [1, 2, 3, 4, 5, 6]
-names = ["akbar", "fatemeh", "zeinab", "maryam", "Kobra"]
-users = [{'name': 'Behrooz', 'family': 'nadery', 'born': 1369, 'shopCart': []},
-         {'name': 'Alireza', 'family': 'saberi', 'born': 1400, 'shopCart': []},
-         {'name': 'Attefeh', 'family': 'Rezaie', 'born': 1372, 'shopCart': ['kotlin', 'vue']}]
-
-
-def func1_get_even():
-    evens = filter(lambda num: num % 2 == 0, numbers)
-    print(f"func1:{list(evens)}")
-
-
-def func3():  # Use with Falsyness Or Trusynes
-    result = filter(lambda user: not user['shopCart'], users)  # [not user['shopCart']] OR [len(user['shopCart']) == 0]
-    # result = filter(lambda user: len(user['shopCart']) == 0, users)
-    print(f"func3(alt):{list(result)}")
-
-
-def func4_map_filter():
-    result_user = filter(lambda user: not user['shopCart'], users)
-    result_user_name = lambda user: user['name']
-    result = map(result_user_name, result_user)
-    # ALTERNATIVE =====> result = [user['name'] for user in users if len(user['shopCart']) == 0]
-    print(f"func4(filterAndMap):{list(result)}")
-
-
-func1_get_even()
-print()
-
-func3()
-print()
-
-func4_map_filter()
-
-```
-
-## 9.4. 🅱️ map
-
-```python
-# 64. map: calls a function for all its members of iterable
-# 65. ---> Syntax: map(function, iterable) ==> Return: an iterable mapObject
-# 66. ==> Ussing: list(mapObject) or Tuple(mapObject) or ...
-# 67. ---> Note: تنها یکبار روی لیست یا غیره می‌تواند پیمایش صورت بپذیرد و در پیمایش دوم با لیست خالی مواجه می‌شود
-# 68. ---> itarate: پیمایش
-# 69. ---> iterable: هر چیزی که روی آیتم‌های آن قابلیت پیمایش وچود داشته باشد
-# 70. ---> Note:  به صورت «لِیزی» عمل می‌کند، به این معنی که محاسبات تنها زمانی انجام می‌شود که به نتایج آن نیاز باشد
-
-
-numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-names = ["akbar", "natasha", "zeinab", "maryam", "Kobra"]
-users = [{'name': 'amirali', 'family': 'ojaghi', 'born': 1369, 'shopCart': []},
-         {'name': 'mahmood', 'family': 'sabeti', 'born': 1400, 'shopCart': []},
-         {'name': 'hossein', 'family': 'taheri', 'born': 1372, 'shopCart': ['kotlin', 'vue']}]
-
-
-def func1():
-    def square(x):
-        return x ** 2
-
-    squared_numbers = map(square, numbers)
-    # Alternatives: squared_numbers = map(lambda x: x ** 2, numbers)
-
-    # تبدیل به لیست
-    squared_list = list(squared_numbers)
-    print(squared_list)  # خروجی: [1, 4, 9, 16, 25]
-
-
-def func2_map_filter():
-    result_user = filter(lambda user: not user['shopCart'], users)
-    result_user_name = lambda user: user['name']
-    result = map(result_user_name, result_user)
-    # ALTERNATIVE =====> result = [user['name'] for user in users if len(user['shopCart']) == 0]
-    print(f"func4(filterAndMap):{list(result)}")
-
-
-def func3():
-    upper_names = map(lambda name: name.upper(), names)
-    print(f"func5{list(upper_names)}")
-    print(f"func5(خالی خواهد بود زیرا یک بار پیمایش شده است){list(upper_names)}")  # خالی خواهد بود زیرا پیمایش سبب تخلیه می‌گردد
-
-
-def func4():
-    result = map(lambda person: person['family'], users)
-    print(f"func3:{list(result)}")
-    # Alternatives:
-    #           families = []
-    #           for person in users: families.append(person['family'])
-    #           print(f"{families}")
-
-
-def func5():
-    def add(x, y):
-        return x + y
-
-    list1 = [1, 2, 3]
-    list2 = [4, 5, 6]
-    added_numbers = map(add, list1, list2)
-    # ALTERNATIVE =====> added_numbers = map(lambda x, y: x + y, list1, list2)
-
-    # تبدیل به لیست
-    result_list = list(added_numbers)
-    print(result_list)  # خروجی: [5, 7, 9]
-
-
-func1()
-print()
-func2_map_filter()
-print()
-
-func3()
-print()
-
-func4()
-print()
-
-func5()
-
-```
-
-## 9.5. 🅱️ Min_Max
-
-```python
-list1 = [3, 6, 8, 13, 4, 90]
-list2 = ['a', 't', 'z']
-list3 = "mostafa"
-list4 = ['mohammad', 'milad', 'akbar', 'sara', 'iman', 'ali']
-
-# 71. Step 1️⃣️ - روش اول
-result = [len(name) for name in list4]
-print(f"Character lenght {list(list4)} ---> {result}")
-
-# 72. Step 1️⃣️ - روش دوم
-print(f"Character lenght {list(list4)} ---> {[len(name) for name in list4]}")
-print("----------End1-------------")
-
-# 73. Step 2️⃣️
-print(f"max in {list(list1)} ---> {max(list1)}")
-print(f"min in {list(list1)} ---> {min(list1)}")
-print(f"max lenght in {list(list4)} ---> {max(list4, key=lambda n: len(n))}")  # ماکزیمم را برحسب تعداد کاراکتر درنظر بگیر
-print(f"max lenght in {list(list4)} ---> {min(list4, key=lambda n: len(n))}")  # مینیمم را برحسب تعداد کاراکتر درنظر بگیر
-
-```
-
-## 9.6. 🅱️ Reversed
-
-```python
-numbers = [1, 2, 3, 4, 5, 6]
-
-# 74. numbers.reverse() #در لیست تغییر ایجاد میکند
-
-print(f"reversed in [{numbers}] ---> {list(reversed(numbers))}")
-
-chars = "hello"
-print(f"reversed in {chars} ---> {list(reversed(chars))}")
-print(f"reversed in {chars} ---> {chars[::-1]}")
-
-nameRes = ''
-print(nameRes.join(list(reversed("hello"))))
-
-for num in reversed(range(0, 10)):
-    print(num)
-print("----")
-for num in range(9, -1, -1):
-    print(num)
-
-```
-
-## 9.7. 🅱️ Sort
-
-```python
-def func2sort_NoChange():
-    numbers = [1, 5, 8, 4, 6, 2]
-    print(f"func2(befor): {list(numbers)}")
-    result = sorted(numbers, reverse=False)
-    print(f"func2(sorted result): {result}")
-    print(f"func2(after): {list(numbers)}")
-
-
-def func4sort_Change():
-    numbers = [1, 5, 8, 4, 6, 2]
-    print(f"func4(befor): {list(numbers)}")
-    numbers.sort(reverse=False)
-    print(f"func4(after): {list(numbers)}")
-
-
-# 75. لیست ها برای مرتب سازی نیاز به کلید دارند
-
-
-def func5():
-    users = [
-        {'name': 'taha', 'family': 'MohammadiNasab', 'age': 40},
-        {'name': 'mohammad', 'family': 'ketabi', 'age': 23},
-        {'name': 'sara', 'family': 'nadery', 'age': 80},
-        {'name': 'ali', 'family': 'Mohamadi', 'age': 30}
-    ]
-    print(users)
-    print(sorted(users, key=lambda user: user['age'], reverse=False))
-
-
-func2sort_NoChange()
-print("")
-func4sort_Change()
-print("")
-func5()
-
-```
-
-## 9.8. 🅱️ Length
-
-```python
-users = [{'name': 'Behrooz', 'family': 'nadery', 'born': 1369, 'shopCart': []},
-         {'name': 'Alireza', 'family': 'saberi', 'born': 1400, 'shopCart': []},
-         {'name': 'Attefeh', 'family': 'Rezaie', 'born': 1372, 'shopCart': ['kotlin', 'vue']}]
-
-
-def func1():
-    print(f"func1:{len(users)}")
-
-
-def func2():
-    result = filter(lambda user: len(user['shopCart']) == 0, users)
-    print(f"func2(filter):{list(result)}")
-
-
-func1()
-func2()
-
-```
-
-## 9.9. 🅱️ Input Agmuments
+## 9.1. 🅱️ Agmuments
 
 ```python
 # 76. درصورت استفاده از همه موارد ترتیب اولیت استفاده به شکل زیر است:
@@ -1012,7 +627,261 @@ behrooz.func5(1, 2, 6, first_name="Behrooz", last_name="MohamadiNasab")
 
 ```
 
-## 9.10. 🅱️ TruthinessFalsiness_All
+
+## 9.2. 🅱️ __NAME__
+
+### 9.2.1. ✅️ `__init__`
+
+نقش تابع سازنده در هر کلاس را ایفا می‌کند
+
+```python
+class User:
+    def __init__(self, name, age):  # تابع سازنده
+        self.name = name
+        self.age = age
+
+    def show_data(self):
+        print(self.name, self.age)
+
+
+obj = User("behrooz", 33)
+obj.show_data()
+
+```
+
+### 9.2.2. ✅️ `__len__`
+
+فقط زمانی می‌شود از این تابع استفاده کرد که فانکشن آن تعریف شده باشد یا خودمان یا ارث‌بری
+
+```python
+class Behrooz:
+    def __init__(self, _name):
+        self.name = _name
+
+    def __len__(self):
+        return 20
+
+
+obj = Behrooz("Alii")
+print(len(obj))
+```
+
+### 9.2.3. ✅️  `__add__` و `__mul__` و `__truediv__` و `__sub__`
+
+```python
+class Behrooz:
+    def __init__(self, _name):
+        self.name = _name
+
+    # بجای عملگر  + استفاده می‌شود
+    def __add__(self, other):
+        return f"Need to plus with {self.name} or {other}"
+
+    # بجای عملگر *استفاده می‌شود
+    def __mul__(self, other):
+        return f"Need to multiplier with {self.name} or {other}"
+
+    # بجای عملگر / استفاده می‌شود
+    def __truediv__(self, other):
+        return f"Need to division with {self.name} or {other}"
+
+    # بجای عملگر - استفاده می‌شود
+    def __sub__(self, other):
+        return f"Need to minus with {self.name} or {other}"
+
+
+obj = Behrooz("Alii")
+
+print(obj)
+print(obj + "salam")
+print(obj - "salam")
+print(obj * "salam")
+print(obj / "salam")
+
+```
+
+| Function               | Oprator |
+|------------------------|---------|
+| __isub__(self,p2)      | -=      | 
+| __imul__(self,p2)      | *=      | 
+| __itruediv__(self,p2)  | \=      | 
+| __floordiv__(self,p2)  | \\      | 
+| __ifloordiv__(self,p2) | \=      | 
+
+### 9.2.4. ✅️  `__repr__`
+
+* باتعریف این تابع سبب می‌شویم در هنگام پرینت آبجکت تهیه شده از یک کلاس تابع اجرا شود وگرنه آدرس شیء در حافظه نمایش می‌شود
+* یعنی اگر بخواهیم که بچای نمایش دیتای فنی دیتای خوانا به کاربر نمایش داده شود
+* برای نمایش "رسمی" و دقیق‌تر شیء استفاده می‌شود (معمولاً برای دیباگ یا لاگ‌گیری).
+
+```python
+class Behrooz:
+    def __init__(self, _name):
+        self.name = _name
+
+    def __repr__(self) -> str:
+        return f"behroooz class attribute is [{self.name}]"
+
+
+obj = Behrooz("Alii")
+print(obj)
+
+```
+
+### 9.2.5. ✅️ `__str__`
+
+* برای خوانایی بیشتر EndUser از یک شیء مورد استفاده قرار می‌گیرد
+* این متد زمانی فراخوانی می‌شود که توابعی مانند print یا str برای نمایش یک شیء استفاده شود
+* این متد باید یک رشته (str) برگرداند که نماینده‌ی شیء باشد.
+* اگر __str__ تعریف نشده باشد، پایتون به جای آن از متد __repr__ استفاده می‌کند.
+
+```python
+class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    def __str__(self):
+        return f"Person(name={self.name}, age={self.age})"
+
+
+person = Person("علی", 25)
+print(person)  # output: Person(name=علی, age=25)
+```
+
+## 9.3. 🅱️ Lambda
+
+* لامبدا در اصل یک تابع است(نوعی از تعریف تابع است) که تنها در یک خط تعریف می‌شود
+* به «توابع یک خطی» یا «Annonymous function» معروف هستند
+
+```python
+# 55. Syntax is:
+# 56. lambda arg1, arg2: arg1 * arg2 + 10
+# 57. lambda arg1      : value_if_true if condition  else  value_if_false
+# 58. lambda arg1      : value_if_true if condition1 else  (value_if_true2 if condition2 else value_if_false)
+
+function1 = lambda arg1, arg2: arg1 * arg2 + 10  # !!!!!!!!! don't use [CTRL+Shift+i]
+print(function1(5, 2))
+
+function2 = lambda x: "Positive" if x > 0 else ("Zero" if x == 0 else "Negative")
+print(function2(-5))
+
+```
+
+## 9.4. 🅱️ MATH
+
+### 9.4.1. ✅️ Min_Max
+
+```python
+list1 = [3, 6, 8, 13, 4, 90]
+list2 = ['a', 't', 'z']
+list3 = "mostafa"
+list4 = ['mohammad', 'milad', 'akbar', 'sara', 'iman', 'ali']
+
+# 71. Step 1️⃣️ - روش اول
+result = [len(name) for name in list4]
+print(f"Character lenght {list(list4)} ---> {result}")
+
+# 72. Step 1️⃣️ - روش دوم
+print(f"Character lenght {list(list4)} ---> {[len(name) for name in list4]}")
+print("----------End1-------------")
+
+# 73. Step 2️⃣️
+print(f"max in {list(list1)} ---> {max(list1)}")
+print(f"min in {list(list1)} ---> {min(list1)}")
+print(f"max lenght in {list(list4)} ---> {max(list4, key=lambda n: len(n))}")  # ماکزیمم را برحسب تعداد کاراکتر درنظر بگیر
+print(f"max lenght in {list(list4)} ---> {min(list4, key=lambda n: len(n))}")  # مینیمم را برحسب تعداد کاراکتر درنظر بگیر
+
+```
+
+## 9.5. 🅱️ Reversed
+
+```python
+numbers = [1, 2, 3, 4, 5, 6]
+
+# 74. numbers.reverse() #در لیست تغییر ایجاد میکند
+
+print(f"reversed in [{numbers}] ---> {list(reversed(numbers))}")
+
+chars = "hello"
+print(f"reversed in {chars} ---> {list(reversed(chars))}")
+print(f"reversed in {chars} ---> {chars[::-1]}")
+
+nameRes = ''
+print(nameRes.join(list(reversed("hello"))))
+
+for num in reversed(range(0, 10)):
+    print(num)
+print("----")
+for num in range(9, -1, -1):
+    print(num)
+
+```
+
+## 9.6. 🅱️ Sort
+
+```python
+def func2sort_NoChange():
+    numbers = [1, 5, 8, 4, 6, 2]
+    print(f"func2(befor): {list(numbers)}")
+    result = sorted(numbers, reverse=False)
+    print(f"func2(sorted result): {result}")
+    print(f"func2(after): {list(numbers)}")
+
+
+def func4sort_Change():
+    numbers = [1, 5, 8, 4, 6, 2]
+    print(f"func4(befor): {list(numbers)}")
+    numbers.sort(reverse=False)
+    print(f"func4(after): {list(numbers)}")
+
+
+# 75. لیست ها برای مرتب سازی نیاز به کلید دارند
+
+
+def func5():
+    users = [
+        {'name': 'taha', 'family': 'MohammadiNasab', 'age': 40},
+        {'name': 'mohammad', 'family': 'ketabi', 'age': 23},
+        {'name': 'sara', 'family': 'nadery', 'age': 80},
+        {'name': 'ali', 'family': 'Mohamadi', 'age': 30}
+    ]
+    print(users)
+    print(sorted(users, key=lambda user: user['age'], reverse=False))
+
+
+func2sort_NoChange()
+print("")
+func4sort_Change()
+print("")
+func5()
+
+```
+
+## 9.7. 🅱️ Length
+
+```python
+users = [{'name': 'Behrooz', 'family': 'nadery', 'born': 1369, 'shopCart': []},
+         {'name': 'Alireza', 'family': 'saberi', 'born': 1400, 'shopCart': []},
+         {'name': 'Attefeh', 'family': 'Rezaie', 'born': 1372, 'shopCart': ['kotlin', 'vue']}]
+
+
+def func1():
+    print(f"func1:{len(users)}")
+
+
+def func2():
+    result = filter(lambda user: len(user['shopCart']) == 0, users)
+    print(f"func2(filter):{list(result)}")
+
+
+func1()
+func2()
+
+```
+
+
+## 9.8. 🅱️ TruthinessFalsiness_All
 
 ```python
 # 84. بررسی درستی یا نادرستی یا همان تروسینس یا فالسینس
@@ -1042,7 +911,7 @@ print(all([num % 2 == 0 for num in numbers]))
 
 ```
 
-## 9.11. 🅱️ TruthinessFalsiness_Any
+## 9.9. 🅱️ TruthinessFalsiness_Any
 
 ```python
 # 88. بررسی درستی یا نادرستی یا همان تروسینس یا فالسینس
@@ -1814,7 +1683,142 @@ def search(self, mylist):
 
 ```
 
-## 11.5. 🅱️ Generator_Expression
+
+## 11.5. 🅱️ Filter
+
+* انتخاب یک المان تحت شرایط
+* فیلتر روی یک ایتریبل اگر در شرط بگنجد
+    * Filter a iterable by condition(only apply to items which true condition on it)
+* itarate: پیمایش
+
+```python
+# 59. Syntax:                        filter(function, iterable)
+# 60. return:                        IterableObject
+# 61. How ussing IterableObject:     list(IterableObject) or  Tuple(IterableObject)
+```
+
+```python
+numbers = [1, 2, 3, 4, 5, 6]
+names = ["akbar", "fatemeh", "zeinab", "maryam", "Kobra"]
+users = [{'name': 'Behrooz', 'family': 'nadery', 'born': 1369, 'shopCart': []},
+         {'name': 'Alireza', 'family': 'saberi', 'born': 1400, 'shopCart': []},
+         {'name': 'Attefeh', 'family': 'Rezaie', 'born': 1372, 'shopCart': ['kotlin', 'vue']}]
+
+
+def func1_get_even():
+    evens = filter(lambda num: num % 2 == 0, numbers)
+    print(f"func1:{list(evens)}")
+
+
+def func3():  # Use with Falsiness Or Truthiness
+    result = filter(lambda user: not user['shopCart'], users)  # [not user['shopCart']] OR [len(user['shopCart']) == 0]
+    # result = filter(lambda user: len(user['shopCart']) == 0, users)
+    print(f"func3(alt):{list(result)}")
+
+
+def func4_map_filter():
+    result_user = filter(lambda user: not user['shopCart'], users)
+    result_user_name = lambda user: user['name']
+    result = map(result_user_name, result_user)
+    # ALTERNATIVE =====> result = [user['name'] for user in users if len(user['shopCart']) == 0]
+    print(f"func4(filterAndMap):{list(result)}")
+
+
+func1_get_even()
+print()
+
+func3()
+print()
+
+func4_map_filter()
+
+```
+
+## 11.6. 🅱️ map
+
+```python
+# 64. map: calls a function for all its members of iterable
+# 65. ---> Syntax: map(function, iterable) ==> Return: an iterable mapObject
+# 66. ==> Ussing: list(mapObject) or Tuple(mapObject) or ...
+# 67. ---> Note: تنها یکبار روی لیست یا غیره می‌تواند پیمایش صورت بپذیرد و در پیمایش دوم با لیست خالی مواجه می‌شود
+# 68. ---> itarate: پیمایش
+# 69. ---> iterable: هر چیزی که روی آیتم‌های آن قابلیت پیمایش وچود داشته باشد
+# 70. ---> Note:  به صورت «لِیزی» عمل می‌کند، به این معنی که محاسبات تنها زمانی انجام می‌شود که به نتایج آن نیاز باشد
+
+
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+names = ["akbar", "natasha", "zeinab", "maryam", "Kobra"]
+users = [{'name': 'amirali', 'family': 'ojaghi', 'born': 1369, 'shopCart': []},
+         {'name': 'mahmood', 'family': 'sabeti', 'born': 1400, 'shopCart': []},
+         {'name': 'hossein', 'family': 'taheri', 'born': 1372, 'shopCart': ['kotlin', 'vue']}]
+
+
+def func1():
+    def square(x):
+        return x ** 2
+
+    squared_numbers = map(square, numbers)
+    # Alternatives: squared_numbers = map(lambda x: x ** 2, numbers)
+
+    # تبدیل به لیست
+    squared_list = list(squared_numbers)
+    print(squared_list)  # خروجی: [1, 4, 9, 16, 25]
+
+
+def func2_map_filter():
+    result_user = filter(lambda user: not user['shopCart'], users)
+    result_user_name = lambda user: user['name']
+    result = map(result_user_name, result_user)
+    # ALTERNATIVE =====> result = [user['name'] for user in users if len(user['shopCart']) == 0]
+    print(f"func4(filterAndMap):{list(result)}")
+
+
+def func3():
+    upper_names = map(lambda name: name.upper(), names)
+    print(f"func5{list(upper_names)}")
+    print(f"func5(خالی خواهد بود زیرا یک بار پیمایش شده است){list(upper_names)}")  # خالی خواهد بود زیرا پیمایش سبب تخلیه می‌گردد
+
+
+def func4():
+    result = map(lambda person: person['family'], users)
+    print(f"func3:{list(result)}")
+    # Alternatives:
+    #           families = []
+    #           for person in users: families.append(person['family'])
+    #           print(f"{families}")
+
+
+def func5():
+    def add(x, y):
+        return x + y
+
+    list1 = [1, 2, 3]
+    list2 = [4, 5, 6]
+    added_numbers = map(add, list1, list2)
+    # ALTERNATIVE =====> added_numbers = map(lambda x, y: x + y, list1, list2)
+
+    # تبدیل به لیست
+    result_list = list(added_numbers)
+    print(result_list)  # خروجی: [5, 7, 9]
+
+
+func1()
+print()
+func2_map_filter()
+print()
+
+func3()
+print()
+
+func4()
+print()
+
+func5()
+
+```
+
+
+## 11.7. 🅱️ Generator_Expression
 
 * Generator: create function as sequentional lazy items
     * create or generate items only when ussing
@@ -1830,7 +1834,7 @@ def search(self, mylist):
     * قابلیت ادامه تابع از همان نقطه توقف
     * عدم محاسبه و برگرداندن یکباره تمام مقادیر بلکه محاسبه و تولیدیکی پس از دیگری
 
-### 11.5.1. ✅️ Example 1️⃣️: yield
+### 11.7.1. ✅️ Example 1️⃣️: yield
 
 ```python
 def nums():
@@ -1846,7 +1850,7 @@ print(next(g))
 print(next(g))
 ```
 
-### 11.5.2. ✅️ Example 2️⃣️: Generator
+### 11.7.2. ✅️ Example 2️⃣️: Generator
 
 ```python
 myGenerator = (num for num in range(20))
@@ -1857,7 +1861,7 @@ print(next(myGenerator))
 print(next(myGenerator))
 ```
 
-### 11.5.3. ✅️ Example 3️⃣️: yield
+### 11.7.3. ✅️ Example 3️⃣️: yield
 
 ```python
 def func_generator(maximom):
@@ -1874,7 +1878,7 @@ print(next(counter))  # -> 3
 # 166. print(next(counter))  # if run error
 ```
 
-### 11.5.4. ✅️ Example4️⃣️: Fibunachi()
+### 11.7.4. ✅️ Example4️⃣️: Fibunachi()
 
 ```python
 print("--------------------byList----------------------")
@@ -1911,7 +1915,7 @@ for num in fib_generator(10):  # استفاده از حالت جنریتور
     print(f"------> {num}")
 ```
 
-### 11.5.5. ✅️ Example 5️⃣️
+### 11.7.5. ✅️ Example 5️⃣️
 
 ```python
 from time import time
@@ -1928,7 +1932,7 @@ print(f"---------->  Time(s): {end_time - start_time}\n")
 
 ```
 
-## 11.6. 🅱️ Zip
+## 11.8. 🅱️ Zip
 
 ```python
 # 167. تلفیق دو ایتِرِیت با یکدیگر تبدیل به یک ایتریت جدید که شامل هردوی آن‌ها می‌باشد
@@ -2020,7 +2024,7 @@ func7_avg_WithIndex()
 
 ```
 
-## 11.7. 🅱️ Iterate_class_example
+## 11.9. 🅱️ Iterate_class_example
 
 ```python
 # 169. example 1️⃣️
