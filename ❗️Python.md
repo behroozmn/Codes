@@ -933,7 +933,7 @@ math.pow(x, y, z)         # ❌️ Error (در ماژول math چنین تابع
 pow(2, 3, 5) # (built-in) # ✅️ ==> (2^3 % 5) = (8 % 5) => [Output:3]
 ```
 
-### 9.4.5. ✅️
+### 9.4.5. ✅️ 
 
 ### 9.4.6. ✅️
 
@@ -968,10 +968,8 @@ print("----------End1-------------")
 # 73. Step 2️⃣️
 print(f"max in {list(list1)} ---> {max(list1)}")
 print(f"min in {list(list1)} ---> {min(list1)}")
-print(
-    f"max lenght in {list(list4)} ---> {max(list4, key=lambda n: len(n))}")  # ماکزیمم را برحسب تعداد کاراکتر درنظر بگیر
-print(
-    f"max lenght in {list(list4)} ---> {min(list4, key=lambda n: len(n))}")  # مینیمم را برحسب تعداد کاراکتر درنظر بگیر
+print(f"max lenght in {list(list4)} ---> {max(list4, key=lambda n: len(n))}")  # ماکزیمم را برحسب تعداد کاراکتر درنظر بگیر
+print(f"max lenght in {list(list4)} ---> {min(list4, key=lambda n: len(n))}")  # مینیمم را برحسب تعداد کاراکتر درنظر بگیر
 
 ```
 
