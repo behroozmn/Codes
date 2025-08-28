@@ -910,15 +910,28 @@ math.abs(-5)  # ❌️ AttributeError: module 'math' has no attribute 'abs'
 ```python
 import math
 
-print(math.sqrt(9))   # Output: 3.0
+print(math.sqrt(9))  # Output: 3.0
 print(math.sqrt(16))  # Output: 4.0
-print(math.sqrt(2))   # Output: 1.4142135623730951
-print(math.sqrt(0))   # Output: 0.0
-print(math.sqrt(7.5)) # Output: 2.7386127875258306
+print(math.sqrt(2))  # Output: 1.4142135623730951
+print(math.sqrt(0))  # Output: 0.0
+print(math.sqrt(7.5))  # Output: 2.7386127875258306
 print(math.sqrt(-1))  # ❌️ Error:ValueError
 ```
 
-### 9.4.4. ✅️
+### 9.4.4. ✅️ math.pow(x,y)
+
+* محاسبه x به توان y
+* شاید با تابع pow(x, y, z) اشتباه گرفته شود که یک تابع داخلی(built-in) پایتون است که پشتیبانی از سومین آرگومان برای محاسبه به پیمانه (modulus) را دارد
+
+```python
+import math
+
+print(math.pow(2, 3))     # Output: 8.0
+print(math.pow(4, 0.5))   # Output: 2.0
+print(math.pow(5))        # ❌️ Error
+math.pow(x, y, z)         # ❌️ Error (در ماژول math چنین تابعی نداریم)
+pow(2, 3, 5) # (built-in) # ✅️ ==> (2^3 % 5) = (8 % 5) => [Output:3]
+```
 
 ### 9.4.5. ✅️
 
