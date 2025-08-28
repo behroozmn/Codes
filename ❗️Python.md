@@ -582,10 +582,11 @@ print(function2(4)) # Output: Positive
 
 * اگر در هنگام تعریف بدنه یک تابع همه موارد parameters و args و defaultParameters و kwargs داشته باشیم ترتیب اولویت به شکل زیر است
    * 1️⃣️ `parameters`
-   * 2️⃣️ `*args` => Tuple
-   * 3️⃣️ `default parameters`
-   * 4️⃣️ `**kwargs` => Dictionary
-* 
+   * 2️⃣️ `*args` یعنی Tuple ◄  متغیر ازنوع غیرقابل تغییرخواهد بود
+   * 3️⃣️ `default parameters` یعنی تعیین مقدار پیش‌فرض برای متغیر 
+     * اگر درهنگام فراخوانی تابع مقدار متغیر تعیین نشود آنگاه مقدارپیش‌فرض بعنوان مقدار متغیر لحاظ می‌گردد
+   * 4️⃣️ `**kwargs` یعنی Dictionary ◄ متغیر دارای محتوی کلید و مقدار است
+* وقتی `*args` در بدنه تابع وجود داشت یعنی آن متغیرها همگی از نوع Tuple خواهند بود یعنی اینکه Immutable و غیرقابل تغییر خواهند بود 
 * 
 ```python
 class Functions:
