@@ -504,21 +504,21 @@ print_with_custom_color("Behrooz", 'redd')
 ## 8.3. 🅱️ Debug(pdb)
 
 ```python
-# 44. import pdb
+# import pdb
 
-# 45. pdb.set_trace()
+# pdb.set_trace()
 
-# 46. number1 = int(input('please enter a number: '))
-# 47. number2 = int(input('please enter a number: '))
-# 48. result = number1 + number2
-# 49. print(f"result is {result}")
+# number1 = int(input('please enter a number: '))
+# number2 = int(input('please enter a number: '))
+# result = number1 + number2
+# print(f"result is {result}")
 
 
-# 50. common pdb commands
-# 51. l -> your commands list
-# 52. n -> next line
-# 53. c -> continue -> finished debugging
-# 54. p -> print
+# common pdb commands
+# l -> your commands list
+# n -> next line
+# c -> continue -> finished debugging
+# p -> print
 
 def add_numbers(a, b, c, d):
     import pdb;
@@ -533,13 +533,15 @@ print(res)
 
 # 9. 🅰️ Function
 
-* اگر یک تابع در داخل یک کلاس تعریف گردد آنگاه برای اینکه به مقادیر کلاس دسترسی داشته باشد باید آرگومان اول آن را کلمه کلیدی self قرار دهید
+* اگر یک تابع در داخل یک کلاس تعریف گردد آنگاه برای اینکه به مقادیر کلاس دسترسی داشته باشد باید آرگومان اول آن را کلمه
+  کلیدی self قرار دهید
 
 بدنه یک تابع به فرم زیر می‌باشد
 
 ```python
 def exponent(num, power=2):
     return num ** power
+
 
 print(exponent(5))  # output: 25
 ```
@@ -568,26 +570,135 @@ print(showFullName(last="MohammadiNasab", first="Behrooz"))  # تغییر در �
 ```python
 # 1️⃣️
 function1 = lambda arg1, arg2: arg1 * arg2 + 10
-print(function1(5, 2)) # output: 20
+print(function1(5, 2))  # output: 20
 
 # 2️⃣️
 function2 = lambda x: "Positive" if x > 0 else ("Zero" if x == 0 else "Negative")
-print(function2(-5)) # Output: Negative
-print(function2(0)) # Output: Zero
-print(function2(4)) # Output: Positive
+print(function2(-5))  # Output: Negative
+print(function2(0))  # Output: Zero
+print(function2(4))  # Output: Positive
 
 ```
 
 ## 9.2. 🅱️ Agmuments
 
-* اگر در هنگام تعریف بدنه یک تابع همه موارد parameters و args و defaultParameters و kwargs داشته باشیم ترتیب اولویت به شکل زیر است
-   * 1️⃣️ `parameters`
-   * 2️⃣️ `*args` یعنی Tuple ◄  متغیر ازنوع غیرقابل تغییرخواهد بود
-   * 3️⃣️ `default parameters` یعنی تعیین مقدار پیش‌فرض برای متغیر 
-     * اگر درهنگام فراخوانی تابع مقدار متغیر تعیین نشود آنگاه مقدارپیش‌فرض بعنوان مقدار متغیر لحاظ می‌گردد
-   * 4️⃣️ `**kwargs` یعنی Dictionary ◄ متغیر دارای محتوی کلید و مقدار است
-* وقتی `*args` در بدنه تابع وجود داشت یعنی آن متغیرها همگی از نوع Tuple خواهند بود یعنی اینکه Immutable و غیرقابل تغییر خواهند بود 
+* اگر در هنگام تعریف بدنه یک تابع همه موارد parameters و args و defaultParameters و kwargs داشته باشیم ترتیب اولویت به
+  شکل زیر است
+    * 1️⃣️ `Positional Parameters` پارامترهای عادی
+    * 2️⃣️ `*args` یعنی متغیرهای نام‌گذاری‌نشده
+        * ◄ متغیرها ازنوع Tuple و غیرقابل تغییرخواهدبود(Immutable یا غیرقابل تغییر)
+    * 3️⃣️ `default parameters` یعنی تعیین مقدار پیش‌فرض برای متغیر
+        * اگر درهنگام فراخوانی تابع مقدار متغیر تعیین نشود آنگاه مقدارپیش‌فرض بعنوان مقدار متغیر لحاظ می‌گردد
+    * 4️⃣️ `**kwargs` یعنی Dictionary ◄ متغیر دارای محتوی کلید و مقدار است
 
+### 9.2.1. ✅️ PositionalParameters
+
+```python
+# Example1️⃣️
+def greet(name, age):
+    print(f"Hi {name}، you are {age} years old")
+
+
+greet("Ali", 25)  # Output: Hi Ali، you are 25 years old
+
+
+# Example2️⃣️
+def add_numbers(a, b, c):
+    return a + b + c
+
+
+result = add_numbers(10, 20, 30)
+print(result)  # Output: 60
+
+```
+
+### 9.2.2. ✅️ `*args`
+
+* با استفاده از *args می‌توان تعداد نامشخصی از ورودی‌ها را به صورت یک Tuple (غیرقابل تغییر) دریافت کرد.
+* args یک تاپل است و Immutable (غیرقابل تغییر) است 
+
+```python
+# Example1️⃣️
+def sum_all(*args):
+  total = 0
+  for num in args:
+    total += num
+  return total
+
+
+print(sum_all(1, 2, 3, 4))  # Output: 10
+print(sum_all(5, 10))  # Output: 15
+
+
+# Example2️⃣️
+def print_names(*names):
+  for name in names:
+    print(f"ٔName: {name}")
+
+
+print_names("Zeinab", "Mohadeseh", "Tasnim")
+# Output:
+# Name: Zeinab
+# Name: Mohadeseh
+# Name: Tasnim
+```
+
+### 9.2.3. ✅️ DefaultParameters
+
+اگر مقداری به پارامتر داده نشود، از مقدار پیش‌فرض استفاده می‌شود
+
+```python
+# Example1️⃣️
+def introduce(name, job="Unknown"):
+    print(f"I am {name}، my job is {job}.")
+
+
+introduce("Zahra")  # Output: I am Zahra ، my job is Unknown.
+introduce("Hassan", "Engineer")  # Output: I am Hassan، my job is Engineer.
+
+
+# Example2️⃣️
+def power(base, exponent=2):
+    return base ** exponent
+
+
+print(power(3))  # Output: 3^2 = 9
+print(power(3, 3))  # Output: 3^3 = 27
+```
+
+### 9.2.4. ✅️ `**kwargs`
+
+با **kwargs می‌توان ورودی‌های نام‌دار متغیر را به صورت دیکشنری دریافت کرد. 
+
+
+```python
+# Example1️⃣️
+def user_info(**kwargs):
+    for key, value in kwargs.items():
+        print(f"{key}: {value}")
+
+
+user_info(name="فاطمه", age=30, city="تهران")
+
+
+# خروجی:
+# name: فاطمه
+# age: 30
+# city: تهران
+
+# Example2️⃣️
+def create_profile(**details):
+    profile = {}
+    for key, value in details.items():
+        profile[key] = value
+    return profile
+
+
+profile = create_profile(username="ali123", email="ali@example.com", role="admin")
+print(profile)
+# خروجی: {'username': 'ali123', 'email': 'ali@example.com', 'role': 'admin'}
+```
+####### 9.2.4.1. --------------------------------------------------------
 ```python
 class Functions:
     def func1(self, num, power=2):
