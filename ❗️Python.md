@@ -590,6 +590,7 @@ print(function2(4))  # Output: Positive
     * 3️⃣️ `default parameters` یعنی تعیین مقدار پیش‌فرض برای متغیر
         * اگر درهنگام فراخوانی تابع مقدار متغیر تعیین نشود آنگاه مقدارپیش‌فرض بعنوان مقدار متغیر لحاظ می‌گردد
     * 4️⃣️ `**kwargs` یعنی Dictionary ◄ متغیر دارای محتوی کلید و مقدار است
+* توجه: ترتیب *args قبل از default و **kwargs الزامی است.
 
 ### 9.2.1. ✅️ PositionalParameters
 
@@ -615,15 +616,15 @@ print(result)  # Output: 60
 ### 9.2.2. ✅️ `*args`
 
 * با استفاده از *args می‌توان تعداد نامشخصی از ورودی‌ها را به صورت یک Tuple (غیرقابل تغییر) دریافت کرد.
-* args یک تاپل است و Immutable (غیرقابل تغییر) است 
+* args یک تاپل است و Immutable (غیرقابل تغییر) است
 
 ```python
 # Example1️⃣️
 def sum_all(*args):
-  total = 0
-  for num in args:
-    total += num
-  return total
+    total = 0
+    for num in args:
+        total += num
+    return total
 
 
 print(sum_all(1, 2, 3, 4))  # Output: 10
@@ -632,8 +633,8 @@ print(sum_all(5, 10))  # Output: 15
 
 # Example2️⃣️
 def print_names(*names):
-  for name in names:
-    print(f"ٔName: {name}")
+    for name in names:
+        print(f"ٔName: {name}")
 
 
 print_names("Zeinab", "Mohadeseh", "Tasnim")
@@ -668,8 +669,7 @@ print(power(3, 3))  # Output: 3^3 = 27
 
 ### 9.2.4. ✅️ `**kwargs`
 
-با **kwargs می‌توان ورودی‌های نام‌دار متغیر را به صورت دیکشنری دریافت کرد. 
-
+با `**kwargs` می‌توان ورودی‌های نام‌دار متغیر را به صورت دیکشنری دریافت کرد.
 
 ```python
 # Example1️⃣️
@@ -678,13 +678,13 @@ def user_info(**kwargs):
         print(f"{key}: {value}")
 
 
-user_info(name="فاطمه", age=30, city="تهران")
+user_info(name="Behrooz", age=30, city="Tehran")
 
 
-# خروجی:
-# name: فاطمه
+# Output:
+# name: Behrooz
 # age: 30
-# city: تهران
+# city: Tehran
 
 # Example2️⃣️
 def create_profile(**details):
@@ -695,10 +695,31 @@ def create_profile(**details):
 
 
 profile = create_profile(username="ali123", email="ali@example.com", role="admin")
-print(profile)
-# خروجی: {'username': 'ali123', 'email': 'ali@example.com', 'role': 'admin'}
+print(profile)  # Output: {'username': 'ali123', 'email': 'ali@example.com', 'role': 'admin'}
 ```
-####### 9.2.4.1. --------------------------------------------------------
+
+### 9.2.5. ✅️ Combine
+
+```python
+def full_function(a, b, *args, c=10, **kwargs):
+    print("a:", a)
+    print("b:", b)
+    print("*args:", args)
+    print("c (default):", c)
+    print("**kwargs:", kwargs)
+
+
+full_function(1, 2, 3, 4, 5, c=50, name="Sarah", age=25)
+
+# Output:
+
+# a: 1
+# b: 2
+# *args: (3, 4, 5)
+# c (default): 50
+# **kwargs: {'name': 'Sarah', 'age': 25}
+```
+
 ```python
 class Functions:
     def func1(self, num, power=2):
