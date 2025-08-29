@@ -201,10 +201,7 @@ deactivate #غیر فعال سازی و خروج از محیط مجازی
    ```
 
 ```python
-print(list(range(4, 10)))  # [4, 5, 6, 7, 8, 9]
-print(list(range(10)))  # [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-print(list(range(0, 15, 2)))  # [0, 2, 4, 6, 8, 10, 12, 14]
-print(list(range(10, 0, -2)))  # [10, 8, 6, 4, 2]
+
 
 userRank = 1
 print("you got GOLD medal") if userRank == 1 else print("no medal")
@@ -972,6 +969,19 @@ print(max(letters))  # Output: 'd'
 words = ['apple', 'hi', 'banana']
 print(min(words, key=len))  # Output: 'hi' (کوتاه‌ترین کلمه)
 print(max(words, key=len))  # Output: 'banana' (بلند کلمه)
+
+# Example5️⃣️: set Default
+print(min([], default=0))  # Output: 0
+
+# Example6️⃣️: set Default
+users = []  # Empty user
+youngest_age = min((user['age'] for user in users), default=None)
+print(youngest_age)  # Output: None
+
+# Example7️⃣️: set Default
+data = []
+result = max(data, default=0)
+print(result)  # Output: 0
 ```
 
 پارامتر `key`: این پارامتر یک تابع است که مشخص می‌کند بر اساس چه معیاری مقایسه انجام شود
@@ -996,7 +1006,17 @@ oldest = max(students, key=lambda x: x['age'])
 print(oldest)  # Output: {'name': 'Sara', 'age': 22}
 ```
 
-### 10.4.6. ✅️
+* وقتی یک لیست(یا هر iterable) خالی باشد، فراخوانی min یا max بدون default باعث خطای ValueError می‌شود
+   ```python
+   min([])  # ❌️ ValueError: min() arg is an empty sequence
+   ```
+* برای رشته‌ها، min و max بر اساس کد ASCII کاراکترها عمل می‌کنند
+   ```python
+   print(min('Hello'))  # 'H' (کد ASCII کمتری دارد)
+   print(max('Hello'))  # 'o' (بیشترین کد ASCII)
+   ```
+
+### 10.4.6. ✅️ range
 
 ### 10.4.7. ✅️
 
@@ -1011,7 +1031,12 @@ round(x[, ndigits])  # زند یک عدد با دقت دلخواه
 print(round(12.2565856, 5))  # 12.25659
 range()
 range(9, -1, -1)
-range(1, number + 1):
+range(1, number + 1)
+print(list(range(4, 10)))  # [4, 5, 6, 7, 8, 9]
+print(list(range(10)))  # [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+print(list(range(0, 15, 2)))  # [0, 2, 4, 6, 8, 10, 12, 14]
+print(list(range(10, 0, -2)))  # [10, 8, 6, 4, 2]
+
 ceil(x)  # وقتی ایکس عدد اعشار باشد آنگاه مقدار صحیح بالاتر را برمی‌گرداند
 degrees(x)  # اگر ایکس رادیان باشد مقدار زاویه را به درجه برمی‌گرداند
 ```
