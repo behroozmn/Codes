@@ -1018,6 +1018,25 @@ print(oldest)  # Output: {'name': 'Sara', 'age': 22}
 
 ### 10.4.6. ✅️ range
 
+* برای تولید دنباله‌ای از اعداد استفاده می‌شود. معمولاً در حلقه‌های for به کار می‌رود
+* فقط اعداد صحیح (int) قابل استفاده هستند
+* نمی‌توان از اعداد اعشاری استفاده کرد
+
+```python
+# Syntax: range(start, stop, step) 
+# stop: الزاما باید وارد شود
+```
+
+```python
+for i in range(5): print(i)  # Output: 0, 1, 2, 3, 4
+for i in range(2, 7): print(i)  # Output: 2, 3, 4, 5, 6
+for i in range(1, 10, 2): print(i)  # Output: 1, 3, 5, 7, 9
+for i in range(5, 0, -1): print(i)  # Output: 5, 4, 3, 2, 1
+for i in range(10, 5, -2): print(i)  # Output: 10, 8, 6
+for i in range(0, 11, 2): print(i)  # Output: 0, 2, 4, 6, 8, 10
+print(list(range(1, 6)))  # Output: [1, 2, 3, 4, 5]
+```
+
 ### 10.4.7. ✅️
 
 ### 10.4.8. ✅️
@@ -1029,13 +1048,6 @@ pow(x, y, z)  # عدد ایکس به توان وای و بعد نتیجه تقس
 repr(obj)  # نمایش رشته‌ای
 round(x[, ndigits])  # زند یک عدد با دقت دلخواه
 print(round(12.2565856, 5))  # 12.25659
-range()
-range(9, -1, -1)
-range(1, number + 1)
-print(list(range(4, 10)))  # [4, 5, 6, 7, 8, 9]
-print(list(range(10)))  # [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-print(list(range(0, 15, 2)))  # [0, 2, 4, 6, 8, 10, 12, 14]
-print(list(range(10, 0, -2)))  # [10, 8, 6, 4, 2]
 
 ceil(x)  # وقتی ایکس عدد اعشار باشد آنگاه مقدار صحیح بالاتر را برمی‌گرداند
 degrees(x)  # اگر ایکس رادیان باشد مقدار زاویه را به درجه برمی‌گرداند
