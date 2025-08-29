@@ -821,6 +821,25 @@ print(obj)
 
 ```
 
+* می‌توانید رفتار repr() را در کلاس‌های خود با تعریف متد __repr__() تنظیم کنید
+
+```python
+class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    def __repr__(self):
+        return f"Person(name='{self.name}', age={self.age})"
+
+
+p = Person("Ali", 25)
+print(repr(p))  # Person(name='Ali', age=25)
+print(p)  # Person(name='Ali', age=25)
+# نکته: `print(p)` و `print(repr(p))` خروجی یکسان دارند زیرا print از str استفاده می‌کند، اما str وقتی `__str__` نباشد از repr استفاده می‌کند)
+```
+
+
 ### 10.3.5. ✅️ `__str__`
 
 * برای خوانایی بیشتر EndUser از یک شیء مورد استفاده قرار می‌گیرد
@@ -963,6 +982,133 @@ for i in range(0, 11, 2): print(i)  # Output: 0, 2, 4, 6, 8, 10
 print(list(range(1, 6)))  # Output: [1, 2, 3, 4, 5]
 ```
 
+### 10.4.4. ✅️ round(number,ndigits)
+
+* برای گِرد کردن اعداد اعشاری به نزدیک‌ترین مقدار با تعداد مشخصی رقم اعشار استفاده می‌شود.
+* number: عددی که می‌خواهید گرد شود (اجباری)
+* کاربرد در گرد کردن و نمایش قیمت
+
+```python
+print(round(3.6))  # -----------> Output: 4
+print(round(3.4))  # -----------> Output: 3
+print(round(3.5))  # -----------> Output: 4
+print(round(2.5))  # -----------> Output: 2 ← مهم! (پایتون به سمت عدد زوج نزدیک‌تر گرد می‌کند)
+```
+
+#### 10.4.4.1. ❇️ ndigits
+
+* ndigits: تعداد ارقام اعشار (اختیاری)
+    * اگر ننویسید، به نزدیک‌ترین عدد صحیح گرد می‌شود.
+
+```python
+print(round(3.14159, 2))  # ----> Output: 3.14
+print(round(2.675, 2))  # ------> Output: 2.67 یا 2.68؟ (به دلیل دقت شناور، ممکن است 2.68 نباشد!)
+print(round(1.2345, 1))  # -----> Output: 1.2
+print(round(1.2345, 3))  # -----> Output: 1.234
+print(round(12.2565856, 5))  # -> 12.25659
+```
+
+* منفی: گرد کردن به سمت چپ ممیز (به دهگان، صدگان و غیره)
+
+```python
+print(round(123.456, -1))  # خروجی: 120.0 → گرد به نزدیک‌ترین 10 تایی
+print(round(123.456, -2))  # خروجی: 100.0 → گرد به نزدیک‌ترین 100 تایی
+print(round(167, -2))  # خروجی: 200
+```
+
+* عدد صحیح بازگردانده می‌شود اگر ndigits نباشد
+
+```python
+type(round(3.7))  # <class 'int'>
+```
+
+* اما اگر ndigits باشد، خروجی float است
+
+```python
+type(round(3.7, 1))  # <class 'float'>
+```
+
+* به دلیل نحوه ذخیره اعداد اعشاری در کامپیوتر، گاهی نتیجه غیرمنتظره می‌دهد
+    *     📌 دلیل: عدد 2.675 دقیقاً در حافظه به صورت 2.674999... ذخیره می‌شود. 
+
+```python
+print(round(2.675, 2))  # ممکن است خروجی: 2.67 باشد، نه 2.68!
+```
+
+* بین گرد کردن و قطع کردن فرق هست
+
+```python
+# Example1️⃣️: این کار قطع می‌کند، نه گرد می‌کند
+x = 3.14159
+truncated = int(x * 100) / 100  # 3.14
+
+# Example2️⃣️: این کار گرد می‌کند، نه قطع می‌کند
+price = 19.87654
+print(f"قیمت: {round(price, 2)} تومان")  # خروجی: قیمت: 19.88 تومان
+```
+
+#### 10.4.4.2. ❇️ Banker’s Rounding
+
+* پایتون از روش گرد کردن بانکی (Banker’s Rounding) استفاده می‌کند یعنی وقتی عدد دقیقاً در وسط دو عدد باشد (مثل 2.5 یا 3.5)، به نزدیک‌ترین عدد زوج گرد می‌شود.
+* این روش برای کاهش سوگیری آماری در محاسبات طولانی استفاده می‌شود.
+
+```python
+print(round(2.5))  # خروجی: 2
+print(round(3.5))  # خروجی: 4
+print(round(4.5))  # خروجی: 4
+print(round(5.5))  # خروجی: 6
+```
+
+### 10.4.5. ✅️ repr(object)
+
+* برای دریافت نمایش رشته‌ای "رسمی" از یک شیء (object) استفاده می‌شود.
+* هدف اصلی repr() این است که یک رشته تولید کند که
+    * نحوه ساخت شیء را نشان دهد
+    * قابل استفاده در کد پایتون باشد (مثلاً برای دیباگ یا بازسازی شیء)
+    * برای توسعه‌دهندگان و دیباگ کردن طراحی شده است
+* تفاوت `str` و `repr`
+    * str(x): خروجی را به شکل "طبیعی" نشان می‌دهد (\n به عنوان خط جدید).
+    * repr(x): دقیقاً نشان می‌دهد که رشته چگونه نوشته شده (با \n به عنوان کاراکتر فرار).
+
+```python
+# Example 1️⃣️
+x = "Hello\nWorld"
+print(str(x))  # Output: Hello
+# World
+
+print(repr(x))  # Output: 'Hello\nWorld'
+
+# Example 2️⃣️:
+x = 3.141592653589793238
+print(str(x))  # Output:3.141592653589793
+print(repr(x))  # Output:3.141592653589793 سعی می‌کند دقت بیشتری حفظ کند
+
+# Example 3️⃣️:
+lst = ['apple', 'banana\nsweet', 42]
+print(str(lst))  # Output:['apple', 'banana\nsweet', 42]
+print(repr(lst))  # Output:['apple', 'banana\\nsweet', 42]
+```
+
+* می‌توانید رفتار repr() را در کلاس‌های خود با تعریف متد __repr__() تنظیم کنید
+
+```python
+class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    def __repr__(self):
+        return f"Person(name='{self.name}', age={self.age})"
+
+
+p = Person("Ali", 25)
+print(repr(p))  # Person(name='Ali', age=25)
+print(p)  # Person(name='Ali', age=25)
+# نکته از قطعه کد بالا: `print(p)` و `print(repr(p))` خروجی یکسان دارند زیرا print از str استفاده می‌کند، اما str وقتی `__str__` نباشد از repr استفاده می‌کند)
+
+```
+
+
 ## 10.5. 🅱️ MATH functions
 
 | ویژگی                        | `math`       | `cmath`                                     |
@@ -1016,11 +1162,11 @@ print(math.floor(-1.7))  # Output: -2 (عدد را به سمت منفی بی‌�
 ```python
 import math
 
-print(math.ceil(4.1))   # Output: 5
-print(math.ceil(4.0))   # Output: 4
-print(math.ceil(4.9))   # Output: 5
+print(math.ceil(4.1))  # Output: 5
+print(math.ceil(4.0))  # Output: 4
+print(math.ceil(4.9))  # Output: 5
 print(math.ceil(-2.3))  # Output:-2
-print(math.ceil(0.5))   # Output: 1
+print(math.ceil(0.5))  # Output: 1
 print(math.ceil(-0.5))  # Output: 0
 ```
 
@@ -1055,20 +1201,92 @@ math.pow(x, y, z)  # ❌️ Error (در ماژول math چنین تابعی ند
 pow(2, 3, 5)  # (built-in) # ✅️ ==> (2^3 % 5) = (8 % 5) => [Output:3]
 ```
 
+### 10.5.5. ✅️ math.degrees(radian)
 
-### 10.5.5. ✅️ degrees(x)
+* برای تبدیل زاویه از رادیان به درجه استفاده می‌شود
+* ورودی: زاویه بر حسب رادیان (عدد حقیقی)
+* خروجی: زاویه بر حسب درجه
+* دوتابع `math.degrees(radian)` و `math.radians(degree)` معکوس یکدیگر هستند
 
+```python
+import math
+
+# convert π radian to degree (π = 180°)
+print(math.degrees(math.pi))  # Output: 180.0
+
+# convert π/2 radian to degree (90 degree)
+print(math.degrees(math.pi / 2))  # Output: 90.0
+
+# convert π/4 radian to degree (45 degree)
+print(math.degrees(math.pi / 4))  # Output: 45.0
+
+# convert 1 radian to degree
+print(math.degrees(1))  # Output: 57.29577951308232
+
+# تبدیل زاویه منفی
+print(math.degrees(-math.pi / 3))  # Output: -60.0
 ```
-degrees(x)   اگر ایکس رادیان باشد مقدار زاویه را به درجه برمی‌گرداند
+
+![math-Radian_degree.jpg](./_srcFiles/Images/math-Radian_degree.jpg "math-Radian_degree.jpg")
+
+```python
+import math
+
+# Example 1️⃣️
+radians = math.pi / 3
+degrees = radians * (180 / math.pi)
+print(degrees)  # Output: 60.0
+
+# Example 2️⃣️: فرض کن می‌خوای زاویه مقابل یک ضلع را پیدا کنی 
+opposite = 3
+adjacent = 4
+angle_radians = math.atan(opposite / adjacent)  # تانژانت معکوس
+angle_degrees = math.degrees(angle_radians)
+print(f"زاویه: {angle_degrees:.2f} درجه")  # Output: زاویه: 36.87 درجه
 ```
-### 10.5.6. ✅️ round(x[, ndigits])
 
-round(x[, ndigits])  # زند یک عدد با دقت دلخواه
-print(round(12.2565856, 5))  # 12.25659
+### 10.5.6. ✅️ math.radians(degree)
 
-### 10.5.7. ✅️ repr(x)
+* برای تبدیل زاویه از درجه به رادیان استفاده می‌شود
+* دوتابع `math.degrees(radian)` و `math.radians(degree)` معکوس یکدیگر هستند
 
-repr(obj)  # نمایش رشته‌ای
+```python
+import math
+
+# convert 180 degree To radian
+print(math.radians(180))  # Output: 3.141592653589793  → π
+
+# convert 90 degree
+print(math.radians(90))  # Output: 1.5707963267948966 → π/2
+
+# convert 45 degree
+print(math.radians(45))  # Output: 0.7853981633974483 → π/4
+
+# convert 30 degree
+print(math.radians(30))  # Output: 0.5235987755982988
+
+# تبدیل زاویه منفی
+print(math.radians(-60))  # Output: -1.0471975511965976 → -π/3
+```
+
+![math-degree_Radian.jpg](./_srcFiles/Images/math-degree_Radian.jpg "math-degree_Radian.jpg")
+
+```python
+import math
+
+# Example 1️⃣️
+degrees = 60
+radians = degrees * (math.pi / 180)
+print(radians)  # -----------> Output: 1.0471975511965976
+print(math.radians(60))  # --> Output: 1.0471975511965976
+
+# Example 2️⃣️: فرض کن می‌خوای سینوس 30 درجه را حساب کنیم 
+# Note:❌ اگر مستقیماً بنویسی math.sin(30)، عدد 30 را رادیان فرض می‌کند و جواب اشتباه می‌دهد! 
+angle_degrees = 30
+angle_radians = math.radians(angle_degrees)
+print(math.sin(angle_radians))  # --> Output: ✅️ 0.5
+print(math.sin(30))  # -------------> Output: ❌️ -0.988 (غلط! چون 30 رادیان است)
+```
 
 ![Fibonatchi](./_srcFiles/Images/07.gif "07.gif")
 
