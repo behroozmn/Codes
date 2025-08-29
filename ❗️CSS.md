@@ -1,6 +1,6 @@
 <div dir="rtl">
 
-# 🅰️ مفاهیم و نکات
+# 1. 🅰️ مفاهیم و نکات
 
 <div style="display: flex; flex-direction: column; align-items: center;">
 
@@ -10,9 +10,9 @@
 
 </div>
 
-# 🅰️ Properties
+# 2. 🅰️ Properties
 
-## 🅱️ Shorthand
+## 2.1. 🅱️ Shorthand
 
 * به شما اجازه می دهد مقادیر متعدد خاص CSS را همزمان تنظیم کنید
 * می توانید برگه های سبک مختصر تر ، صرفه جویی در وقت و انرژی را بنویسید
@@ -88,9 +88,9 @@ view-timeline
 -webkit-mask-box-image
 ```
 
-### ✅️ border-*
+### 2.1.1. ✅️ border-*
 
-#### ❇️ border-bottom
+#### 2.1.1.1. ❇️ border-bottom
 
 ```css
 li:last-child {
@@ -98,9 +98,9 @@ li:last-child {
 }  
 ```
 
-### ✅️ margin-*
+### 2.1.2. ✅️ margin-*
 
-#### ❇️ margin
+#### 2.1.2.1. ❇️ margin
 
 ```css
 p {
@@ -108,9 +108,9 @@ p {
 }
 ```
 
-### ✅️ text-*
+### 2.1.3. ✅️ text-*
 
-#### ❇️ text-decoration
+#### 2.1.3.1. ❇️ text-decoration
 
 * مورد none: سبب می‌شود که با نگه داشتن روی لینک زیر آن لینک خط نیافتد
 
@@ -120,9 +120,9 @@ p {
 }
 ```
 
-### ✅️ transition-*
+### 2.1.4. ✅️ transition-*
 
-#### ❇️ transition[[url]](https://developer.mozilla.org/en-US/docs/Web/CSS/transition)
+#### 2.1.4.1. ❇️ transition[[url]](https://developer.mozilla.org/en-US/docs/Web/CSS/transition)
 
 ```css
 li a {
@@ -146,9 +146,9 @@ li a {
 }
 ```
 
-## 🅱️ general
+## 2.2. 🅱️ general
 
-### ✅️ display
+### 2.2.1. ✅️ display
 
 [//]: # (Todo: Need to Review)
 
@@ -158,7 +158,7 @@ header nav {
 }
 ```
 
-#### ❇️ flex
+#### 2.2.1.1. ❇️ flex
 
 > در حالت عادی دو اِلِمان ۱-تصویر ۲-محتوی(عنوان و متن) زیر هم قرار می‌گیرند
 
@@ -196,9 +196,9 @@ header nav {
 }
 ```
 
-### ✅️ list-*
+### 2.2.2. ✅️ list-*
 
-#### ❇️ list-style-type
+#### 2.2.2.1. ❇️ list-style-type
 
 ```css
 ul {
@@ -206,9 +206,9 @@ ul {
 }
 ```
 
-### ✅️ font-*
+### 2.2.3. ✅️ font-*
 
-#### ❇️ font-family
+#### 2.2.3.1. ❇️ font-family
 
 ```css
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,900&display=swap');
@@ -226,9 +226,9 @@ p {
 }
 ```
 
-### ✅️ box-*
+### 2.2.4. ✅️ box-*
 
-#### ❇️ box-shadow[[url]](https://developer.mozilla.org/en-US/docs/Web/CSS/box-shadow)
+#### 2.2.4.1. ❇️ box-shadow[[url]](https://developer.mozilla.org/en-US/docs/Web/CSS/box-shadow)
 
 ```css
 p {
@@ -242,13 +242,13 @@ p {
 }
 ```
 
-# 🅰️ Statement
+# 3. 🅰️ Statement
 
-## 🅱️ RulesSets
+## 3.1. 🅱️ RulesSets
 
 * نوع Rulesets :مجموعه‌ای از declaration های CSS که توسط Selectorها تخصیص پیدا می‌کنند
 
-## 🅱️ At-rules
+## 3.2. 🅱️ At-rules
 
 * نوع At-rules: مواردی که با علامت @ آغاز می‌شوند.
 
@@ -273,7 +273,7 @@ p {
 
 ```
 
-### ✅️ @font-face
+### 3.2.1. ✅️ @font-face
 
 ```CSS
 @font-face {
@@ -292,7 +292,7 @@ Web Open Font Format     font/woff
 Web Open Font Format2    font/woff2
 ```
 
-### ✅️ @import
+### 3.2.2. ✅️ @import
 
 ```css
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,900&display=swap');
@@ -302,7 +302,7 @@ html {
 }
 ```
 
-# 🅰️ اجباری نمودن یک خصلت برای یک اِلِمان
+# 4. 🅰️ اجباری نمودن یک خصلت برای یک اِلِمان
 
 ```css
 selector {
@@ -313,7 +313,7 @@ selector {
 
 ```
 
-## 🅱️ Example1
+## 4.1. 🅱️ Example1
 
 ```css
 .errorlist {

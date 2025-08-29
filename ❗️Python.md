@@ -201,9 +201,6 @@ deactivate #غیر فعال سازی و خروج از محیط مجازی
    ```
 
 ```python
-
-print(round(12.2565856, 5))  # 12.25659
-
 print(list(range(4, 10)))  # [4, 5, 6, 7, 8, 9]
 print(list(range(10)))  # [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 print(list(range(0, 15, 2)))  # [0, 2, 4, 6, 8, 10, 12, 14]
@@ -214,7 +211,14 @@ print("you got GOLD medal") if userRank == 1 else print("no medal")
 
 ```
 
-# 6. 🅰️ Loop
+# 6. 🅰️ for
+
+```python
+def sum_list():
+    return sum([x for x in range(40000000)])
+```
+
+# 7. 🅰️ Loop
 
 ```python
 
@@ -229,7 +233,6 @@ for variable in iterable:
 
 
 # 9. کد برای حالت دیگر condition1
-
 
 class loop:
 
@@ -276,9 +279,9 @@ behrooz = loop()
 behrooz.whileLoop2()
 ```
 
-# 7. 🅰️ Operation
+# 8. 🅰️ Operation
 
-## 7.1. 🅱️ OperatorsComparison
+## 8.1. 🅱️ OperatorsComparison
 
 ```python
 # 14. Return Boolean Value
@@ -319,7 +322,7 @@ print(list1 is list3)
 
 ```
 
-## 7.2. 🅱️ Logical Operand
+## 8.2. 🅱️ Logical Operand
 
 ```python
 # 23. AND
@@ -369,7 +372,7 @@ if not ((2 < age < 8) or age >= 65):
 
 ```
 
-## 7.3. 🅱️ Ternary Operator
+## 8.3. 🅱️ Ternary Operator
 
 ```python
 # 27. ternary:A ternary operator exists in some programming languages, and it allows you to shorten a simple If-Else block. It takes in 3 or more operands:
@@ -445,9 +448,9 @@ condition5_Alternative()
 
 ```
 
-# 8. 🅰️ exception
+# 9. 🅰️ exception
 
-## 8.1. 🅱️ Error
+## 9.1. 🅱️ Error
 
 ```python
 try:
@@ -475,7 +478,7 @@ finally:
 
 ```
 
-## 8.2. 🅱️ Error-Raise
+## 9.2. 🅱️ Error-Raise
 
 ```python
 # 40. print(test)
@@ -501,7 +504,7 @@ print_with_custom_color("Behrooz", 'redd')
 
 ```
 
-## 8.3. 🅱️ Debug(pdb)
+## 9.3. 🅱️ Debug(pdb)
 
 ```python
 # import pdb
@@ -531,7 +534,7 @@ print(res)
 
 ```
 
-# 9. 🅰️ Function
+# 10. 🅰️ Function
 
 * اگر یک تابع در داخل یک کلاس تعریف گردد آنگاه برای اینکه به مقادیر کلاس دسترسی داشته باشد باید آرگومان اول آن را کلمه
   کلیدی self قرار دهید
@@ -555,7 +558,7 @@ print(showFullName("MohammadiNasab", "Behrooz"))
 print(showFullName(last="MohammadiNasab", first="Behrooz"))  # تغییر در ترتیب پارامتر ورودی
 ```
 
-## 9.1. 🅱️ Lambda
+## 10.1. 🅱️ Lambda
 
 * لامبدا در اصل یک تابع است(نوعی از تعریف تابع است) که تنها در یک خط تعریف می‌شود
 * به «توابع یک خطی» یا «Annonymous function» معروف هستند
@@ -580,7 +583,7 @@ print(function2(4))  # Output: Positive
 
 ```
 
-## 9.2. 🅱️ Agmuments
+## 10.2. 🅱️ Agmuments
 
 * اگر در هنگام تعریف بدنه یک تابع همه موارد parameters و args و defaultParameters و kwargs داشته باشیم ترتیب اولویت به
   شکل زیر است
@@ -592,7 +595,7 @@ print(function2(4))  # Output: Positive
     * 4️⃣️ `**kwargs` یعنی Dictionary ◄ متغیر دارای محتوی کلید و مقدار است
 * توجه: ترتیب *args قبل از default و **kwargs الزامی است.
 
-### 9.2.1. ✅️ PositionalParameters
+### 10.2.1. ✅️ PositionalParameters
 
 ```python
 # Example1️⃣️
@@ -613,7 +616,7 @@ print(result)  # Output: 60
 
 ```
 
-### 9.2.2. ✅️ `*args`
+### 10.2.2. ✅️ `*args`
 
 * با استفاده از *args می‌توان تعداد نامشخصی از ورودی‌ها را به صورت یک Tuple (غیرقابل تغییر) دریافت کرد.
 * args یک تاپل است و Immutable (غیرقابل تغییر) است
@@ -644,7 +647,7 @@ print_names("Zeinab", "Mohadeseh", "Tasnim")
 # Name: Tasnim
 ```
 
-### 9.2.3. ✅️ DefaultParameters
+### 10.2.3. ✅️ DefaultParameters
 
 اگر مقداری به پارامتر داده نشود، از مقدار پیش‌فرض استفاده می‌شود
 
@@ -667,7 +670,7 @@ print(power(3))  # Output: 3^2 = 9
 print(power(3, 3))  # Output: 3^3 = 27
 ```
 
-### 9.2.4. ✅️ `**kwargs`
+### 10.2.4. ✅️ `**kwargs`
 
 با `**kwargs` می‌توان ورودی‌های نام‌دار متغیر را به صورت دیکشنری دریافت کرد.
 
@@ -698,7 +701,7 @@ profile = create_profile(username="ali123", email="ali@example.com", role="admin
 print(profile)  # Output: {'username': 'ali123', 'email': 'ali@example.com', 'role': 'admin'}
 ```
 
-### 9.2.5. ✅️ Combine
+### 10.2.5. ✅️ Combine
 
 ```python
 def full_function(a, b, *args, c=10, **kwargs):
@@ -720,9 +723,9 @@ full_function(1, 2, 3, 4, 5, c=50, name="Sarah", age=25)
 # **kwargs: {'name': 'Sarah', 'age': 25}
 ```
 
-## 9.3. 🅱️ __NAME__
+## 10.3. 🅱️ __NAME__
 
-### 9.3.1. ✅️ `__init__`
+### 10.3.1. ✅️ `__init__`
 
 نقش تابع سازنده در هر کلاس را ایفا می‌کند
 
@@ -741,7 +744,7 @@ obj.show_data()
 
 ```
 
-### 9.3.2. ✅️ `__len__`
+### 10.3.2. ✅️ `__len__`
 
 فقط زمانی می‌شود از این تابع استفاده کرد که فانکشن آن تعریف شده باشد یا خودمان یا ارث‌بری
 
@@ -758,7 +761,7 @@ obj = Behrooz("Alii")
 print(len(obj))
 ```
 
-### 9.3.3. ✅️  `__add__` و `__mul__` و `__truediv__` و `__sub__`
+### 10.3.3. ✅️  `__add__` و `__mul__` و `__truediv__` و `__sub__`
 
 ```python
 class Behrooz:
@@ -800,7 +803,7 @@ print(obj / "salam")
 | __floordiv__(self,p2)  | \\      | 
 | __ifloordiv__(self,p2) | \=      | 
 
-### 9.3.4. ✅️  `__repr__`
+### 10.3.4. ✅️  `__repr__`
 
 * باتعریف این تابع سبب می‌شویم در هنگام پرینت آبجکت تهیه شده از یک کلاس تابع اجرا شود وگرنه آدرس شیء در حافظه نمایش
   می‌شود
@@ -821,7 +824,7 @@ print(obj)
 
 ```
 
-### 9.3.5. ✅️ `__str__`
+### 10.3.5. ✅️ `__str__`
 
 * برای خوانایی بیشتر EndUser از یک شیء مورد استفاده قرار می‌گیرد
 * این متد زمانی فراخوانی می‌شود که توابعی مانند print یا str برای نمایش یک شیء استفاده شود
@@ -842,7 +845,7 @@ person = Person("علی", 25)
 print(person)  # output: Person(name=علی, age=25)
 ```
 
-## 9.4. 🅱️ MATH
+## 10.4. 🅱️ MATH
 
 | ویژگی                        | `math`       | `cmath`                                     |
 |------------------------------|--------------|---------------------------------------------|
@@ -870,7 +873,7 @@ print(cmath.sqrt(-1))  # ✅️ 1j
 cmath.log(-1)  # ✅️ 3.141592653589793j
 ```
 
-### 9.4.1. ✅️ math.floor(x)
+### 10.4.1. ✅️ math.floor(x)
 
 * بزرگترین عدد صحیحی که کوچکتر یا مساوی مقدار ایکس باشد را برمی‌گرداند
 * به عبارتی اگر ایکس اعشاری باشد مقدار صحیح برا برمی‌گرداند
@@ -887,7 +890,7 @@ print(int(-1.7))  # Output: -1 (عدد را به سمت صفر گِرد می‌�
 print(math.floor(-1.7))  # Output: -2 (عدد را به سمت منفی بی‌نهایت گِرد می‌کند)
 ```
 
-### 9.4.2. ✅️ abs(x)
+### 10.4.2. ✅️ abs(x)
 
 محاسبه قدرمطلق یعنی اگر منفی باشد مثبت می‌کند
 
@@ -902,7 +905,7 @@ import math
 math.abs(-5)  # ❌️ AttributeError: module 'math' has no attribute 'abs'
 ```
 
-### 9.4.3. ✅️ math.sqrt(x)
+### 10.4.3. ✅️ math.sqrt(x)
 
 * جذر (ریشه دوم) یک عدد را محاسبه و برمی‌گرداند.
 * مقدار ورودی اگر یک عدد منفی باشد، خطای ValueError رخ می‌دهد
@@ -918,7 +921,7 @@ print(math.sqrt(7.5))  # Output: 2.7386127875258306
 print(math.sqrt(-1))  # ❌️ Error:ValueError
 ```
 
-### 9.4.4. ✅️ math.pow(x,y)
+### 10.4.4. ✅️ math.pow(x,y)
 
 * محاسبه x به توان y
 * شاید با تابع pow(x, y, z) اشتباه گرفته شود که یک تابع داخلی(built-in) پایتون است که پشتیبانی از سومین آرگومان برای محاسبه به پیمانه (modulus) را دارد
@@ -933,9 +936,71 @@ math.pow(x, y, z)  # ❌️ Error (در ماژول math چنین تابعی ند
 pow(2, 3, 5)  # (built-in) # ✅️ ==> (2^3 % 5) = (8 % 5) => [Output:3]
 ```
 
-### 9.4.5. ✅️
+### 10.4.5. ✅️ Min,max
 
-### 9.4.6. ✅️
+* از توابع داخلی (built-in) هستند که به ترتیب برای یافتن کوچکترین و بزرگترین مقدار در یک دنباله (مانند لیست، تاپل، رشته و غیره) استفاده می‌شوند.
+* min:پیدا کردن کوچکترین مقدار در یک دنباله یا بین چند عدد
+* max:پیدا کردن بزرگترین مقدار در یک دنباله یا بین چند عدد
+
+```python
+# syntax:
+# min(iterable, *iterables, key, default)
+# max(iterable, *iterables, key, default)
+
+# min(arg1, arg2, *args, key)
+# max(arg1, arg2, *args, key)
+```
+
+مثال‌ها
+
+```python
+# Example1️⃣️: on list
+numbers = [4, 1, 7, 3, 9]
+print(min(numbers))  # Output: 1
+print(max(numbers))  # Output: 9
+
+# Example2️⃣️: on multiple number
+print(min(10, 5, 8, 3))  # Output: 3
+print(max(10, 5, 8, 3))  # Output: 10
+
+# Example3️⃣️: on string(بر اساس ترتیب الفبایی)
+letters = ['b', 'a', 'd', 'c']
+print(min(letters))  # Output: 'a'
+print(max(letters))  # Output: 'd'
+
+# Example4️⃣️: On words
+words = ['apple', 'hi', 'banana']
+print(min(words, key=len))  # Output: 'hi' (کوتاه‌ترین کلمه)
+print(max(words, key=len))  # Output: 'banana' (بلند کلمه)
+```
+
+پارامتر `key`: این پارامتر یک تابع است که مشخص می‌کند بر اساس چه معیاری مقایسه انجام شود
+
+```python
+# Example1️⃣️
+list1 = ['mohammad', 'milad', 'akbar', 'sara', 'iman', 'ali']
+print(f"min lenght in {list(list1)} ---> {min(list1, key=lambda n: len(n))}")  # Output: Ali ------> مینیمم را برحسب تعداد کاراکتر درنظر بگیر
+print(f"max lenght in {list(list1)} ---> {max(list1, key=lambda n: len(n))}")  # Output: mohammad -> ماکزیمم را برحسب تعداد کاراکتر درنظر بگیر
+
+# Example2️⃣️
+students = [
+    {'name': 'Ali', 'age': 20},
+    {'name': 'Reza', 'age': 18},
+    {'name': 'Sara', 'age': 22}
+]
+
+youngest = min(students, key=lambda x: x['age'])
+print(youngest)  # Output: {'name': 'Reza', 'age': 18}
+
+oldest = max(students, key=lambda x: x['age'])
+print(oldest)  # Output: {'name': 'Sara', 'age': 22}
+```
+
+### 10.4.6. ✅️
+
+### 10.4.7. ✅️
+
+### 10.4.8. ✅️
 
 ```python
 
@@ -943,37 +1008,17 @@ math.ceil(x)  # کوچکترین عدد بزرگترمساوی‌یک عدد
 pow(x, y, z)  # عدد ایکس به توان وای و بعد نتیجه تقسیم بر زد و نمایش باقیمانده
 repr(obj)  # نمایش رشته‌ای
 round(x[, ndigits])  # زند یک عدد با دقت دلخواه
+print(round(12.2565856, 5))  # 12.25659
+range()
+range(9, -1, -1)
+range(1, number + 1):
 ceil(x)  # وقتی ایکس عدد اعشار باشد آنگاه مقدار صحیح بالاتر را برمی‌گرداند
 degrees(x)  # اگر ایکس رادیان باشد مقدار زاویه را به درجه برمی‌گرداند
 ```
 
 ![Fibonatchi](./_srcFiles/Images/07.gif "07.gif")
 
-### 9.4.7. ✅️ Min_Max
-
-```python
-list1 = [3, 6, 8, 13, 4, 90]
-list2 = ['a', 't', 'z']
-list3 = "mostafa"
-list4 = ['mohammad', 'milad', 'akbar', 'sara', 'iman', 'ali']
-
-# 71. Step 1️⃣️ - روش اول
-result = [len(name) for name in list4]
-print(f"Character lenght {list(list4)} ---> {result}")
-
-# 72. Step 1️⃣️ - روش دوم
-print(f"Character lenght {list(list4)} ---> {[len(name) for name in list4]}")
-print("----------End1-------------")
-
-# 73. Step 2️⃣️
-print(f"max in {list(list1)} ---> {max(list1)}")
-print(f"min in {list(list1)} ---> {min(list1)}")
-print(f"max lenght in {list(list4)} ---> {max(list4, key=lambda n: len(n))}")  # ماکزیمم را برحسب تعداد کاراکتر درنظر بگیر
-print(f"max lenght in {list(list4)} ---> {min(list4, key=lambda n: len(n))}")  # مینیمم را برحسب تعداد کاراکتر درنظر بگیر
-
-```
-
-## 9.5. 🅱️ Reversed
+## 10.5. 🅱️ Reversed
 
 ```python
 numbers = [1, 2, 3, 4, 5, 6]
@@ -997,7 +1042,7 @@ for num in range(9, -1, -1):
 
 ```
 
-## 9.6. 🅱️ Sort
+## 10.6. 🅱️ Sort
 
 ```python
 def func2sort_NoChange():
@@ -1037,7 +1082,7 @@ func5()
 
 ```
 
-## 9.7. 🅱️ Length
+## 10.7. 🅱️ Length
 
 ```python
 users = [{'name': 'Behrooz', 'family': 'nadery', 'born': 1369, 'shopCart': []},
@@ -1059,9 +1104,9 @@ func2()
 
 ```
 
-## 9.8. 🅱️ TruthinessFalsiness_All
+## 10.8. 🅱️ TruthinessFalsiness_All
 
-### 9.8.1. ✅️ ALL
+### 10.8.1. ✅️ ALL
 
 ```python
 # 84. بررسی درستی یا نادرستی یا همان تروسینس یا فالسینس
@@ -1091,7 +1136,7 @@ print(all([num % 2 == 0 for num in numbers]))
 
 ```
 
-### 9.8.2. ✅️ Any
+### 10.8.2. ✅️ Any
 
 ```python
 # 88. بررسی درستی یا نادرستی یا همان تروسینس یا فالسینس
@@ -1141,13 +1186,13 @@ func5()
 func6()
 ```
 
-# 10. 🅰️ Decorator
+# 11. 🅰️ Decorator
 
-## 10.1. 🅱️ function into function
+## 11.1. 🅱️ function into function
 
 استفاده از تابع درون تابع دیگر به روش های متفاوت انجام می‌شود که نمونه‌های آن در ذیل آمده است
 
-### 10.1.1. ✅️ Traditional
+### 11.1.1. ✅️ Traditional
 
 ```python
 from random import choice
@@ -1166,7 +1211,7 @@ print("\n")
 
 ```
 
-### 10.1.2. ✅️ Traditional-ByReturnValue
+### 11.1.2. ✅️ Traditional-ByReturnValue
 
 ```python
 from random import choice
@@ -1184,7 +1229,7 @@ result = state()
 print("=====> ", result())
 ```
 
-### 10.1.3. ✅️ Traditional-ByArgs
+### 11.1.3. ✅️ Traditional-ByArgs
 
 ```python
 def sum_func(number, func):
@@ -1201,7 +1246,7 @@ def square_func(number):
 print("☰☰☰☰☰> ", sum_func(5, square_func))
 ```
 
-### 10.1.4. ✅️ Modern-ByDecorator
+### 11.1.4. ✅️ Modern-ByDecorator
 
 * تکنیک Decorator یک DesignePatternاست که یک تابع را درون تابع دیگر فراخوانی میکنیم
 * امکان تغییر یا گسترش رفتار یک تابع یا کلاس بدون تغییر در کد اصلی آن
@@ -1229,7 +1274,7 @@ say_hello()
 
 ```
 
-## 10.2. 🅱️ Classmethod
+## 11.2. 🅱️ Classmethod
 
 * تغییر عملکرد یک تابع بطوریکه به‌جای استفاده از منابع نمونه از منابع کلاس استفاده می‌کند
 * دسترسی مستقیم به دیتای کلاس بدون ساخت شیء نمونه
@@ -1253,7 +1298,7 @@ print(obj1.func1())
 
 ```
 
-## 10.3. 🅱️ Property
+## 11.3. 🅱️ Property
 
 * property: تبدیل تابع به ویزگی(property) یا صفت(attribute)
 * برای دسترسی به متد باید حتما پرانتز باز و بسته گذاشته بشود ولی برای پراپرتی نباید پرانتز گذاشت
@@ -1281,7 +1326,7 @@ print(obj1.fullname)
 
 ```
 
-## 10.4. 🅱️ PropertyGetterSetter
+## 11.4. 🅱️ PropertyGetterSetter
 
 * تغییر رفتارِ تابع به متغیر
 * getter: یک تابع است و برای استفاده باید حتما همراه پرانتز باشد ولی هنگامیکه با @property بیاید آنگاه نیاز به استفاده
@@ -1332,7 +1377,7 @@ print(obj1.fullName)  # به حالت متد فراخوانی نمیکنیم ب�
 
 ```
 
-## 10.5. 🅱️ Advanced
+## 11.5. 🅱️ Advanced
 
 ```python
 def before_after(func):
@@ -1466,7 +1511,7 @@ show_data(Fname="Behi")
 
 ```
 
-## 10.6. 🅱️ Example
+## 11.6. 🅱️ Example
 
 ```python
 from time import time
@@ -1498,7 +1543,7 @@ sum_list()
 
 ```
 
-# 11. 🅰️ Iterate
+# 12. 🅰️ Iterate
 
 ```python
 # 93. iterate: پیمایش یا تکرار کردن
@@ -1538,7 +1583,7 @@ print(next(iterName))
 
 ```
 
-## 11.1. 🅱️ Dictionary
+## 12.1. 🅱️ Dictionary
 
 ```python
 # 108. List       → []
@@ -1662,7 +1707,7 @@ behrooz.func4(name="behrooz", FamilyName="Mohammadi", born=1369, mobile="0919167
 
 ```
 
-## 11.2. 🅱️ Set
+## 12.2. 🅱️ Set
 
 ```python
 # 130. List       → []
@@ -1714,7 +1759,7 @@ print(SetClass._set5)
 
 ```
 
-## 11.3. 🅱️ Tupple
+## 12.3. 🅱️ Tupple
 
 ```python
 # 138. List       → []
@@ -1757,7 +1802,7 @@ obj.func1(*numbers)  # اگر ستاره نباشد ارور میدهد
 
 ```
 
-## 11.4. 🅱️ List
+## 12.4. 🅱️ List
 
 ```python
 # 146. List       → []
@@ -1867,7 +1912,7 @@ def search(self, mylist):
 
 ```
 
-## 11.5. 🅱️ Filter
+## 12.5. 🅱️ Filter
 
 * برای یاد گیری سه مفهوم ۱-لامبدا ۲-فیلتر ۳-مَپ ،باید به ترتیب نام برده شده مطالعه شود
 
@@ -1919,7 +1964,7 @@ func4_map_filter()
 
 ```
 
-## 11.6. 🅱️ map
+## 12.6. 🅱️ map
 
 ```python
 # 64. map: calls a function for all its members of iterable
@@ -2003,7 +2048,7 @@ func5()
 
 ```
 
-## 11.7. 🅱️ Generator_Expression
+## 12.7. 🅱️ Generator_Expression
 
 * Generator: create function as sequentional lazy items
     * create or generate items only when ussing
@@ -2019,7 +2064,7 @@ func5()
     * قابلیت ادامه تابع از همان نقطه توقف
     * عدم محاسبه و برگرداندن یکباره تمام مقادیر بلکه محاسبه و تولیدیکی پس از دیگری
 
-### 11.7.1. ✅️ Example 1️⃣️: yield
+### 12.7.1. ✅️ Example 1️⃣️: yield
 
 ```python
 def nums():
@@ -2035,7 +2080,7 @@ print(next(g))
 print(next(g))
 ```
 
-### 11.7.2. ✅️ Example 2️⃣️: Generator
+### 12.7.2. ✅️ Example 2️⃣️: Generator
 
 ```python
 myGenerator = (num for num in range(20))
@@ -2046,7 +2091,7 @@ print(next(myGenerator))
 print(next(myGenerator))
 ```
 
-### 11.7.3. ✅️ Example 3️⃣️: yield
+### 12.7.3. ✅️ Example 3️⃣️: yield
 
 ```python
 def func_generator(maximom):
@@ -2063,7 +2108,7 @@ print(next(counter))  # -> 3
 # 166. print(next(counter))  # if run error
 ```
 
-### 11.7.4. ✅️ Example4️⃣️: Fibunachi()
+### 12.7.4. ✅️ Example4️⃣️: Fibunachi()
 
 ```python
 print("--------------------byList----------------------")
@@ -2100,7 +2145,7 @@ for num in fib_generator(10):  # استفاده از حالت جنریتور
     print(f"------> {num}")
 ```
 
-### 11.7.5. ✅️ Example 5️⃣️
+### 12.7.5. ✅️ Example 5️⃣️
 
 ```python
 from time import time
@@ -2118,7 +2163,7 @@ print(f"---------->  Time(s): {end_time - start_time}\n")
 
 ```
 
-## 11.8. 🅱️ Zip
+## 12.8. 🅱️ Zip
 
 ```python
 # 167. تلفیق دو ایتِرِیت با یکدیگر تبدیل به یک ایتریت جدید که شامل هردوی آن‌ها می‌باشد
@@ -2210,7 +2255,7 @@ func7_avg_WithIndex()
 
 ```
 
-## 11.9. 🅱️ Iterate_class_example
+## 12.9. 🅱️ Iterate_class_example
 
 ```python
 # 169. example 1️⃣️
@@ -2290,7 +2335,7 @@ for item in User('ali', 60):
 
 ```
 
-# 12. 🅰️ OOP(Object Oriented Programming)
+# 13. 🅰️ OOP(Object Oriented Programming)
 
 * در کلاس‌ها درحین تعریف یک تابع در داخل آن تابع اگر از کلمه کلیدی self استفاده نشود آنگاه متغیرهای کلاس همراه آورده
   نمی‌شود
@@ -2323,7 +2368,7 @@ print("آیا شیء یک نمونه از کلاس است؟", isinstance(obj, Us
 
 ```
 
-## 12.1. 🅱️ NameMangling
+## 13.1. 🅱️ NameMangling
 
 ```python
 # 181. _name    => define local variable
@@ -2358,7 +2403,7 @@ print(
 
 ```
 
-## 12.2. 🅱️ Override
+## 13.2. 🅱️ Override
 
 ```python
 class Animal:
@@ -2384,7 +2429,7 @@ print(worm.makeSound())
 
 ```
 
-## 12.3. 🅱️ Static
+## 13.3. 🅱️ Static
 
 * اگر یک متغیر را در داخل کلاس و خارج توابع تعریف کنیم آنگاه آن را استاتیک خواندنی درنظر می‌گیرد
 * یعنی با تغییر در شیء‌نمونه‌ها ازین پس مقادیر آنها مستقل خواهند شد
@@ -2425,9 +2470,9 @@ print(f"staticData in two [id: {id(two.staticData)} ] ---> {two.staticData}")
 
 ```
 
-# 13. 🅰️ File
+# 14. 🅰️ File
 
-## 13.1. 🅱️ Read
+## 14.1. 🅱️ Read
 
 ```python
 data = open("/etc/passwd")
@@ -2452,7 +2497,7 @@ with open("/etc/passwd", encoding='UTF-8', mode="r") as bFile:
 
 ```
 
-## 13.2. 🅱️ Write
+## 14.2. 🅱️ Write
 
 ```python
 # 196. mode:
@@ -2466,7 +2511,7 @@ with open("/tmp/salam.txt", encoding='UTF-8', mode="w") as bFile:
 
 ```
 
-## 13.3. 🅱️ module os
+## 14.3. 🅱️ module os
 
 ```python
 import os
@@ -2538,7 +2583,7 @@ for data in os.walk(''):  # os.walk('dir',topdown=False) از تویی ترین 
 
 ```
 
-## 13.4. 🅱️ Module Pathlib
+## 14.4. 🅱️ Module Pathlib
 
 ```python
 import pathlib
@@ -2573,7 +2618,7 @@ print(list(data))
 
 ```
 
-## 13.5. 🅱️ Module shutil
+## 14.5. 🅱️ Module shutil
 
 ```python
 import os
@@ -2595,7 +2640,7 @@ import shutil
 
 ```
 
-# 14. 🅰️ JSON
+# 15. 🅰️ JSON
 
 ```python
 import json
@@ -2653,9 +2698,9 @@ def showData():
 
 ```
 
-# 15. 🅰️Database
+# 16. 🅰️Database
 
-## 15.1. 🅱️ SQLlight
+## 16.1. 🅱️ SQLlight
 
 ```python
 import sqlite3
@@ -2697,11 +2742,11 @@ for product in cursor:
     print(product)
 ```
 
-# 16. 🅰️ GUI
+# 17. 🅰️ GUI
 
-## 16.1. 🅱️ tkinter
+## 17.1. 🅱️ tkinter
 
-### 16.1.1. ✅️ Lable
+### 17.1.1. ✅️ Lable
 
 ```python
 from tkinter import *
@@ -2720,7 +2765,7 @@ root.mainloop()
 
 ```
 
-### 16.1.2. ✅️ Button
+### 17.1.2. ✅️ Button
 
 ```python
 from tkinter import *
@@ -2755,7 +2800,7 @@ tkWnd.mainloop()
 
 ```
 
-### 16.1.3. ✅️ Calculator پوسته
+### 17.1.3. ✅️ Calculator پوسته
 
 ```python
 from tkinter import *
@@ -2819,7 +2864,7 @@ root.mainloop()
 
 ```
 
-### 16.1.4. ✅️ Calculator
+### 17.1.4. ✅️ Calculator
 
 ```python
 from tkinter import *
@@ -2939,7 +2984,7 @@ root.mainloop()
 
 ```
 
-### 16.1.5. ✅️ Entry
+### 17.1.5. ✅️ Entry
 
 ```python
 from tkinter import *
@@ -2972,7 +3017,7 @@ root.mainloop()
 
 ```
 
-### 16.1.6. ✅️ Frame
+### 17.1.6. ✅️ Frame
 
 ```python
 from tkinter import *
@@ -3005,11 +3050,11 @@ root.mainloop()
 
 ```
 
-# 17. 🅰️ Regex
+# 18. 🅰️ Regex
 
 * Need to`import re`
 
-## 17.1. 🅱️ dot
+## 18.1. 🅱️ dot
 
 ```shell
 # 237. (.) -> Note: یک کاراکتر
@@ -3024,7 +3069,7 @@ root.mainloop()
 # 246. 
 ```
 
-## 17.2. 🅱️ ^
+## 18.2. 🅱️ ^
 
 ```shell
 # 247. text = 'Toplearn'
@@ -3033,7 +3078,7 @@ root.mainloop()
 # 250. print('this is ok')
 ```
 
-## 17.3. 🅱️  $
+## 18.3. 🅱️  $
 
 ```shell
 # 251. text = 'Toplearn'
@@ -3042,7 +3087,7 @@ root.mainloop()
 # 254. print('this is ok')
 ```
 
-## 17.4. 🅱️ escape
+## 18.4. 🅱️ escape
 
 ```shell
 # 255. text = 'this is a book.'
@@ -3051,7 +3096,7 @@ root.mainloop()
 # 258. print('this is ok')
 ```
 
-## 17.5. 🅱️ set
+## 18.5. 🅱️ set
 
 ```shell
 # 259. text = 'site'
@@ -3060,7 +3105,7 @@ root.mainloop()
 # 262. print('this is ok')
 ```
 
-## 17.6. 🅱️ range
+## 18.6. 🅱️ range
 
 ```shell
 # 263. text = 'c'
@@ -3069,7 +3114,7 @@ root.mainloop()
 # 266. print('this is ok')
 ```
 
-## 17.7. 🅱️ exclude
+## 18.7. 🅱️ exclude
 
 ```shell
 # 267. text = 'siue'
@@ -3078,7 +3123,7 @@ root.mainloop()
 # 270. print('this is ok')
 ```
 
-## 17.8. 🅱️ repeat
+## 18.8. 🅱️ repeat
 
 ```shell
 # 271. text = '09123456789'
@@ -3087,7 +3132,7 @@ root.mainloop()
 # 274. print('this is ok')
 ```
 
-## 17.9. 🅱️ other characters
+## 18.9. 🅱️ other characters
 
 ```shell
 # 275. decimal digits => \d
@@ -3102,7 +3147,7 @@ root.mainloop()
 # 283. print('this is ok')
 ```
 
-## 17.10. 🅱️ email regex
+## 18.10. 🅱️ email regex
 
 ```python
 text = '787jhjkj@test.com'
@@ -3110,7 +3155,7 @@ if re.match('^[\w\.-]+@([\w-]+\.)+[\w-]{2,4}$', text):
     print('email is valid')
 ```
 
-## 17.11. 🅱️ Search
+## 18.11. 🅱️ Search
 
 ```python
 import re
@@ -3141,7 +3186,7 @@ for item in os.walk('/Learning-Concept'):
 
 ```
 
-# 18. 🅰️ Thread
+# 19. 🅰️ Thread
 
 ```python
 import time
@@ -3170,9 +3215,9 @@ print("Done")
 
 ```
 
-# 19. 🅰️ Number
+# 20. 🅰️ Number
 
-## 19.1. 🅱️ Leading Zero
+## 20.1. 🅱️ Leading Zero
 
 ```python
 number = 1
