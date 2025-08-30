@@ -903,10 +903,10 @@ nameRes = ''
 print(nameRes.join(list(reversed("hello"))))
 
 for num in reversed(range(0, 10)):
-    print(num)
+  print(num)
 print("----")
 for num in range(9, -1, -1):
-    print(num)
+  print(num)
 
 ```
 
