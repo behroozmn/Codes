@@ -750,7 +750,6 @@ obj = Behrooz("Ali")
 print(len(obj))
 ```
 
-
 ### 5.3.5. ✅️ `__str__`
 
 * برای خوانایی بیشتر EndUser از یک شیء مورد استفاده قرار می‌گیرد
@@ -771,7 +770,6 @@ class Person:
 person = Person("علی", 25)
 print(person)  # output: Person(name=علی, age=25)
 ```
-
 
 ### 5.3.4. ✅️  `__repr__`
 
@@ -1445,17 +1443,13 @@ print(next(iterName))
 
 ```
 
-## 7.1. 🅱️ Dictionary
+## 7.1. 🅱️ Dictionary `{key1:value1}`
 
 ```python
-# 144. List       → []
-# 145. Dictionary → { key1: value1, key2: value2 }
-# 146. Set        → {} 1-All Items must be uniq (No repeat)
-# 147. 2-without sort
-# 148. 3-without index #اندیس ناپذیر
-# 149. 4-without call # نمی‌توانیم فراخوانی داشته باشیم
-# 150. 
-# 151. Tuple      → () 1-Items cannot change(immutable)
+# syntax: { key1: value1, key2: value2 }
+```
+
+```python
 
 class DictionaryClass:
     Dic1 = {
@@ -1569,19 +1563,14 @@ behrooz.func4(name="behrooz", FamilyName="Mohammadi", born=1369, mobile="0919167
 
 ```
 
-## 7.2. 🅱️ Set
+## 7.2. 🅱️ Set `{}`
+
+* NoRepeat(uniq): مجموعه‌ای که محتوی آن بدون شک تکراری نخواهند شد
+* در آن مرتب سازی معنی ندارد
+*  در آن اندیس جایگاه ندارد(اندیس ناپذیر)
+* درآن قابلیت فراخوانی (Call) وجود ندارد
 
 ```python
-# 166. List       → []
-# 167. Dictionary → { key1: value1, key2: value2 }
-# 168. Set        → {} 1-All Items must be uniq (No repeat)
-# 169. 2-without sort
-# 170. 3-without index #اندیس ناپذیر
-# 171. 4-without call # نمی‌توانیم فراخوانی داشته باشیم
-# 172. 
-# 173. Tuple      → () 1-Items cannot change(immutable)
-
-
 class SetClass:
     _set1 = {3, 5, 't', 'z', 2, 7, 1, 1, 1, 5, 5, 5, 5}
     _set2 = {"ali", "milad", "mohammad", "sara"}
@@ -1621,22 +1610,15 @@ print(SetClass._set5)
 
 ```
 
-## 7.3. 🅱️ Tupple
+## 7.3. 🅱️ Tupple`()`
+
+
+* مجموعه‌ای که محتوی آن قابلیت تغییر نداشته باشد(immutable)
+* 
 
 ```python
-# 174. List       → []
-# 175. Dictionary → { key1: value1, key2: value2 }
-# 176. Set        → {} 1-All Items must be uniq (No repeat)
-# 177. 2-without sort
-# 178. 3-without index #اندیس ناپذیر
-# 179. 4-without call # نمی‌توانیم فراخوانی داشته باشیم
-# 180. 
-# 181. Tuple      → () 1-Items cannot change(immutable)
-
-
 class TuppleClass:
-    _tuple1_1to50 = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27,
-                     28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50)
+    _tuple1_1to15 = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)
     _tuple2 = (1, 2, 2, 3, 4, 5, 2, (4, 5, 3), 3, 3)  # immutable list
     _tuple3 = (1, 2, {2}, (3, 4), [2, 5], 2, (4, 5, 3), 3, 3)
     _tuple4 = tuple([1, 2, 3, 4, 5])
@@ -1664,18 +1646,9 @@ obj.func1(*numbers)  # اگر ستاره نباشد ارور میدهد
 
 ```
 
-## 7.4. 🅱️ List
+## 7.4. 🅱️ List `[]`
 
 ```python
-# 182. List       → []
-# 183. Dictionary → { key1: value1, key2: value2 }
-# 184. Set        → {} 1-All Items must be uniq (No repeat)
-# 185. 2-without sort
-# 186. 3-without index #اندیس ناپذیر
-# 187. 4-without call # نمی‌توانیم فراخوانی داشته باشیم
-# 188. 
-# 189. Tuple      → () 1-Items cannot change(immutable)
-
 class ListClass:
     def __init__(self):
         _list1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
