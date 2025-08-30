@@ -746,48 +746,10 @@ class Behrooz:
         return 20
 
 
-obj = Behrooz("Alii")
+obj = Behrooz("Ali")
 print(len(obj))
 ```
 
-### 5.3.4. ✅️  `__repr__`
-
-* باتعریف این تابع سبب می‌شویم در هنگام پرینت آبجکت تهیه شده از یک کلاس تابع اجرا شود وگرنه آدرس شیء در حافظه نمایش
-  می‌شود
-* یعنی اگر بخواهیم که بچای نمایش دیتای فنی دیتای خوانا به کاربر نمایش داده شود
-* برای نمایش "رسمی" و دقیق‌تر شیء استفاده می‌شود (معمولاً برای دیباگ یا لاگ‌گیری).
-
-```python
-class Person:
-    def __init__(self, _name):  # Constructor
-        self.name = _name
-
-    def __repr__(self) -> str:
-        return f"behroooz class attribute is [{self.name}]"
-
-
-obj = Person("Alii")
-print(obj)
-
-```
-
-* می‌توانید رفتار repr() را در کلاس‌های خود با تعریف متد __repr__() تنظیم کنید
-
-```python
-class Person:
-    def __init__(self, name, age):  # Constructor
-        self.name = name
-        self.age = age
-
-    def __repr__(self):
-        return f"Person(name='{self.name}', age={self.age})"
-
-
-p = Person("Ali", 25)
-print(repr(p))  # Person(name='Ali', age=25)
-print(p)  # Person(name='Ali', age=25)
-# نکته: `print(p)` و `print(repr(p))` خروجی یکسان دارند زیرا print از str استفاده می‌کند، اما str وقتی `__str__` نباشد از repr استفاده می‌کند)
-```
 
 ### 5.3.5. ✅️ `__str__`
 
@@ -808,6 +770,46 @@ class Person:
 
 person = Person("علی", 25)
 print(person)  # output: Person(name=علی, age=25)
+```
+
+
+### 5.3.4. ✅️  `__repr__`
+
+* باتعریف این تابع سبب می‌شویم در هنگام پرینت آبجکت تهیه شده از یک کلاس تابع اجرا شود وگرنه آدرس شیء در حافظه نمایش
+  می‌شود
+* یعنی اگر بخواهیم که بچای نمایش دیتای فنی دیتای خوانا به کاربر نمایش داده شود
+* برای نمایش "رسمی" و دقیق‌تر شیء استفاده می‌شود (معمولاً برای دیباگ یا لاگ‌گیری).
+
+```python
+class Person:
+    def __init__(self, _name):  # Constructor
+        self.name = _name
+
+    def __repr__(self) -> str:
+        return f"behroooz class attribute is [{self.name}]"
+
+
+obj = Person("Ali")
+print(obj)
+
+```
+
+* می‌توانید رفتار repr() را در کلاس‌های خود با تعریف متد __repr__() تنظیم کنید
+
+```python
+class Person:
+    def __init__(self, name, age):  # Constructor
+        self.name = name
+        self.age = age
+
+    def __repr__(self):
+        return f"Person(name='{self.name}', age={self.age})"
+
+
+p = Person("Ali", 25)
+print(repr(p))  # Person(name='Ali', age=25)
+print(p)  # Person(name='Ali', age=25)
+# نکته: `print(p)` و `print(repr(p))` خروجی یکسان دارند زیرا print از str استفاده می‌کند، اما str وقتی `__str__` نباشد از repr استفاده می‌کند)
 ```
 
 ### 5.3.3. ✅️  `__add__`
@@ -1736,7 +1738,7 @@ def list_functions(self, mylist):
     last_item = mylist.pop()
     length = {len(mylist)}
     mylist.extend(["ali", "hassan", "hossein"])
-    mylist.append(["alii", "hassann", "hosseinn"])
+    mylist.append(["ali", "hassann", "hosseinn"])
     mylist.insert(-1, "Behrooz")
     mylist.remove(13)
     # mylist.clear()  # remove all elements
