@@ -181,26 +181,31 @@ deactivate #غیر فعال سازی و خروج از محیط مجازی
 * این قابلیت در پایتون وجود دارد که انواع نوع را در یک متغیر وارد نماییم
 * مقدار None برابر است با Empty یعنی اگر مقدار `myCount = None` را دیدیم یعنی مقدار myCount برابر است با Empty
 * توسط دستور input می‌توان مقدار اولیه برای یک متغیر قرار داد.تابع raw_input در نسخه پایتون۲ بود که منسوخ شد
-   ```python
-   username = "behrooz"
-   username = input("Insert username: ")
-   ```
+
+```python
+username = "behrooz"
+username = input("Insert username: ")
+```
+
 * اگر در تابع print یک fقبل از علامت کوتیشن قرار دهید آنگاه مقادیر قابلیت تفکیک پیدا می‌کنند
-   ```python
-   # 1️⃣️
-   BoolData = True
-   print(f"the BoolData is {BoolData}") # the BoolData is True
-   print("the BoolData is {BoolData}")  # the BoolData is {BoolData}
-   # 2️⃣️
-   x, y = 400, 500
-   print(f"sum is : {x + y}")
-   print(f"multiply 2 and 6 is : {2 * 6}")
-   ```
+
+```python
+# 1️⃣️
+BoolData = True
+print(f"the BoolData is {BoolData}")  # the BoolData is True
+print("the BoolData is {BoolData}")  # the BoolData is {BoolData}
+# 2️⃣️
+x, y = 400, 500
+print(f"sum is : {x + y}")
+print(f"multiply 2 and 6 is : {2 * 6}")
+```
+
 * می‌توان در خروجی چند متغیر را الحاق کرد
-   ```python
-   username = "behrooz"
-   print("Name: " + username) # Name: behrooz
-   ```
+
+```python
+username = "behrooz"
+print("Name: " + username)  # Name: behrooz
+```
 
 ## 5.2. 🅱️ if
 
@@ -365,80 +370,58 @@ if not ((2 < age < 8) or age >= 65):
     print("you should pay 10 dollars")
 ```
 
-### 5.5.3. ✅️ Ternary Operator
+### 5.5.3. ✅️ TernaryOperator(اپراتورهای‌سه‌گانه)
+
+* در برخی زبان‌های برنامه‌نویسی هستند
+* به شما امکان میدهد که یک بلوک را ساده نمایید
+* `syntax: [value_if_true] if [condition] else [value_if_false]`
+    * قسمت value_if_true: مقداری که اگر شرط True باشد باید برگردانده شود
+    * فسمت condition: شرط
+    * قسمت value_if_false: مقداری که اگر شرط False باشد باید برگردانده شود
 
 ```python
-# ternary:A ternary operator exists in some programming languages, and it allows you to shorten a simple If-Else block. It takes in 3 or more operands:
-# syntax: [value_if_true] if [condition] else [value_if_false]
-# │                  │              │
-# │                  │              └──> A value that's returned if the condition evaluates to False.
-# │                  │
-# │                  └─> A boolean condition that has to be satisfied to return value if true.
-# │
-# └──> A value that's returned if the condition evaluates to True.
+# Example1️⃣️: 
+a, b = 10, 20
+min = a if a < b else b
+print(min)  # Output: 10
 
-def condition1():
-    a, b = 10, 20
-    min = a if a < b else b
-    print(min)
+# Example2️⃣️: True:[Go home], condition1:[age<16], False:[{'Not sure...' if 16 <= age < 18 else 'Welcome'} ---> {True:[Not sure],condition:[16<=age<18],False:[Welcome]}] 
+age = 17
+result = 'Go home.' if age < 16 else 'Not sure' if 16 <= age < 18 else 'Welcome'
+print(result)  # Output: Not sure
 
+# Example3️⃣️: Python: [False=0], [True=1]
+a, b = 100, 20
 
-def condition2():
-    age = 17
-    outcome = 'Go home.' if age < 16 else 'Not sure...' if 16 <= age < 18 else 'Welcome'
-    print(outcome)
+print((a, b)[a < b])  # 1️⃣️(a,b):Tuple 2️⃣️[a < b]:condition --> [a < b]=False --> (a, b)[False] --> (a, b)[0]=a --> (100, 20)[0]=100 --> Output:100
+print((a, b)[a > b])  # 1️⃣️(a,b):Tuple 2️⃣️[a > b]:condition --> [a > b]=True ---> (a, b)[True] ---> (a, b)[1]=b --> (100, 20)[1]=20 ---> Output:20
+print((b, a)[a < b])  # 1️⃣️(b,a):Tuple 2️⃣️[a < b]:condition --> [a < b]=False --> (b, a)[False] --> (b, a)[0]=b --> (20, 100)[0]=20 ---> Output:20
+print((b, a)[a > b])  # 1️⃣️(b,a):Tuple 2️⃣️[a > b]:condition --> [a > b]=True ---> (b, a)[True] ---> (b, a)[1]=a --> (20, 100)[1]=100 --> Output:100
 
+# Example4️⃣️: Python: [False=0], [True=1]
+a, b = 10, 20
+print((lambda: b, lambda: a)[a < b]())  # (lambda:b, lambda:a)[True=1] -->  function: lambda:a ---> Output: 10
 
-def condition3():
-    a, b = 100, 20
-    print((b, a)[a < b])
+# Example5️⃣️:
+a, b = 10, 20
+print("Both a and b are equal" if a == b else "a is greater than b"
+if a > b else "b is greater than a")
+# Output: b is greater than a
 
-
-def condition4():
-    a, b = 10, 20
-    print((lambda: b, lambda: a)[a < b]())
-
-
-def condition5():
-    a, b = 10, 20
-    print("Both a and b are equal" if a == b else "a is greater than b"
-    if a > b else "b is greater than a")
-
-
-def condition5_Alternative():
-    a, b = 10, 20
-    if a != b:
-        if a > b:
-            print("a is greater than b")
-        else:
-            print("b is greater than a")
+# Example5️⃣️: هردو مثال یکسان هستند
+a, b = 10, 20
+if a != b:
+    if a > b:
+        print("a is greater than b")
     else:
-        print("Both a and b are equal")
+        print("b is greater than a")
+else:
+    print("Both a and b are equal")
+# Output: b is greater than a
 
-
-def condition6():
-    a, b = 5, 7
-    print(a, "is greater") if (a > b) else print(b, "is Greater")
-
-
-#⇉ a if condition  else b
-condition1()
-condition6()
-
-print("---------Step 2------------")
-#⇉ a if condition1 else b if condition2 else c
-condition2()
-
-#⇉ print({True: a, False: b} [a < b])
-condition3()
-
-#⇉ Lambda
-condition4()
-
-#⇉ nested ternary operator
-condition5()
-condition5_Alternative()
-
+# Example6️⃣️:
+a, b = 5, 7
+print(a, "is greater") if (a > b) else print(b, "is Greater")  # output: 7 is Greater
 ```
 
 # 6. 🅰️ exception
@@ -474,11 +457,11 @@ finally:
 ## 6.2. 🅱️ Error-Raise
 
 ```python
-#print(test)
-#None = 1
+# print(test)
+# None = 1
 
-#raise IndexError('throw index error')
-#raise ValueError('invalid value')
+# raise IndexError('throw index error')
+# raise ValueError('invalid value')
 
 
 def print_with_custom_color(text, color):
@@ -500,21 +483,21 @@ print_with_custom_color("Behrooz", 'redd')
 ## 6.3. 🅱️ Debug(pdb)
 
 ```python
-#import pdb
+# import pdb
 
-#pdb.set_trace()
+# pdb.set_trace()
 
-#number1 = int(input('please enter a number: '))
-#number2 = int(input('please enter a number: '))
-#result = number1 + number2
-#print(f"result is {result}")
+# number1 = int(input('please enter a number: '))
+# number2 = int(input('please enter a number: '))
+# result = number1 + number2
+# print(f"result is {result}")
 
 
-#common pdb commands
-#l -> your commands list
-#n -> next line
-#c -> continue -> finished debugging
-#p -> print
+# common pdb commands
+# l -> your commands list
+# n -> next line
+# c -> continue -> finished debugging
+# p -> print
 
 def add_numbers(a, b, c, d):
     import pdb;
@@ -529,26 +512,44 @@ print(res)
 
 # 7. 🅰️ Function
 
-* اگر یک تابع در داخل یک کلاس تعریف گردد آنگاه برای اینکه به مقادیر کلاس دسترسی داشته باشد باید آرگومان اول آن را کلمه
-  کلیدی self قرار دهید
+* اگر یک تابع در داخل یک کلاس تعریف گردد آنگاه برای اینکه به مقادیر کلاس دسترسی داشته باشد باید آرگومان اول آن را کلمه کلیدی self قرار دهید
+* کاراکترهای پرانتز باز و بسته  `()` عملگر فراخوانی تابع یا call operator است.
 
 بدنه یک تابع به فرم زیر می‌باشد
 
 ```python
+# Example1️⃣️: 
 def exponent(num, power=2):
     return num ** power
 
 
 print(exponent(5))  # output: 25
-```
 
-```python
+
+# Example2️⃣️: 
 def showFullName(first, last):
     return f"{first} {last}"
 
 
 print(showFullName("MohammadiNasab", "Behrooz"))
 print(showFullName(last="MohammadiNasab", first="Behrooz"))  # تغییر در ترتیب پارامتر ورودی
+
+
+# Example3️⃣️:
+a = 10
+def f():
+    return a
+
+f()         # Output: 10
+f           # Output: <function f at 0x7f89357a5580>
+print(f)    # Output: <function f at 0x7f89357a5580>
+print(f())  # Output: 10
+
+# lambda
+(lambda: a)()         # Output: 10
+(lambda: a)           # Output: <function <lambda> at 0x7f89357677e0>
+print((lambda: a))    # Output: <function <lambda> at 0x7f892fe12c00>
+print((lambda: a)())  # Output: 10
 ```
 
 ## 7.1. 🅱️ Lambda
@@ -557,18 +558,18 @@ print(showFullName(last="MohammadiNasab", first="Behrooz"))  # تغییر در �
 * به «توابع یک خطی» یا «Annonymous function» معروف هستند
 
 ```python
-#Syntax is:
-#lambda arg1, arg2: arg1 * arg2 + 10
-#lambda arg1      : value_if_true if condition  else  value_if_false
-#lambda arg1      : value_if_true if condition1 else  (value_if_true2 if condition2 else value_if_false)
+# Syntax is:
+# lambda arg1, arg2: arg1 * arg2 + 10
+# lambda arg1      : value_if_true if condition  else  value_if_false
+# lambda arg1      : value_if_true if condition1 else  (value_if_true2 if condition2 else value_if_false)
 ```
 
 ```python
-#Example1️⃣️: 
+# Example1️⃣️: 
 function1 = lambda arg1, arg2: arg1 * arg2 + 10
 print(function1(5, 2))  # output: 20
 
-#Example2️⃣️: 
+# Example2️⃣️: 
 function2 = lambda x: "Positive" if x > 0 else ("Zero" if x == 0 else "Negative")
 print(function2(-5))  # Output: Negative
 print(function2(0))  # Output: Zero
@@ -591,7 +592,7 @@ print(function2(4))  # Output: Positive
 ### 7.2.1. ✅️ PositionalParameters
 
 ```python
-#Example1️⃣️
+# Example1️⃣️
 def greet(name, age):
     print(f"Hi {name}، you are {age} years old")
 
@@ -599,7 +600,7 @@ def greet(name, age):
 greet("Ali", 25)  # Output: Hi Ali، you are 25 years old
 
 
-#Example2️⃣️
+# Example2️⃣️
 def add_numbers(a, b, c):
     return a + b + c
 
@@ -615,7 +616,7 @@ print(result)  # Output: 60
 * args یک تاپل است و Immutable (غیرقابل تغییر) است
 
 ```python
-#Example1️⃣️
+# Example1️⃣️
 def sum_all(*args):
     total = 0
     for num in args:
@@ -627,17 +628,17 @@ print(sum_all(1, 2, 3, 4))  # Output: 10
 print(sum_all(5, 10))  # Output: 15
 
 
-#Example2️⃣️
+# Example2️⃣️
 def print_names(*names):
     for name in names:
         print(f"ٔName: {name}")
 
 
 print_names("Zeinab", "Mohadeseh", "Tasnim")
-#Output:
-#Name: Zeinab
-#Name: Mohadeseh
-#Name: Tasnim
+# Output:
+# Name: Zeinab
+# Name: Mohadeseh
+# Name: Tasnim
 ```
 
 ### 7.2.3. ✅️ DefaultParameters
@@ -645,7 +646,7 @@ print_names("Zeinab", "Mohadeseh", "Tasnim")
 اگر مقداری به پارامتر داده نشود، از مقدار پیش‌فرض استفاده می‌شود
 
 ```python
-#Example1️⃣️
+# Example1️⃣️
 def introduce(name, job="Unknown"):
     print(f"I am {name}، my job is {job}.")
 
@@ -654,7 +655,7 @@ introduce("Zahra")  # Output: I am Zahra ، my job is Unknown.
 introduce("Hassan", "Engineer")  # Output: I am Hassan، my job is Engineer.
 
 
-#Example2️⃣️
+# Example2️⃣️
 def power(base, exponent=2):
     return base ** exponent
 
@@ -668,7 +669,7 @@ print(power(3, 3))  # Output: 3^3 = 27
 با `**kwargs` می‌توان ورودی‌های نام‌دار متغیر را به صورت دیکشنری دریافت کرد.
 
 ```python
-#Example1️⃣️
+# Example1️⃣️
 def user_info(**kwargs):
     for key, value in kwargs.items():
         print(f"{key}: {value}")
@@ -677,12 +678,12 @@ def user_info(**kwargs):
 user_info(name="Behrooz", age=30, city="Tehran")
 
 
-#Output:
-#name: Behrooz
-#age: 30
-#city: Tehran
+# Output:
+# name: Behrooz
+# age: 30
+# city: Tehran
 
-#Example2️⃣️
+# Example2️⃣️
 def create_profile(**details):
     profile = {}
     for key, value in details.items():
@@ -707,12 +708,12 @@ def full_function(a, b, *args, c=10, **kwargs):
 
 full_function(1, 2, 3, 4, 5, c=50, name="Sarah", age=25)
 
-#Output:
-#a: 1
-#b: 2
-#*args: (3, 4, 5)
-#c (default): 50
-#**kwargs: {'name': 'Sarah', 'age': 25}
+# Output:
+# a: 1
+# b: 2
+# *args: (3, 4, 5)
+# c (default): 50
+# **kwargs: {'name': 'Sarah', 'age': 25}
 ```
 
 ## 7.3. 🅱️ __NAME__
@@ -831,7 +832,7 @@ class Person:
 p = Person("Ali", 25)
 print(repr(p))  # Person(name='Ali', age=25)
 print(p)  # Person(name='Ali', age=25)
-#نکته: `print(p)` و `print(repr(p))` خروجی یکسان دارند زیرا print از str استفاده می‌کند، اما str وقتی `__str__` نباشد از repr استفاده می‌کند)
+# نکته: `print(p)` و `print(repr(p))` خروجی یکسان دارند زیرا print از str استفاده می‌کند، اما str وقتی `__str__` نباشد از repr استفاده می‌کند)
 ```
 
 ### 7.3.5. ✅️ `__str__`
@@ -867,6 +868,7 @@ abs(-3.14)  # Output: 3.14
 abs(3 - 4j)  # Output: 5.0 (قدر مطلق یک عدد مختلط)
 
 import math
+
 math.abs(-5)  # ❌️ AttributeError: module 'math' has no attribute 'abs'
 ```
 
@@ -877,45 +879,45 @@ math.abs(-5)  # ❌️ AttributeError: module 'math' has no attribute 'abs'
 * max:پیدا کردن بزرگترین مقدار در یک دنباله یا بین چند عدد
 
 ```python
-#syntax:
-#min(iterable, *iterables, key, default)
-#max(iterable, *iterables, key, default)
+# syntax:
+# min(iterable, *iterables, key, default)
+# max(iterable, *iterables, key, default)
 
-#min(arg1, arg2, *args, key)
-#max(arg1, arg2, *args, key)
+# min(arg1, arg2, *args, key)
+# max(arg1, arg2, *args, key)
 ```
 
 مثال‌ها
 
 ```python
-#Example1️⃣️: on list
+# Example1️⃣️: on list
 numbers = [4, 1, 7, 3, 9]
 print(min(numbers))  # Output: 1
 print(max(numbers))  # Output: 9
 
-#Example2️⃣️: on multiple number
+# Example2️⃣️: on multiple number
 print(min(10, 5, 8, 3))  # Output: 3
 print(max(10, 5, 8, 3))  # Output: 10
 
-#Example3️⃣️: on string(بر اساس ترتیب الفبایی)
+# Example3️⃣️: on string(بر اساس ترتیب الفبایی)
 letters = ['b', 'a', 'd', 'c']
 print(min(letters))  # Output: 'a'
 print(max(letters))  # Output: 'd'
 
-#Example4️⃣️: On words
+# Example4️⃣️: On words
 words = ['apple', 'hi', 'banana']
 print(min(words, key=len))  # Output: 'hi' (کوتاه‌ترین کلمه)
 print(max(words, key=len))  # Output: 'banana' (بلند کلمه)
 
-#Example5️⃣️: set Default
+# Example5️⃣️: set Default
 print(min([], default=0))  # Output: 0
 
-#Example6️⃣️: set Default
+# Example6️⃣️: set Default
 users = []  # Empty user
 youngest_age = min((user['age'] for user in users), default=None)
 print(youngest_age)  # Output: None
 
-#Example7️⃣️: set Default
+# Example7️⃣️: set Default
 data = []
 result = max(data, default=0)
 print(result)  # Output: 0
@@ -924,12 +926,12 @@ print(result)  # Output: 0
 پارامتر `key`: این پارامتر یک تابع است که مشخص می‌کند بر اساس چه معیاری مقایسه انجام شود
 
 ```python
-#Example1️⃣️
+# Example1️⃣️
 list1 = ['mohammad', 'milad', 'akbar', 'sara', 'iman', 'ali']
 print(f"min lenght in {list(list1)} ---> {min(list1, key=lambda n: len(n))}")  # Output: Ali ------> مینیمم را برحسب تعداد کاراکتر درنظر بگیر
 print(f"max lenght in {list(list1)} ---> {max(list1, key=lambda n: len(n))}")  # Output: mohammad -> ماکزیمم را برحسب تعداد کاراکتر درنظر بگیر
 
-#Example2️⃣️
+# Example2️⃣️
 students = [
     {'name': 'Ali', 'age': 20},
     {'name': 'Reza', 'age': 18},
@@ -960,8 +962,8 @@ print(oldest)  # Output: {'name': 'Sara', 'age': 22}
 * نمی‌توان از اعداد اعشاری استفاده کرد
 
 ```python
-#Syntax: range(start, stop, step)
-#stop: الزاما باید وارد شود
+# Syntax: range(start, stop, step)
+# stop: الزاما باید وارد شود
 ```
 
 ```python
@@ -1030,11 +1032,11 @@ print(round(2.675, 2))  # ممکن است خروجی: 2.67 باشد، نه 2.68!
 * بین گرد کردن و قطع کردن فرق هست
 
 ```python
-#Example1️⃣️: این کار قطع می‌کند، نه گرد می‌کند
+# Example1️⃣️: این کار قطع می‌کند، نه گرد می‌کند
 x = 3.14159
 truncated = int(x * 100) / 100  # 3.14
 
-#Example2️⃣️: این کار گرد می‌کند، نه قطع می‌کند
+# Example2️⃣️: این کار گرد می‌کند، نه قطع می‌کند
 price = 19.87654
 print(f"قیمت: {round(price, 2)} تومان")  # خروجی: قیمت: 19.88 تومان
 ```
@@ -1063,19 +1065,19 @@ print(round(5.5))  # خروجی: 6
     * repr(x): دقیقاً نشان می‌دهد که رشته چگونه نوشته شده (با \n به عنوان کاراکتر فرار).
 
 ```python
-#Example 1️⃣️
+# Example 1️⃣️
 x = "Hello\nWorld"
 print(str(x))  # Output: Hello
-#World
+# World
 
 print(repr(x))  # Output: 'Hello\nWorld'
 
-#Example 2️⃣️:
+# Example 2️⃣️:
 x = 3.141592653589793238
 print(str(x))  # Output:3.141592653589793
 print(repr(x))  # Output:3.141592653589793 سعی می‌کند دقت بیشتری حفظ کند
 
-#Example 3️⃣️:
+# Example 3️⃣️:
 lst = ['apple', 'banana\nsweet', 42]
 print(str(lst))  # Output:['apple', 'banana\nsweet', 42]
 print(repr(lst))  # Output:['apple', 'banana\\nsweet', 42]
@@ -1096,7 +1098,7 @@ class Person:
 p = Person("Ali", 25)
 print(repr(p))  # Person(name='Ali', age=25)
 print(p)  # Person(name='Ali', age=25)
-#نکته از قطعه کد بالا: `print(p)` و `print(repr(p))` خروجی یکسان دارند زیرا print از str استفاده می‌کند، اما str وقتی `__str__` نباشد از repr استفاده می‌کند)
+# نکته از قطعه کد بالا: `print(p)` و `print(repr(p))` خروجی یکسان دارند زیرا print از str استفاده می‌کند، اما str وقتی `__str__` نباشد از repr استفاده می‌کند)
 
 ```
 
@@ -1231,12 +1233,12 @@ print(math.degrees(-math.pi / 3))  # Output: -60.0
 ```python
 import math
 
-#Example 1️⃣️
+# Example 1️⃣️
 radians = math.pi / 3
 degrees = radians * (180 / math.pi)
 print(degrees)  # Output: 60.0
 
-#Example 2️⃣️: فرض کن می‌خوای زاویه مقابل یک ضلع را پیدا کنی
+# Example 2️⃣️: فرض کن می‌خوای زاویه مقابل یک ضلع را پیدا کنی
 opposite = 3
 adjacent = 4
 angle_radians = math.atan(opposite / adjacent)  # تانژانت معکوس
@@ -1273,14 +1275,14 @@ print(math.radians(-60))  # Output: -1.0471975511965976 → -π/3
 ```python
 import math
 
-#Example 1️⃣️
+# Example 1️⃣️
 degrees = 60
 radians = degrees * (math.pi / 180)
 print(radians)  # -----------> Output: 1.0471975511965976
 print(math.radians(60))  # --> Output: 1.0471975511965976
 
-#Example 2️⃣️: فرض کن می‌خوای سینوس 30 درجه را حساب کنیم
-#Note:❌ اگر مستقیماً بنویسی math.sin(30)، عدد 30 را رادیان فرض می‌کند و جواب اشتباه می‌دهد!
+# Example 2️⃣️: فرض کن می‌خوای سینوس 30 درجه را حساب کنیم
+# Note:❌ اگر مستقیماً بنویسی math.sin(30)، عدد 30 را رادیان فرض می‌کند و جواب اشتباه می‌دهد!
 angle_degrees = 30
 angle_radians = math.radians(angle_degrees)
 print(math.sin(angle_radians))  # --> Output: ✅️ 0.5
@@ -2529,7 +2531,7 @@ func7_avg_WithIndex()
 ## 9.9. 🅱️ Iterate_class_example
 
 ```python
-#example 1️⃣️
+# example 1️⃣️
 class MyIterator:
     def __init__(self, limit):
         self.limit = limit
@@ -2552,7 +2554,7 @@ for number in my_iter:
     print(number)
 
 
-#example 2️⃣️
+# example 2️⃣️
 class Counter:
     def __init__(self, start, end, step=1):
         self.current = start
@@ -2575,7 +2577,7 @@ print("------")
 for num in Counter(10, 20): print(num)
 
 
-#example 3️⃣️
+# example 3️⃣️
 class User:
     ActiveUsers = []
 
