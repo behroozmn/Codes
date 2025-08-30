@@ -375,7 +375,7 @@ print(repr(lst))  # Output:['apple', 'banana\\nsweet', 42]
 
 ```python
 class Person:
-    def __init__(self, name, age):
+    def __init__(self, name, age): # Constructor
         self.name = name
         self.age = age
 

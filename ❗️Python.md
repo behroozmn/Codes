@@ -735,11 +735,11 @@ obj.show_data()
 
 ### 5.3.2. ✅️ `__len__`
 
-تنها درصورتی می‌توان از تابع len استفاده کرد که تابع `__len__` از طریق برنامه‌نویس یا ارث‌بری در کلاس تعریف شده باشد 
+تنها درصورتی می‌توان از تابع len استفاده کرد که تابع `__len__` از طریق برنامه‌نویس یا ارث‌بری در کلاس تعریف شده باشد
 
 ```python
 class Behrooz:
-    def __init__(self, _name):
+    def __init__(self, _name): # Constructor
         self.name = _name
 
     def __len__(self):
@@ -750,47 +750,90 @@ obj = Behrooz("Alii")
 print(len(obj))
 ```
 
-### 5.3.3. ✅️  `__add__` و `__mul__` و `__truediv__` و `__sub__`
+### 5.3.3. ✅️  `__add__`
 
 ```python
-class Behrooz:
-    def __init__(self, _name):
+class Person:
+    def __init__(self, _name): # Constructor
         self.name = _name
 
-    # بجای عملگر  + استفاده می‌شود
+    # بجای عملگر + استفاده می‌شود
     def __add__(self, other):
         return f"Need to plus with {self.name} or {other}"
+
+
+obj = Person("Alii")
+
+print(obj)
+print(obj + "salam")
+```
+
+### 5.3.3. ✅️   `__mul__`
+
+```python
+class Person:
+    def __init__(self, _name): # Constructor
+        self.name = _name
 
     # بجای عملگر *استفاده می‌شود
     def __mul__(self, other):
         return f"Need to multiplier with {self.name} or {other}"
 
+
+obj = Person("Alii")
+
+print(obj)
+print(obj * "salam")
+
+
+```
+
+### 5.3.3. ✅️  `__truediv__`
+
+```python
+class Person:
+    def __init__(self, _name): # Constructor
+        self.name = _name
+
     # بجای عملگر / استفاده می‌شود
     def __truediv__(self, other):
         return f"Need to division with {self.name} or {other}"
+
+
+obj = Person("Alii")
+
+print(obj)
+print(obj / "salam")
+
+```
+
+### 5.3.3. ✅️   `__sub__`
+
+```python
+class Person:
+    def __init__(self, _name): # Constructor
+        self.name = _name
 
     # بجای عملگر - استفاده می‌شود
     def __sub__(self, other):
         return f"Need to minus with {self.name} or {other}"
 
 
-obj = Behrooz("Alii")
+obj = Person("Alii")
 
 print(obj)
-print(obj + "salam")
 print(obj - "salam")
-print(obj * "salam")
-print(obj / "salam")
+
 
 ```
 
-| Function               | Oprator |
-|------------------------|---------|
-| __isub__(self,p2)      | -=      | 
-| __imul__(self,p2)      | *=      | 
-| __itruediv__(self,p2)  | \=      | 
-| __floordiv__(self,p2)  | \\      | 
-| __ifloordiv__(self,p2) | \=      | 
+| Function                | Oprator |
+|-------------------------|---------|
+| `__isub__(self,p2)`     | `-=`    | 
+| `__imul__(self,p2)`     | `*=`    | 
+| `__itruediv__(self,p2)` | `\=`    | 
+| `__floordiv__(self,p2)` | `\\`    | 
+| `s`                     | `\=`    | 
 
 ### 5.3.4. ✅️  `__repr__`
 
@@ -801,7 +844,7 @@ print(obj / "salam")
 
 ```python
 class Behrooz:
-    def __init__(self, _name):
+    def __init__(self, _name): # Constructor
         self.name = _name
 
     def __repr__(self) -> str:
@@ -817,7 +860,7 @@ print(obj)
 
 ```python
 class Person:
-    def __init__(self, name, age):
+    def __init__(self, name, age): # Constructor
         self.name = name
         self.age = age
 
@@ -840,7 +883,7 @@ print(p)  # Person(name='Ali', age=25)
 
 ```python
 class Person:
-    def __init__(self, name, age):
+    def __init__(self, name, age): 
         self.name = name
         self.age = age
 
