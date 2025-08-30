@@ -872,10 +872,10 @@ def func1():
 def func2():
     print("func2")
 
-class func3:
+class class1:
     print("func3")
 
-__all__ = ['func1', 'func3']
+__all__ = ['func1', 'class1']
 ```
 
 حالا وقتی بنویسید:
