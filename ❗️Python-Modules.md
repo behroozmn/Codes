@@ -609,7 +609,9 @@ ascii_art = colored(ascii_art, color="red")
 print(ascii_art)
 ```
 
-# 6. 🅰️ termcolor
+# 6. 🅰️ Environment
+
+## 8.1. 🅱️ termcolor
 
 * ماژولی برای رنگ آمیزی خروجی
 
@@ -625,7 +627,9 @@ print(termcolor.colored('python course', color="cyan"))
 
 ```
 
-# 7. 🅰️ JsonResponse
+# 7. 🅰️ Web
+
+## 8.1. 🅱️ JsonResponse
 
 ```
 return JsonResponse(Items.to_dict(), safe=False)
@@ -637,9 +641,9 @@ return JsonResponse(Items.to_dict(), safe=False)
         * آنگاه اجازه می‌دهیم هر نوع object قابل سریالایز شدن JSON (مثل لیست , namedtuple , custom class ) را هم برگردانیم.
         * در این حالت، JsonResponse فرض می‌کند که شما مسئول مدیریت خروجی هستید.
 
-# 8. 🅰️ requests
+## 8.1. 🅱️ requests
 
-## 8.1. 🅱️ Get
+### ✅️ Get
 
 ```python
 import requests
@@ -662,7 +666,7 @@ print(f"[res2.json()]: {res2.json()}")
 
 ```
 
-## 8.2. 🅱️ Post
+### ✅️ Post
 
 ```python
 import requests
@@ -678,7 +682,7 @@ for data in res1.json():
 
 ```
 
-# 9. 🅰️ BaseHTTPRequestHandler and HTTPServer
+## 8.1. 🅱️ BaseHTTPRequestHandler and HTTPServer
 
 ```python
 from http.server import BaseHTTPRequestHandler, HTTPServer
