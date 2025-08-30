@@ -1,12 +1,14 @@
 <div dir="rtl">
 
-# 1. 🅰️ `__init__.py`
+# 1. 🅰️ PreDefine modules
+
+## 1.1. 🅱️ `__init__.py`
 
 * یک فولدر(دایرکتوری) حاوی فایل __init__.py بعنوان یک package(بسته) شناخته می‌شود و بدون این فایل پایتون نمی‌تواند دایرکتوری را به‌عنوان یک بسته شناسایی کند
 * هرگاه یک بسته(ماژول) import شود، آنگاه کد داخل این فایل به منظور راه‌انداز(پیکربندی ماژول‌ها) اجرا می‌شود
 * وقتی یک package ایمپورت می‌شود، فایل __init__.py اولین چیزی است که اجرا می‌شود
 
-## 1.1. 🅱️ مزیت‌های Package بودن یک دایرکتوری
+### 1.1.1. ✅️ advantages of package directory
 
 * فولدر می‌تواند شامل ماژول‌های دیگر یعنی FileName.py های دیگر باشد
 * فولدر می‌تواند حاوی sub-packageهای دیگر باشد
@@ -19,7 +21,7 @@
 * یک فولدر حتی بدون __init__.py هم می‌تواند package باشد (implicit namespace package) که در پایتون 3.3 به بعد ممکن شده است اما در این صورت import نسبی (from . import ...) کار نمی‌کند.
 * نمی‌توانید از __all__ کدهای اولیه‌سازی استفاده کنید.
 
-## 1.2. 🅱️ Example
+### 1.1.2. ✅️ Example
 
 فرض کنید دایرکتوری حاوی نظام و ساختارفایل زیر است
 
@@ -47,7 +49,7 @@ from . import module_b  # import نسبی
 
 💡 بدون __init__.py، این . (نقطه) در import نسبی کار نمی‌کند.
 
-## 1.3. 🅱️ کدنویسی دراین فایل
+### 1.1.3. ✅️ FileContent
 
 * هر بار این بسته مورد استفاده قرار بگیرد آنگاه لاگ بیاندازد که فلان بسته مورد استفاده قرار گرفته است
 
@@ -55,6 +57,90 @@ from . import module_b  # import نسبی
 print("Package is being imported!")
 ```
 
+## 1.2. 🅱️ `__all__`
+
+* یک لیست از رشته‌ها (strings)  است که نام متغیرها، توابع، یا کلاس‌هایی هستند که وقتی از یک ماژول یا package از طریق import * استفاده می‌کنید، وارد می‌شوند
+* قابلیت تعریف کردن در ۱-فایل‌های .py (ماژول) و ۲-در فایل __init__.py (package)
+
+📌️ **دلایل استفاده**
+
+* کنترل دقیق بر روی آنچه قابل ایمپورت است
+    * هنگام عدم استفاده از __all__ درهنگام import * تمام نام‌های عمومی یا PublicNames داخل ماژول ایمپورت می‌شوند
+    * منظور از PublicNames ها مواردی است که با آندرلاین شروع **نمی‌شوند** (توابع یا کلاس‌ها و متغیرها)
+* عدم آلودگی namespace
+    * وقتی import * می‌کنید، تمام نام‌ها به scope فعلی وارد می‌شوند. این می‌تونه باعث تداخل نام‌ها بشه.
+    * با استفاده از __all__ می‌تونی دقیق مشخص کنی که چه چیزهایی قراره وارد بشن.
+
+📌️ **نحوه تعریف:**: * عبارت __all__ حتما باید در انتها تعریف شود
+
+فرض کنید بسته mymodule.py با محتوی زیر دارد
+
+```python
+def func1():
+    print("func1")
+
+
+def func2():
+    print("func2")
+
+
+class class1:
+    print("func3")
+
+
+__all__ = ['func1', 'class1']
+```
+
+حالا وقتی بنویسید:
+
+```python
+from mymodule import *
+```
+
+فقط func1 و func3 ایمپورت می‌شوند.
+
+## 1.3. 🅱️ Install Offline Modules
+
+### 1.3.1. ✅️ [install from local Archive](https://packaging.python.org/en/latest/tutorials/installing-packages/#installing-from-local-archives)
+
+#### 1.3.1.1. ❇️ روش اول
+
+```shell
+mkdir /tmp/download
+vim /tmp/requirements.txt
+- wadllib==1.3.6
+- webcolors==1.11.1
+- webencodings==0.5.1
+- websocket-client==1.2.3
+- Werkzeug==2.2.2
+cd download
+pip download -r /tmp/requirements.txt
+python3 -m pip install --no-index --find-links=file:///tmp/download wadllib webcolors webencodings websocket-client Werkzeug
+
+```
+
+#### 1.3.1.2. ❇️ روش دوم
+
+```shell
+python3 -m pip install ./downloads/SomeProject-1.0.4.tar.gz
+python3 -m pip install --no-index --find-links=file:///local/dir/ SomeProject
+python3 -m pip install --no-index --find-links=/local/dir/ SomeProject
+python3 -m pip install --no-index --find-links=relative/dir/ SomeProject
+```
+
+#### 1.3.1.3. ❇️ روش سوم
+
+* برای نصب دستی یک بسته ابتدا آن را دانلود کرده و سپس به پوشه مورد نظر رفته و مطابق دستور زیر نصب نمایید(به فایل توضیحی همراه بسته توجه گردد)
+    ```python
+    python setup.py install --user --prefix=~
+    ```
+
+### 1.3.2. ✅️ Installer
+
+* تولید یک فایل اجرایی برنامه پایتون(اکسپورت فایل اجرایی از تمام پکیج‌ها و لایبرری‌ها و مشتقات برنامه نوشته شده)
+    ```python
+    pyinstaller --onefile --windowed <MainScript.py>
+    ```
 
 # 2. 🅰️ Built-in functions
 
@@ -302,7 +388,7 @@ print(p)  # Person(name='Ali', age=25)
 
 ```
 
-# 3. 🅰️  MATH functions
+# 3. 🅰️ Math module
 
 | ویژگی                        | `math`       | `cmath`                                     |
 |------------------------------|--------------|---------------------------------------------|
@@ -491,7 +577,6 @@ print(math.sin(30))  # -------------> Output: ❌️ -0.988 (غلط! چون 30 �
 
 ![Fibonatchi](./_srcFiles/Images/07.gif "07.gif")
 
-
 # 4. 🅰️ mathGraph
 
 ```python
@@ -552,51 +637,9 @@ return JsonResponse(Items.to_dict(), safe=False)
         * آنگاه اجازه می‌دهیم هر نوع object قابل سریالایز شدن JSON (مثل لیست , namedtuple , custom class ) را هم برگردانیم.
         * در این حالت، JsonResponse فرض می‌کند که شما مسئول مدیریت خروجی هستید.
 
-# 8. 🅰️ Install Offline
+# 8. 🅰️ requests
 
-## 8.1. 🅱️  [install from local Archive](https://packaging.python.org/en/latest/tutorials/installing-packages/#installing-from-local-archives)
-
-### 8.1.1. ✅️ روش اول
-
-```shell
-mkdir /tmp/download
-vim /tmp/requirements.txt
-- wadllib==1.3.6
-- webcolors==1.11.1
-- webencodings==0.5.1
-- websocket-client==1.2.3
-- Werkzeug==2.2.2
-cd download
-pip download -r /tmp/requirements.txt
-python3 -m pip install --no-index --find-links=file:///tmp/download wadllib webcolors webencodings websocket-client Werkzeug
-
-```
-
-### 8.1.2. ✅️ روش دوم
-
-```shell
-python3 -m pip install ./downloads/SomeProject-1.0.4.tar.gz
-python3 -m pip install --no-index --find-links=file:///local/dir/ SomeProject
-python3 -m pip install --no-index --find-links=/local/dir/ SomeProject
-python3 -m pip install --no-index --find-links=relative/dir/ SomeProject
-```
-### 8.1.3. ✅️ روش سوم
-
-* برای نصب دستی یک بسته ابتدا آن را دانلود کرده و سپس به پوشه مورد نظر رفته و مطابق دستور زیر نصب نمایید(به فایل توضیحی همراه بسته توجه گردد)
-    ```python
-    python setup.py install --user --prefix=~
-    ```
-
-## 8.2. 🅱️ Installer
-
-* تولید یک فایل اجرایی برنامه پایتون(اکسپورت فایل اجرایی از تمام پکیج‌ها و لایبرری‌ها و مشتقات برنامه نوشته شده)
-    ```python
-    pyinstaller --onefile --windowed <MainScript.py>
-    ```
-
-# 9. 🅰️ requests
-
-## 9.1. 🅱️ Get
+## 8.1. 🅱️ Get
 
 ```python
 import requests
@@ -619,7 +662,7 @@ print(f"[res2.json()]: {res2.json()}")
 
 ```
 
-## 9.2. 🅱️ Post
+## 8.2. 🅱️ Post
 
 ```python
 import requests
@@ -635,7 +678,7 @@ for data in res1.json():
 
 ```
 
-# 10. 🅰️ BaseHTTPRequestHandler and HTTPServer
+# 9. 🅰️ BaseHTTPRequestHandler and HTTPServer
 
 ```python
 from http.server import BaseHTTPRequestHandler, HTTPServer
