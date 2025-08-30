@@ -720,7 +720,7 @@ full_function(1, 2, 3, 4, 5, c=50, name="Sarah", age=25)
 
 ```python
 class User:
-    def __init__(self, name, age):  # تابع سازنده
+    def __init__(self, name, age):  # Constructor
         self.name = name
         self.age = age
 
@@ -735,7 +735,7 @@ obj.show_data()
 
 ### 5.3.2. ✅️ `__len__`
 
-فقط زمانی می‌شود از این تابع استفاده کرد که فانکشن آن تعریف شده باشد یا خودمان یا ارث‌بری
+تنها درصورتی می‌توان از تابع len استفاده کرد که تابع `__len__` از طریق برنامه‌نویس یا ارث‌بری در کلاس تعریف شده باشد 
 
 ```python
 class Behrooz:
