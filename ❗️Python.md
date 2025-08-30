@@ -297,25 +297,25 @@ while num < 30:
 # Example1️⃣️: 
 number_1 = -100
 number_2 = -200
-print(f"{number_1} == {number_2} : {number_1 == number_2}")  # Output:  -100 == -200 : False   
-print(f"{number_1} != {number_2} : {number_1 != number_2}")  # Output:  -100 != -200 : True  
-print(f"{number_1} > {number_2} : {number_1 > number_2}")  # Output:  -100 >  -200 : True  
-print(f"{number_1} >= {number_2} : {number_1 >= number_2}")  # Output:  -100 >= -200 : True
-print(f"{number_1} < {number_2} : {number_1 < number_2}")  # Output:  -100 <  -200 : False
-print(f"{number_1} <= {number_2} : {number_1 <= number_2}")  # Output:  -100 <= -200 : False  
+print(f"{number_1} == {number_2} : {number_1 == number_2}")  # -> Output:  -100 == -200 : False   
+print(f"{number_1} != {number_2} : {number_1 != number_2}")  # -> Output:  -100 != -200 : True  
+print(f"{number_1} > {number_2} : {number_1 > number_2}")  # ---> Output:  -100 >  -200 : True  
+print(f"{number_1} >= {number_2} : {number_1 >= number_2}")  # -> Output:  -100 >= -200 : True
+print(f"{number_1} < {number_2} : {number_1 < number_2}")  # ---> Output:  -100 <  -200 : False
+print(f"{number_1} <= {number_2} : {number_1 <= number_2}")  # -> Output:  -100 <= -200 : False  
 
 # Example2️⃣️: 
 list1 = ['a', 'b', 'c']
 list2 = list1
 list3 = list(list1)
 
-print(list1)  # Output: ['a', 'b', 'c']
-print(list2)  # Output: ['a', 'b', 'c']
-print(list3)  # Output: ['a', 'b', 'c']
-print(list1 == list2)  # Output: True
-print(list1 == list3)  # Output: True
-print(list1 is list2)  # Output: True
-print(list1 is list3)  # Output: False
+print(list1)  # ----------> Output: ['a', 'b', 'c']
+print(list2)  # ----------> Output: ['a', 'b', 'c']
+print(list3)  # ----------> Output: ['a', 'b', 'c']
+print(list1 == list2)  # -> Output: True
+print(list1 == list3)  # -> Output: True
+print(list1 is list2)  # -> Output: True
+print(list1 is list3)  # -> Output: False
 
 ```
 
@@ -323,10 +323,10 @@ print(list1 is list3)  # Output: False
 
 ```python
 # Example1:🇦 🇳 🇩 
-print(f"True and True : {True and True}")
-print(f"False and True : {False and True}")
-print(f"True and False : {True and False}")
-print(f"False and False : {False and False}")
+print(f"True and True : {True and True}")  # -------> True and True : True 
+print(f"False and True : {False and True}")  # -----> False and True : False  
+print(f"True and False : {True and False}")  # -----> True and False : False 
+print(f"False and False : {False and False}")  # ---> False and False : False  
 
 # Example2: 
 userAge = 17
@@ -337,10 +337,10 @@ else:
     print("you can stay at home")
 
 # Example3:🇴 🇷
-print(f"True or True : {True or True}")
-print(f"False or True : {False or True}")
-print(f"True or False : {True or False}")
-print(f"False or False : {False or False}")
+print(f"True or True : {True or True}")  # -----------> True or True : True         
+print(f"False or True : {False or True}")  # ---------> False or True : True          
+print(f"True or False : {True or False}")  # ---------> True or False : True            
+print(f"False or False : {False or False}")  # -------> False or False : False          
 
 # Example4: 
 weather = "sunny"
@@ -350,8 +350,8 @@ else:
     print("we can not travel")
 
 # Example5:🇳 🇴 🇹 
-print(f"not True : {not True}")
-print(f"not False : {not False}")
+print(f"not True : {not True}")  # -----> not True : False       
+print(f"not False : {not False}")  # ---> not False : True     
 
 isBrotherComming = False
 if not isBrotherComming:
