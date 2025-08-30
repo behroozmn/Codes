@@ -739,7 +739,7 @@ obj.show_data()
 
 ```python
 class Behrooz:
-    def __init__(self, _name): # Constructor
+    def __init__(self, _name):  # Constructor
         self.name = _name
 
     def __len__(self):
@@ -754,86 +754,69 @@ print(len(obj))
 
 ```python
 class Person:
-    def __init__(self, _name): # Constructor
+    def __init__(self, _name):  # Constructor
         self.name = _name
 
-    # بجای عملگر + استفاده می‌شود
+    # when ussing +
     def __add__(self, other):
-        return f"Need to plus with {self.name} or {other}"
+        return f"{self.name} Plus {other}"
 
 
-obj = Person("Alii")
-
-print(obj)
-print(obj + "salam")
+obj = Person("Ali")
+print(obj)  # --------------> Output: <__main__.Person object at 0x7f5f43c13890>
+print(obj + "behrooz")  # --> Output: Ali Plus behrooz
 ```
 
 ### 5.3.3. ✅️   `__mul__`
 
 ```python
 class Person:
-    def __init__(self, _name): # Constructor
+    def __init__(self, _name):  # Constructor
         self.name = _name
 
-    # بجای عملگر *استفاده می‌شود
+    # when ussing *
     def __mul__(self, other):
-        return f"Need to multiplier with {self.name} or {other}"
+        return f"{self.name} multiplier {other}"
 
 
-obj = Person("Alii")
-
-print(obj)
-print(obj * "salam")
-
-
+obj = Person("Ali")
+print(obj)  # --------------> Output: <__main__.Person object at 0x7f5f43c13050>   
+print(obj * "behrooz")  # --> Output:  Ali multiplier behrooz
 ```
 
 ### 5.3.3. ✅️  `__truediv__`
 
 ```python
 class Person:
-    def __init__(self, _name): # Constructor
+    def __init__(self, _name):  # Constructor
         self.name = _name
 
-    # بجای عملگر / استفاده می‌شود
+    # when ussing /
     def __truediv__(self, other):
-        return f"Need to division with {self.name} or {other}"
+        return f"{self.name} division {other}"
 
 
-obj = Person("Alii")
-
-print(obj)
-print(obj / "salam")
-
+obj = Person("Ali")
+print(obj)  # --------------> Output: <__main__.Person object at 0x7f5f43c31c10>    
+print(obj / "behrooz")  # --> Output: Ali division behrooz
 ```
 
 ### 5.3.3. ✅️   `__sub__`
 
 ```python
 class Person:
-    def __init__(self, _name): # Constructor
+    def __init__(self, _name):  # Constructor
         self.name = _name
 
-    # بجای عملگر - استفاده می‌شود
+    # when ussing -
     def __sub__(self, other):
-        return f"Need to minus with {self.name} or {other}"
+        return f"{self.name} minus {other}"
 
 
-obj = Person("Alii")
-
-print(obj)
-print(obj - "salam")
-
-
+obj = Person("Ali")
+print(obj)  # --------------> Output:  <__main__.Person object at 0x7f5f43c31e90>          
+print(obj - "behrooz")  # --> Output: Ali minus behrooz
 ```
-
-| Function                | Oprator |
-|-------------------------|---------|
-| `__isub__(self,p2)`     | `-=`    | 
-| `__imul__(self,p2)`     | `*=`    | 
-| `__itruediv__(self,p2)` | `\=`    | 
-| `__floordiv__(self,p2)` | `\\`    | 
-| `s`                     | `\=`    | 
 
 ### 5.3.4. ✅️  `__repr__`
 
@@ -843,15 +826,15 @@ print(obj - "salam")
 * برای نمایش "رسمی" و دقیق‌تر شیء استفاده می‌شود (معمولاً برای دیباگ یا لاگ‌گیری).
 
 ```python
-class Behrooz:
-    def __init__(self, _name): # Constructor
+class Person:
+    def __init__(self, _name):  # Constructor
         self.name = _name
 
     def __repr__(self) -> str:
         return f"behroooz class attribute is [{self.name}]"
 
 
-obj = Behrooz("Alii")
+obj = Person("Alii")
 print(obj)
 
 ```
@@ -860,7 +843,7 @@ print(obj)
 
 ```python
 class Person:
-    def __init__(self, name, age): # Constructor
+    def __init__(self, name, age):  # Constructor
         self.name = name
         self.age = age
 
@@ -883,7 +866,7 @@ print(p)  # Person(name='Ali', age=25)
 
 ```python
 class Person:
-    def __init__(self, name, age): 
+    def __init__(self, name, age):  # Constructor
         self.name = name
         self.age = age
 
@@ -1184,7 +1167,7 @@ print(obj1.func1())
 
 class Behrooz:
 
-    def __init__(self, name, family):
+    def __init__(self, name, family):  # Constructor
         self.name = name
         self.family = family
 
@@ -1212,7 +1195,7 @@ print(obj1.fullname)
 ```python
 class behrooz:
 
-    def __init__(self, _name, _family, _age):
+    def __init__(self, _name, _family, _age):  # Constructor
         self.name = _name
         self.family = _family
         self.age = _age
@@ -2137,7 +2120,7 @@ func7_avg_WithIndex()
 ```python
 # example 1️⃣️
 class MyIterator:
-    def __init__(self, limit):
+    def __init__(self, limit):  # Constructor
         self.limit = limit
         self.current = 0
 
@@ -2160,7 +2143,7 @@ for number in my_iter:
 
 # example 2️⃣️
 class Counter:
-    def __init__(self, start, end, step=1):
+    def __init__(self, start, end, step=1):  # Constructor
         self.current = start
         self.end = end
         self.step = step
@@ -2185,7 +2168,7 @@ for num in Counter(10, 20): print(num)
 class User:
     ActiveUsers = []
 
-    def __init__(self, name, age):
+    def __init__(self, name, age):  # Constructor
         self.name = name
         self.age = age
         self.index = 0
@@ -2231,7 +2214,7 @@ for item in User('ali', 60):
 
 
 class User:
-    def __init__(self, name, age):  # تابع سازنده
+    def __init__(self, name, age):  # Constructor
         self.name = name
         self.age = age
 
@@ -2262,7 +2245,7 @@ class User:
     _mobile = "09191671085"  # بعنوان پیشنهاد در لیست intelliSence نمایش داده نمی‌شود و تلویحاً بعنوان متغیر محلی تلفی‌می‌شود
     __password = "myPassword"  # Generally __password is not available. only available by _User__password
 
-    def __init__(self, name, age):
+    def __init__(self, name, age):  # Constructor
         self.name = name
         self.age = age
 
