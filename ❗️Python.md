@@ -750,7 +750,7 @@ obj = Behrooz("Ali")
 print(len(obj))
 ```
 
-### 5.3.5. ✅️ `__str__`
+### 5.3.3. ✅️ `__str__`
 
 * برای خوانایی بیشتر EndUser از یک شیء مورد استفاده قرار می‌گیرد
 * این متد زمانی فراخوانی می‌شود که توابعی مانند print یا str برای نمایش یک شیء استفاده شود
@@ -810,7 +810,7 @@ print(p)  # Person(name='Ali', age=25)
 # نکته: `print(p)` و `print(repr(p))` خروجی یکسان دارند زیرا print از str استفاده می‌کند، اما str وقتی `__str__` نباشد از repr استفاده می‌کند)
 ```
 
-### 5.3.3. ✅️  `__add__`
+### 5.3.5. ✅️  `__add__`
 
 ```python
 class Person:
@@ -827,7 +827,7 @@ print(obj)  # --------------> Output: <__main__.Person object at 0x7f5f43c13890>
 print(obj + "behrooz")  # --> Output: Ali Plus behrooz
 ```
 
-### 5.3.3. ✅️   `__mul__`
+### 5.3.6. ✅️   `__mul__`
 
 ```python
 class Person:
@@ -844,7 +844,7 @@ print(obj)  # --------------> Output: <__main__.Person object at 0x7f5f43c13050>
 print(obj * "behrooz")  # --> Output:  Ali multiplier behrooz
 ```
 
-### 5.3.3. ✅️  `__truediv__`
+### 5.3.7. ✅️  `__truediv__`
 
 ```python
 class Person:
@@ -861,7 +861,7 @@ print(obj)  # --------------> Output: <__main__.Person object at 0x7f5f43c31c10>
 print(obj / "behrooz")  # --> Output: Ali division behrooz
 ```
 
-### 5.3.3. ✅️   `__sub__`
+### 5.3.8. ✅️   `__sub__`
 
 ```python
 class Person:
@@ -878,31 +878,7 @@ print(obj)  # --------------> Output:  <__main__.Person object at 0x7f5f43c31e90
 print(obj - "behrooz")  # --> Output: Ali minus behrooz
 ```
 
-## 5.4. 🅱️ Reversed
-
-```python
-numbers = [1, 2, 3, 4, 5, 6]
-
-# 118. numbers.reverse() #در لیست تغییر ایجاد میکند
-
-print(f"reversed in [{numbers}] ---> {list(reversed(numbers))}")
-
-chars = "hello"
-print(f"reversed in {chars} ---> {list(reversed(chars))}")
-print(f"reversed in {chars} ---> {chars[::-1]}")
-
-nameRes = ''
-print(nameRes.join(list(reversed("hello"))))
-
-for num in reversed(range(0, 10)):
-    print(num)
-print("----")
-for num in range(9, -1, -1):
-    print(num)
-
-```
-
-## 5.5. 🅱️ Sort
+## 5.4. 🅱️ Sort
 
 ```python
 def func2sort_NoChange():
@@ -942,7 +918,7 @@ func5()
 
 ```
 
-## 5.6. 🅱️ Length
+## 5.5. 🅱️ Length
 
 ```python
 users = [{'name': 'Behrooz', 'family': 'nadery', 'born': 1369, 'shopCart': []},
@@ -964,9 +940,9 @@ func2()
 
 ```
 
-## 5.7. 🅱️ TruthinessFalsiness_All
+## 5.6. 🅱️ TruthinessFalsiness_All
 
-### 5.7.1. ✅️ ALL
+### 5.6.1. ✅️ ALL
 
 ```python
 # 120. بررسی درستی یا نادرستی یا همان تروسینس یا فالسینس
@@ -996,7 +972,7 @@ print(all([num % 2 == 0 for num in numbers]))
 
 ```
 
-### 5.7.2. ✅️ Any
+### 5.6.2. ✅️ Any
 
 ```python
 # 124. بررسی درستی یا نادرستی یا همان تروسینس یا فالسینس
@@ -1567,7 +1543,7 @@ behrooz.func4(name="behrooz", FamilyName="Mohammadi", born=1369, mobile="0919167
 
 * NoRepeat(uniq): مجموعه‌ای که محتوی آن بدون شک تکراری نخواهند شد
 * در آن مرتب سازی معنی ندارد
-*  در آن اندیس جایگاه ندارد(اندیس ناپذیر)
+* در آن اندیس جایگاه ندارد(اندیس ناپذیر)
 * درآن قابلیت فراخوانی (Call) وجود ندارد
 
 ```python
@@ -1612,9 +1588,8 @@ print(SetClass._set5)
 
 ## 7.3. 🅱️ Tupple`()`
 
-
 * مجموعه‌ای که محتوی آن قابلیت تغییر نداشته باشد(immutable)
-* 
+*
 
 ```python
 class TuppleClass:
