@@ -220,7 +220,76 @@ userRank = 1
 print("you got GOLD medal") if userRank == 1 else print("no medal")
 ```
 
+### 3.2.1. ✅️ TernaryOperator(اپراتورهای‌سه‌گانه)
+
+* در برخی زبان‌های برنامه‌نویسی هستند
+* به شما امکان میدهد که یک بلوک را ساده نمایید
+
+```python
+# syntax: [value_if_true] if [condition] else [value_if_false]
+## value_if_true: مقداری که اگر شرط True باشد باید برگردانده شود
+## value_if_false: مقداری که اگر شرط False باشد باید برگردانده شود
+## condition: شرط
+```
+
+```python
+# Example1️⃣️: 
+a, b = 10, 20
+min = a if a < b else b
+print(min)  # Output: 10
+
+# Example2️⃣️: True:[Go home], condition1:[age<16], False:[{'Not sure...' if 16 <= age < 18 else 'Welcome'} ---> {True:[Not sure],condition:[16<=age<18],False:[Welcome]}] 
+age = 17
+result = 'Go home.' if age < 16 else 'Not sure' if 16 <= age < 18 else 'Welcome'
+print(result)  # Output: Not sure
+
+# Example3️⃣️: Python: [False=0], [True=1]
+a, b = 100, 20
+
+print((a, b)[a < b])  # 1️⃣️(a,b):Tuple 2️⃣️[a < b]:condition --> [a < b]=False --> (a, b)[False] --> (a, b)[0]=a --> (100, 20)[0]=100 --> Output:100
+print((a, b)[a > b])  # 1️⃣️(a,b):Tuple 2️⃣️[a > b]:condition --> [a > b]=True ---> (a, b)[True] ---> (a, b)[1]=b --> (100, 20)[1]=20 ---> Output:20
+print((b, a)[a < b])  # 1️⃣️(b,a):Tuple 2️⃣️[a < b]:condition --> [a < b]=False --> (b, a)[False] --> (b, a)[0]=b --> (20, 100)[0]=20 ---> Output:20
+print((b, a)[a > b])  # 1️⃣️(b,a):Tuple 2️⃣️[a > b]:condition --> [a > b]=True ---> (b, a)[True] ---> (b, a)[1]=a --> (20, 100)[1]=100 --> Output:100
+
+# Example4️⃣️: Python: [False=0], [True=1]
+a, b = 10, 20
+print((lambda: b, lambda: a)[a < b]())  # (lambda:b, lambda:a)[True=1] -->  function: lambda:a ---> Output: 10
+
+# Example5️⃣️:
+a, b = 10, 20
+print("Both a and b are equal" if a == b else "a is greater than b"
+if a > b else "b is greater than a")
+# Output: b is greater than a
+
+# Example5️⃣️: هردو مثال یکسان هستند
+a, b = 10, 20
+if a != b:
+    if a > b:
+        print("a is greater than b")
+    else:
+        print("b is greater than a")
+else:
+    print("Both a and b are equal")
+# Output: b is greater than a
+
+# Example6️⃣️:
+a, b = 5, 7
+print(a, "is greater") if (a > b) else print(b, "is Greater")  # output: 7 is Greater
+
+# Example7️⃣️:
+score = 85
+grade = (
+    "A" if score >= 90 else
+    "B" if score >= 80 else
+    "C" if score >= 70 else
+    "D" if score >= 60 else
+    "F"
+)
+print(grade)  # B
+```
+
 ## 3.3. 🅱️ for
+
 
 ```python
 # Syntax:
@@ -245,7 +314,13 @@ for number in listOfNumbers:
     print(number * 2)
 
 # Example3️⃣️:
-[print(x) for x in [1, 2, 3, 4, 5, 6, 11]]
+[print(x) for x in [1, 2, 3, 4]]
+# 1
+# 2
+# 3
+# 4
+# [None, None, None, None]
+
 
 # Example4️⃣️: 
 for num in range(1, 10):
@@ -257,6 +332,7 @@ for num in range(1, 10):
             print("*" * star)
 
 # Example5️⃣️:
+print([num % 2 == 0 for num in [1, 2, 3, 4, 5]])  # Output: [False, True, False, True, False]
 
 # Example6️⃣️:
 
@@ -286,7 +362,7 @@ while num < 30:
 
 ## 3.5. 🅱️ Operation
 
-### 3.5.1. ✅️ OperatorsComparison
+### 3.5.1. ✅️ Operators Comparison
 
 <div dir="ltr">
 
@@ -373,60 +449,6 @@ if (0 <= age <= 2) or (8 <= age < 65):
     print("you should pay 10 dollars")
 if not ((2 < age < 8) or age >= 65):
     print("you should pay 10 dollars")
-```
-
-### 3.5.3. ✅️ TernaryOperator(اپراتورهای‌سه‌گانه)
-
-* در برخی زبان‌های برنامه‌نویسی هستند
-* به شما امکان میدهد که یک بلوک را ساده نمایید
-* `syntax: [value_if_true] if [condition] else [value_if_false]`
-    * قسمت value_if_true: مقداری که اگر شرط True باشد باید برگردانده شود
-    * فسمت condition: شرط
-    * قسمت value_if_false: مقداری که اگر شرط False باشد باید برگردانده شود
-
-```python
-# Example1️⃣️: 
-a, b = 10, 20
-min = a if a < b else b
-print(min)  # Output: 10
-
-# Example2️⃣️: True:[Go home], condition1:[age<16], False:[{'Not sure...' if 16 <= age < 18 else 'Welcome'} ---> {True:[Not sure],condition:[16<=age<18],False:[Welcome]}] 
-age = 17
-result = 'Go home.' if age < 16 else 'Not sure' if 16 <= age < 18 else 'Welcome'
-print(result)  # Output: Not sure
-
-# Example3️⃣️: Python: [False=0], [True=1]
-a, b = 100, 20
-
-print((a, b)[a < b])  # 1️⃣️(a,b):Tuple 2️⃣️[a < b]:condition --> [a < b]=False --> (a, b)[False] --> (a, b)[0]=a --> (100, 20)[0]=100 --> Output:100
-print((a, b)[a > b])  # 1️⃣️(a,b):Tuple 2️⃣️[a > b]:condition --> [a > b]=True ---> (a, b)[True] ---> (a, b)[1]=b --> (100, 20)[1]=20 ---> Output:20
-print((b, a)[a < b])  # 1️⃣️(b,a):Tuple 2️⃣️[a < b]:condition --> [a < b]=False --> (b, a)[False] --> (b, a)[0]=b --> (20, 100)[0]=20 ---> Output:20
-print((b, a)[a > b])  # 1️⃣️(b,a):Tuple 2️⃣️[a > b]:condition --> [a > b]=True ---> (b, a)[True] ---> (b, a)[1]=a --> (20, 100)[1]=100 --> Output:100
-
-# Example4️⃣️: Python: [False=0], [True=1]
-a, b = 10, 20
-print((lambda: b, lambda: a)[a < b]())  # (lambda:b, lambda:a)[True=1] -->  function: lambda:a ---> Output: 10
-
-# Example5️⃣️:
-a, b = 10, 20
-print("Both a and b are equal" if a == b else "a is greater than b"
-if a > b else "b is greater than a")
-# Output: b is greater than a
-
-# Example5️⃣️: هردو مثال یکسان هستند
-a, b = 10, 20
-if a != b:
-    if a > b:
-        print("a is greater than b")
-    else:
-        print("b is greater than a")
-else:
-    print("Both a and b are equal")
-# Output: b is greater than a
-
-# Example6️⃣️:
-a, b = 5, 7
-print(a, "is greater") if (a > b) else print(b, "is Greater")  # output: 7 is Greater
 ```
 
 # 4. 🅰️ exception
@@ -876,90 +898,6 @@ class Person:
 obj = Person("Ali")
 print(obj)  # --------------> Output:  <__main__.Person object at 0x7f5f43c31e90>          
 print(obj - "behrooz")  # --> Output: Ali minus behrooz
-```
-
-
-
-## 5.4. 🅱️ TruthinessFalsiness_All
-
-### 5.4.1. ✅️ ALL
-
-```python
-# 120. بررسی درستی یا نادرستی یا همان تروسینس یا فالسینس
-# 121. اگر تمام آیتم‌های داده شده به این تابع درست باشد مقدار ترو را برمی‌گرداند
-# 122. عدد صفر بطور پیش‌فرض در پایتون مقدار فالس در نظر گرفته شده است
-
-print(all([2, 3, 4, 8]))
-print("")
-
-print("-----Step2-----")
-print(all([]))  # اگر خالی باشد ترو برمی‌گرداند
-print("")
-
-print("-----Step3-----")
-numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-print(list(num for num in numbers if num % 2 == 0))
-print("")
-
-print("-----Step4-----")
-print([num % 2 == 0 for num in numbers])
-print("")
-
-print("-----Step5-----")
-
-# 123. همه آیتم هایی که در نامبر هستند بر دو بخش پذیر هستند یا خیر
-print(all([num % 2 == 0 for num in numbers]))
-
-```
-
-### 5.4.2. ✅️ Any
-
-```python
-# 124. بررسی درستی یا نادرستی یا همان تروسینس یا فالسینس
-# 125. اگر تنها حتی یک آیتم از مواردی که به این تابع داده شده است ترو باشد مقدار ترو را برمی‌گرداند
-
-def func1():
-    numbers = [0, 0, 0, 0]
-    print(f"{numbers} --> {any(numbers)}")
-
-
-def func2():
-    numbers = [0, 0, 0, 1]
-    print(f"{numbers} --> {any(numbers)}")
-
-
-def func3():
-    data = [False, False, False, False]
-    print(f"{data} --> {any(data)}")
-
-
-def func4():
-    data = [False, False, False, True]
-    print(f"{data} --> {any(data)}")
-
-
-def func5():
-    print(any([]))
-
-
-def func5():
-    numbers = [2, 4, 6, 8]
-    result = (any([num % 2 != 0 for num in numbers]))
-    print(f"{numbers} --> {result}")
-
-
-def func6():
-    numbers = [2, 4, 6, 7]
-    result = (any([num % 2 != 0 for num in numbers]))
-    print(f"{numbers} --> {result}")
-
-
-func1()
-func2()
-func3()
-func4()
-func5()
-func6()
 ```
 
 # 6. 🅰️ Decorator
@@ -1714,17 +1652,16 @@ func4_map_filter()
 
 ```
 
-
 ## 7.6. 🅱️ map
 
 ```python
-# 205. map: calls a function for all its members of iterable
-# 206. ---> Syntax: map(function, iterable) ==> Return: an iterable mapObject
-# 207. ==> Ussing: list(mapObject) or Tuple(mapObject) or ...
-# 208. ---> Note: تنها یکبار روی لیست یا غیره می‌تواند پیمایش صورت بپذیرد و در پیمایش دوم با لیست خالی مواجه می‌شود
-# 209. ---> itarate: پیمایش
-# 210. ---> iterable: هر چیزی که روی آیتم‌های آن قابلیت پیمایش وچود داشته باشد
-# 211. ---> Note:  به صورت «لِیزی» عمل می‌کند، به این معنی که محاسبات تنها زمانی انجام می‌شود که به نتایج آن نیاز باشد
+# map: calls a function for all its members of iterable
+# ---> Syntax: map(function, iterable) ==> Return: an iterable mapObject
+# ==> Ussing: list(mapObject) or Tuple(mapObject) or ...
+# ---> Note: تنها یکبار روی لیست یا غیره می‌تواند پیمایش صورت بپذیرد و در پیمایش دوم با لیست خالی مواجه می‌شود
+# ---> itarate: پیمایش
+# ---> iterable: هر چیزی که روی آیتم‌های آن قابلیت پیمایش وچود داشته باشد
+# ---> Note:  به صورت «لِیزی» عمل می‌کند، به این معنی که محاسبات تنها زمانی انجام می‌شود که به نتایج آن نیاز باشد
 
 
 numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -1814,6 +1751,26 @@ func5()
     * وضعیت تابع(شامل مقادیر متغیرها و موقعیت اجرای تابع) حفظ می‌شود
     * قابلیت ادامه تابع از همان نقطه توقف
     * عدم محاسبه و برگرداندن یکباره تمام مقادیر بلکه محاسبه و تولیدیکی پس از دیگری
+
+generator expression: عناصر رو به صورت تنبل (lazy) تولید می‌کنه — یعنی فقط وقتی که نیاز باشه.
+list comprehension: تمام عناصر رو فوراً ایجاد می‌کنه و در حافظه نگه می‌داره.  
+
+```python
+# Example1️⃣️: # simple for
+result = []
+for num in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]:
+    if num % 2 == 0:
+        result.append(num)
+print(result)  # Output: [2, 4, 6, 8, 10]
+
+# Example1️⃣️: list comprehension
+print([num for num in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] if num % 2 == 0])  # Output: [2, 4, 6, 8, 10]
+
+# Example1️⃣️: generator expression
+print(list(num for num in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] if num % 2 == 0))  # Output: [2, 4, 6, 8, 10]
+```
+
+
 
 ### 7.7.1. ✅️ Example 1️⃣️: yield
 
