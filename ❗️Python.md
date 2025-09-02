@@ -878,71 +878,11 @@ print(obj)  # --------------> Output:  <__main__.Person object at 0x7f5f43c31e90
 print(obj - "behrooz")  # --> Output: Ali minus behrooz
 ```
 
-## 5.4. 🅱️ Sort
-
-```python
-def func2sort_NoChange():
-    numbers = [1, 5, 8, 4, 6, 2]
-    print(f"func2(befor): {list(numbers)}")
-    result = sorted(numbers, reverse=False)
-    print(f"func2(sorted result): {result}")
-    print(f"func2(after): {list(numbers)}")
 
 
-def func4sort_Change():
-    numbers = [1, 5, 8, 4, 6, 2]
-    print(f"func4(befor): {list(numbers)}")
-    numbers.sort(reverse=False)
-    print(f"func4(after): {list(numbers)}")
+## 5.4. 🅱️ TruthinessFalsiness_All
 
-
-# 119. لیست ها برای مرتب سازی نیاز به کلید دارند
-
-
-def func5():
-    users = [
-        {'name': 'taha', 'family': 'MohammadiNasab', 'age': 40},
-        {'name': 'mohammad', 'family': 'ketabi', 'age': 23},
-        {'name': 'sara', 'family': 'nadery', 'age': 80},
-        {'name': 'ali', 'family': 'Mohamadi', 'age': 30}
-    ]
-    print(users)
-    print(sorted(users, key=lambda user: user['age'], reverse=False))
-
-
-func2sort_NoChange()
-print("")
-func4sort_Change()
-print("")
-func5()
-
-```
-
-## 5.5. 🅱️ Length
-
-```python
-users = [{'name': 'Behrooz', 'family': 'nadery', 'born': 1369, 'shopCart': []},
-         {'name': 'Alireza', 'family': 'saberi', 'born': 1400, 'shopCart': []},
-         {'name': 'Attefeh', 'family': 'Rezaie', 'born': 1372, 'shopCart': ['kotlin', 'vue']}]
-
-
-def func1():
-    print(f"func1:{len(users)}")
-
-
-def func2():
-    result = filter(lambda user: len(user['shopCart']) == 0, users)
-    print(f"func2(filter):{list(result)}")
-
-
-func1()
-func2()
-
-```
-
-## 5.6. 🅱️ TruthinessFalsiness_All
-
-### 5.6.1. ✅️ ALL
+### 5.4.1. ✅️ ALL
 
 ```python
 # 120. بررسی درستی یا نادرستی یا همان تروسینس یا فالسینس
@@ -972,7 +912,7 @@ print(all([num % 2 == 0 for num in numbers]))
 
 ```
 
-### 5.6.2. ✅️ Any
+### 5.4.2. ✅️ Any
 
 ```python
 # 124. بررسی درستی یا نادرستی یا همان تروسینس یا فالسینس
@@ -1773,6 +1713,7 @@ print()
 func4_map_filter()
 
 ```
+
 
 ## 7.6. 🅱️ map
 

@@ -131,16 +131,20 @@ python3 -m pip install --no-index --find-links=relative/dir/ SomeProject
 #### 1.3.1.3. ❇️ Method 3️⃣️
 
 * برای نصب دستی یک بسته ابتدا آن را دانلود کرده و سپس به پوشه مورد نظر رفته و مطابق دستور زیر نصب نمایید(به فایل توضیحی همراه بسته توجه گردد)
-    ```python
-    python setup.py install --user --prefix=~
-    ```
+
+```python
+python
+setup.py
+install - -user - -prefix = ~
+```
 
 ### 1.3.2. ✅️ Installer
 
 * تولید یک فایل اجرایی برنامه پایتون(اکسپورت فایل اجرایی از تمام پکیج‌ها و لایبرری‌ها و مشتقات برنامه نوشته شده)
-    ```python
-    pyinstaller --onefile --windowed <MainScript.py>
-    ```
+
+```python
+pyinstaller - -onefile - -windowed < MainScript.py >
+```
 
 # 2. 🅰️ Built-in functions
 
@@ -525,6 +529,195 @@ b = [1, 2, 3]
 c = list(reversed(b))
 print(b)  # Output: [1, 2, 3]
 print(c)  # Output: [3, 2, 1]
+```
+
+## 2.4. 🅱️ Sort
+
+* برای مرتب‌سازی یک لیست بصورت درجا (in-place)
+
+```python
+# syntax: list.sort(reverse=False, key=None)
+# reverse: False(Default) --> مرتب‌سازی به صورت صعود
+# reverse: True ------------> مرتب‌سازی به صورت نزولی
+# Key: function ------------> یک تابع که مشخص می‌کند که مرتب‌سازی بر چه اساسی صورت گیرد
+```
+
+```python
+# Example1️⃣️: 
+numbers = [3, 1, 4, 1, 5, 9]
+numbers.sort()
+print(numbers)  # Output: [1, 1, 3, 4, 5, 9]
+
+# Example2️⃣️: 
+numbers = [3, 1, 4, 1, 5, 9]
+numbers.sort(reverse=True)
+print(numbers)  # Output: [9, 5, 4, 3, 1, 1]
+
+# Example3️⃣️:
+words = ['banana', 'apple', 'cherry']
+words.sort()
+print(words)  # Output: ['apple', 'banana', 'cherry']
+
+# Example4️⃣️: 
+words = ['python', 'is', 'awesome']
+words.sort(key=len)
+print(words)  # Output: ['is', 'python', 'awesome']
+
+# Example5️⃣️:
+numbers = [-5, 3, -1, 10]
+numbers.sort(key=abs)
+print(numbers)  # Output: [-1, 3, -5, 10] --> Becuase: | -1 | = 1, |3| = 3, |-5| = 5, |10| = 10
+
+# Example6️⃣️:
+# تابع sort() مقدار None برمی‌گرداند و لیست اصلی رو تغییر می‌ده. پس اگر بنویسی:
+numbers = [3, 1, 4, 1, 5, 9]
+sorted_list = numbers.sort()  # --> ❌️
+print(sorted_list)  # ------------> Output: None
+```
+
+## 2.5. 🅱️ Sorted
+
+* یک کپی مرتب‌شده از یک ایترابل (iterable) برمی‌گرداند، بدون اینکه داده اصلی تغییر کند.
+* نه فقط روی لیست بلکه روی tuple, str, set, dict و ... هم کار می‌کنه.
+* همواره لیست برمی‌گرداند و حتی اگر ورودی یک تاپل یا رشته باشه، خروجی یک لیست است.
+* لیست ها برای مرتب سازی نیاز به کلید دارند
+
+```python
+# syntax: sorted(iterable, key=None, reverse=False)
+```
+
+```python
+# Example1️⃣️: 
+numbers = [4, 1, 3, 2]
+sorted_numbers = sorted(numbers)
+print(sorted_numbers)  # Output: [1, 2, 3, 4]
+print(numbers)  # Output: [4, 1, 3, 2] ← تغییر نکرده
+
+# Example2️⃣️: 
+sorted_desc = sorted(numbers, reverse=True)
+print(sorted_desc)  # Output: [4, 3, 2, 1]
+
+# Example3️⃣️:
+text = "python"
+sorted_chars = sorted(text)
+print(sorted_chars)  # ['h', 'n', 'o', 'p', 't', 'y']
+print(''.join(sorted_chars))  # Output: "hnopty"
+
+# Example4️⃣️: 
+tuple1 = (5, 2, 8, 1)
+sorted_tuple1 = sorted(tuple1)
+print(sorted_tuple1)  # Output: [1, 2, 5, 8] ← لیست برمی‌گردونه!
+
+# Example5️⃣️:
+words = ['banana', 'kiwi', 'apple', 'pear']
+sorted_by_len = sorted(words, key=len)
+print(sorted_by_len)  # Output: ['pear', 'kiwi', 'apple', 'banana']
+
+# Example6️⃣️:
+nums = [-5, 3, -1, 10]
+sorted_abs = sorted(nums, key=abs)
+print(sorted_abs)  # Output: [-1, 3, -5, 10]
+
+# Example7️⃣️:
+grades = {'ali': 19, 'reza': 15, 'sara': 18, 'Behrooz': 20, 'tasnim': 10, 'AmirAbas': 9}
+
+# مرتب بر اساس نام (کلید)
+sorted_by_name1 = sorted(grades.items())
+sorted_by_name2 = sorted(grades.items(), key=lambda x: x[0], reverse=False)
+print(sorted_by_name1)  # Output: [('AmirAbas', 9), ('Behrooz', 20), ('ali', 19), ('reza', 15), ('sara', 18), ('tasnim', 10)]
+print(sorted_by_name2)  # Output: [('AmirAbas', 9), ('Behrooz', 20), ('ali', 19), ('reza', 15), ('sara', 18), ('tasnim', 10)]
+
+# مرتب بر اساس نمره (مقدار)
+sorted_by_grade = sorted(grades.items(), key=lambda x: x[1], reverse=True)
+print(sorted_by_grade)  # Output: [('Behrooz', 20), ('ali', 19), ('sara', 18), ('reza', 15), ('tasnim', 10), ('AmirAbas', 9)]
+
+# Example8️⃣️: دیکشنری
+students = [
+    {'name': 'Ali', 'age': 20},
+    {'name': 'Sara', 'age': 18},
+    {'name': 'Reza', 'age': 22}
+]
+
+sorted_students = sorted(students, key=lambda x: x['age'])
+print(students)  # ---------> Output: [{'name': 'Ali', 'age': 20}, {'name': 'Sara', 'age': 18}, {'name': 'Reza', 'age': 22}]         
+print(sorted_students)  # --> Output: [{'name': 'Sara', 'age': 18}, {'name': 'Ali', 'age': 20}, {'name': 'Reza', 'age': 22}]       
+
+#  مرتب‌سازی چندمرحله‌ای
+sorted_student_multi = sorted(students, key=lambda x: (x['age'], x['name']))
+print(sorted_student_multi)  # Output: [{'name': 'Sara', 'age': 18}, {'name': 'Ali', 'age': 20}, {'name': 'Reza', 'age': 22}]
+```
+
+## 2.6. 🅱️ len(object)
+
+* تعداد عناصر یک شیء قابل اندیس‌گذاری یا ایترابل (iterable) را برمی‌گرداند
+* وقتی `len(obj)` رو صدا می‌زنی، پایتون در واقع متد داخلی `__len__()` شیء رو فراخوانی می‌کنه:
+* انواع داده‌هایی که `len()` روی آن‌ها کار می‌کند
+
+| نوع داده         | توضیح                              | مثال                          |
+|------------------|------------------------------------|-------------------------------|
+| `str` (رشته)     | تعداد کاراکترها (حتی فاصله و نماد) | `len("hello")` → `5`          |
+| `list` (لیست)    | تعداد عناصر                        | `len([1, 2, 3])` → `3`        |
+| `tuple` (تاپل)   | تعداد عناصر                        | `len((1, 2))` → `2`           |
+| `dict` (دیکشنری) | تعداد **کلیدها**                   | `len({'a': 1, 'b': 2})` → `2` |
+| `set` (مجموعه)   | تعداد عناصر (بدون تکراری)          | `len({1, 2, 3})` → `3`        |
+| `range`          | تعداد اعداد در بازه                | `len(range(5))` → `5`         |
+
+```python
+# Syntax: len(object)
+# ورودی باید یک شیء باشد که طول تعریف شده داشته باشه (مثل لیست، رشته، تاپل، دیکشنری، مجموعه و ...)
+```
+
+```python
+# Example1️⃣️: 
+text = "Hello, world!"
+print(len(text))  # Output: 13
+
+# Example2️⃣️: 
+fruits = ['apple', 'banana', 'cherry']
+print(len(fruits))  # Output: 3
+
+# Example3️⃣️:
+person = {'name': 'Ali', 'age': 25, 'city': 'Tehran'}
+print(len(person))  # Output: 3 (تعداد کلیدها)
+
+# Example4️⃣️: 
+unique_nums = {1, 2, 2, 3, 3, 3}
+print(len(unique_nums))  # Output: 3
+
+# Example5️⃣️:
+r = range(10, 20)
+print(len(r))  # Output: 10 (اعداد 10 تا 19)
+
+
+# Example6️⃣️:
+class Team:
+    def __init__(self, members):
+        self.members = members
+
+    def __len__(self):
+        return len(self.members)
+
+
+team = Team(['Ali', 'Reza', 'Sara'])  # ایجاد شیء
+print(len(team))  # Output: 3
+
+# Example7️⃣️: چک کردن اینکه لیست خالی است یا نه
+list1 = []
+if len(list1) == 0:
+    print("لیست خالی است")
+
+# Example8️⃣️: تکرار بر اساس طول لیست
+list2 = [3, 1, 4, 1, 5, 9]
+for i in range(len(list2)):
+    print(list2[i])
+
+# Example9️⃣️:
+name = input("نام خود را وارد کنید: ")
+if len(name) < 3:
+    print("نام باید حداقل 3 کاراکتر باشد")
+
+# Example1️⃣️0️⃣️:
+len(None)  # ❌️ TypeError
 ```
 
 # 3. 🅰️ MATH
