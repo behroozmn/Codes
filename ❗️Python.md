@@ -1138,7 +1138,7 @@ def decorator(func):
 | `@retry`          | اجرای مجدد تابع در صورت خطا             |
 | `@property`       | تبدیل متد به ویژگی (در کلاس‌ها)         |
 
-### 5.7.1. ✅️ Custome
+### 5.7.1. ✅️ Custom
 
 ```python
 def exec_after_before(func):
