@@ -900,13 +900,13 @@ print(obj)  # --------------> Output:  <__main__.Person object at 0x7f5f43c31e90
 print(obj - "behrooz")  # --> Output: Ali minus behrooz
 ```
 
-# 6. 🅰️ Decorator
+## 5.4. 🅱️ Decorator
 
-## 6.1. 🅱️ function into function
+### 5.4.1. ✅️ function into function
 
 استفاده از تابع درون تابع دیگر به روش های متفاوت انجام می‌شود که نمونه‌های آن در ذیل آمده است
 
-### 6.1.1. ✅️ Traditional
+#### 5.4.1.1. ❇️ Traditional
 
 ```python
 from random import choice
@@ -925,7 +925,7 @@ print("\n")
 
 ```
 
-### 6.1.2. ✅️ Traditional-ByReturnValue
+#### 5.4.1.2. ❇️ Traditional-ByReturnValue
 
 ```python
 from random import choice
@@ -943,7 +943,7 @@ result = state()
 print("=====> ", result())
 ```
 
-### 6.1.3. ✅️ Traditional-ByArgs
+#### 5.4.1.3. ❇️ Traditional-ByArgs
 
 ```python
 def sum_func(number, func):
@@ -960,7 +960,7 @@ def square_func(number):
 print("☰☰☰☰☰> ", sum_func(5, square_func))
 ```
 
-### 6.1.4. ✅️ Modern-ByDecorator
+#### 5.4.1.4. ❇️ Modern-ByDecorator
 
 * تکنیک Decorator یک DesignePatternاست که یک تابع را درون تابع دیگر فراخوانی میکنیم
 * امکان تغییر یا گسترش رفتار یک تابع یا کلاس بدون تغییر در کد اصلی آن
@@ -988,7 +988,7 @@ say_hello()
 
 ```
 
-## 6.2. 🅱️ Classmethod
+### 5.4.2. ✅️ Classmethod
 
 * تغییر عملکرد یک تابع بطوریکه به‌جای استفاده از منابع نمونه از منابع کلاس استفاده می‌کند
 * دسترسی مستقیم به دیتای کلاس بدون ساخت شیء نمونه
@@ -1012,7 +1012,7 @@ print(obj1.func1())
 
 ```
 
-## 6.3. 🅱️ Property
+### 5.4.3. ✅️ Property
 
 * property: تبدیل تابع به ویزگی(property) یا صفت(attribute)
 * برای دسترسی به متد باید حتما پرانتز باز و بسته گذاشته بشود ولی برای پراپرتی نباید پرانتز گذاشت
@@ -1040,7 +1040,7 @@ print(obj1.fullname)
 
 ```
 
-## 6.4. 🅱️ PropertyGetterSetter
+### 5.4.4. ✅️ PropertyGetterSetter
 
 * تغییر رفتارِ تابع به متغیر
 * getter: یک تابع است و برای استفاده باید حتما همراه پرانتز باشد ولی هنگامیکه با @property بیاید آنگاه نیاز به استفاده
@@ -1091,7 +1091,7 @@ print(obj1.fullName)  # به حالت متد فراخوانی نمیکنیم ب�
 
 ```
 
-## 6.5. 🅱️ Advanced
+### 5.4.5. ✅️ Advanced
 
 ```python
 def before_after(func):
@@ -1225,7 +1225,7 @@ show_data(Fname="Behi")
 
 ```
 
-## 6.6. 🅱️ Example
+### 5.4.6. ✅️ Example
 
 ```python
 from time import time
@@ -1257,7 +1257,7 @@ sum_list()
 
 ```
 
-# 7. 🅰️ Iterate
+# 6. 🅰️ Iterate
 
 ```python
 # 129. iterate: پیمایش یا تکرار کردن
@@ -1297,7 +1297,7 @@ print(next(iterName))
 
 ```
 
-## 7.1. 🅱️ Dictionary `{key1:value1}`
+## 6.1. 🅱️ Dictionary `{key1:value1}`
 
 ```python
 # syntax: { key1: value1, key2: value2 }
@@ -1417,7 +1417,7 @@ behrooz.func4(name="behrooz", FamilyName="Mohammadi", born=1369, mobile="0919167
 
 ```
 
-## 7.2. 🅱️ Set `{}`
+## 6.2. 🅱️ Set `{}`
 
 * NoRepeat(uniq): مجموعه‌ای که محتوی آن بدون شک تکراری نخواهند شد
 * در آن مرتب سازی معنی ندارد
@@ -1464,7 +1464,7 @@ print(SetClass._set5)
 
 ```
 
-## 7.3. 🅱️ Tupple`()`
+## 6.3. 🅱️ Tupple`()`
 
 * مجموعه‌ای که محتوی آن قابلیت تغییر نداشته باشد(immutable)
 *
@@ -1499,7 +1499,7 @@ obj.func1(*numbers)  # اگر ستاره نباشد ارور میدهد
 
 ```
 
-## 7.4. 🅱️ List `[]`
+## 6.4. 🅱️ List `[]`
 
 ```python
 class ListClass:
@@ -1600,7 +1600,7 @@ def search(self, mylist):
 
 ```
 
-## 7.5. 🅱️ Filter
+## 6.5. 🅱️ Filter
 
 * برای یاد گیری سه مفهوم ۱-لامبدا ۲-فیلتر ۳-مَپ ،باید به ترتیب نام برده شده مطالعه شود
 
@@ -1652,7 +1652,7 @@ func4_map_filter()
 
 ```
 
-## 7.6. 🅱️ map
+## 6.6. 🅱️ map
 
 ```python
 # map: calls a function for all its members of iterable
@@ -1736,7 +1736,7 @@ func5()
 
 ```
 
-## 7.7. 🅱️ Generator_Expression
+## 6.7. 🅱️ Generator_Expression
 
 * Generator: create function as sequentional lazy items
     * create or generate items only when ussing
@@ -1772,7 +1772,7 @@ print(list(num for num in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] if num % 2 == 0))  # O
 
 
 
-### 7.7.1. ✅️ Example 1️⃣️: yield
+### 6.7.1. ✅️ Example 1️⃣️: yield
 
 ```python
 def nums():
@@ -1788,7 +1788,7 @@ print(next(g))
 print(next(g))
 ```
 
-### 7.7.2. ✅️ Example 2️⃣️: Generator
+### 6.7.2. ✅️ Example 2️⃣️: Generator
 
 ```python
 myGenerator = (num for num in range(20))
@@ -1799,7 +1799,7 @@ print(next(myGenerator))
 print(next(myGenerator))
 ```
 
-### 7.7.3. ✅️ Example 3️⃣️: yield
+### 6.7.3. ✅️ Example 3️⃣️: yield
 
 ```python
 def func_generator(maximom):
@@ -1816,7 +1816,7 @@ print(next(counter))  # -> 3
 # 212. print(next(counter))  # if run error
 ```
 
-### 7.7.4. ✅️ Example4️⃣️: Fibunachi()
+### 6.7.4. ✅️ Example4️⃣️: Fibunachi()
 
 ```python
 print("--------------------byList----------------------")
@@ -1853,7 +1853,7 @@ for num in fib_generator(10):  # استفاده از حالت جنریتور
     print(f"------> {num}")
 ```
 
-### 7.7.5. ✅️ Example 5️⃣️
+### 6.7.5. ✅️ Example 5️⃣️
 
 ```python
 from time import time
@@ -1871,7 +1871,7 @@ print(f"---------->  Time(s): {end_time - start_time}\n")
 
 ```
 
-## 7.8. 🅱️ Zip
+## 6.8. 🅱️ Zip
 
 ```python
 # 213. تلفیق دو ایتِرِیت با یکدیگر تبدیل به یک ایتریت جدید که شامل هردوی آن‌ها می‌باشد
@@ -1963,7 +1963,7 @@ func7_avg_WithIndex()
 
 ```
 
-## 7.9. 🅱️ Iterate_class_example
+## 6.9. 🅱️ Iterate_class_example
 
 ```python
 # example 1️⃣️
@@ -2043,7 +2043,7 @@ for item in User('ali', 60):
 
 ```
 
-# 8. 🅰️ OOP(Object Oriented Programming)
+# 7. 🅰️ OOP(Object Oriented Programming)
 
 * در کلاس‌ها درحین تعریف یک تابع در داخل آن تابع اگر از کلمه کلیدی self استفاده نشود آنگاه متغیرهای کلاس همراه آورده
   نمی‌شود
@@ -2076,7 +2076,7 @@ print("آیا شیء یک نمونه از کلاس است؟", isinstance(obj, Us
 
 ```
 
-## 8.1. 🅱️ NameMangling
+## 7.1. 🅱️ NameMangling
 
 ```python
 # 227. _name    => define local variable
@@ -2111,7 +2111,7 @@ print(
 
 ```
 
-## 8.2. 🅱️ Override
+## 7.2. 🅱️ Override
 
 ```python
 class Animal:
@@ -2137,7 +2137,7 @@ print(worm.makeSound())
 
 ```
 
-## 8.3. 🅱️ Static
+## 7.3. 🅱️ Static
 
 * اگر یک متغیر را در داخل کلاس و خارج توابع تعریف کنیم آنگاه آن را استاتیک خواندنی درنظر می‌گیرد
 * یعنی با تغییر در شیء‌نمونه‌ها ازین پس مقادیر آنها مستقل خواهند شد
@@ -2178,9 +2178,9 @@ print(f"staticData in two [id: {id(two.staticData)} ] ---> {two.staticData}")
 
 ```
 
-# 9. 🅰️ File
+# 8. 🅰️ File
 
-## 9.1. 🅱️ Read
+## 8.1. 🅱️ Read
 
 ```python
 data = open("/etc/passwd")
@@ -2205,7 +2205,7 @@ with open("/etc/passwd", encoding='UTF-8', mode="r") as bFile:
 
 ```
 
-## 9.2. 🅱️ Write
+## 8.2. 🅱️ Write
 
 ```python
 # 242. mode:
@@ -2219,7 +2219,7 @@ with open("/tmp/salam.txt", encoding='UTF-8', mode="w") as bFile:
 
 ```
 
-## 9.3. 🅱️ module os
+## 8.3. 🅱️ module os
 
 ```python
 import os
@@ -2291,7 +2291,7 @@ for data in os.walk(''):  # os.walk('dir',topdown=False) از تویی ترین 
 
 ```
 
-## 9.4. 🅱️ Module Pathlib
+## 8.4. 🅱️ Module Pathlib
 
 ```python
 import pathlib
@@ -2326,7 +2326,7 @@ print(list(data))
 
 ```
 
-## 9.5. 🅱️ Module shutil
+## 8.5. 🅱️ Module shutil
 
 ```python
 import os
@@ -2348,7 +2348,7 @@ import shutil
 
 ```
 
-# 10. 🅰️ JSON
+# 9. 🅰️ JSON
 
 ```python
 import json
@@ -2406,9 +2406,9 @@ def showData():
 
 ```
 
-# 11. 🅰️Database
+# 10. 🅰️Database
 
-## 11.1. 🅱️ SQLlight
+## 10.1. 🅱️ SQLlight
 
 ```python
 import sqlite3
@@ -2450,11 +2450,11 @@ for product in cursor:
     print(product)
 ```
 
-# 12. 🅰️ GUI
+# 11. 🅰️ GUI
 
-## 12.1. 🅱️ tkinter
+## 11.1. 🅱️ tkinter
 
-### 12.1.1. ✅️ Lable
+### 11.1.1. ✅️ Lable
 
 ```python
 from tkinter import *
@@ -2473,7 +2473,7 @@ root.mainloop()
 
 ```
 
-### 12.1.2. ✅️ Button
+### 11.1.2. ✅️ Button
 
 ```python
 from tkinter import *
@@ -2508,7 +2508,7 @@ tkWnd.mainloop()
 
 ```
 
-### 12.1.3. ✅️ Calculator پوسته
+### 11.1.3. ✅️ Calculator پوسته
 
 ```python
 from tkinter import *
@@ -2572,7 +2572,7 @@ root.mainloop()
 
 ```
 
-### 12.1.4. ✅️ Calculator
+### 11.1.4. ✅️ Calculator
 
 ```python
 from tkinter import *
@@ -2692,7 +2692,7 @@ root.mainloop()
 
 ```
 
-### 12.1.5. ✅️ Entry
+### 11.1.5. ✅️ Entry
 
 ```python
 from tkinter import *
@@ -2725,7 +2725,7 @@ root.mainloop()
 
 ```
 
-### 12.1.6. ✅️ Frame
+### 11.1.6. ✅️ Frame
 
 ```python
 from tkinter import *
@@ -2758,11 +2758,11 @@ root.mainloop()
 
 ```
 
-# 13. 🅰️ Regex
+# 12. 🅰️ Regex
 
 * Need to`import re`
 
-## 13.1. 🅱️ dot
+## 12.1. 🅱️ dot
 
 ```shell
 # 283. (.) -> Note: یک کاراکتر
@@ -2777,7 +2777,7 @@ root.mainloop()
 # 292. 
 ```
 
-## 13.2. 🅱️ ^
+## 12.2. 🅱️ ^
 
 ```shell
 # 293. text = 'Toplearn'
@@ -2786,7 +2786,7 @@ root.mainloop()
 # 296. print('this is ok')
 ```
 
-## 13.3. 🅱️  $
+## 12.3. 🅱️  $
 
 ```shell
 # 297. text = 'Toplearn'
@@ -2795,7 +2795,7 @@ root.mainloop()
 # 300. print('this is ok')
 ```
 
-## 13.4. 🅱️ escape
+## 12.4. 🅱️ escape
 
 ```shell
 # 301. text = 'this is a book.'
@@ -2804,7 +2804,7 @@ root.mainloop()
 # 304. print('this is ok')
 ```
 
-## 13.5. 🅱️ set
+## 12.5. 🅱️ set
 
 ```shell
 # 305. text = 'site'
@@ -2813,7 +2813,7 @@ root.mainloop()
 # 308. print('this is ok')
 ```
 
-## 13.6. 🅱️ range
+## 12.6. 🅱️ range
 
 ```shell
 # 309. text = 'c'
@@ -2822,7 +2822,7 @@ root.mainloop()
 # 312. print('this is ok')
 ```
 
-## 13.7. 🅱️ exclude
+## 12.7. 🅱️ exclude
 
 ```shell
 # 313. text = 'siue'
@@ -2831,7 +2831,7 @@ root.mainloop()
 # 316. print('this is ok')
 ```
 
-## 13.8. 🅱️ repeat
+## 12.8. 🅱️ repeat
 
 ```shell
 # 317. text = '09123456789'
@@ -2840,7 +2840,7 @@ root.mainloop()
 # 320. print('this is ok')
 ```
 
-## 13.9. 🅱️ other characters
+## 12.9. 🅱️ other characters
 
 ```shell
 # 321. decimal digits => \d
@@ -2855,7 +2855,7 @@ root.mainloop()
 # 329. print('this is ok')
 ```
 
-## 13.10. 🅱️ email regex
+## 12.10. 🅱️ email regex
 
 ```python
 text = '787jhjkj@test.com'
@@ -2863,7 +2863,7 @@ if re.match('^[\w\.-]+@([\w-]+\.)+[\w-]{2,4}$', text):
     print('email is valid')
 ```
 
-## 13.11. 🅱️ Search
+## 12.11. 🅱️ Search
 
 ```python
 import re
@@ -2894,7 +2894,7 @@ for item in os.walk('/Learning-Concept'):
 
 ```
 
-# 14. 🅰️ Thread
+# 13. 🅰️ Thread
 
 ```python
 import time
