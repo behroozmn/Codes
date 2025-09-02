@@ -290,7 +290,6 @@ print(grade)  # B
 
 ## 3.3. 🅱️ for
 
-
 ```python
 # Syntax:
 for variable in iterable:
@@ -900,34 +899,155 @@ print(obj)  # --------------> Output:  <__main__.Person object at 0x7f5f43c31e90
 print(obj - "behrooz")  # --> Output: Ali minus behrooz
 ```
 
-## 5.4. 🅱️ Decorator
+## 5.4. 🅱️ Function as Object
 
-### 5.4.1. ✅️ function into function
+* توابع در پایتون شیء هستند
+* توابع در پایتون می‌توانند
+    * همانند متغیرها منتقل شوند
+    * به یک متغیر نسبت‌داده‌شوند
+    * به تابع دیگر داده شوند
+    * داخل لیست و دیکشنری و موارد مشابه ذخیره شوند
 
-استفاده از تابع درون تابع دیگر به روش های متفاوت انجام می‌شود که نمونه‌های آن در ذیل آمده است
-
-#### 5.4.1.1. ❇️ Traditional
+مثال:
 
 ```python
-from random import choice
+def greet():
+    return "Hello!"
 
 
-def state():
-    def get_state():
-        msg = choice(('Good', 'Bad!', 'Fine'))
-        return msg
+func = greet  # تابع رو به یک متغیر نسبت دادیم
+print(func())  # Hello!
+```
 
-    return get_state()
+## 5.5. 🅱️ Higher-Order Functions
+
+* یک تابع مرتبه‌بالا(Higher-Order Function) به تابعی گفته می‌شه که: یکی از موارد زیر باشد
+    * 1️⃣️یک تابع دیگر را به عنوان ورودی بگیرد،
+    * 2️⃣️ یک تابع را به عنوان خروجی برگرداند.
+* پیش‌نیاز این موضوع آن است که توابع در پایتون شیء باشند
+
+```python
+def greet():
+    return "Hello!"
 
 
-print(f"-----> {state()}")
-print("\n")
+def caller(func):
+    return func()
+
+
+caller(greet)  # "Hello!"
+```
+
+### 5.5.1. 1️⃣️ Function as input
+
+* تابعی که تابع دیگری را به عنوان ورودی می‌گیرد
+* Example: map(), filter(), sorted(), sum()
+
+```python
+# Example1️⃣️: map(func, iterable)
+def square(x):
+    return x ** 2
+
+
+numbers = [1, 2, 3, 4]
+squared = list(map(square, numbers))
+print(squared)  # [1, 4, 9, 16]
+
+
+# Example2️⃣️: filter(func, iterable)
+def is_even(x):
+    return x % 2 == 0
+
+
+evens = list(filter(is_even, numbers))
+print(evens)  # [2, 4]
+
+# Example3️⃣️: sorted(iterable, key=func)
+words = ['banana', 'kiwi', 'apple']
+sorted_by_len = sorted(words, key=len)
+print(sorted_by_len)  # ['kiwi', 'apple', 'banana']
+
+# Example4️⃣️: 
+from functools import reduce
+
+
+def add(x, y):
+    return x + y
+
+
+numbers = [1, 2, 3, 4, 5]
+total = reduce(add, numbers)
+print(total)  # Output: 15
+
+# Example5️⃣️:
+numbers = [1, 2, 3, 4, 5]
+squared = list(map(lambda x: x ** 2, numbers))
+evens = list(filter(lambda x: x % 2 == 0, numbers))
+print(squared)  # [1, 4, 9, 16, 25]
+print(evens)  # [2, 4]
 
 ```
 
-#### 5.4.1.2. ❇️ Traditional-ByReturnValue
+### 5.5.2. 2️⃣️ Function return Function
+
+* این نوع معمولاً در دکوراتورها یا ** Closureها** دیده می‌شه.
+* مثال: تابعی که یک تابع جدید بسازد
 
 ```python
+# Example1️⃣️:  
+def make_multiplier(n):
+    def multiplier(x):
+        return x * n
+
+    return multiplier  # تابع را برمی‌گرداند!
+
+
+double = make_multiplier(2)
+triple = make_multiplier(3)
+
+# نکته: make_multiplier یک تابع مرتبه بالا است چون یک تابع (multiplier) را برمی‌گرداند.
+print(double(5))  # 10
+print(triple(5))  # 15
+```
+
+### 5.5.3. 3️⃣️ Combine
+
+```python
+def add_logger(func):
+    def wrapper(x):
+        print(f"Calling function with input: {x}")
+        result = func(x)
+        print(f"Result: {result}")
+        return result
+
+    return wrapper  # تابع جدید را برمی‌گرداند
+
+
+def square(x):
+    return x ** 2
+
+
+logged_square = add_logger(square)
+logged_square(4)
+
+# Output: Calling function with input: 4
+########: Result: 16
+```
+
+## 5.6. 🅱️ Function Inside Function
+
+توابع می‌توانند در داخل تابع دیگر تعریف شوند (توابع تو در تو)
+
+```python
+# Example1️⃣️: 
+def outer():
+    def inner():
+        print("Inside inner")
+
+    return inner
+
+
+# Example2️⃣️: return value
 from random import choice
 
 
@@ -936,38 +1056,89 @@ def state():
         msg = choice(('Good', 'Bad!', 'Fine'))
         return msg
 
-    return get_state
+    return get_state()  # 📌️ به علامت پرانتز باز و بسته توجه شود
+
+
+print(state())
+
+# Example3️⃣️: Return func
+from random import choice
+
+
+def state():
+    def get_state():
+        msg = choice(('Good', 'Bad!', 'Fine'))
+        return msg
+
+    return get_state  # 📌️ به عدم وجود پرانتز باز و بسته توجه شود
 
 
 result = state()
-print("=====> ", result())
-```
+print(result())
 
-#### 5.4.1.3. ❇️ Traditional-ByArgs
 
-```python
-def sum_func(number, func):
+# Example4️⃣️: with Args
+def func1_square(number):
+    return number * number
+
+
+def func2_sum(number, func):
     total = 0
     for num in range(1, number + 1):
         total += func(num)
     return total
 
 
-def square_func(number):
-    return number * number
-
-
-print("☰☰☰☰☰> ", sum_func(5, square_func))
+print(func2_sum(5, func1_square))  # Output: 55
 ```
 
-#### 5.4.1.4. ❇️ Modern-ByDecorator
+## 5.7. 🅱️ Decorator
 
-* تکنیک Decorator یک DesignePatternاست که یک تابع را درون تابع دیگر فراخوانی میکنیم
+دِکوراتور یک تابع است که یک تابع دیگر را می‌گیرد، رفتار آن را تغییر می‌دهد و یک تابع جدید را برمی‌گرداند
+
+```python
+my_function = decorator(my_function)
+
+
+# معادل است با
+@decorator
+def my_function():
+    pass
+```
+
+* بادرک صحیح از سه مفهوم زیر مبحث Decorator درک خواهد شد
+    * Function as Object
+    * High-Order Functions
+    * Function inside functions
+* تکنیک Decorator یک DesignePattern است که یک تابع را درون تابع دیگر فراخوانی میکنیم
 * امکان تغییر یا گسترش رفتار یک تابع یا کلاس بدون تغییر در کد اصلی آن
-* معمولاً به صورت یک تابع تعریف می‌شوند
 * یک تابع دیگر را بعنوان آرگومان ورودی می‌پذیرند و یک تابع جدید را برمی‌گردانند
 * این تابع جدید می‌تواند قبل یا بعد از اجرای تابع اصلی، کارهای اضافی انجام دهد
 * معمولا همراه با کاراکتر @ در بالای توابع ظاهر می‌شوند
+
+ساختار کلی یک دکوراتور به شکل زیراست. همچنین `*args, **kwargs` باعث می‌شود تا دکوراتور با هر تابعی(فارغ از تعداد آرگومان ورودی) کار کند
+
+```python
+def decorator(func):
+    def wrapper(*args, **kwargs):
+        # کار قبل از اجرای تابع (مثلاً لاگ، زمان، اجازه دسترسی)
+        result = func(*args, **kwargs)  # اجرای تابع اصلی
+        # کار بعد از اجرای تابع (مثلاً پاک‌کردن، چک نتیجه)
+        return result
+
+    return wrapper
+```
+
+| دکوراتور          | کاربرد                                  |
+|-------------------|-----------------------------------------|
+| `@timer`          | اندازه‌گیری زمان اجرا                   |
+| `@debug`          | لاگ کردن فراخوانی توابع                 |
+| `@cache`          | ذخیره نتایج برای جلوگیری از محاسبه مجدد |
+| `@login_required` | بررسی اینکه کاربر وارد شده باشد (در وب) |
+| `@retry`          | اجرای مجدد تابع در صورت خطا             |
+| `@property`       | تبدیل متد به ویژگی (در کلاس‌ها)         |
+
+### 5.7.1. ✅️ Custome
 
 ```python
 def exec_after_before(func):
@@ -987,40 +1158,311 @@ def say_hello():
 say_hello()
 
 ```
+### 5.7.1. ✅️ `@timer`
 
-### 5.4.2. ✅️ Classmethod
-
-* تغییر عملکرد یک تابع بطوریکه به‌جای استفاده از منابع نمونه از منابع کلاس استفاده می‌کند
-* دسترسی مستقیم به دیتای کلاس بدون ساخت شیء نمونه
+اگر بخواهیم قبل و بعد از اجرای تابع، زمان رو چک کنه
 
 ```python
-class User:
-    activeUsers = 0
-
-    @classmethod
-    def func1(cls):
-        return cls.activeUsers
+import time
 
 
-# 126. روش 1️⃣️: بدون نیاز ساخت شیء از کلاس
-print(User.func1())
+def timer(function_job):
+    def wrapper():
+        start = time.time()
+        function_job()  # اجرای تابع اصلی
+        end = time.time()
+        print(f"Time taken: {end - start:.2f} seconds")
 
-# 127. روش 2️⃣️: الزام بر ساختن شیء از کلاس"
+    return wrapper
 
-obj1 = User()
-print(obj1.func1())
+
+# نحوه استفاده
+@timer
+def behrooz():
+    time.sleep(2)  # عملیات دلخواه که میخواهیم مقدار زمان آن را اندازه گیری کنیم
+    print("Job Done!")
+
+
+behrooz()
+
+# Output: 
+### Job Done!!
+### Time taken: 2.00 seconds
+```
+
+توضیحات
+
+* تابع behrooz به عنوان ورودی به timer داده شد.
+* timer یک تابع جدید (wrapper) ساخت و برگرداند.
+* حالا behrooz دیگه تابع اصلی نیست، بلکه تابع پیچ‌شده (wrapped) است که قبل و بعدش کار اضافه انجام می‌ده.
+
+```python
+@timer
+def behrooz():
+    ...
+
+
+# قطعه کد بالا در پایتون معادل زیر تلقی می‌شود
+slow_function = timer(behrooz)
+```
+
+### 5.7.2. ✅️ `@debug`
+
+```python
+def debug(func):
+    def wrapper(*args, **kwargs):
+        print(f"Calling function:{func.__name__}, args:{args}, kwargs:{kwargs}")
+        result = func(*args, **kwargs)
+        print(f"function:{func.__name__}, returned:{result}")
+        return result
+
+    return wrapper
+
+
+@debug
+def add(a, b):
+    return a + b
+
+
+add(3, 5)
+# Output:
+## Calling function:add, args:(3, 5), kwargs:{}
+## function:add ,returned:8
+## 8
+```
+
+### 5.7.3. ✅️ `@wraps`
+
+* وقتی از یک دکوراتور استفاده می‌کنیم، در واقع تابع اصلی رو با یک تابع جدید (معمولاً wrapper) جایگزین می‌کنیم.
+* اما مشکل جایگزینی این است که اطلاعات متاداده تابع اصلی (مثل نام، توضیحات، مستندات) از بین می‌رود و به جای آن اطلاعات تابع wrapper نمایش داده می‌شود
+    * `__name__`
+    * `__doc__`
+    * `__module__`
+* ذیل ماژول functools می‌باشد
+
+```python
+# Example1️⃣️: Without @wraps
+def my_decorator(func):
+    def wrapper():
+        return func()
+
+    return wrapper
+
+
+@my_decorator
+def hello():
+    """Says hello"""
+    print("Hello!")
+
+
+print(hello.__name__)  # Output: wrapper ← اشتباه!
+print(hello.__doc__)  # Output: None ← اشتباه!
+
+# Example1️⃣️: with @wraps
+from functools import wraps
+
+
+def my_decorator(func):
+    @wraps(func)
+    def wrapper():
+        return func()
+
+    return wrapper
+
+
+@my_decorator
+def hello():
+    """Says hello"""
+    print("Hello!")
+
+
+print(hello.__name__)  # Output: hello ✅
+print(hello.__doc__)  # Output: Says hello ✅
+```
+
+### 5.7.4. ✅️ `@lru_cache`
+
+* ذخیره نتایج برای جلوگیری از محاسبه مجدد
+* در پایتون از نسخه 3.9 به بعد، یک دکوراتور جدید به نام @cache به ماژول functools اضافه شد که نسخه ساده‌شده و پیش‌فرض از @lru_cache است.
+    * پس دکوریتور `@cache` در نسخه های بالاتر از 3.9 معادل است با `@lru_cache(maxsize=None)`
+* در موارد زیر می‌توان از cache استفاده کرد
+    * فقط وابسته به ورودی‌هاست (pure function): توابعی که ورودی یکسان، همیشه خروجی یکسان دارند
+    * ورودی و خروجی به زمان و گزاره‌های تصادفی و متغیرهای سراسری وابسته نباشد
+        * وگرنه زمان را کش میکند و هربار یک زمان را نشان میدهد
+        * وگرنه عدد رندم را کش میکند و هربار یک عدد رندم ثابت را نمایش میدهد
+    * محاسبات تکراری دارد
+    * ورودی‌های تکراری زیادی دارد
+    * زمان اجرا زیاد است
+* مثال
+    * توابع بازگشتی (فیبوناچی، فاکتوریل)
+    * پردازش داده‌های تکراری
+    * APIهای شبیه‌سازی‌شده
+* اگر پایتونت قدیمی‌تر از 3.9 است، از @lru_cache(maxsize=None) استفاده کن.
+* اگر 3.9+ داری، @cache انتخاب تمیزتر و مدرن‌تریه
+
+```python
+from functools import lru_cache
+
+
+@lru_cache(maxsize=None)
+def fibonacci(n):
+    print(f"Calculating fibonacci({n})...")
+    if n < 2:
+        return n
+    return fibonacci(n - 1) + fibonacci(n - 2)
+
+
+# اولین بار: محاسبه می‌شه
+print(fibonacci(5))
+# خروجی:
+# Calculating fibonacci(5)...
+# Calculating fibonacci(4)...
+# Calculating fibonacci(3)...
+# Calculating fibonacci(2)...
+# Calculating fibonacci(1)...
+# Calculating fibonacci(0)...
+# 5
+
+# دومین بار: از کش استفاده می‌شه — هیچ پیامی چاپ نمی‌شه!
+print(fibonacci(5))  # 5 ← بدون محاسبه دوباره
+```
+
+* بدون کش، fibonacci(35) ممکنه چند ثانیه طول بکشه. با کش، لحظه‌ای اجرا می‌شه.
+
+### 5.7.5. ✅️ `@cache`
+
+```python
+# Example1️⃣️: فرض کنیم یک تابع کند داریم که جمع اعداد تا n رو حساب می‌کنه 
+from functools import cache
+
+
+@cache
+def slow_sum(n):
+    print(f"process sum until {n}...")
+    total = 0
+    for i in range(n):
+        total += i
+    return total
+
+
+# try1: process
+print(slow_sum(10))  # Output: process sum until 10... \n 45
+
+# try2: From Cache
+print(slow_sum(10))  # Output: 45 (بدون محاسبه مجدد)
+
+# Example2️⃣️: محاسبه فاکتوریل (بازگشتی)
+from functools import cache
+
+
+@cache
+def factorial(n):
+    print(f"processing factorial({n})")
+    if n <= 1:
+        return 1
+    return n * factorial(n - 1)
+
+
+# try1: process
+print(factorial(5))
+# Output:
+# ------> processing factorial(5)
+# ------> processing factorial(4)
+# ------> processing factorial(3)
+# ------> processing factorial(2)
+# ------> processing factorial(1)
+# ------> 120 
+
+# try2: From Cache
+print(factorial(5))
+# Output:
+# ------> processing factorial(5)
+# ------> 120
 
 ```
 
-### 5.4.3. ✅️ Property
+### 5.7.6. ✅️ `@retry`
 
-* property: تبدیل تابع به ویزگی(property) یا صفت(attribute)
-* برای دسترسی به متد باید حتما پرانتز باز و بسته گذاشته بشود ولی برای پراپرتی نباید پرانتز گذاشت
+* اجرای مجدد تابع در صورت خطا
+* اگر تابعی به دلیل خطا (مثلاً شبکه قطع شد) شکست خورد، چند بار دوباره امتحان کن.
 
 ```python
+import time
+import random
 
+
+def retry(max_attempts=3, delay=1):
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            for attempt in range(max_attempts):
+                try:
+                    return func(*args, **kwargs)
+                except Exception as e:
+                    print(f"تلاش {attempt + 1} شکست خورد: {e}")
+                    if attempt < max_attempts - 1:
+                        time.sleep(delay)  # کمی صبر کن
+                    else:
+                        print("همه تلاش‌ها شکست خورد.")
+                        raise
+
+        return wrapper
+
+    return decorator
+
+
+@retry(max_attempts=3, delay=0.5)
+def unstable_function():
+    if random.random() < 0.7:  # 70% احتمال خطا
+        raise ConnectionError("اتصال شبکه قطع شد!")
+    print("عملیات با موفقیت انجام شد.")
+    return True
+
+
+# اجرا
+unstable_function()
+# Output: 
+##### تلاش 1 شکست خورد: اتصال شبکه قطع شد!
+##### تلاش 2 شکست خورد: اتصال شبکه قطع شد!
+##### عملیات با موفقیت انجام شد.
+```
+
+### 5.7.7. ✅️ `@login_required`
+
+* قبل از اجرای یک تابع (مثل دسترسی به پروفایل)، بررسی کن که کاربر وارد شده (logged in) باشد.
+* این دکوراتور معمولاً در فریم‌ورک‌هایی مثل Flask یا Django وجود داره. اینجا یک نسخه ساده‌شده می‌زنیم.
+
+```python
+def login_required(func):
+    def wrapper(*args, **kwargs):
+        # فرض می‌کنیم کاربر وارد شده یا نه
+        is_logged_in = True  # فرض کن کاربر وارد شده
+        if not is_logged_in:
+            print("AccessDenied! Please login")
+            return None
+        return func(*args, **kwargs)
+
+    return wrapper
+
+
+@login_required
+def view_profile():
+    print("profile is loading")
+
+
+view_profile()
+# Output: profile is loading ------------------> if `is_logged_in = True`
+# Output: AccessDenied! Please login ----------> if `is_logged_in = False`
+
+```
+
+### 5.7.8. ✅️ `@property`
+
+* property: تبدیل تابع به ویزگی(property) یا صفت(attribute)
+* برای دسترسی به متد باید حتما پرانتز باز و بسته گذاشته بشود ولی برای حالت property نباید پرانتز گذاشت
+
+```python
+# Example1️⃣️: 
 class Behrooz:
-
     def __init__(self, name, family):  # Constructor
         self.name = name
         self.family = family
@@ -1034,39 +1476,45 @@ class Behrooz:
 
 
 obj1 = Behrooz("behrooz", "MohamadiNasab")
+print(obj1.show_fullname())  # --> Output: behrooz MohamadiNasab  
+print(obj1.fullname)  # ---------> Output: behrooz MohamadiNasab
 
-print(obj1.show_fullname())
-print(obj1.fullname)
 
+# Example2️⃣️: 
+class Person:
+    def __init__(self, name, birth_year):
+        self.name = name
+        self.birth_year = birth_year
+
+    @property
+    def age(self):
+        from datetime import datetime
+        return datetime.now().year - self.birth_year
+
+
+p = Person("Ali", 1990)
+print(p.age)  # Output: مثلاً 34
 ```
 
-### 5.4.4. ✅️ PropertyGetterSetter
+### 5.7.9. ✅️ PropertyGetterSetter
 
-* تغییر رفتارِ تابع به متغیر
-* getter: یک تابع است و برای استفاده باید حتما همراه پرانتز باشد ولی هنگامیکه با @property بیاید آنگاه نیاز به استفاده
-  از پرانتز نیست
+* getter: یک تابع که برای استفاده می‌بایست همراه پرانتز باشد ولی هنگامیکه با `@property` آمده‌باشد نیاز به استفاده از پرانتز نیست
 
 ```python
 class behrooz:
-
     def __init__(self, _name, _family, _age):  # Constructor
         self.name = _name
         self.family = _family
         self.age = _age
 
-    # برای دسترسی به متد باید حتما پرانتز باز و بسته گذاشته بشود
-    # ولی وقتی از تابع getter استفاده می‌کنیم با گذاشتن Decorator تحت عنوان property نباید پرانتز گذاشت
-    # اگر پراپرتی را قرار ندهیم آنگاه برای فراخوانی مقدار باید حتما پرانتز باز و بسته رو قرار دهیم
     @property
-    def age(self):  # # تبدیل یک تابع به یک پراپرتی و نه متد
+    def age(self):  # تبدیل یک تابع به یک پراپرتی و نه متد
         return self._age
 
     @property
     def fullName(self):  # تبدیل یک تابع به یک پراپرتی و نه متد
         return f"{self.name} {self.family}"
 
-    # توابعی که Decorator تحت عنوان property و setter قرار دارد سبب می‌شود تا رفتارِ تابع تغییر کند و در حالت متغیر استفاده گردد
-    # نکته: کلمه age که در خط زیر است از تابع بالایی که همراه property است آمده است و باید هم‌نام آن باشد
     @age.setter
     def age(self, value):
         if value >= 0:
@@ -1076,7 +1524,7 @@ class behrooz:
 
 
 obj1 = behrooz("behrooz", "MohamadiNasab", -18)
-print(obj1.age)  # اگر پراپرتی را در بالای گِتِر متغیر قرار نمی‌دادیم باید در اینجا پرانتز باز و بسته قرار می‌دادیم
+print(obj1.age)
 
 obj1.age = 40
 print(obj1.age)
@@ -1086,12 +1534,34 @@ print(obj1.age)
 
 obj1.age = 18
 print(obj1.age)
+print(obj1.fullName)
+```
 
-print(obj1.fullName)  # به حالت متد فراخوانی نمیکنیم بلکه به حالت پراپرتی(خصیصه) فراخوانی می‌کنیم
+### 5.7.2. ✅️ ClassMethod
+
+* تغییر عملکرد یک تابع بطوریکه به‌جای استفاده از منابع نمونه از منابع کلاس استفاده می‌کند
+* دسترسی مستقیم به دیتای کلاس بدون ساخت شیء نمونه
+
+```python
+class User:
+    activeUsers = 0
+
+    @classmethod
+    def func1(cls):
+        return cls.activeUsers
+
+
+# Method1️⃣️: بدون نیاز ساخت شیء از کلاس
+print(User.func1())
+
+# Method2️⃣️: الزام بر ساختن شیء از کلاس"
+
+obj1 = User()
+print(obj1.func1())
 
 ```
 
-### 5.4.5. ✅️ Advanced
+### 5.7.5. ✅️ Advanced
 
 ```python
 def before_after(func):
@@ -1132,7 +1602,7 @@ print("###  Decorator #### 1 Argument ###")
 print("##################################")
 
 
-# 128. x only sent to wrapper[not sent to num_before_after]
+# x only sent to wrapper[not sent to num_before_after]
 def one_arg_before_after(func):
     def wrapper(x):
         print(f"Before={x - 1}")
@@ -1225,37 +1695,6 @@ show_data(Fname="Behi")
 
 ```
 
-### 5.4.6. ✅️ Example
-
-```python
-from time import time
-
-
-def speed_test(func):
-    def wrapper(*args, **kwargs):
-        start_time = time()
-        result = func(*args, **kwargs)
-        end_time = time()
-        print(f"Time Elapsed : {end_time - start_time}")
-        return result
-
-    return wrapper
-
-
-@speed_test
-def sum_list():
-    return sum([x for x in range(40000000)])
-
-
-@speed_test
-def sum_gen():
-    return sum(x for x in range(40000000))
-
-
-sum_gen()
-sum_list()
-
-```
 
 # 6. 🅰️ Iterate
 
@@ -1753,7 +2192,7 @@ func5()
     * عدم محاسبه و برگرداندن یکباره تمام مقادیر بلکه محاسبه و تولیدیکی پس از دیگری
 
 generator expression: عناصر رو به صورت تنبل (lazy) تولید می‌کنه — یعنی فقط وقتی که نیاز باشه.
-list comprehension: تمام عناصر رو فوراً ایجاد می‌کنه و در حافظه نگه می‌داره.  
+list comprehension: تمام عناصر رو فوراً ایجاد می‌کنه و در حافظه نگه می‌داره.
 
 ```python
 # Example1️⃣️: # simple for
@@ -1769,8 +2208,6 @@ print([num for num in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] if num % 2 == 0])  # Outpu
 # Example1️⃣️: generator expression
 print(list(num for num in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] if num % 2 == 0))  # Output: [2, 4, 6, 8, 10]
 ```
-
-
 
 ### 6.7.1. ✅️ Example 1️⃣️: yield
 
