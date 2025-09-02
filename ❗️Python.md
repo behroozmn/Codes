@@ -1158,7 +1158,7 @@ def say_hello():
 say_hello()
 
 ```
-### 5.7.1. ✅️ `@timer`
+### 5.7.2. ✅️ `@timer`
 
 اگر بخواهیم قبل و بعد از اجرای تابع، زمان رو چک کنه
 
@@ -1206,7 +1206,7 @@ def behrooz():
 slow_function = timer(behrooz)
 ```
 
-### 5.7.2. ✅️ `@debug`
+### 5.7.3. ✅️ `@debug`
 
 ```python
 def debug(func):
@@ -1231,7 +1231,7 @@ add(3, 5)
 ## 8
 ```
 
-### 5.7.3. ✅️ `@wraps`
+### 5.7.4. ✅️ `@wraps`
 
 * وقتی از یک دکوراتور استفاده می‌کنیم، در واقع تابع اصلی رو با یک تابع جدید (معمولاً wrapper) جایگزین می‌کنیم.
 * اما مشکل جایگزینی این است که اطلاعات متاداده تابع اصلی (مثل نام، توضیحات، مستندات) از بین می‌رود و به جای آن اطلاعات تابع wrapper نمایش داده می‌شود
@@ -1280,7 +1280,7 @@ print(hello.__name__)  # Output: hello ✅
 print(hello.__doc__)  # Output: Says hello ✅
 ```
 
-### 5.7.4. ✅️ `@lru_cache`
+### 5.7.5. ✅️ `@lru_cache`
 
 * ذخیره نتایج برای جلوگیری از محاسبه مجدد
 * در پایتون از نسخه 3.9 به بعد، یک دکوراتور جدید به نام @cache به ماژول functools اضافه شد که نسخه ساده‌شده و پیش‌فرض از @lru_cache است.
@@ -1329,7 +1329,7 @@ print(fibonacci(5))  # 5 ← بدون محاسبه دوباره
 
 * بدون کش، fibonacci(35) ممکنه چند ثانیه طول بکشه. با کش، لحظه‌ای اجرا می‌شه.
 
-### 5.7.5. ✅️ `@cache`
+### 5.7.6. ✅️ `@cache`
 
 ```python
 # Example1️⃣️: فرض کنیم یک تابع کند داریم که جمع اعداد تا n رو حساب می‌کنه 
@@ -1381,7 +1381,7 @@ print(factorial(5))
 
 ```
 
-### 5.7.6. ✅️ `@retry`
+### 5.7.7. ✅️ `@retry`
 
 * اجرای مجدد تابع در صورت خطا
 * اگر تابعی به دلیل خطا (مثلاً شبکه قطع شد) شکست خورد، چند بار دوباره امتحان کن.
@@ -1426,7 +1426,7 @@ unstable_function()
 ##### عملیات با موفقیت انجام شد.
 ```
 
-### 5.7.7. ✅️ `@login_required`
+### 5.7.8. ✅️ `@login_required`
 
 * قبل از اجرای یک تابع (مثل دسترسی به پروفایل)، بررسی کن که کاربر وارد شده (logged in) باشد.
 * این دکوراتور معمولاً در فریم‌ورک‌هایی مثل Flask یا Django وجود داره. اینجا یک نسخه ساده‌شده می‌زنیم.
@@ -1455,7 +1455,7 @@ view_profile()
 
 ```
 
-### 5.7.8. ✅️ `@property`
+### 5.7.9. ✅️ `@property`
 
 * property: تبدیل تابع به ویزگی(property) یا صفت(attribute)
 * برای دسترسی به متد باید حتما پرانتز باز و بسته گذاشته بشود ولی برای حالت property نباید پرانتز گذاشت
@@ -1496,7 +1496,7 @@ p = Person("Ali", 1990)
 print(p.age)  # Output: مثلاً 34
 ```
 
-### 5.7.9. ✅️ PropertyGetterSetter
+### 5.7.10. ✅️ PropertyGetterSetter
 
 * getter: یک تابع که برای استفاده می‌بایست همراه پرانتز باشد ولی هنگامیکه با `@property` آمده‌باشد نیاز به استفاده از پرانتز نیست
 
@@ -1537,7 +1537,7 @@ print(obj1.age)
 print(obj1.fullName)
 ```
 
-### 5.7.2. ✅️ ClassMethod
+### 5.7.11. ✅️ ClassMethod
 
 * تغییر عملکرد یک تابع بطوریکه به‌جای استفاده از منابع نمونه از منابع کلاس استفاده می‌کند
 * دسترسی مستقیم به دیتای کلاس بدون ساخت شیء نمونه
@@ -1561,7 +1561,7 @@ print(obj1.func1())
 
 ```
 
-### 5.7.5. ✅️ Advanced
+### 5.7.12. ✅️ Comprehensive Advance Examples
 
 ```python
 def before_after(func):
@@ -1573,11 +1573,7 @@ def before_after(func):
     return wrapper
 
 
-print("#########################################")
-print("######## روش اول:برگرداندن یک تابع ######")
-print("#########################################")
-
-
+# Example1️⃣️: Legacy❗️ Return function
 def say_hello():
     print("hello")
 
@@ -1585,11 +1581,13 @@ def say_hello():
 tempFunc = before_after(say_hello)
 tempFunc()
 
-print("\n#################################")
-print("###  Decorator #### 0 Argument ###")
-print("##################################")
 
+# Output:
+## -----> Before=0
+## -----> hello
+## -----> After=1
 
+# Example2️⃣️: Zero args
 @before_after
 def say_hello():
     print("hello")
@@ -1597,12 +1595,13 @@ def say_hello():
 
 say_hello()
 
-print("\n##################################")
-print("###  Decorator #### 1 Argument ###")
-print("##################################")
 
+# Output:
+## -----> Before=0
+## -----> hello
+## -----> After=1
 
-# x only sent to wrapper[not sent to num_before_after]
+# Example3️⃣️: 1 args
 def one_arg_before_after(func):
     def wrapper(x):
         print(f"Before={x - 1}")
@@ -1614,85 +1613,128 @@ def one_arg_before_after(func):
 
 @one_arg_before_after
 def say_hello(x):
-    print(f"----1arg---->hi {x}")
-    print(f"----1arg---->hi")
+    print(f"hi {x}")
+    print(f"hi")
 
 
 say_hello(256)
 
-print("\n##################################")
-print("###  Decorator #### 2 Argument ###")
-print("##################################")
+
+# Output: 
+## ------> Before=255
+## ------> hi 256
+## ------> hi
+## ------> After=257
 
 
+# Example4️⃣️: 2 Args
 def two_args_before_after(func):
     def wrapper(arg1, arg2):
-        print(f"Before:      [arg1:{arg1}] - [arg2:{arg2}]")
+        print(f"Before:[arg1:{arg1}] - [arg2:{arg2}]")
         func(arg1, arg2)
-        print(f"After:       [arg1:{arg1}] - [arg2:{arg2}]")
+        print(f"After:[arg1:{arg1}] - [arg2:{arg2}]")
 
     return wrapper
 
 
 @two_args_before_after
 def show_name(name, family):
-    print(f"---2arg--->  {name} {family}")
+    print(f"{name} {family}")
 
 
 show_name('behrooz', 'Mohamadinasab')
 
-print("\n###############################")
-print("###  Decorator ##### (*Arg) ###")
-print("###############################")
+
+# Output:
+## -----> Before:[arg1:behrooz] - [arg2:Mohamadinasab]
+## -----> behrooz Mohamadinasab
+## -----> After:[arg1:behrooz] - [arg2:Mohamadinasab]
 
 
+# Example5️⃣️: *Arg
 def many_args_before_after(func):
     def wrapper(*args):
-        print(f"Before      [{args}]")
+        print(f"Before [{args}]")
         func(args)
-        print(f"After       [{args}]")
+        print(f"After [{args}]")
 
     return wrapper
 
 
 @many_args_before_after
 def show_data(*args):
-    print(f"---*arg---> {args}")
+    print(f"*args: {args}")
 
 
 show_data('Behrooz', 'MohamadiNasab', 'phone', 'male', 'address')
+# Output:
+## -----> Before [('Behrooz', 'MohamadiNasab', 'phone', 'male', 'address')]
+## -----> *args: (('Behrooz', 'MohamadiNasab', 'phone', 'male', 'address'),)
+## -----> After [('Behrooz', 'MohamadiNasab', 'phone', 'male', 'address')]
 
-print("\n##########################################")
-print("###  Decorator with(*Arg and **kwargs) ###")
-print("##########################################")
+show_data('Behrooz', 'male')
 
 
+# Output:
+## -----> Before [('Behrooz', 'male')]
+## -----> *args: (('Behrooz', 'male'),)
+## -----> After [('Behrooz', 'male')]
+
+
+# Example6️⃣️: *Arg and **kwargs
 def exec_before_after(func):
     def wrapper(*args, **kwargs):
-        print(f"Before      [args:{args}]")
+        print(f"Before[args:{args}]")
         func(*args, **kwargs)
-        print(f"After       [kwargs:{kwargs}]")
+        print(f"After[kwargs:{kwargs}]")
 
     return wrapper
 
 
 @exec_before_after
 def show_data(*args, **kwargs):
-    print(f"==========> {args} - {kwargs}")
+    print(f"{args} - {kwargs}")
 
 
 show_data('Behrooz', 'MohamadiNasab', 'phone', 'male', 'address', Fname="Behi", Lname="Mohamadi")
-print("\n\n")
-show_data('Behrooz', 'MohamadiNasab', 'phone', 'male', 'address', Fname="Behi")
-print("\n\n")
-show_data('Behrooz', 'MohamadiNasab', 'phone')
-print("\n\n")
-show_data(Fname="Behi", Lname="Mohamadi")
-print("\n\n")
-show_data('male')
-print("\n\n")
-show_data(Fname="Behi")
+# Output:
+## -----> Before[args:('Behrooz', 'MohamadiNasab', 'phone', 'male', 'address')]
+## -----> ('Behrooz', 'MohamadiNasab', 'phone', 'male', 'address') - {'Fname': 'Behi', 'Lname': 'Mohamadi'}
+## -----> After[kwargs:{'Fname': 'Behi', 'Lname': 'Mohamadi'}]
 
+show_data('Behrooz', 'MohamadiNasab', 'phone', 'male', 'address', Fname="Behi")
+# Output:
+## -----> Before[args:('Behrooz', 'MohamadiNasab', 'phone', 'male', 'address')]
+## -----> ('Behrooz', 'MohamadiNasab', 'phone', 'male', 'address') - {'Fname': 'Behi'}
+## -----> After[kwargs:{'Fname': 'Behi'}]
+
+
+show_data('Behrooz', 'MohamadiNasab', 'phone')
+# Output:
+## -----> Before[args:('Behrooz', 'MohamadiNasab', 'phone')]
+## -----> ('Behrooz', 'MohamadiNasab', 'phone') - {}
+## -----> After[kwargs:{}]
+
+
+show_data(Fname="Behi", Lname="Mohamadi")
+# Output:
+## -----> Before[args:()]
+## -----> () - {'Fname': 'Behi', 'Lname': 'Mohamadi'}
+## -----> After[kwargs:{'Fname': 'Behi', 'Lname': 'Mohamadi'}]
+
+
+show_data('male')
+# Output:
+## -----> Before[args:('male',)]
+## -----> ('male',) - {}
+## -----> After[kwargs:{}]
+
+
+show_data(Fname="Behi")
+# Output:
+## -----> Before[args:()]
+## -----> () - {'Fname': 'Behi'}
+## -----> After[kwargs:{'Fname': 'Behi'}]
 ```
 
 
