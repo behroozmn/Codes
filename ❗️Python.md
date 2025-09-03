@@ -1158,6 +1158,7 @@ def say_hello():
 say_hello()
 
 ```
+
 ### 5.7.2. ✅️ `@timer`
 
 اگر بخواهیم قبل و بعد از اجرای تابع، زمان رو چک کنه
@@ -1737,7 +1738,6 @@ show_data(Fname="Behi")
 ## -----> After[kwargs:{'Fname': 'Behi'}]
 ```
 
-
 # 6. 🅰️ Iterate
 
 ```python
@@ -1785,117 +1785,136 @@ print(next(iterName))
 ```
 
 ```python
+dic1 = {"name": "Behrooz", "family": "Mohammadi Nasab", "age": 34}
+dic2 = dict(first=1, second=2, third=3)  # {'first': 1, 'second': 2, 'third': 3}
+dic3 = {}  # {}
+dic4 = {num: num for num in [1, 2, 3, 4, 5]}  # {1: 1, 2: 2, 3: 3, 4: 4, 5: 5}
+dic5 = {key: value ** 2 for key, value in dic4.items()}  # {1: 1, 2: 4, 3: 9, 4: 16, 5: 25}
+dic6 = {num: ("even" if num % 2 == 0 else "odd") for num in [1, 2, 3, 4, 5]}  # {1: 'odd', 2: 'even', 3: 'odd', 4: 'even', 5: 'odd'}
+dic7 = {num: num ** num for num in [1, 2, 3, 4, 5]}  # {1: 1, 2: 4, 3: 27, 4: 256, 5: 3125}
 
-class DictionaryClass:
-    Dic1 = {
-        "name": "Behrooz",
-        "family": "Mohammadi Nasab",
-        "age": 31
+# Example1️⃣️: 
+dic1 = {"name": "Behrooz", "family": "Mohammadi Nasab", "age": 34}
+print(dic1["family"])  # Output: Mohammadi Nasab
+
+# Example2️⃣️: .values()
+print(dic1.values())  # Output: dict_values(['Behrooz', 'Mohammadi Nasab', 34])
+for value in dic1.values():
+    print(value)
+# Output:
+## -----> Behrooz
+## -----> Mohammadi Nasab  
+## -----> 34 
+
+# Example3️⃣️: .keys()
+print(dic1.keys())  # Output: dict_keys(['name', 'family', 'age'])
+
+# Example4️⃣️: .get(key)
+print(dic1.get("name"))  # output: Behrooz
+print(dic1.get("age"))  # output: 34
+
+# Example5️⃣️:
+for key, value in dic1.items():
+    print(f"{key}: {value}")
+# Output:
+## -----> name: Behrooz
+## -----> family: Mohammadi Nasab
+## -----> age: 34
+
+# Example6️⃣️:
+x = "name"
+if x in dic1:
+    print(dic1[x])
+else:
+    print(f"there is no {x} key in me")
+
+# Example7️⃣️: .clear()
+dic1.clear()  # dic1 is cleared
+
+# Example8️⃣️: copy()
+dic1 = {num: num for num in [1, 2, 3, 4, 5]}  # {1: 1, 2: 2, 3: 3, 4: 4, 5: 5}
+dic2 = dic1.copy()
+print(dic2)  # Output: {1: 1, 2: 2, 3: 3, 4: 4, 5: 5}
+
+# Example9️⃣️: .pop(key) کلید و مقدار را باهم پاک میکند
+dic1 = {'first': 1, 'second': 2, 'third': 3}  # {'first': 1, 'second': 2, 'third': 3}
+dic1.pop("second")
+print(dic1)  # Output: {'first': 1, 'third': 3}
+
+# Example1️⃣️0️⃣️: .popitem() حذف آخرین آیتم از دیکشنری
+dic1 = {'first': 1, 'second': 2, 'third': 3}  # {'first': 1, 'second': 2, 'third': 3}
+dic1.popitem()
+print(dic1)  # Output: {'first': 1, 'second': 2}
+
+# Example1️⃣️1️⃣️: .update(dictionary) دیکشنری را به دیکنشری موجود می‌افراید
+dic1 = {"name": "Behrooz", "family": "Mohammadi Nasab", "age": 34}
+dic2 = dict(first=1, second=2, third=3)  # {'first': 1, 'second': 2, 'third': 3}
+dic1.update(dic2)
+print(dic1)  # Output: {'name': 'Behrooz', 'family': 'Mohammadi Nasab', 'age': 34, 'first': 1, 'second': 2, 'third': 3}
+
+# Example1️⃣️2️⃣️: RaedOnly DICTIONARY by types.MappingProxyType
+from types import MappingProxyType
+
+d = {'a': 1, 'b': 2}
+readonly = MappingProxyType(d)
+
+print(readonly['a'])  # 1
+# readonly['a'] = 3    # ❌️ TypeError: cannot be modified
+
+# Example1️⃣️3️⃣️: nested dictionaries
+data = {
+    'user': {
+        'profile': {
+            'name': 'Ali'
+        }
     }
+}
+name = data['user']['profile']['name']  # ❗️ توصیه نمی‌شود
+name = data.get('user', {}).get('profile', {}).get('name', 'Unknown')  # ✅️ توصیه می‌شود
+print(name)  # Ali
 
-    Dic2 = {
-        "mobile": "09191671085"
-    }
+# Example1️⃣️4️⃣️: convert Dictionary to Object
+from types import SimpleNamespace
 
-    Dic3 = dict(first=1, second=2, third=3)
+config = SimpleNamespace(
+    host="localhost",
+    port=8000,
+    debug=True
+)
 
-    Dic4 = {num: num for num in [1, 2, 3, 4, 5]}  # {1: 1, 2: 2, 3: 3, 4: 4, 5: 5}
+print(config.host)  # Output: localhost
 
-    Dic5 = {key: value ** 2 for key, value in Dic3.items()}  # {'first': 1, 'second': 4, 'third': 9}
+# Example1️⃣️5️⃣️: Convert Dictionary to namespace
+from types import SimpleNamespace
 
-    _Dic6 = {num: ("even" if num % 2 == 0 else "odd")  # {1: 'odd', 2: 'even', 3: 'odd', 4: 'even', 5: 'odd'}
-             for num in [1, 2, 3, 4, 5]}
+d = {'name': 'Ali', 'age': 25}
+ns = SimpleNamespace(**d)
+print(ns.name)  # Ali
+```
 
-    __Dic7 = {num: num ** num for num in [1, 2, 3, 4, 5]}
+اگر از کلاس dict ارث بری نماییم و تابع `__missing__` تعریف شده باشد آنگاه اگر کلیدی یافت نشد آنگاه تابع فراخوانی می‌شود
 
-    def __init__(self) -> None:
-        pass
-
-    def showValue(self):
-        print(DictionaryClass.Dic1["name"])  # Behrooz
-        print(DictionaryClass.Dic1["family"])  # MohammadiNasab
-        print(DictionaryClass.Dic1["age"])  # 31
-        # dict_values(['Behrooz', 'MohammadiNasab', 31])
-        print(DictionaryClass.Dic1.values())
-        print(DictionaryClass.Dic1.keys())  # dict_keys(['name', 'family', 'age'])
-
-    def returnValue(self):
-        return DictionaryClass.Dic1.get("name"), DictionaryClass.Dic1["family"], DictionaryClass.Dic1["age"]
-
-    def printValuesByFor(self):
-        for value in DictionaryClass.Dic1.values():
-            print(value)
-
-    def printKeysByFor(self):
-        for key in DictionaryClass.Dic1.keys():
-            print(DictionaryClass.Dic1[key])
-
-    def printKeyValuesByFor(self):
-        for key, value in DictionaryClass.Dic1.items():
-            print(f"{key}: --> {value}")
-
-    def printAll(self):
-        print(DictionaryClass.Dic1)
-
-    def isExist(self, x):
-        if x in DictionaryClass.Dic1:
-            print(DictionaryClass.Dic1[x])
-        else:
-            print(f"there is no {x} key in me")
-
-    def clearData(self):
-        DictionaryClass.Dic1.clear()
-
-    def copyData(self):
-        two = DictionaryClass.Dic1.copy()  # یک دیکشنری را دقیقا در دیگری می‌ریزد یعنی کپی میکند
-        return two
-
-    def popData(self):
-        # one.pop("name") #کلید و مقدار را باهم پاک میکند
-        # or
-        # مقدار را اول داخل متغیر میریزد و سپس از دیکشنری حذف میکد
-        result = DictionaryClass.Dic1.pop("name")
-
-    def popLastItem(self):
-        DictionaryClass.Dic1.popitem()  # آخرین کلید و مقدار را حذف میکند
-
-    def concatenateDictionary(self):
-        DictionaryClass.Dic1.update(DictionaryClass.Dic2)  # دیکشنری را به دیکنشری موجود می‌افراید
-
-    # آرگومان ورودی تبدیل می‌شود به یک دیکشنری
-    def func4(self, **kwargs):
-        my_string = ""
-        for key, value in kwargs.items():
-            my_string = f"{my_string} {key}:{value} - "
-        print(f"func4: {my_string}")
+```python
+class DefaultDict(dict):
+    def __missing__(self, key):
+        return f"Key '{key}' not found, but I'm helping!"
 
 
-behrooz = DictionaryClass()
-# 152. behrooz.printValuesByFor()
-# 153. behrooz.printKeysByFor()
-# 154. behrooz.printKeyValuesByFor()
-# 155. behrooz.isExist("name")
-# 156. behrooz.clearData()
+d = DefaultDict()
+print(d['name'])  # Key 'name' not found, but I'm helping!
+```
 
-# 157. print(behrooz.copyData().get("age"))
-# 158. print(behrooz.copyData() == one)
-# 159. print(behrooz.copyData() is one)
+ادغام دیکشنری با | و |= (پایتون ۳.۹+)
 
-# 160. behrooz.popLastItem()
-# 161. behrooz.printKeyValuesByFor()
+```python
+d1 = {'a': 1, 'b': 2}
+d2 = {'b': 3, 'c': 4}
 
-# 162. behrooz.concatenateDictionary()
-# 163. behrooz.printKeyValuesByFor()
+merged = d1 | d2
+print(merged)  # {'a': 1, 'b': 3, 'c': 4} — b از d2 جایگزین شد
 
-# 164. value1, value2, value3 = behrooz.returnValue()
-# 165. print(f"name:{value1}\n\nfamily:{value2}\n\nage:{value3}")
-
-behrooz.printAll()
-
-behrooz.func4(name="behrooz")
-behrooz.func4(name="behrooz", FamilyName="Mohammadi")
-behrooz.func4(name="behrooz", FamilyName="Mohammadi", born=1369, mobile="09191671085")
-
+d1 |= d2  # update in-place
+print(d1)  # {'a': 1, 'b': 3, 'c': 4}
 ```
 
 ## 6.2. 🅱️ Set `{}`
@@ -1904,45 +1923,149 @@ behrooz.func4(name="behrooz", FamilyName="Mohammadi", born=1369, mobile="0919167
 * در آن مرتب سازی معنی ندارد
 * در آن اندیس جایگاه ندارد(اندیس ناپذیر)
 * درآن قابلیت فراخوانی (Call) وجود ندارد
+* از نسخه `۳.۷` به بعد ترتیب درج نگه‌داری می‌شود
+* فقط اشیاء قابل هش (hashable) می‌تونن عضو set باشن.
+    * قابل هش (hashable)
+        * موارد int, str, tuple البته اگر اگر عناصرش قابل هش باشن
+        * frozenset
+        * bool
+    * غیرقابل هش (unhashable)
+        * list
+        * dict
+        * set
+        * bytearray
 
 ```python
-class SetClass:
-    _set1 = {3, 5, 't', 'z', 2, 7, 1, 1, 1, 5, 5, 5, 5}
-    _set2 = {"ali", "milad", "mohammad", "sara"}
-    _set3 = {"mohammad", "ahmad", "reza", "ali"}
-    _set4 = {x ** 2 for x in range(20)}
-    _set5 = {char for char in "Behrooz Mohammadi Nasab Sahzabi"}
+set1 = {3, 5, 't', 'z', 2, 7, 1, 1, 1, 5, 5, 5, 5}
+set2 = {"ali", "milad", "mohammad", "sara"}
+set3 = {"mohammad", "ahmad", "reza", "ali"}
+set4 = {x ** 2 for x in range(20)}
+set5 = {char for char in "Behrooz Mohammadi Nasab Sahzabi"}
+set6 = set([1, 2, 2, 3])  # {1, 2, 3}
+A = {1, 2, 3, 4}
+B = {3, 4, 5, 6}
 
-    def showData(self):
-        for item in self._set1:
-            print(item)
-        print(self._set1)
+# Example1️⃣️: 
+print(set1)  # {'z', 1, 2, 3, 5, 7, 't'}
 
-    def functions(self, mySet):
-        mySet.add(8)
+# Example2️⃣️: .add(element)
+set6.add(4)
+set6.add(2)  # تاثیری نداره
+print(set6)  # {1, 2, 3, 4}
 
-        if 4 in mySet:
-            mySet.remove(2)
+# Example3️⃣️: .remove(element) عضو رو حذف می‌کنه. اگر وجود نداشته باشه، خطا می‌ده
+set6.remove(4)
+# s.remove(10) → ❌️ KeyError!
 
-        mySet.discard(4)  # اگر عدد بود آن را پاک میکند و اگر نبود ارور نمیدهد و دستور بدون ارور رد می‌شود
-        print(mySet)
+# Example4️⃣️: .discard(element) حذف میکند و اما اگر عضو وجود نداشته باشه، خطا نمی‌ده
+set6.discard(10)  # OK، بدون خطا
 
+# Example5️⃣️: .pop() یک عضو تصادفی رو حذف و برمی‌گردونه (چون set مرتب نیست).
+item = set6.pop()  # حذف یک عضو به صورت تصادفی
 
-behrooz = SetClass()
+# Example6️⃣️: .clear()
+set6.clear()
 
-behrooz.showData()
+# Example7️⃣️: `|` اجتماع union
+A | B  # {1, 2, 3, 4, 5, 6} # معادل: A.union(B)
+# حافظه کمتر ازlist(set(A + B))
 
-behrooz.functions(SetClass._set1)
+# Example8️⃣️: `&` اشتراک Intersection
+A & B  # {3, 4} # معادل: A.intersection(B)
 
-print(
-    SetClass._set2 | SetClass._set3)  # {'ahmad', 'mohammad', 'reza', 'milad', 'sara', 'ali'}  # نمایش اجتماع بدون تکرار
+# Example9️⃣️: `-` تفاضل Difference
 
-print(SetClass._set2 & SetClass._set3)  # {'ali', 'mohammad'}  #نمایش اشتراک بدون تکرار
+A - B  # {1, 2}
 
-print(SetClass._set4)
+# Example1️⃣️0️⃣️: `^` تفاضل‌متقارن SymmetricDifference
+A ^ B  # {1, 2, 5, 6}
 
-print(SetClass._set5)
+# Example1️⃣️1️⃣️: unhashable
+s = set()
+# s.add([1, 2]) → ❌ TypeError
+s.add((1, 2))  # ✅ OK
 
+# Example1️⃣️2️⃣️: تبدیل به حالت های متفاوت
+list(set([1, 2, 2, 3]))  # [1, 2, 3] — حذف تکراری
+set("hello")  # {'h', 'e', 'l', 'o'} — تکراری 'l' حذف شد
+set(range(5))  # {0, 1, 2, 3, 4}
+
+# Example1️⃣️3️⃣️: بررسی وجود مشترک بودن عناصر
+if set(A) & set(B):
+    print("حداقل یک عضو مشترک دارند")
+
+# Example1️⃣️4️⃣️: پیدا کردن عناصر منحصر به فرد در دو لیست
+print(set(A) - set(B))  # Output: {1, 2}
+print(set(B) - set(A))  # Output: {5, 6}
+```
+
+اپراتورهای منطقی
+
+| اپراتور | مفهوم             | مثال                        |
+|---------|-------------------|-----------------------------|
+| `==`    | برابری            | `{1,2} == {2,1}` → `True`   |
+| `<`     | زیرمجموعه سره     | `{1} < {1,2}` → `True`      |
+| `<=`    | زیرمجموعه         | `{1,2} <= {1,2}` → `True`   |
+| `>`     | مجموعه سره بزرگتر | `{1,2,3} > {1,2}` → `True`  |
+| `>=`    | شامل بودن         | `{1,2,3} >= {1,2}` → `True` |
+
+### 6.2.1. ✅️ frozenset
+
+نوعی مجموعه(set)است که غیرقابل تغییر (immutable) و فقط-خواندنی (read-only) است.
+
+* set غیرقابل هش(unhashable)است. پس نمی‌تونه کلید دیکشنری باشه. اما frozenset قابل هش است پس می‌تونه کلید باشه
+* frozenset غیرقابل تغییر است
+
+```python
+# Example1️⃣️: Create
+fs = frozenset([1, 2, 3, 2])  # تکراری‌ها حذف می‌شن
+print(fs)  # frozenset({1, 2, 3})
+
+# Example2️⃣️: Create رشته
+frozenset("hello")  # frozenset({'h', 'e', 'l', 'o'})
+
+# Example3️⃣️: Create
+s = {1, 2, 3}
+fs = frozenset(s)
+
+# Example4️⃣️(مهم): استفاده به عنوان کلید دیکشنری
+d = {
+    frozenset([1, 2]): "group A",
+    frozenset([3, 4]): "group B"
+}
+print(d[frozenset([1, 2])])  # Output: group A
+# d = {[1, 2]: "error"} # TypeError: unhashable type: 'list' - با ست امکان‌پذیر نیست
+# d = {{1, 2}: "error"} # TypeError: unhashable type: 'set' - با ست امکان‌پذیر نیست
+
+# Example5️⃣️:
+A = frozenset([1, 2, 3])
+B = frozenset([3, 4, 5])
+print(A | B)  # frozenset({1, 2, 3, 4, 5}) → اجتماع
+print(A & B)  # frozenset({3}) → اشتراک
+print(A - B)  # frozenset({1, 2}) → تفاضل
+print(A ^ B)  # frozenset({1, 2, 4, 5}) → تفاضل متقارن
+
+# Example6️⃣️:
+A = frozenset([1, 2])
+B = frozenset([1, 2, 3])
+print(A < B)  # True → A زیرمجموعه سره B است
+print(A <= B)  # True
+
+# Example7️⃣️: استفاده در setها (چون قابل هش است)
+collection = {
+    frozenset([1, 2]),
+    frozenset([3, 4])
+}
+# می‌تونی frozenset رو عضو یک set کنی!
+
+print(collection)  # {frozenset({1, 2}), frozenset({3, 4})}
+
+# { {1, 2}, {3, 4} } # TypeError: unhashable type: 'set' - با ست امکان‌پذیر نیست
+
+# Example8️⃣️: غیر قابل تغییر
+fs = frozenset([1, 2])
+# fs.add(3) → AttributeError
+# fs.remove(1) → AttributeError
 ```
 
 ## 6.3. 🅱️ Tupple`()`
@@ -1982,158 +2105,330 @@ obj.func1(*numbers)  # اگر ستاره نباشد ارور میدهد
 
 ## 6.4. 🅱️ List `[]`
 
+* مرتب (ordered) است عناصر ترتیب خاصی دارند.
+* تغییرپذیر (mutable) است می‌تونی عناصرش رو تغییر بدی.
+* قابل تکرار (iterable) است.
+* می‌تونه تکراری داشته باشه.
+* می‌تونه انواع مختلف داده رو داشته باشه (عدد، رشته، لیست دیگر، تابع و ...).
+
 ```python
-class ListClass:
-    def __init__(self):
-        _list1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
-        _list2 = ["Python", True, 5, [4, 5, 6]]
-        _list3 = ["red", "blue", "green", "gray", "yellow", "orange", 3.6]
-        _list4 = []
-        _list5 = [num * 2 for num in _list1]
-        _list6 = [char.upper() for char in "behrooz"]
-        _list7_even = [num for num in _list1 if num % 2 == 0]
-        _list7_odd = [num for num in _list1 if num % 2 != 0]
-        _list8 = [num * 2 if num % 2 == 0 else num * 3 for num in _list1]
-        _list9 = "BehroozMohammadiNasab"
-        _list10_nestedList = [[1, 2, 3], [4, 5, 6]]
-        _list11 = [num ** 2 for num in range(1, 11)]
+list1 = [1, 2, 3, 4, 5, 6]
+list2 = ["Python", True, 5, [4, 5, 6], 1, "hello", 3.14, [1, 2], True, "red", "blue", "green", "gray", "yellow", 3.6]
+list3 = ['apple', 'banana', 'cherry']
+list4 = []
+list5 = [num * 2 for num in list1]
+list6 = [num ** 2 for num in range(1, 6)]
+list7 = [char.upper() for char in "behrooz"]
+list8_even = [num for num in list1 if num % 2 == 0]
+list9_odd = [num for num in list1 if num % 2 != 0]
+list10 = [num * 2 if num % 2 == 0 else num * 3 for num in list1]
+list12_nestedList = [[1, 2, 3], [4, 5, 6]]
 
-    def getDataAll(self, myList):
-        for x in myList:
-            print(f"the value is : {x}")
-
-    def getDataAllByCount(self, mylist):
-        indexCount = len(mylist)
-        index = 0
-        while index < indexCount:
-            x = mylist[index]
-            print(f"the value is : {x}")
-            index += 1
-
-    def fill_list(self):
-        for num in self._list1:
-            self._list4.append(num ** 2)
-
-    def get_alldata_revese(self, mylist):
-        mylist.reverse()
-        print(mylist)
-
-    def get_select_item(self, mylist):
-        # List[start:end:step]
-
-        value1 = mylist[1]  # output: 2
-        value2 = mylist[-5:]  # output: [12, 13, 14, 15, 16]
-        value3 = mylist[::2]  # output: [1, 3, 5, 7, 9, 11, 13, 15]
-        value4 = mylist[0:]  # output: All items [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
-        value5 = mylist[:]  # output: All items [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
-        value6 = mylist[
-                 ::-1]  # List[start:end:step] output: Reverse [16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
-        value7 = mylist[:3]
-        print(f"value1:{value1}")
-        print(f"value2:{value2}")
-        print(f"value3:{value3}")
-        print(f"value4:{value4}")
-        print(f"value5:{value5}")
-        print(mylist == value5)
-        print(mylist is value5)
-        print(f"value6:{value6}")
-        print(f"value7:{value7}")
+# Example1️⃣️: 
 
 
-def list_functions(self, mylist):
-    first_item = mylist.pop(0)
-    last_item = mylist.pop()
-    length = {len(mylist)}
-    mylist.extend(["ali", "hassan", "hossein"])
-    mylist.append(["ali", "hassann", "hosseinn"])
-    mylist.insert(-1, "Behrooz")
-    mylist.remove(13)
-    # mylist.clear()  # remove all elements
-    # mylist.sort()  # only number
-    print(f"length: {length}")
-    print(f"firstItem:{first_item}")
-    print(f"lastItem:{last_item}")
-    print(mylist)
+# Example2️⃣️: len(list)
+list2 = ["Python", True, 5, [4, 5, 6], 1, "hello", 3.14, [1, 2], True, "red", "blue", "green", "gray", "yellow", 3.6]
+print(len(list2))  # Output: 15
 
+# Example3️⃣️: .append(item)
+list4 = []
+list4.append("one")
+list4.append(['grape', 'melon'])
+print(list4)  # Output: ['one', ['grape', 'melon']]
+print(len(list4))  # Output: 2
 
-def search(self, mylist):
-    index1 = mylist.index(5)
-    index2 = mylist.index(7, 3, 10)  # از اندیس ۴ تا اندیس ۱۱ جستجو نماید
-    print(index1)
-    print(index2)
+# Example4️⃣️: .extend(iterable) اضافه کردن چند آیتم 
+list4 = []
+list4.extend(['grape', 'melon'])
+print(list4)  # ['grape', 'melon']
 
-    tmp = '.'.join(['ab', 'pq', 'rs'])
-    print(tmp)
+# Example5️⃣️: .insert(index, item) درج در موقعیت خاص
+list3 = ['apple', 'banana', 'cherry']
+list3.insert(1, 'kiwi')
+print(list3)  # ['apple', 'kiwi', 'banana', 'cherry']
 
-# 190. behrooz.getDataAll(list._list8)
-# 191. behrooz.getDataAllByCount(list._list2)
-# 192. behrooz.fillList()
-# 193. behrooz.getDataAll(list._list4)
-# 194. behrooz.getDataAll_Revese(list._list1)
-# 195. behrooz.get_select_item(list.list1)
-# 196. print(list._list10_nestedList[1][2])  # output: 6
-# 197. [[print(x) for x in y] for y in list._list10_nestedList] # output: 1 NewLine 2 NewLine 3 NewLine 4 NewLine 5 NewLine 6
-# 198. behrooz.listFunctions(list._list1)
-# 199. behrooz.search(list._list1)
-# 200. print(list._list11)
+# Example6️⃣️: .remove(item)
+list3.remove('banana')
+print(list3)  # Output: ['apple', 'cherry']
 
-# 201. behrooz = list()
+# Example7️⃣️: .pop(index) حذف و بازگردانی آیتم
+list3 = ['apple', 'banana', 'cherry']
+last = list3.pop()  # Last item
+print(last)  # Output: cherry
+second = list3.pop(1)  # index1
+print(second)  # Output: banana
+
+# Example8️⃣️: .clear()
+list3.clear()
+
+# Example9️⃣️: .reverse() معکوس کردن لیست در جا
+numbers = [1, 2, 3, 4, 5]
+numbers.reverse()
+print(numbers)  # [5, 4, 3, 2, 1]
+# نکته: reversed_nums = numbers.reverse() آنگاه reversed_nums برابر None خواهد شد 
+
+# Example1️⃣️0️⃣️: `+`
+a = [1, 2]
+b = [3, 4]
+c = a + b
+print(c)  # [1, 2, 3, 4]
+
+# Example1️⃣️1️⃣️: `*`
+[0] * 5  # [0, 0, 0, 0, 0]
+['hi'] * 3  # ['hi', 'hi', 'hi']
+
+# Example1️⃣️2️⃣️: `in`
+print('apple' in fruits)  # True یا False
+print(99 in numbers)  # False
+
+# Example1️⃣️3️⃣️: Slicing
+lst = ['a', 'b', 'c', 'd', 'e']
+
+print(lst[0])  # 'a' — اولین
+print(lst[-1])  # 'e' — آخرین
+print(lst[1:4])  # ['b', 'c', 'd'] — برش
+print(lst[::-1])  # ['e', 'd', 'c', 'b', 'a'] — معکوس (بدون تغییر لیست اصلی)
+
+# Example1️⃣️4️⃣️: .index(item) - ValueError if not Exist
+list3 = ['apple', 'banana', 'cherry']
+print(list3.index('cherry'))  # 2 
+
+# Example1️⃣️5️⃣️: .count(item)
+nums = [1, 2, 2, 3, 2]
+print(nums.count(2))  # 3
+
+# Example1️⃣️6️⃣️: کپی کردن
+lst_original = [1, 2, 3]
+lst_copy = lst_original  # ❌️ فقط ارجاع
+lst_copy.append(4)
+print(lst_original)  # [1, 2, 3, 4] ← تغییر کرد!
+
+# راه‌های درست کپی:
+safe1 = lst_original[:]  # slice
+safe2 = list(lst_original)  # constructor
+safe3 = lst_original.copy()  # method
+safe4 = [x for x in lst_original]  # list comprehension
+
+# Example1️⃣️7️⃣️: حذف تکراری‌ها (با حفظ ترتیب — پایتون 3.7+)
+lst = [1, 2, 2, 3, 1, 4]
+unique = list(dict.fromkeys(lst))  # [1, 2, 3, 4]
+
+# Example1️⃣️8️⃣️: رزرو برای بعد
+
+# Example1️⃣️9️⃣️: رزرو برای بعد
 
 ```
 
-## 6.5. 🅱️ Filter
+## 6.5. 🅱️ List Comprehension
 
-* برای یاد گیری سه مفهوم ۱-لامبدا ۲-فیلتر ۳-مَپ ،باید به ترتیب نام برده شده مطالعه شود
-
-* انتخاب یک المان تحت شرایط
-* فیلتر روی یک ایتریبل اگر در شرط بگنجد
-    * Filter a iterable by condition(only apply to items which true condition on it)
-* itarate: پیمایش
+* روش کوتاه، خوانا برای ساخت لیست جدید از یک ایترابل (مثل لیست، رشته، دیکشنری و ...) است
+* تمام عناصر رو فوراً ایجاد می‌کنه و در حافظه نگه می‌دارد
+* به جای نوشتن یک حلقه for بلند، فقط با یک خط کد، لیست مورد نظرساخته می‌شود
+* مواردی که می‌توانند جایگزین ListComprehension شوند
+    * generatorExpression: وقتی داده‌ها بزرگ هستند و نمی‌خوای همه رو یک‌جا در حافظه بگیری: `(x**2 for x in range(1000000))`
+    * مورد `()filter()`+`map`: وقتی منطق پیچیده است
+    * حلقه عادی: وقتی کد خیلی پیچیده یا چند خطی هست
 
 ```python
-# 202. Syntax:                        filter(function, iterable)
-# 203. return:                        IterableObject
-# 204. How ussing IterableObject:     list(IterableObject) or  Tuple(IterableObject)
+# Syntax: [expression for item in iterable if condition]
+# ----> expression: چه چیزی به لیست اضافه بشه (مثلاً item, item * 2, item.upper())
+# ----> item: هر عنصر در مجموعه
+# ----> iterable: لیست، رشته، تاپل، و غیره
+# ----> if condition (اختیاری): فقط اگر شرط درست بود، آیتم اضافه می‌شه
+```
+
+<div dir="ltr">
+
+| کار            | نحوه نوشتن                                   |
+|----------------|----------------------------------------------|
+| ساخت لیست ساده | `[x*2 for x in lst]`                         |
+| با شرط         | `[x for x in lst if x > 0]`                  |
+| با if-else     | `["even" if x%2==0 else "odd" for x in lst]` |
+| روی دیکشنری    | `[k for k, v in d.items() if v > 10]`        |
+| ترکیب دو حلقه  | `[f"{a}{b}" for a in A for b in B]`          |
+
+</div>
+
+```python
+# Example1️⃣️: squares[Traditional]
+squares = []
+for n in [1, 2, 3, 4, 5]:
+    squares.append(n ** 2)
+print(squares)  # Output: [1, 4, 9, 16, 25]
+
+# Example1️⃣️: squares[List Comprehension]
+squares = [n ** 2 for n in [1, 2, 3, 4, 5]]
+print(squares)  # Output: [1, 4, 9, 16, 25]
+
+# Example2️⃣️: even
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+evens = [n for n in numbers if n % 2 == 0]
+print(evens)  # [2, 4, 6, 8, 10]
+
+# Example3️⃣️: تبدیل رشته به لیست حروف بزرگ
+text = "hello"
+upper_chars = [char.upper() for char in text]
+print(upper_chars)  # ['H', 'E', 'L', 'L', 'O']
+
+# Example4️⃣️:  استخراج ایمیل‌های گیمیل
+emails = ["ali@yahoo.com", "sara@gmail.com", "reza@gmail.com", "taha@outlook.com"]
+gmails = [email for email in emails if email.endswith("@gmail.com")]
+print(gmails)  # ['sara@gmail.com', 'reza@gmail.com']
+
+# Example5️⃣️: حذف مقادیر خالی یا None
+data = ["Ali", "", "Sara", None, "Reza", "   ", "Leyla"]
+cleaned = [item for item in data if item]  # فقط truthy ها
+print(cleaned)  # ['Ali', 'Sara', 'Reza', 'Leyla']
+
+# Example6️⃣️: ایجاد لیست از دیکشنری‌ها (با شرط)
+people = [
+    {"name": "Ali", "age": 20},
+    {"name": "Sara", "age": 17},
+    {"name": "Reza", "age": 25}
+]
+
+adults = [p["name"] for p in people if p["age"] >= 18]
+print(adults)  # ['Ali', 'Reza']
+
+# Example7️⃣️: ایجاد ماتریس (لیست دو بعدی)
+matrix = [[i * j for j in range(1, 4)] for i in range(1, 4)]
+print(matrix)
+# خروجی:
+# [
+#  [1, 2, 3],
+#  [2, 4, 6],
+#  [3, 6, 9]
+# ]
+
+# Example8️⃣️: استخراج کلیدها یا مقادیر از دیکشنری
+grades = {"ali": 20, "sara": 18, "reza": 15}
+
+# فقط نام‌هایی که نمره‌شون بالای 17 است
+top_students = [name for name, grade in grades.items() if grade > 17]
+print(top_students)  # ['ali', 'sara']
+
+# Example9️⃣️: تبدیل لیست از رشته به عدد (با فیلتر کردن ورودی‌های معتبر)
+strings = ["1", "2", "abc", "3", "xyz", "4"]
+numbers = [int(s) for s in strings if s.isdigit()]
+print(numbers)  # [1, 2, 3, 4]
+
+# Example1️⃣️0️⃣️: ترکیب دو لیست (مثل دکارتی)
+colors = ["red", "blue"]
+items = ["shirt", "hat"]
+combinations = [f"{color} {item}" for color in colors for item in items]
+print(combinations)
+# ['red shirt', 'red hat', 'blue shirt', 'blue hat']
+
+
+# Example1️⃣️1️⃣️: if-else
+numbers = [1, 2, 3, 4, 5]
+labels = ["even" if n % 2 == 0 else "odd" for n in numbers]
+print(labels)  # ['odd', 'even', 'odd', 'even', 'odd']
+
+# Example1️⃣️2️⃣️:
+# Example1️⃣️3️⃣️:
+# Example1️⃣️4️⃣️:
+# Example1️⃣️5️⃣️:
+# Example1️⃣️6️⃣️:
+# Example1️⃣️7️⃣️:
+# Example1️⃣️8️⃣️:
+# Example1️⃣️9️⃣️:
+# Example2️⃣️0️⃣️:
+```
+
+## 6.6. 🅱️ Filter
+
+* تابع filter() یک "فیلتر" هوشمند است که روی یک لیست (یا هر چیز قابل پیمایش) اجرا می‌شه و فقط عناصری که شرط ما رو دارن، نگه می‌داره.
+* فیلتر تغییری در لیست اصلی نمی‌دهد
+* می‌تواند روی هر ایتریبل کار کند
+
+```python
+# Syntax: filter(function, iterable)
+# ------> function: a function that return True or False for ech item
+# ------> iterable: لیست، تاپل، رشته، و غیره — چیزی که می‌تونیم رویش حلقه بزنیم.
+# ------> return: IterableObject ==> list(IterableObject) or Tuple(IterableObject)
 ```
 
 ```python
-numbers = [1, 2, 3, 4, 5, 6]
-names = ["akbar", "fatemeh", "zeinab", "maryam", "Kobra"]
+# Example1️⃣️: EvenNumbers
+evens = []
+for num in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]:
+    if num % 2 == 0:
+        evens.append(num)
+print(evens)  # Output: [2, 4, 6, 8, 10]
+
+# Example1️⃣️: EvenNumbers By Filter
+evens = list(filter(lambda x: x % 2 == 0, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]))
+print(evens)  # Output: [2, 4, 6, 8, 10]
+
+# Example2️⃣️: فیلتر رشته‌های غیرخالی
+texts = ["hello", "", "world", " ", "python", None]
+valid_texts = list(filter(None, texts))
+# وقتی function = None باشه، filter فقط عناصری رو نگه می‌داره که درست (True) باشند
+print(valid_texts)  # ['hello', 'world', ' ', 'python']
+
+# Example3️⃣️: کلمات بلندتر از ۵ حرف
+long_words = list(filter(lambda w: len(w) > 5, ["cat", "python", "elephant", "dog", "butterfly"]))
+print(long_words)  # ['python', 'elephant', 'butterfly']
+
+# Example4️⃣️: افراد بالای۱۸سال
+people = [
+    {"name": "Ali", "age": 20},
+    {"name": "Sara", "age": 17},
+    {"name": "Reza", "age": 25},
+    {"name": "Leyla", "age": 16}
+]
+
+adults = list(filter(lambda p: p["age"] >= 18, people))
+print(adults)  # Output: [{'name': 'Ali', 'age': 20}, {'name': 'Reza', 'age': 25}]
+
+# Example5️⃣️: اعداد مثبت
+positives = list(filter(lambda x: x > 0, [-3, -1, 0, 2, 5, -7, 8]))
+print(positives)  # [2, 5, 8]
+
+# Example6️⃣️: فیلتر ایمیل‌های دامنه
+emails = ["ali@yahoo.com", "sara@gmail.com", "reza@outlook.com", "leyla@gmail.com"]
+gmails = list(filter(lambda e: e.endswith("@gmail.com"), emails))
+print(gmails)  # ['sara@gmail.com', 'leyla@gmail.com']
+
+
+# Example7️⃣️: اعداد اول بدون لامبدا
+def is_prime(n):
+    if n < 2: return False
+    for i in range(2, int(n ** 0.5) + 1):
+        if n % i == 0: return False
+    return True
+
+
+primes = list(filter(is_prime, range(1, 100)))
+print(primes)  # [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]
+
+# Example8️⃣️: 
 users = [{'name': 'Behrooz', 'family': 'nadery', 'born': 1369, 'shopCart': []},
          {'name': 'Alireza', 'family': 'saberi', 'born': 1400, 'shopCart': []},
          {'name': 'Attefeh', 'family': 'Rezaie', 'born': 1372, 'shopCart': ['kotlin', 'vue']}]
+result = filter(lambda user: not user['shopCart'], users)  # معادل result = filter(lambda user: len(user['shopCart']) == 0, users)
+print(list(result))
+# Output: [
+# {'name': 'Behrooz', 'family': 'nadery', 'born': 1369, 'shopCart': []}, 
+# {'name': 'Alireza', 'family': 'saberi', 'born': 1400, 'shopCart': []}]
 
 
-def func1_get_even():
-    evens = filter(lambda num: num % 2 == 0, numbers)
-    print(f"func1:{list(evens)}")
-
-
-def func3():  # Use with Falsiness Or Truthiness
-    result = filter(lambda user: not user['shopCart'], users)  # [not user['shopCart']] OR [len(user['shopCart']) == 0]
-    # result = filter(lambda user: len(user['shopCart']) == 0, users)
-    print(f"func3(alt):{list(result)}")
-
-
-def func4_map_filter():
-    result_user = filter(lambda user: not user['shopCart'], users)
-    result_user_name = lambda user: user['name']
-    result = map(result_user_name, result_user)
-    # ALTERNATIVE =====> result = [user['name'] for user in users if len(user['shopCart']) == 0]
-    print(f"func4(filterAndMap):{list(result)}")
-
-
-func1_get_even()
-print()
-
-func3()
-print()
-
-func4_map_filter()
-
+# Example9️⃣️: رزرو برای بعد
+# Example1️⃣️0️⃣️: رزرو برای بعد
 ```
 
-## 6.6. 🅱️ map
+* همه کارهای filter() رو می‌شه با لیست درک (list comprehension) هم انجام داد
+* استفاده از فیلتر هنگامی خوب است که تنها قصد فیلتر کردن داشته‌باشیم ولی اگر همزمان قصد تغییر در دیتا نیز داشته باشیم آنگاه بهتر است از list comprehension استفاده شود
+
+```python
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+evens_f = list(filter(lambda x: x % 2 == 0, numbers))  # filter 
+evens_l = [x for x in numbers if x % 2 == 0]  # list comprehension
+```
+
+## 6.7. 🅱️ map
 
 ```python
 # map: calls a function for all its members of iterable
@@ -2217,7 +2512,21 @@ func5()
 
 ```
 
-## 6.7. 🅱️ Generator_Expression
+```python
+users = [{'name': 'Behrooz', 'family': 'nadery', 'born': 1369, 'shopCart': []},
+         {'name': 'Alireza', 'family': 'saberi', 'born': 1400, 'shopCart': []},
+         {'name': 'Attefeh', 'family': 'Rezaie', 'born': 1372, 'shopCart': ['kotlin', 'vue']}]
+
+result_user = filter(lambda user: not user['shopCart'], users)
+result_user_name = lambda user: user['name']
+result = map(result_user_name, result_user)
+# ALTERNATIVE =====> result = [user['name'] for user in users if len(user['shopCart']) == 0]
+print(f"func4(filterAndMap):{list(result)}")
+
+
+```
+
+## 6.8. 🅱️ Generator_Expression
 
 * Generator: create function as sequentional lazy items
     * create or generate items only when ussing
@@ -2251,7 +2560,7 @@ print([num for num in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] if num % 2 == 0])  # Outpu
 print(list(num for num in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] if num % 2 == 0))  # Output: [2, 4, 6, 8, 10]
 ```
 
-### 6.7.1. ✅️ Example 1️⃣️: yield
+### 6.8.1. ✅️ Example 1️⃣️: yield
 
 ```python
 def nums():
@@ -2267,7 +2576,7 @@ print(next(g))
 print(next(g))
 ```
 
-### 6.7.2. ✅️ Example 2️⃣️: Generator
+### 6.8.2. ✅️ Example 2️⃣️: Generator
 
 ```python
 myGenerator = (num for num in range(20))
@@ -2278,7 +2587,7 @@ print(next(myGenerator))
 print(next(myGenerator))
 ```
 
-### 6.7.3. ✅️ Example 3️⃣️: yield
+### 6.8.3. ✅️ Example 3️⃣️: yield
 
 ```python
 def func_generator(maximom):
@@ -2295,7 +2604,7 @@ print(next(counter))  # -> 3
 # 212. print(next(counter))  # if run error
 ```
 
-### 6.7.4. ✅️ Example4️⃣️: Fibunachi()
+### 6.8.4. ✅️ Example4️⃣️: Fibunachi()
 
 ```python
 print("--------------------byList----------------------")
@@ -2332,7 +2641,7 @@ for num in fib_generator(10):  # استفاده از حالت جنریتور
     print(f"------> {num}")
 ```
 
-### 6.7.5. ✅️ Example 5️⃣️
+### 6.8.5. ✅️ Example 5️⃣️
 
 ```python
 from time import time
@@ -2350,7 +2659,7 @@ print(f"---------->  Time(s): {end_time - start_time}\n")
 
 ```
 
-## 6.8. 🅱️ Zip
+## 6.9. 🅱️ Zip
 
 ```python
 # 213. تلفیق دو ایتِرِیت با یکدیگر تبدیل به یک ایتریت جدید که شامل هردوی آن‌ها می‌باشد
@@ -2442,7 +2751,7 @@ func7_avg_WithIndex()
 
 ```
 
-## 6.9. 🅱️ Iterate_class_example
+## 6.10. 🅱️ Iterate_class_example
 
 ```python
 # example 1️⃣️
