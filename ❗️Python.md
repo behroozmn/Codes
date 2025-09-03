@@ -2586,99 +2586,180 @@ evens_l = [x for x in numbers if x % 2 == 0]  # list comprehension
 
 ## 6.7. 🅱️ map
 
+* هر عنصر از یک لیست (یا هر ایترابل) رو به یک تابع می‌ده و خروجی یک "نگاشت" جدید ایجاد می‌کنه
+    * زبان ساده: به ازای هر چیز در این لیست، این کار رو انجام بده
+* همه کارهای map() رو می‌شه با List Comprehension هم انجام داد
+* تنها یکبار روی لیست یا غیره می‌تواند پیمایش صورت بپذیرد و در پیمایش دوم با لیست خالی مواجه می‌شود
+* به صورت «Lazy» عمل می‌کند، به این معنی که محاسبات تنها زمانی انجام می‌شود که به نتایج آن نیاز باشد
+
 ```python
-# map: calls a function for all its members of iterable
-# ---> Syntax: map(function, iterable) ==> Return: an iterable mapObject
-# ==> Ussing: list(mapObject) or Tuple(mapObject) or ...
-# ---> Note: تنها یکبار روی لیست یا غیره می‌تواند پیمایش صورت بپذیرد و در پیمایش دوم با لیست خالی مواجه می‌شود
-# ---> itarate: پیمایش
-# ---> iterable: هر چیزی که روی آیتم‌های آن قابلیت پیمایش وچود داشته باشد
-# ---> Note:  به صورت «لِیزی» عمل می‌کند، به این معنی که محاسبات تنها زمانی انجام می‌شود که به نتایج آن نیاز باشد
+# Syntax: map(function, iterable)
+# ----> function: تابعی که می‌خوای روی هر عنصر اعمال کنی
+# ----> iterable: لیست، رشته، تاپل، دیکشنری و غیره
+# ----> return: IterableObject ==> list(IterableObject) or Tuple(IterableObject)
+```
+
+```python
+# Example1️⃣️: square(Traditional)
+numbers = [1, 2, 3, 4]
+squares = []
+for n in numbers:
+    squares.append(n ** 2)
+
+# Example1️⃣️: square(map)
+numbers = [1, 2, 3, 4]
+squares = list(map(lambda x: x ** 2, numbers))  # معادل ListComprehension ----> [x**2 for x in numbers]
+print(squares)  # [1, 4, 9, 16]
+
+# Example2️⃣️: تبدیل رشته به عدد
+str_nums = ["1", "2", "3", "4"]
+int_nums = list(map(int, str_nums))
+print(int_nums)  # [1, 2, 3, 4]
+
+# Example3️⃣️: تبدیل اعداد به رشته
+nums = [10, 20, 30]
+str_nums = list(map(str, nums))
+print(str_nums)  # ['10', '20', '30']
+
+# Example4️⃣️: تبدیل حروف به بزرگ (Upper Case)
+words = ["hello", "world", "python"]
+upper_words = list(map(str.upper, words))
+print(upper_words)  # ['HELLO', 'WORLD', 'PYTHON']
+
+# Example5️⃣️: طول هر رشته در لیست
+fruits = ["apple", "banana", "cherry"]
+lengths = list(map(len, fruits))
+print(lengths)  # [5, 6, 6]
+
+# Example6️⃣️: گرد کردن اعداد اعشاری
+floats = [3.1415, 2.718, 1.414]
+rounded = list(map(lambda x: round(x, 2), floats))
+print(rounded)  # [3.14, 2.72, 1.41]
+
+# Example7️⃣️:  حذف فاصله از انتهای رشته‌ها (strip)
+texts = ["  hello  ", " python ", "  world  "]
+cleaned = list(map(str.strip, texts))
+print(cleaned)  # ['hello', 'python', 'world']
 
 
-numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+# Example8️⃣️: اعمال تابع مشخص
+def add_tax(price):
+    return price * 1.09  # اضافه کردن ۹٪ مالیات
+
+
+prices = [100, 200, 300]
+with_tax = list(map(add_tax, prices))
+print(with_tax)  # [109.0, 218.0, 327.0]
+
+# Example9️⃣️: تبدیل دمای سانتیگراد به فارنهایت
+celsius = [0, 20, 30, 40]
+
+
+def c_to_f(c):
+    return (c * 9 / 5) + 32
+
+
+fahrenheit = list(map(c_to_f, celsius))
+print(fahrenheit)  # [32.0, 68.0, 86.0, 104.0]
+
+# Example1️⃣️0️⃣️: استخراج کلیدهای دیکشنری
+people = [
+    {"name": "Ali", "age": 20},
+    {"name": "Sara", "age": 18},
+    {"name": "Reza", "age": 25}
+]
+
+names = list(map(lambda p: p["name"], people))
+print(names)  # ['Ali', 'Sara', 'Reza']
+
+# Example1️⃣️1️⃣️: استخراج مقادیر دیکشنری
+grades = {"ali": 20, "sara": 18, "reza": 15}
+values = list(map(lambda x: x * 10, grades.values()))  # مثلاً تبدیل به نمره از 200
+print(values)  # [200, 180, 150]
+
+# Example1️⃣️2️⃣️: تبدیل تاریخ‌ها به فرمت خاص
+from datetime import date
+
+dates = [date(2024, 1, 1), date(2024, 2, 15), date(2024, 3, 10)]
+
+formatted = list(map(lambda d: d.strftime("%Y-%m-%d"), dates))
+print(formatted)  # ['2024-01-01', '2024-02-15', '2024-03-10']
+
+# Example1️⃣️3️⃣️: تبدیل باینری به دسیمال
+binary_list = ["1010", "1111", "1001"]
+
+decimals = list(map(lambda b: int(b, 2), binary_list))
+print(decimals)  # [10, 15, 9]
+
+# Example1️⃣️4️⃣️: zip + map ---> استفاده از تابع مپ همراه چند لیست
+names = ["Ali", "Sara", "Reza"]
+scores = [85, 92, 78]
+
+# می‌تونه روی چند ایترابل کار کنه، به شرطی که تابع همون تعداد ورودی داشته باشه که در اینجا کار با دوتا لیست(ایتریبل) می‌باشد
+messages = list(map(lambda n, s: f"{n}: {s}%", names, scores))
+print(messages)  # ['Ali: 85%', 'Sara: 92%', 'Reza: 78%']
+
+# Example1️⃣️5️⃣️:  تبدیل مسیرهای فایل به نام فایل
+paths = [
+    "/home/user/docs/file1.txt",
+    "/home/user/pics/photo.jpg",
+    "/home/user/music/song.mp3"
+]
+
+# فقط نام فایل رو بگیر
+import os
+
+filenames = list(map(os.path.basename, paths))
+print(filenames)  # ['file1.txt', 'photo.jpg', 'song.mp3']
+
+# Example1️⃣️6️⃣️:  اعمال تابع روی کلیدها و مقادیر دیکشنری
+data = {"  ALI  ": 20.5, "  SARA  ": 18.2}
+
+# تمیز کردن کلیدها و گرد کردن مقادیر
+cleaned = dict(zip(
+    map(str.strip, map(str.title, data.keys())),  # تمیز + حروف اول بزرگ
+    map(round, data.values())  # گرد کردن
+))
+
+print(cleaned)  # {'Ali': 20, 'Sara': 18}
+
+# Example1️⃣️7️⃣️: map() + filter() + sum()
+numbers = ["10", "abc", "20", "xyz", "30"]
+
+# فقط رشته‌های عددی رو تبدیل به عدد کن و جمع بزن
+total = sum(
+    map(int, filter(str.isdigit, numbers))
+)
+print(total)  # 60
+
+
+# Example1️⃣️8️⃣️:
+def add(x, y):
+    return x + y
+
+
+list1 = [1, 2, 3]
+list2 = [4, 5, 6]
+added_numbers = map(add, list1, list2)  # معادل:  added_numbers = map(lambda x, y: x + y, list1, list2)
+
+result_list = list(added_numbers)  # تبدیل به لیست
+print(result_list)  # خروجی: [5, 7, 9]
+
+# Example1️⃣️9️⃣️: در پیمایش دوم لیست خالی خواهد بود
 names = ["akbar", "natasha", "zeinab", "maryam", "Kobra"]
+upper_names = map(lambda name: name.upper(), names)
+print(list(upper_names))  # Output: ['AKBAR', 'NATASHA', 'ZEINAB', 'MARYAM', 'KOBRA']
+print(list(upper_names))  # Output: []
+
+# Example2️⃣️0️⃣️:
 users = [{'name': 'amirali', 'family': 'ojaghi', 'born': 1369, 'shopCart': []},
          {'name': 'mahmood', 'family': 'sabeti', 'born': 1400, 'shopCart': []},
          {'name': 'hossein', 'family': 'taheri', 'born': 1372, 'shopCart': ['kotlin', 'vue']}]
 
-
-def func1():
-    def square(x):
-        return x ** 2
-
-    squared_numbers = map(square, numbers)
-    # Alternatives: squared_numbers = map(lambda x: x ** 2, numbers)
-
-    # تبدیل به لیست
-    squared_list = list(squared_numbers)
-    print(squared_list)  # خروجی: [1, 4, 9, 16, 25]
-
-
-def func2_map_filter():
-    result_user = filter(lambda user: not user['shopCart'], users)
-    result_user_name = lambda user: user['name']
-    result = map(result_user_name, result_user)
-    # ALTERNATIVE =====> result = [user['name'] for user in users if len(user['shopCart']) == 0]
-    print(f"func4(filterAndMap):{list(result)}")
-
-
-def func3():
-    upper_names = map(lambda name: name.upper(), names)
-    print(f"func5{list(upper_names)}")
-    print(
-        f"func5(خالی خواهد بود زیرا یک بار پیمایش شده است){list(upper_names)}")  # خالی خواهد بود زیرا پیمایش سبب تخلیه می‌گردد
-
-
-def func4():
-    result = map(lambda person: person['family'], users)
-    print(f"func3:{list(result)}")
-    # Alternatives:
-    #           families = []
-    #           for person in users: families.append(person['family'])
-    #           print(f"{families}")
-
-
-def func5():
-    def add(x, y):
-        return x + y
-
-    list1 = [1, 2, 3]
-    list2 = [4, 5, 6]
-    added_numbers = map(add, list1, list2)
-    # ALTERNATIVE =====> added_numbers = map(lambda x, y: x + y, list1, list2)
-
-    # تبدیل به لیست
-    result_list = list(added_numbers)
-    print(result_list)  # خروجی: [5, 7, 9]
-
-
-func1()
-print()
-func2_map_filter()
-print()
-
-func3()
-print()
-
-func4()
-print()
-
-func5()
-
-```
-
-```python
-users = [{'name': 'Behrooz', 'family': 'nadery', 'born': 1369, 'shopCart': []},
-         {'name': 'Alireza', 'family': 'saberi', 'born': 1400, 'shopCart': []},
-         {'name': 'Attefeh', 'family': 'Rezaie', 'born': 1372, 'shopCart': ['kotlin', 'vue']}]
-
 result_user = filter(lambda user: not user['shopCart'], users)
 result_user_name = lambda user: user['name']
-result = map(result_user_name, result_user)
-# ALTERNATIVE =====> result = [user['name'] for user in users if len(user['shopCart']) == 0]
-print(f"func4(filterAndMap):{list(result)}")
-
+result = map(result_user_name, result_user)  # معادل: result = [user['name'] for user in users if len(user['shopCart']) == 0]
+print(list(result))  # Output: ['amirali', 'mahmood']
 
 ```
 
