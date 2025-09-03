@@ -1784,6 +1784,21 @@ print(next(iterName))
 # syntax: { key1: value1, key2: value2 }
 ```
 
+* پایتون فقط اجازه می‌ده اشیاء غیرقابل تغییر (immutable) رو به عنوان کلید دیکشنری استفاده کنی.
+    * Immutable(غیرقابل‌تغییر)
+        * str → "hello"
+        * int → 100
+        * float → 3.14
+        * tuple → (1, 2)
+        * bool → True
+        * frozenset → نوع خاصی از مجموعه که تغییرناپذیره
+    * mutable(تغییرپذیر)
+        * list → [1, 2]
+            * سعی کنی یک لیست رو به عنوان کلید استفاده کنی، خطای `TypeError: unhashable type: 'list'` می‌ده
+            * اگر لیست می‌تونست کلید باشه، بعد از تغییرش(چون تغییر پذیره)، دیکشنری نمی‌دونست کجا بره و کلید گم می‌شد
+        * dict → {"a": 1}
+        * set → {1, 2}
+
 ```python
 dic1 = {"name": "Behrooz", "family": "Mohammadi Nasab", "age": 34}
 dic2 = dict(first=1, second=2, third=3)  # {'first': 1, 'second': 2, 'third': 3}
@@ -1859,7 +1874,7 @@ d = {'a': 1, 'b': 2}
 readonly = MappingProxyType(d)
 
 print(readonly['a'])  # 1
-# readonly['a'] = 3    # ❌️ TypeError: cannot be modified
+# readonly['a'] = 3 # ❌️ TypeError: cannot be modified
 
 # Example1️⃣️3️⃣️: nested dictionaries
 data = {
@@ -1890,6 +1905,26 @@ from types import SimpleNamespace
 d = {'name': 'Ali', 'age': 25}
 ns = SimpleNamespace(**d)
 print(ns.name)  # Ali
+
+# Example1️⃣️6️⃣️: ادغام دیکشنری با `|` و `|=` (پایتون ۳.۹+)
+d1 = {'a': 1, 'b': 2}
+d2 = {'b': 3, 'c': 4}
+
+merged = d1 | d2
+print(merged)  # {'a': 1, 'b': 3, 'c': 4} — b از d2 جایگزین شد
+
+d1 |= d2  # update in-place
+print(d1)  # {'a': 1, 'b': 3, 'c': 4}
+
+# Example1️⃣️7️⃣️: استفاده از تاپل به عنوان کلید
+locations = {  # مختصات شهرها
+    (35.7, 51.4): "Tehran",
+    (30.3, 48.3): "Isfahan",
+    (25.2, 51.5): "Shiraz"
+}
+
+print(locations[(35.7, 51.4)])  # خروجی: Tehran
+
 ```
 
 اگر از کلاس dict ارث بری نماییم و تابع `__missing__` تعریف شده باشد آنگاه اگر کلیدی یافت نشد آنگاه تابع فراخوانی می‌شود
@@ -1902,19 +1937,6 @@ class DefaultDict(dict):
 
 d = DefaultDict()
 print(d['name'])  # Key 'name' not found, but I'm helping!
-```
-
-ادغام دیکشنری با | و |= (پایتون ۳.۹+)
-
-```python
-d1 = {'a': 1, 'b': 2}
-d2 = {'b': 3, 'c': 4}
-
-merged = d1 | d2
-print(merged)  # {'a': 1, 'b': 3, 'c': 4} — b از d2 جایگزین شد
-
-d1 |= d2  # update in-place
-print(d1)  # {'a': 1, 'b': 3, 'c': 4}
 ```
 
 ## 6.2. 🅱️ Set `{}`
@@ -2070,15 +2092,156 @@ fs = frozenset([1, 2])
 
 ## 6.3. 🅱️ Tupple`()`
 
-* مجموعه‌ای که محتوی آن قابلیت تغییر نداشته باشد(immutable)
-*
+* تاپل (tuple) یک ساختار داده غیرقابل تغییر (immutable) و مرتب (ordered) در پایتون است
+* ثبات داده بدلیل عدم تغییر
+* استفاده به عنوان کلید در دیکشنری
+* مناسب برای داده‌های ثابت مثل مکان، رنگ RGB و ...
+* چون تاپل غیرقابل تغییره، فقط دو متد داره
+    * `.count(item)`: شمارش تکرار
+    * `.index(item)`: پیدا کردن اندیس اولین مقدار
+
+```python
+tuple1 = (1, 2, 3)
+tuple2 = 1, 2, 3  # بدون پرانتز هم می‌شه!
+tuple3_empty = ()
+tuple4 = (5,)  # تاپل یک عضوی حتماً کاما داشته باشه
+tuple5_1to15 = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)
+tuple6 = (1, 2, 2, 3, 4, 5, 2, (4, 5, 3), 3, 3)  # immutable list
+tuple7 = (1, 2, {2}, (3, 4), [2, 5], 2, (4, 5, 3), 3, 3)
+tuple8 = tuple([1, 2, 3, 4, 5])
+
+# Example1️⃣️: ذخیره مختصات نقطه
+point = (3, 4)
+x, y = point
+print(f"Point: ({x}, {y})")  # Point: (3, 4)
+
+
+# Example2️⃣️: بازگشت چند مقدار از یک تابع
+def divide_remainder(a, b):
+    return a // b, a % b  # Output: بازگشت به صورت تاپل
+
+
+quotient, remainder = divide_remainder(10, 3)
+print(quotient, remainder)  # Output: 3 1
+
+# Example3️⃣️:  استفاده به عنوان کلید در دیکشنری
+scores = {  # ذخیره امتیاز تیم‌ها در یک تورنمنت
+    ("Iran", "Spain"): (2, 1),
+    ("Iran", "Portugal"): (1, 1),
+    ("Spain", "Portugal"): (3, 3)
+}
+
+print(scores[("Iran", "Spain")])  # (2, 1)
+
+# Example4️⃣️:  Color RGB (چون تغییر نمی‌کنه، تاپل انتخاب مناسبیه) 
+colors = {
+    "red": (255, 0, 0),
+    "green": (0, 255, 0),
+    "blue": (0, 0, 255)
+}
+
+print(colors["red"])  # (255, 0, 0)
+
+# Example5️⃣️: ذخیره تاریخ و زمان به صورت تاپل
+event = ("Conference", (2024, 5, 15), "Tehran")
+name, date, city = event
+year, month, day = date
+
+print(f"{name} in {city} on {year}-{month}-{day}")  # Output: Conference in Tehran on 2024-5-15
+
+# Example6️⃣️: 
+points = [(1, 2), (3, 4), (5, 6)]
+
+for x, y in points:
+    print(f"({x}, {y})")
+# (1, 2)
+# (3, 4)
+# (5, 6)
+
+# Example7️⃣️: تبدیل لیست به تاپل (برای حفظ ثبات)
+my_list = [1, 2, 3]
+my_tuple = tuple(my_list)
+
+
+# my_tuple[0] = 99  → ❌️ TypeError عدم امکان تغییر 
+
+# Example8️⃣️: استفاده در تابع با `*args`
+def print_names(*names):
+    # names یک تاپل است
+    for name in names:
+        print(name)
+
+
+print_names("Ali", "Sara", "Reza")
+# Output:
+## ---> Ali
+## ---> Sara
+## ---> Reza
+
+# Example9️⃣️: ذخیره اطلاعات دانشجو — رکورد ثابت
+student = ("Ali", 20, "Computer Science", 19.5)
+
+name, age, major, avg = student
+print(f"{name} studies {major}, average: {avg}")
+
+# Example1️⃣️0️⃣️:  استفاده در کتابخانه‌ها — مثلاً `zip()`
+names = ["Ali", "Sara", "Reza"]
+ages = [20, 19, 21]
+
+pairs = list(zip(names, ages))
+print(pairs)  # [('Ali', 20), ('Sara', 19), ('Reza', 21)]
+
+for name, age in pairs:  # هر عنصر یک تاپل است
+    print(f"{name} is {age} years old")
+
+# Example1️⃣️1️⃣️:  Ussing in dict.items()
+grades = {"Ali": 20, "Sara": 18}
+for item in grades.items():
+    print(item)  # ('Ali', 20) — یک تاپل
+# Every item in dict.items() is pair tuple ---> (key، value)
+
+# Example1️⃣️2️⃣️: تغییر نام متغیرها (Swapping) با تاپل
+a = 10
+b = 20
+
+a, b = b, a  # (a, b) = (b, a)
+print(a, b)  # 20 10
+
+# Example1️⃣️3️⃣️: .count(item) شمارش تکرار
+t = (1, 2, 2, 3, 2)
+print(t.count(2))  # 3
+
+# Example1️⃣️5️⃣️: .index(item) .index(item)
+print(t.index(3))  # Output: 3    ---> if notFound: ValueError 
+
+# Example1️⃣️4️⃣️: 
+# Example1️⃣️6️⃣️:
+# Example1️⃣️7️⃣️:
+# Example1️⃣️8️⃣️:
+# Example1️⃣️9️⃣️:
+# Example2️⃣️0️⃣️:
+```
+
+کاربردهای رایج استفاده از تاپل به عنوان کلید
+
+```python
+grid = {  # مختصات (x, y)
+    (0, 0): "start",
+    (1, 2): "treasure",
+    (3, 4): "enemy"
+}
+phone_book = {  # نام و نام‌خانوادگی
+    ("Ali", "Rezaei"): "0912-111-2222",
+    ("Sara", "Ahmadi"): "0912-333-4444"
+}
+student_scores = {  # ترکیپ چندویژگی
+    ("Math", "Quiz1", "Easy"): 95,
+    ("Math", "Midterm", "Hard"): 78
+}
+```
 
 ```python
 class TuppleClass:
-    _tuple1_1to15 = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)
-    _tuple2 = (1, 2, 2, 3, 4, 5, 2, (4, 5, 3), 3, 3)  # immutable list
-    _tuple3 = (1, 2, {2}, (3, 4), [2, 5], 2, (4, 5, 3), 3, 3)
-    _tuple4 = tuple([1, 2, 3, 4, 5])
 
     def show_tuple_withfor(self, localtuple=_tuple2):
         for num in localtuple:
@@ -2326,15 +2489,8 @@ numbers = [1, 2, 3, 4, 5]
 labels = ["even" if n % 2 == 0 else "odd" for n in numbers]
 print(labels)  # ['odd', 'even', 'odd', 'even', 'odd']
 
-# Example1️⃣️2️⃣️:
-# Example1️⃣️3️⃣️:
-# Example1️⃣️4️⃣️:
-# Example1️⃣️5️⃣️:
-# Example1️⃣️6️⃣️:
-# Example1️⃣️7️⃣️:
-# Example1️⃣️8️⃣️:
-# Example1️⃣️9️⃣️:
-# Example2️⃣️0️⃣️:
+# Example1️⃣️2️⃣️: رزرو برای بعد
+# Example1️⃣️3️⃣️: رزرو برای بعد
 ```
 
 ## 6.6. 🅱️ Filter
