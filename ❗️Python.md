@@ -1740,42 +1740,180 @@ show_data(Fname="Behi")
 
 # 6. 🅰️ Iterate
 
+* Iterate(فعل پیمایش): فرآیند «چرخیدن روی عناصر یک مجموعه» گفته می‌شود
+    * Iterate کردن یعنی پیمایش یک مجموعه داده، عنصر به عنصر.
+    * کاربردهای iterate:
+        * حلقه‌های for
+        * تابع‌هایی که روی داده پیمایش می‌کنند: sum(), list(), tuple(), max(), min()
+        * توابع map(), filter(), zip()
+        * ساختارهای داده‌ای جدید از روی داده‌های موجود
+        * پردازش فایل‌ها خط به خط
+* Iterable(Object): `__iter__()`
+    * شیء‌ای که می‌توان روی آن حلقه زد مثل : List,Tuple,String,Dictionary,Set,Range,File,...
+    * هر شیء پایتونی که دارای متد `__iter__()` باشد، یک iterable است
+    * هر شیء Iterable را می‌توان توسط مکانیزم Iterator پیمایش کرد
+    * هر شیء iterable را می‌توان با `for` یا توابعی مثل `iter()` و `next()` پیمایش(iterate) کرد.
+    * موضوع توالی و پشت سر هم بودن، جزء مهمترین مولفه در این ساختار است
+    * به صورت عادی نمی‌توان روی یک iterableObjects عمل iterate انجام داد. ابتدا باید تبدیل کنیم به iterator و سپس آن را پیمایش یا iterate کنیم
+    * یک iterableObject به صورت پیش‌فرض iterator نیست بلکه باید توسط افزودن توابع تظیر `__next__()` به آن قابلیت مکانیزم Iterator را اضافه کنیم
+* Iterator(Object): `__iter__()` و `__next__()`
+    * شیء‌ای که وضعیت پیمایش را نگه می‌دارد و می‌توان با `next()` عنصر بعدی را بگیرد.
+    * شیئی که دارای `__iter__()` و `__next__()` است.
+        * `__iter__()` سبب افزودن  `obj.iter()` می‌شود
+        * `__next__()`  سبب افزودن  `obj.next()` می‌شود
+    * پایتون از مکانیسم ایتریتور (iterator) برای پیمایش استفاده می‌کند.
+        * وقتی یک for روی یک iterable اجرا می‌شود، پایتون متد `__iter__()` را فراخوانی می‌کند تا یک ایتریتور ایجاد شود.
+        * سپس متد `__next__()` فراخوانی می‌شود تا هر بار عنصر بعدی را بگیرد.
+        * وقتی عناصر تمام شوند، Exception با نام StopIteration رخ می‌دهد و حلقه پایان می‌یابد.
+    * an object that can iterate on items by itself, and It can sequentially access the elements of an iterable
+    * `iterator=iterableObjects.iter()`
+
 ```python
-# 129. iterate: پیمایش یا تکرار کردن
-# 130. 
-# 131. iterable: Objects which can iterate and can convert to iterator
-# 132. ---> iterableObjects: Lists, Tuples, Dictionaryes, Sets, Strings
-# 133. ---------> iterableObject is not a iterator[but by function it can chage to iterator]
-# 134. ---> Note: we can not iterate on iterableObjects first. It should be converted to iterator and then iterate on it
-# 135. ---> Note: موضوع توالی و پشت سر هم بودن، جزء مهمترین مولفه در این ساختار است
-# 136. ---> Generally ussing with loops(for and ...)
-# 137. ---> next(): ussing next function for access to next item
-# 138. 
-# 139. iterator: object that can iterate on items by itself, and It can sequentially access the elements of an iterable
-# 140. ---> iterator=iterableObjects.iter();
-# 141. ---> class who must define __iter__() to  return iterator [Obj.iter()]
-# 142. ---> class who must define __next__() to  return next item and if nextItem is not available, return [StopIteration exception]) [Obj.next()]
+lst = [1, 2, 3]  # lst: iterable
+it = iter(lst)  # it: iterator
+
+# Example1️⃣️: لیست را پیمایش می‌کند. یعنی هر عنصر را یکی یکی برمی‌دارد و پردازش می‌کند
+for item in [1, 2, 3, 4]:
+    print(item)
+
+# Example2️⃣️: پیمایش روی رشته
+for char in "hello":
+    print(char)
+
+# Example3️⃣️: پیمایش روی دیکشنری (کلیدها)
+for key in {"a": 1, "b": 2}:
+    print(key)
+
+# Example4️⃣️: manual iterate یا پیمایش دستی ----> iter() + next()
+data = "abc"
+it = iter(data)
+
+while True:
+    try:
+        item = next(it)
+        print(item)
+    except StopIteration:
+        break
+# Output: 
+## -----> a
+## -----> b
+## -----> c
+
+# Example5️⃣️: پیمایش فایل
+with open("file.txt") as f:
+    for line in f:  # iterate روی خطوط فایل
+        print(line.strip())
+
+# Example6️⃣️: Tuple
+tup = (10, 20, 30)  # iterable
+it = iter(tup)  # تبدیل به iterator
+
+print(next(it))  # 10
+print(next(it))  # 20
+print(next(it))  # 30
+# print(next(it))  # StopIteration (خطا — عناصر تمام شده‌اند)
+
+# Example7️⃣️: String
+text = "abc"  # iterable
+it = iter(text)  # iterator
+
+print(next(it))  # 'a'
+print(next(it))  # 'b'
+print(next(it))  # 'c'
+
+# Example8️⃣️: Set --> عناصر «سِت» مرتب نیستند، بنابراین ترتیب خروجی ممکن است در اجراهای مختلف متفاوت باشد
+s = {5, 10, 15}  # iterable (ترتیب تضمین نشده)
+it = iter(s)
+
+print(next(it))  # مثلاً 10
+print(next(it))  # مثلاً 5
+print(next(it))  # مثلاً 15
+
+# Example9️⃣️: Dictionary
+d = {'x': 1, 'y': 2, 'z': 3}  # iterable — به طور پیش‌فرض روی کلیدها پیمایش می‌شود
+it = iter(d)
+
+print(next(it))  # 'x'
+print(next(it))  # 'y'
+print(next(it))  # 'z'
+
+# Example1️⃣️0️⃣️: pair
+it_keys = iter(d.keys())  # کلیدها
+it_values = iter(d.values())  # مقادیر
+it_items = iter(d.items())  # جفت‌های (کلید، مقدار)
+
+print(next(it_items))  # ('x', 1)
+
+# Example1️⃣️1️⃣️: range
+r = range(1, 4)  # iterable: 1, 2, 3
+it = iter(r)
+
+print(next(it))  # 1
+print(next(it))  # 2
+print(next(it))  # 3
+
+# Example1️⃣️2️⃣️: File: sample.txt
+file = open("sample.txt", "r")
+it = iter(file)
+
+print(next(it).strip())  # "Line 1"
+print(next(it).strip())  # "Line 2"
+print(next(it).strip())  # "Line 3"
+
+file.close()
 
 
-numbers = [1, 2, 3]  # iterableObjects
-colors = ('red', 'green', 'blue')  # iterableObjects
-name = "Behrooz"  # iterableObjects
-
-iterator = iter(numbers)
-
-print(iterator)  # output: <list_iterator object at 0x7fb1fd78e8f0>
-print(next(iterator))  # output: 1
-print(next(iterator))  # output: 2
-print(next(iterator))  # output: 3
-# 143. print(next(iterator)) # output: Exception(StopIteration) [only 3 items is Exist in iterableObjects]
+# Example1️⃣️3️⃣️: generator
+def my_gen():
+    yield 1
+    yield 2
+    yield 3
 
 
-iterName = iter(name)
-print(next(iterName))
-print(next(iterName))
-print(next(iterName))
-print(next(iterName))
+g = my_gen()  # generator object (هم iterable و هم iterator)
+it = iter(g)  # ایجاد iterator (هرچند خودش از قبل iterator است)
 
+print(next(it))  # 1
+print(next(it))  # 2
+print(next(it))  # 3
+
+# Example1️⃣️4️⃣️:  لیست ترکیبی (انواع داده مختلف) 
+mixed = [100, "hello", True, 3.14]
+it = iter(mixed)
+
+print(next(it))  # 100
+print(next(it))  # "hello"
+print(next(it))  # True
+print(next(it))  # 3.14
+
+
+# Example1️⃣️5️⃣️: Custom
+class CountUp:
+    def __init__(self, start, end):
+        self.start = start
+        self.end = end
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.start >= self.end:
+            raise StopIteration
+        value = self.start
+        self.start += 1
+        return value
+
+
+# استفاده:
+counter = CountUp(1, 4)
+it = iter(counter)
+
+print(next(it))  # 1
+print(next(it))  # 2
+print(next(it))  # 3
+# print(next(it))  # StopIteration
+
+# Example1️⃣️6️⃣️: رزرو برای بعدی
 ```
 
 ## 6.1. 🅱️ Dictionary `{key1:value1}`
