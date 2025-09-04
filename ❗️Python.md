@@ -2968,6 +2968,7 @@ def my_generator():
 ### 6.8.1. ✅️ Examples
 
 مثال1️⃣️: تولید اعداد یک تا سه
+
 ```python
 # ╔═════════════════════╗
 # ║ 𝔾𝕖𝕟𝕖𝕣𝕒𝕥𝕠𝕣 𝔽𝕦𝕟𝕔𝕥𝕚𝕠𝕟 ║
@@ -3021,192 +3022,286 @@ print(next(gen_list_comp))  # Output: 3
 # print(next(gen_list_comp))  # StopIteration
 ```
 
-مثال2️⃣️: 
+مثال2️⃣️: تولید اعداد زوج تا یک حد مشخص
 
 ```python
 # ╔═════════════════════╗
 # ║ 𝔾𝕖𝕟𝕖𝕣𝕒𝕥𝕠𝕣 𝔽𝕦𝕟𝕔𝕥𝕚𝕠𝕟 ║
 # ╚═════════════════════╝
+def even_numbers(limit):
+    num = 0
+    while num <= limit:
+        yield num
+        num += 2
 
-# ==> by for
 
-# ==> Manual
+gen = even_numbers(10)
+for n in gen:
+    print(n)  # Output: 0, 2, 4, 6, 8, 10
 
 # ╔═══════════════════════╗
 # ║ 𝔾𝕖𝕟𝕖𝕣𝕒𝕥𝕠𝕣 𝔼𝕩𝕡𝕣𝕖𝕤𝕤𝕚𝕠𝕟 ║
 # ╚═══════════════════════╝
-# ==> by for
+limit = 10
+gen_expr = (num for num in range(0, limit + 1, 2))
 
-# ==> Manual
+for n in gen_expr:
+    print(n)  # Output: 0, 2, 4, 6, 8, 10
 
 # ╔═════════════════════╗
 # ║ 𝕃𝕚𝕤𝕥 ℂ𝕠𝕞𝕡𝕣𝕖𝕙𝕖𝕟𝕤𝕚𝕠𝕟 ║
 # ╚═════════════════════╝
-# ==> by for
+limit = 10
+gen_list_comp = [num for num in range(0, limit + 1, 2)]
 
-# ==> Manual
+for n in gen_list_comp:
+    print(n)  # Output: 0, 2, 4, 6, 8, 10
 
 ```
 
-مثال3️⃣️:
+مثال3️⃣️: تولید مربع اعداد زوج تا یک حد مشخص
 
 ```python
 # ╔═════════════════════╗
 # ║ 𝔾𝕖𝕟𝕖𝕣𝕒𝕥𝕠𝕣 𝔽𝕦𝕟𝕔𝕥𝕚𝕠𝕟 ║
 # ╚═════════════════════╝
+def even_numbers_squared(limit):
+    num = 0
+    while num <= limit:
+        yield num ** 2  # مربع عدد زوج
+        num += 2
 
-# ==> by for
 
-# ==> Manual
+limit = 10
+gen = even_numbers_squared(limit)
+for n in gen:
+    print(n)  # Output: 0, 4, 16, 36, 64, 100
 
 # ╔═══════════════════════╗
 # ║ 𝔾𝕖𝕟𝕖𝕣𝕒𝕥𝕠𝕣 𝔼𝕩𝕡𝕣𝕖𝕤𝕤𝕚𝕠𝕟 ║
 # ╚═══════════════════════╝
-# ==> by for
-
-# ==> Manual
+limit = 10
+gen_expr = (num ** 2 for num in range(0, limit + 1, 2))
+for n in gen_expr:
+    print(n)  # Output: 0, 4, 16, 36, 64, 100
 
 # ╔═════════════════════╗
 # ║ 𝕃𝕚𝕤𝕥 ℂ𝕠𝕞𝕡𝕣𝕖𝕙𝕖𝕟𝕤𝕚𝕠𝕟 ║
 # ╚═════════════════════╝
-# ==> by for
-
-# ==> Manual
-
+limit = 10
+gen_list_comp = [num ** 2 for num in range(0, limit + 1, 2)]
+for n in gen_list_comp:
+    print(n)  # Output: 0, 4, 16, 36, 64, 100
 ```
 
-مثال4️⃣️: 
+مثال4️⃣️: تولید بی‌نهایت اعداد فیبوناچی
+
 ```python
 # ╔═════════════════════╗
 # ║ 𝔾𝕖𝕟𝕖𝕣𝕒𝕥𝕠𝕣 𝔽𝕦𝕟𝕔𝕥𝕚𝕠𝕟 ║
 # ╚═════════════════════╝
+def fibonacci(limit):
+    a, b = 0, 1
+    count = 0
+    while count < limit:
+        yield a
+        a, b = b, a + b
+        count += 1
 
-# ==> by for
-
-# ==> Manual
-
+limit = 10
+fib = fibonacci(limit)
+for n in fib:
+    print(n) # Output: 0, 1, 1, 2, 3, 5, 8, 13, 21, 34
 # ╔═══════════════════════╗
 # ║ 𝔾𝕖𝕟𝕖𝕣𝕒𝕥𝕠𝕣 𝔼𝕩𝕡𝕣𝕖𝕤𝕤𝕚𝕠𝕟 ║
 # ╚═══════════════════════╝
-# ==> by for
+def fib_gen(limit):
+    a, b = 0, 1
+    count = 0
+    while count < limit:
+        yield a
+        a, b = b, a + b
+        count += 1
 
-# ==> Manual
+limit = 10
+gen_expr = (x for x in fib_gen(limit))
 
+for n in gen_expr:
+    print(n)  # Output: 0, 1, 1, 2, 3, 5, 8, 13, 21, 34
 # ╔═════════════════════╗
 # ║ 𝕃𝕚𝕤𝕥 ℂ𝕠𝕞𝕡𝕣𝕖𝕙𝕖𝕟𝕤𝕚𝕠𝕟 ║
 # ╚═════════════════════╝
-# ==> by for
+def fib_gen(limit):
+    a, b = 0, 1
+    count = 0
+    while count < limit:
+        yield a
+        a, b = b, a + b
+        count += 1
 
-# ==> Manual
+limit = 10
+gen_list_comp = [x for x in fib_gen(limit)]
 
+for n in gen_list_comp:
+    print(n) # Output: 0, 1, 1, 2, 3, 5, 8, 13, 21, 34
 ```
 
-مثال5️⃣️: 
+مثال5️⃣️: پردازش خطوط یک فایل بدون بارگذاری کل فایل
 
 ```python
 # ╔═════════════════════╗
 # ║ 𝔾𝕖𝕟𝕖𝕣𝕒𝕥𝕠𝕣 𝔽𝕦𝕟𝕔𝕥𝕚𝕠𝕟 ║
 # ╚═════════════════════╝
+def read_large_file(filename):
+    with open(filename, 'r') as file:
+        for line in file:
+            yield line.strip()
 
-# ==> by for
 
-# ==> Manual
-
+for line in read_large_file("huge_log.txt"):
+    if "ERROR" in line:
+        print(line)
+        
 # ╔═══════════════════════╗
 # ║ 𝔾𝕖𝕟𝕖𝕣𝕒𝕥𝕠𝕣 𝔼𝕩𝕡𝕣𝕖𝕤𝕤𝕚𝕠𝕟 ║
 # ╚═══════════════════════╝
-# ==> by for
+filename = "huge_log.txt"
 
-# ==> Manual
-
+with open(filename, 'r') as file:
+    gen_expr = (line.strip() for line in file)
+    for line in gen_expr:
+        if "ERROR" in line:
+            print(line)
+            
 # ╔═════════════════════╗
 # ║ 𝕃𝕚𝕤𝕥 ℂ𝕠𝕞𝕡𝕣𝕖𝕙𝕖𝕟𝕤𝕚𝕠𝕟 ║
 # ╚═════════════════════╝
-# ==> by for
+filename = "huge_log.txt"
 
-# ==> Manual
-
+print("List Comprehension (NOT RECOMMENDED for large files):")
+with open(filename, 'r') as file:
+    lines = [line.strip() for line in file]  # ❌ تمام فایل در حافظه
+for line in lines:
+    if "ERROR" in line:
+        print(line)
 ```
 
-مثال6️⃣️: 
+مثال6️⃣️: تولید داده‌های شبیه‌سازی شده (مثلاً دما)
 
 ```python
 # ╔═════════════════════╗
 # ║ 𝔾𝕖𝕟𝕖𝕣𝕒𝕥𝕠𝕣 𝔽𝕦𝕟𝕔𝕥𝕚𝕠𝕟 ║
 # ╚═════════════════════╝
+import random
 
-# ==> by for
 
-# ==> Manual
+def sensor_data():
+    while True:
+        temp = random.uniform(20, 30)
+        yield round(temp, 2)
+
+
+sensor = sensor_data()
+for _ in range(5):
+    print(f"دمای فعلی: {next(sensor)}°C")  # Output: 25.34, 27.12, 22.89, ...
 
 # ╔═══════════════════════╗
 # ║ 𝔾𝕖𝕟𝕖𝕣𝕒𝕥𝕠𝕣 𝔼𝕩𝕡𝕣𝕖𝕤𝕤𝕚𝕠𝕟 ║
 # ╚═══════════════════════╝
-# ==> by for
+import random
 
-# ==> Manual
-
+# Generator Expression شبیه‌سازی شده با iter + lambda
+sensor_gen = (round(random.uniform(20, 30), 2) for _ in iter(int, 1))  # int, 1 → همیشه False → بی‌نهایت
+for _ in range(5):
+    print(f"دمای فعلی: {next(sensor_gen)}°C")  # Output: 24.67, 28.01, 21.95, ...
 # ╔═════════════════════╗
 # ║ 𝕃𝕚𝕤𝕥 ℂ𝕠𝕞𝕡𝕣𝕖𝕙𝕖𝕟𝕤𝕚𝕠𝕟 ║
 # ╚═════════════════════╝
-# ==> by for
+import random
 
-# ==> Manual
-
+data_buffer = [round(random.uniform(20, 30), 2) for _ in range(100)]  # تولید ۱۰۰ عدد تصادفی (به عنوان بافر)
+for i in range(5):
+    print(f"دمای فعلی: {data_buffer[i]}°C")
 ```
 
-مثال7️⃣️:
+مثال7️⃣️: نمایش وضعیت متغیرها
 
 ```python
 # ╔═════════════════════╗
 # ║ 𝔾𝕖𝕟𝕖𝕣𝕒𝕥𝕠𝕣 𝔽𝕦𝕟𝕔𝕥𝕚𝕠𝕟 ║
 # ╚═════════════════════╝
+def counter_with_state():
+    count = 0
+    while count < 3:
+        print(f"Before yield: count = {count}")
+        yield count
+        count += 1
+        print(f"Ⓜ️After yield: count = {count}")
 
-# ==> by for
 
-# ==> Manual
+gen = counter_with_state()
+print("Start:")
+print(next(gen))
+print("❗️After first next")
+print(next(gen))
+print(next(gen))
+
+# Output:
+## -----> Start:
+## -----> Before yield: count = 0
+## -----> 0
+## -----> ❗️After first next
+## -----> Ⓜ️After yield: count = 1
+## -----> Before yield: count = 1
+## -----> 1
+## -----> Ⓜ️After yield: count = 2
+## -----> Before yield: count = 2
+## -----> 2
+
 
 # ╔═══════════════════════╗
 # ║ 𝔾𝕖𝕟𝕖𝕣𝕒𝕥𝕠𝕣 𝔼𝕩𝕡𝕣𝕖𝕤𝕤𝕚𝕠𝕟 ║
 # ╚═══════════════════════╝
-# ==> by for
-
-# ==> Manual
+print("بدلیل عدم توانایی استفاده از لاگ این امکان وجود ندارد")
 
 # ╔═════════════════════╗
 # ║ 𝕃𝕚𝕤𝕥 ℂ𝕠𝕞𝕡𝕣𝕖𝕙𝕖𝕟𝕤𝕚𝕠𝕟 ║
 # ╚═════════════════════╝
-# ==> by for
-
-# ==> Manual
-
+print("بدلیل عدم توانایی استفاده از لاگ این امکان وجود ندارد")
 ```
 
-مثال8️⃣️: 
+مثال8️⃣️: وقتی یک generator پیمایش شود آنگاه محتوای آن خالی خواهد شد
 
 ```python
 # ╔═════════════════════╗
 # ║ 𝔾𝕖𝕟𝕖𝕣𝕒𝕥𝕠𝕣 𝔽𝕦𝕟𝕔𝕥𝕚𝕠𝕟 ║
 # ╚═════════════════════╝
+def gen_func():
+    for x in [1, 2, 3]:
+        yield x
 
-# ==> by for
-
-# ==> Manual
+print("\nGenerator Function:")
+gen = gen_func()
+print(list(gen))  # Output: [1, 2, 3]
+print(list(gen))  # Output: []
 
 # ╔═══════════════════════╗
 # ║ 𝔾𝕖𝕟𝕖𝕣𝕒𝕥𝕠𝕣 𝔼𝕩𝕡𝕣𝕖𝕤𝕤𝕚𝕠𝕟 ║
 # ╚═══════════════════════╝
-# ==> by for
-
-# ==> Manual
+print("Generator Expression:")
+gen = (x for x in [1, 2, 3])
+print(list(gen))  # Output: [1, 2, 3]
+print(list(gen))  # Output: []
 
 # ╔═════════════════════╗
 # ║ 𝕃𝕚𝕤𝕥 ℂ𝕠𝕞𝕡𝕣𝕖𝕙𝕖𝕟𝕤𝕚𝕠𝕟 ║
 # ╚═════════════════════╝
-# ==> by for
+# تولید لیست با list comprehension، سپس تبدیل به iterator
+gen = iter([x for x in [1, 2, 3]])
 
-# ==> Manual
-
+print("\nList Comprehension (as iterator):")
+print(list(gen))  # Output: [1, 2, 3]
+print(list(gen))  # Output: []
 ```
 
 مثال9️⃣️:
@@ -3266,96 +3361,6 @@ print(next(gen_list_comp))  # Output: 3
 GeneratorFunction
 
 ```python
-# Example2️⃣️: تولید اعداد زوج تا یک حد مشخص
-def even_numbers(limit):
-    num = 0
-    while num <= limit:
-        yield num
-        num += 2
-
-
-gen = even_numbers(10)
-
-for n in gen:
-    print(n)
-
-
-# Output: 0, 2, 4, 6, 8, 10
-
-# Example3️⃣️: تولید بی‌نهایت اعداد فیبوناچی
-def fibonacci():
-    a, b = 0, 1
-    while True:
-        yield a
-        a, b = b, a + b
-
-
-fib = fibonacci()
-
-for _ in range(10):  # 10 item from fibonacci
-    print(next(fib))
-
-
-# Output: 0, 1, 1, 2, 3, 5, 8, 13, 21, 34
-
-# Example4️⃣️: پردازش خطوط یک فایل بدون بارگذاری کل فایل
-def read_large_file(filename):
-    with open(filename, 'r') as file:
-        for line in file:
-            yield line.strip()  # فقط یک خط در هر لحظه در حافظه است 
-
-
-for line in read_large_file("huge_log.txt"):
-    if "ERROR" in line:
-        print(line)
-
-# Example5️⃣️: تولید داده‌های شبیه‌سازی شده (مثلاً دما)
-import random
-
-
-def sensor_data():
-    while True:
-        temp = random.uniform(20, 30)
-        yield round(temp, 2)
-
-
-sensor = sensor_data()
-
-for _ in range(5):
-    print(f"دمای فعلی: {next(sensor)}°C")
-
-
-# Output: مثلاً 25.34, 27.12, 22.89, ...
-
-# Example6️⃣️: نمایش وضعیت متغیرها
-def counter_with_state():
-    count = 0
-    while count < 3:
-        print(f"Before yield: count = {count}")
-        yield count
-        count += 1
-        print(f"Ⓜ️After yield: count = {count}")
-
-
-gen = counter_with_state()
-print("Start:")
-print(next(gen))
-print("❗️After first next")
-print(next(gen))
-print(next(gen))
-
-# Output:
-## -----> Start:
-## -----> Before yield: count = 0
-## -----> 0
-## -----> ❗️After first next
-## -----> Ⓜ️After yield: count = 1
-## -----> Before yield: count = 1
-## -----> 1
-## -----> Ⓜ️After yield: count = 2
-## -----> Before yield: count = 2
-## -----> 2
-
 # Example7️⃣️: Generator + itertools
 import itertools
 
@@ -3373,11 +3378,6 @@ first_5 = itertools.islice(evens, 5)
 
 for n in first_5:
     print(n)  # 0, 2, 4, 6, 8
-
-# Example8️⃣️: 
-gen = (x for x in [1, 2, 3])
-list(gen)  # Output: [1, 2, 3]
-list(gen)  # Output: [] — خالی! چون قبلاً تمام شده
 ```
 
 GeneratorExpression...
