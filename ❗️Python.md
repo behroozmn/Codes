@@ -2916,7 +2916,7 @@ print(list(result))  # Output: ['amirali', 'mahmood']
 * ۲نوع Generator در پایتون داریم
     1. Generator Function با کلمه کلیدی `yield`
     2. Generator Expression با علامت `()`
-        * شبیه List Comprehension با علامت `[]` 
+        * شبیه List Comprehension با علامت `[]`
 * کاربرد
     * پردازش داده‌های بزرگ»:مثل فایل‌های بزرگ، لاگ‌ها» و CSV بدون بارگذاری کل داده
     * «جریان داده (DataStreaming)»: شبیه‌سازی داده‌های زنده (مانند سنسورها)
@@ -2937,7 +2937,6 @@ print(list(result))  # Output: ['amirali', 'mahmood']
 * قابلیت ادامه تابع از همان نقطه توقف
 * عدم محاسبه و برگرداندن یکباره تمام مقادیر بلکه محاسبه و تولیدیکی پس از دیگری
 
-
 ```python
 def my_generator():
     yield 1
@@ -2953,7 +2952,6 @@ def my_generator():
 # Syntax: (expression for item in iterable if condition)
 ```
 
-
 تفاوت Generator با List Comprehension
 
 | مورد          | List Comprehension               | Generator Expression                                 |
@@ -2965,7 +2963,7 @@ def my_generator():
 | قابلیت پیمایش | چندباره                          | فقط یک‌بار                                           |
 | سرعت اولیه    | سریع (اما ممکن است کند باشد)     | فوری (چون هنوز تولید نشده)                           |
 
-### 6.8.1. ✅️ Examples
+### 6.8.3. ✅️ Examples
 
 مثال1️⃣️: تولید اعداد یک تا سه
 
@@ -3108,10 +3106,13 @@ def fibonacci(limit):
         a, b = b, a + b
         count += 1
 
+
 limit = 10
 fib = fibonacci(limit)
 for n in fib:
-    print(n) # Output: 0, 1, 1, 2, 3, 5, 8, 13, 21, 34
+    print(n)  # Output: 0, 1, 1, 2, 3, 5, 8, 13, 21, 34
+
+
 # ╔═══════════════════════╗
 # ║ 𝔾𝕖𝕟𝕖𝕣𝕒𝕥𝕠𝕣 𝔼𝕩𝕡𝕣𝕖𝕤𝕤𝕚𝕠𝕟 ║
 # ╚═══════════════════════╝
@@ -3123,11 +3124,14 @@ def fib_gen(limit):
         a, b = b, a + b
         count += 1
 
+
 limit = 10
 gen_expr = (x for x in fib_gen(limit))
 
 for n in gen_expr:
     print(n)  # Output: 0, 1, 1, 2, 3, 5, 8, 13, 21, 34
+
+
 # ╔═════════════════════╗
 # ║ 𝕃𝕚𝕤𝕥 ℂ𝕠𝕞𝕡𝕣𝕖𝕙𝕖𝕟𝕤𝕚𝕠𝕟 ║
 # ╚═════════════════════╝
@@ -3139,11 +3143,12 @@ def fib_gen(limit):
         a, b = b, a + b
         count += 1
 
+
 limit = 10
 gen_list_comp = [x for x in fib_gen(limit)]
 
 for n in gen_list_comp:
-    print(n) # Output: 0, 1, 1, 2, 3, 5, 8, 13, 21, 34
+    print(n)  # Output: 0, 1, 1, 2, 3, 5, 8, 13, 21, 34
 ```
 
 مثال5️⃣️: پردازش خطوط یک فایل بدون بارگذاری کل فایل
@@ -3161,7 +3166,7 @@ def read_large_file(filename):
 for line in read_large_file("huge_log.txt"):
     if "ERROR" in line:
         print(line)
-        
+
 # ╔═══════════════════════╗
 # ║ 𝔾𝕖𝕟𝕖𝕣𝕒𝕥𝕠𝕣 𝔼𝕩𝕡𝕣𝕖𝕤𝕤𝕚𝕠𝕟 ║
 # ╚═══════════════════════╝
@@ -3172,7 +3177,7 @@ with open(filename, 'r') as file:
     for line in gen_expr:
         if "ERROR" in line:
             print(line)
-            
+
 # ╔═════════════════════╗
 # ║ 𝕃𝕚𝕤𝕥 ℂ𝕠𝕞𝕡𝕣𝕖𝕙𝕖𝕟𝕤𝕚𝕠𝕟 ║
 # ╚═════════════════════╝
@@ -3280,6 +3285,7 @@ def gen_func():
     for x in [1, 2, 3]:
         yield x
 
+
 print("\nGenerator Function:")
 gen = gen_func()
 print(list(gen))  # Output: [1, 2, 3]
@@ -3304,147 +3310,226 @@ print(list(gen))  # Output: [1, 2, 3]
 print(list(gen))  # Output: []
 ```
 
-مثال9️⃣️:
+مثال9️⃣️: Generator + itertools.islice - دریافت ۵ عدد اول از اعداد زوج
 
 ```python
-# ╔═════════════════════╗
-# ║ 𝔾𝕖𝕟𝕖𝕣𝕒𝕥𝕠𝕣 𝔽𝕦𝕟𝕔𝕥𝕚𝕠𝕟 ║
-# ╚═════════════════════╝
-
-# ==> by for
-
-# ==> Manual
-
-# ╔═══════════════════════╗
-# ║ 𝔾𝕖𝕟𝕖𝕣𝕒𝕥𝕠𝕣 𝔼𝕩𝕡𝕣𝕖𝕤𝕤𝕚𝕠𝕟 ║
-# ╚═══════════════════════╝
-# ==> by for
-
-# ==> Manual
-
-# ╔═════════════════════╗
-# ║ 𝕃𝕚𝕤𝕥 ℂ𝕠𝕞𝕡𝕣𝕖𝕙𝕖𝕟𝕤𝕚𝕠𝕟 ║
-# ╚═════════════════════╝
-# ==> by for
-
-# ==> Manual
-
-```
-
-مثال1️⃣️0️⃣️:
-
-```python
-# ╔═════════════════════╗
-# ║ 𝔾𝕖𝕟𝕖𝕣𝕒𝕥𝕠𝕣 𝔽𝕦𝕟𝕔𝕥𝕚𝕠𝕟 ║
-# ╚═════════════════════╝
-
-# ==> by for
-
-# ==> Manual
-
-# ╔═══════════════════════╗
-# ║ 𝔾𝕖𝕟𝕖𝕣𝕒𝕥𝕠𝕣 𝔼𝕩𝕡𝕣𝕖𝕤𝕤𝕚𝕠𝕟 ║
-# ╚═══════════════════════╝
-# ==> by for
-
-# ==> Manual
-
-# ╔═════════════════════╗
-# ║ 𝕃𝕚𝕤𝕥 ℂ𝕠𝕞𝕡𝕣𝕖𝕙𝕖𝕟𝕤𝕚𝕠𝕟 ║
-# ╚═════════════════════╝
-# ==> by for
-
-# ==> Manual
-
-```
-
-GeneratorFunction
-
-```python
-# Example7️⃣️: Generator + itertools
 import itertools
 
+n = 5
 
-# ۵ عدد اول از یک generator بی‌نهایت
+
+# ╔═════════════════════╗
+# ║ 𝔾𝕖𝕟𝕖𝕣𝕒𝕥𝕠𝕣 𝔽𝕦𝕟𝕔𝕥𝕚𝕠𝕟 ║
+# ╚═════════════════════╝
 def infinite_evens():
-    n = 0
+    num = 0
     while True:
-        yield n
-        n += 2
+        yield num
+        num += 2
 
 
-evens = infinite_evens()
-first_5 = itertools.islice(evens, 5)
+for value in itertools.islice(infinite_evens(), n):
+    print(value)  # Output: 0, 2, 4, 6, 8
 
-for n in first_5:
-    print(n)  # 0, 2, 4, 6, 8
+# ╔═══════════════════════╗
+# ║ 𝔾𝕖𝕟𝕖𝕣𝕒𝕥𝕠𝕣 𝔼𝕩𝕡𝕣𝕖𝕤𝕤𝕚𝕠𝕟 ║
+# ╚═══════════════════════╝
+for value in itertools.islice((x for x in itertools.count(0, 2)), n):
+    print(value)  # Output: 0, 2, 4, 6, 8
+
+# ╔═════════════════════╗
+# ║ 𝕃𝕚𝕤𝕥 ℂ𝕠𝕞𝕡𝕣𝕖𝕙𝕖𝕟𝕤𝕚𝕠𝕟 ║
+# ╚═════════════════════╝
+# تولید n عدد اول اعداد زوج با list comprehension
+even_numbers = [2 * i for i in range(n)]  # [0, 2, 4, 6, 8]
+for value in itertools.islice(iter(even_numbers), n):
+    print(value)  # Output: 0, 2, 4, 6, 8
 ```
 
-GeneratorExpression...
+مثال1️⃣️0️⃣️: نمایش اعداد زوج در یک لیست داده شده
 
 ```python
-# Example1️⃣️: # simple for
-result = []
-for num in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]:
-    if num % 2 == 0:
-        result.append(num)
-print(result)  # Output: [2, 4, 6, 8, 10]
+source = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
-# Example1️⃣️: list comprehension
-print([num for num in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] if num % 2 == 0])  # Output: [2, 4, 6, 8, 10]
 
-# Example1️⃣️: generator expression
-print(list(num for num in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] if num % 2 == 0))  # Output: [2, 4, 6, 8, 10]
+# ╔═════════════════════╗
+# ║ 𝔾𝕖𝕟𝕖𝕣𝕒𝕥𝕠𝕣 𝔽𝕦𝕟𝕔𝕥𝕚𝕠𝕟 ║
+# ╚═════════════════════╝
+def even_generator(lst):
+    for num in lst:
+        if num % 2 == 0:
+            yield num
 
-# Example2️⃣️: even squares یا مربع اعداد زوج
-### ❗️By Loop
-squares = (x ** 2 for x in range(1, 10) if x % 2 == 0)
 
+result = list(even_generator(source))
+print("Generator Function:", result)  # Output: [2, 4, 6, 8, 10]
+
+# ╔═══════════════════════╗
+# ║ 𝔾𝕖𝕟𝕖𝕣𝕒𝕥𝕠𝕣 𝔼𝕩𝕡𝕣𝕖𝕤𝕤𝕚𝕠𝕟 ║
+# ╚═══════════════════════╝
+print(list(num for num in source if num % 2 == 0))  # Output: [2, 4, 6, 8, 10]
+
+# ╔═════════════════════╗
+# ║ 𝕃𝕚𝕤𝕥 ℂ𝕠𝕞𝕡𝕣𝕖𝕙𝕖𝕟𝕤𝕚𝕠𝕟 ║
+# ╚═════════════════════╝
+print([num for num in source if num % 2 == 0])  # Output: [2, 4, 6, 8, 10]
+```
+
+مثال1️⃣️1️⃣️: مربع اعداد زوج یک تا ده
+
+```python
+# ╔═════════════════════╗
+# ║ 𝔾𝕖𝕟𝕖𝕣𝕒𝕥𝕠𝕣 𝔽𝕦𝕟𝕔𝕥𝕚𝕠𝕟 ║
+# ╚═════════════════════╝
+def even_squares_generator():
+    for x in range(1, 10):
+        if x % 2 == 0:
+            yield x ** 2
+
+
+squares = even_squares_generator()
 for sq in squares:
-    print(sq)  # Output: 4, 16, 36, 64, 100 (ادامه)
-
-### ❗️Manual 
+    print(sq)  # Output: 4, 16, 36, 64
+# ╔═══════════════════════╗
+# ║ 𝔾𝕖𝕟𝕖𝕣𝕒𝕥𝕠𝕣 𝔼𝕩𝕡𝕣𝕖𝕤𝕤𝕚𝕠𝕟 ║
+# ╚═══════════════════════╝
 squares = (x ** 2 for x in range(1, 10) if x % 2 == 0)
-print(next(squares))  # 4
-print(next(squares))  # 16
-print(next(squares))  # 36
-print(next(squares))  # 64
+for sq in squares:
+    print(sq)  # Output: 4, 16, 36, 64
+# ╔═════════════════════╗
+# ║ 𝕃𝕚𝕤𝕥 ℂ𝕠𝕞𝕡𝕣𝕖𝕙𝕖𝕟𝕤𝕚𝕠𝕟 ║
+# ╚═════════════════════╝
+squares = [x ** 2 for x in range(1, 10) if x % 2 == 0]
+for sq in squares:
+    print(sq)  # Output: 4, 16, 36, 64
+```
 
-# Example3️⃣️: فیلتر و تبدیل رشته‌ها
+مثال1️⃣️2️⃣️: تبدیل رشته به حروف بزرگ
+
+```python
+# ╔═════════════════════╗
+# ║ 𝔾𝕖𝕟𝕖𝕣𝕒𝕥𝕠𝕣 𝔽𝕦𝕟𝕔𝕥𝕚𝕠𝕟 ║
+# ╚═════════════════════╝
+def clean_upper_generator(word_list):
+    for word in word_list:
+        stripped = word.strip()
+        if stripped:  # فقط اگر غیرخالی باشد
+            yield stripped.upper()
+
+
 words = ["hello", "", "world", "  ", "python"]
+for w in clean_upper_generator(words):
+    print(w)  # Output: HELLO, WORLD, PYTHON
 
+# ╔═══════════════════════╗
+# ║ 𝔾𝕖𝕟𝕖𝕣𝕒𝕥𝕠𝕣 𝔼𝕩𝕡𝕣𝕖𝕤𝕤𝕚𝕠𝕟 ║
+# ╚═══════════════════════╝
+words = ["hello", "", "world", "  ", "python"]
 clean_upper = (word.strip().upper() for word in words if word.strip())
-
 for w in clean_upper:
-    print(w)
-# Output: HELLO, WORLD, PYTHON
+    print(w)  # Output: HELLO, WORLD, PYTHON
 
-# Example4️⃣️: خواندن یک فایل
+# ╔═════════════════════╗
+# ║ 𝕃𝕚𝕤𝕥 ℂ𝕠𝕞𝕡𝕣𝕖𝕙𝕖𝕟𝕤𝕚𝕠𝕟 ║
+# ╚═════════════════════╝
+words = ["hello", "", "world", "  ", "python"]
+clean_upper = [word.strip().upper() for word in words if word.strip()]
+for w in clean_upper:
+    print(w)  # Output: HELLO, WORLD, PYTHON
+```
+
+مثال1️⃣️3️⃣️: خواندن و پردازش خط‌به‌خط فایل data.txt
+
+```
+Hello World
+# This is a comment
+Python is great
+   # Another comment with spaces
+Keep coding
+```
+
+```python
+# ╔═════════════════════╗
+# ║ 𝔾𝕖𝕟𝕖𝕣𝕒𝕥𝕠𝕣 𝔽𝕦𝕟𝕔𝕥𝕚𝕠𝕟 ║
+# ╚═════════════════════╝
+def read_clean_lines(filename):
+    with open(filename, "r") as file:
+        for line in file:
+            cleaned = line.strip()
+            if cleaned and not cleaned.startswith("#"):
+                yield cleaned
+
+
+for line in read_clean_lines("data.txt"):
+    print(line)  # Output: Hello World, Python is great, Keep coding
+
+# ╔═══════════════════════╗
+# ║ 𝔾𝕖𝕟𝕖𝕣𝕒𝕥𝕠𝕣 𝔼𝕩𝕡𝕣𝕖𝕤𝕤𝕚𝕠𝕟 ║
+# ╚═══════════════════════╝
 line_gen = (line.strip() for line in open("data.txt", "r"))
 
 for line in line_gen:
     if line.startswith("#"):
         continue
-    print(line)
+    if line:  # اطمینان از اینکه خط خالی نیست
+        print(line)  # Output: Hello World, Python is great, Keep coding
 
-# Example5️⃣️: محاسبه تفاوت سرعت اجرا
+# ╔═════════════════════╗
+# ║ 𝕃𝕚𝕤𝕥 ℂ𝕠𝕞𝕡𝕣𝕖𝕙𝕖𝕟𝕤𝕚𝕠𝕟 ║
+# ╚═════════════════════╝
+# خواندن فایل و پردازش با list comprehension
+with open("data.txt", "r") as file:
+    lines = [line.strip() for line in file]
+for line in lines:
+    if line and not line.startswith("#"):
+        print(line)  # Output: Hello World, Python is great, Keep coding
+```
+
+مثال1️⃣️4️⃣️: محاسبه تفاوت سرعت اجرا در مقایسه جمع اعداد بین 0 تا 99,999,999
+
+```python
 from time import time
 
+
+# ╔═════════════════════╗
+# ║ 𝔾𝕖𝕟𝕖𝕣𝕒𝕥𝕠𝕣 𝔽𝕦𝕟𝕔𝕥𝕚𝕠𝕟 ║
+# ╚═════════════════════╝
+def number_generator(n):
+    """یک تابع مولد که اعداد 0 تا n-1 را تولید می‌کند."""
+    for num in range(n):
+        yield num
+
+
+start_time = time()
+print(f"GeneratorFunction: {sum(number_generator(100000000))}")
+end_time = time()
+print(f"----------> duration: {end_time - start_time:.6f} second")
+# Output:
+## GeneratorFunction: 4999999950000000
+## ----------> duration: 2.902747 second
+
+# ╔═══════════════════════╗
+# ║ 𝔾𝕖𝕟𝕖𝕣𝕒𝕥𝕠𝕣 𝔼𝕩𝕡𝕣𝕖𝕤𝕤𝕚𝕠𝕟 ║
+# ╚═══════════════════════╝
 start_time = time()
 print(f"GeneratorExprerssion: {sum(num for num in range(100000000))}")  # --> GeneratorExprerssion
 end_time = time()
 print(f"----------> duration: {end_time - start_time} second")
+# Output:
+## GeneratorExprerssion: 4999999950000000 
+## ----------> duration: 3.010427236557007 second
 
+# ╔═════════════════════╗
+# ║ 𝕃𝕚𝕤𝕥 ℂ𝕠𝕞𝕡𝕣𝕖𝕙𝕖𝕟𝕤𝕚𝕠𝕟 ║
+# ╚═════════════════════╝
 start_time = time()
 print(f"ListComprehension: {sum([num for num in range(100000000)])}")  # --> ListComprehension
 end_time = time()
 print(f"-------> duration: {end_time - start_time} second")
-
 # Output:
-## -----> GeneratorExprerssion: 4999999950000000
-## -----> ----------> duration: 2.7180426120758057 second
-## -----> ListComprehension: 4999999950000000
-## -----> -------> duration: 3.4330999851226807 second
+## ListComprehension: 4999999950000000 
+## -------> duration: 3.480952739715576 second
+
 ```
 
 ## 6.9. 🅱️ Zip
