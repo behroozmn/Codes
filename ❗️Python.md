@@ -2937,6 +2937,7 @@ print(list(result))  # Output: ['amirali', 'mahmood']
 * قابلیت ادامه تابع از همان نقطه توقف
 * عدم محاسبه و برگرداندن یکباره تمام مقادیر بلکه محاسبه و تولیدیکی پس از دیگری
 
+
 ```python
 def my_generator():
     yield 1
@@ -2944,22 +2945,121 @@ def my_generator():
     yield 3
 ```
 
+### 6.8.2. ✅️ GeneratorExpression ► `()`
+
+* شبیه `list comprehension` است، اما به جای `[]` از `()` استفاده می‌کند و یک generator ایجاد می‌کند.
+
+```python
+# Syntax: (expression for item in iterable if condition)
+```
+
+
+تفاوت Generator با List Comprehension
+
+| مورد          | List Comprehension               | Generator Expression                                 |
+|---------------|----------------------------------|------------------------------------------------------|
+| نحوه نوشتن    | `[x**2 for x in range(5)]`       | `(x**2 for x in range(5))`                           |
+| نوع خروجی     | لیست                             | generator object                                     |
+| ایجاد         | تمام عناصر رو فوراً ایجاد می‌کند | عناصر رو به صورت lazy(تنبل:درهنگام‌نیاز)تولید می‌کنه |
+| حافظه         | تمام عناصر در حافظه              | فقط یک عنصر در هر لحظه                               |
+| قابلیت پیمایش | چندباره                          | فقط یک‌بار                                           |
+| سرعت اولیه    | سریع (اما ممکن است کند باشد)     | فوری (چون هنوز تولید نشده)                           |
+
+### 6.8.1. ✅️ Examples
+
 ```python
 # Example1️⃣️: تولید اعداد ۱تا۳
+# ╔════════════════════╗
+# ║ 𝔾𝕖𝕟𝕖𝕣𝕒𝕥𝕠𝕣 𝔽𝕦𝕟𝕔𝕥𝕚𝕠𝕟 ║
+# ╚════════════════════╝
 def count_up():
     yield 1
     yield 2
     yield 3
 
 
-gen = count_up()  # ایجاد generator object
-print(next(gen))  # 1
-print(next(gen))  # 2
-print(next(gen))  # 3
+# ==> by for
+gen = count_up()
+for n in gen:
+    print(n)  # Output: 1, 2, 3
 
-
+# ==> Manual
+gen = count_up()
+print(next(gen))  # Output: 1
+print(next(gen))  # Output: 2
+print(next(gen))  # Output: 3
 # print(next(gen))  # StopIteration
 
+# ╔══════════════════════╗
+# ║ 𝔾𝕖𝕟𝕖𝕣𝕒𝕥𝕠𝕣 𝔼𝕩𝕡𝕣𝕖𝕤𝕤𝕚𝕠𝕟 ║
+# ╚══════════════════════╝
+# ==> by for
+gen_expr = (x for x in [1, 2, 3])
+for n in gen_expr:
+    print(n)  # Output: 1, 2, 3
+
+# ==> Manual
+gen_expr = (x for x in [1, 2, 3])
+print(next(gen_expr))  # Output: 1
+print(next(gen_expr))  # Output: 2
+print(next(gen_expr))  # Output: 3
+# print(next(gen_expr))  # StopIteration
+
+# ╔════════════════════╗
+# ║ 𝕃𝕚𝕤𝕥 ℂ𝕠𝕞𝕡𝕣𝕖𝕙𝕖𝕟𝕤𝕚𝕠𝕟 ║
+# ╚════════════════════╝
+# ==> by for
+gen_list_comp = iter([x for x in [1, 2, 3]])
+for n in gen_list_comp:
+    print(n)  # Output: 1, 2, 3
+
+# ==> Manual
+gen_list_comp = iter([x for x in [1, 2, 3]])
+print(next(gen_list_comp))  # Output: 1
+print(next(gen_list_comp))  # Output: 2
+print(next(gen_list_comp))  # Output: 3
+# print(next(gen_list_comp))  # StopIteration
+```
+
+```python
+# Example: 
+# ╔════════════════════╗
+# ║ 𝔾𝕖𝕟𝕖𝕣𝕒𝕥𝕠𝕣 𝔽𝕦𝕟𝕔𝕥𝕚𝕠𝕟 ║
+# ╚════════════════════╝
+def count_up():
+    yield 1
+    yield 2
+    yield 3
+
+
+# ==> by for
+
+
+# ==> Manual
+
+
+# ╔══════════════════════╗
+# ║ 𝔾𝕖𝕟𝕖𝕣𝕒𝕥𝕠𝕣 𝔼𝕩𝕡𝕣𝕖𝕤𝕤𝕚𝕠𝕟 ║
+# ╚══════════════════════╝
+# ==> by for
+
+
+# ==> Manual
+
+
+# ╔════════════════════╗
+# ║ 𝕃𝕚𝕤𝕥 ℂ𝕠𝕞𝕡𝕣𝕖𝕙𝕖𝕟𝕤𝕚𝕠𝕟 ║
+# ╚════════════════════╝
+# ==> by for
+
+
+# ==> Manual
+
+```
+
+GeneratorFunction
+
+```python
 # Example2️⃣️: تولید اعداد زوج تا یک حد مشخص
 def even_numbers(limit):
     num = 0
@@ -3074,13 +3174,7 @@ list(gen)  # Output: [1, 2, 3]
 list(gen)  # Output: [] — خالی! چون قبلاً تمام شده
 ```
 
-### 6.8.2. ✅️ GeneratorExpression ► `()`
-
-* شبیه `list comprehension` است، اما به جای `[]` از `()` استفاده می‌کند و یک generator ایجاد می‌کند.
-
-```python
-# Syntax: (expression for item in iterable if condition)
-```
+GeneratorExpression...
 
 ```python
 # Example1️⃣️: # simple for
@@ -3131,28 +3225,21 @@ for line in line_gen:
 from time import time
 
 start_time = time()
-print(f"GeneratorExprerssion: {sum(num for num in range(1000000000))}")  # --> GeneratorExprerssion
+print(f"GeneratorExprerssion: {sum(num for num in range(100000000))}")  # --> GeneratorExprerssion
 end_time = time()
 print(f"----------> duration: {end_time - start_time} second")
 
 start_time = time()
-print(f"ListComprehension: {sum([num for num in range(1000000000)])}")  # --> ListComprehension
+print(f"ListComprehension: {sum([num for num in range(100000000)])}")  # --> ListComprehension
 end_time = time()
 print(f"-------> duration: {end_time - start_time} second")
+
+# Output:
+## -----> GeneratorExprerssion: 4999999950000000
+## -----> ----------> duration: 2.7180426120758057 second
+## -----> ListComprehension: 4999999950000000
+## -----> -------> duration: 3.4330999851226807 second
 ```
-
-تفاوت Generator با List Comprehension
-
-| مورد          | List Comprehension               | Generator Expression                                 |
-|---------------|----------------------------------|------------------------------------------------------|
-| نحوه نوشتن    | `[x**2 for x in range(5)]`       | `(x**2 for x in range(5))`                           |
-| نوع خروجی     | لیست                             | generator object                                     |
-| ایجاد         | تمام عناصر رو فوراً ایجاد می‌کند | عناصر رو به صورت lazy(تنبل:درهنگام‌نیاز)تولید می‌کنه |
-| حافظه         | تمام عناصر در حافظه              | فقط یک عنصر در هر لحظه                               |
-| قابلیت پیمایش | چندباره                          | فقط یک‌بار                                           |
-| سرعت اولیه    | سریع (اما ممکن است کند باشد)     | فوری (چون هنوز تولید نشده)                           |
-
-
 
 ## 6.9. 🅱️ Zip
 
@@ -3243,86 +3330,6 @@ func6_MaxZip()
 func6_MaxZip_WithIndex()
 func7_avg()
 func7_avg_WithIndex()
-
-```
-
-## 6.10. 🅱️ Iterate_class_example
-
-```python
-# example 1️⃣️
-class MyIterator:
-    def __init__(self, limit):  # Constructor
-        self.limit = limit
-        self.current = 0
-
-    def __iter__(self):
-        return self
-
-    def __next__(self):
-        if self.current < self.limit:
-            self.current += 1
-            return self.current
-        else:
-            raise StopIteration
-
-
-# 216. استفاده از iterator
-my_iter = MyIterator(5)
-for number in my_iter:
-    print(number)
-
-
-# example 2️⃣️
-class Counter:
-    def __init__(self, start, end, step=1):  # Constructor
-        self.current = start
-        self.end = end
-        self.step = step
-
-    def __iter__(self):
-        return self
-
-    def __next__(self):
-        if self.current < self.end:
-            num = self.current
-            self.current += self.step
-            return num
-        raise StopIteration  # حلقه فور نسبت به این ارور حساس است و خودکار از حلقه خارج می‌شود # auto Break
-
-
-for num in Counter(10, 20, 3): print(num)
-print("------")
-for num in Counter(10, 20): print(num)
-
-
-# example 3️⃣️
-class User:
-    ActiveUsers = []
-
-    def __init__(self, name, age):  # Constructor
-        self.name = name
-        self.age = age
-        self.index = 0
-        User.ActiveUsers.append({'name': name, 'age': age})
-
-    def __iter__(self):
-        return self
-
-    def __next__(self):
-        if self.index < len(User.ActiveUsers):
-            person = User.ActiveUsers[self.index]
-            self.index += 1
-            return person
-        raise StopIteration
-
-
-person_1 = User('mohammad', 24)
-person_2 = User('sara', 20)
-
-print(f"ActiveUsers:{User.ActiveUsers}\n\n")
-
-for item in User('ali', 60):
-    print(item)
 
 ```
 
