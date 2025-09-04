@@ -3631,15 +3631,15 @@ func7_avg_WithIndex()
 * کلمه پارامتر بعنوان ورودی در وقت استفاده از تابع است و کلمه آرگومان بعنوان ورودی‌های یک تابع در بدنه یک فانکشن است
 
 ```python
-# 219. import random
-# 220. import random as rand
-# 221. from random import *
-# 222. from random import randint, choice
-# 223. from random import randint as r_i, choice as r_ch
+# import random
+# import random as rand
+# from random import *
+# from random import randint, choice
+# from random import randint as r_i, choice as r_ch
 
-# 224. vsCode--> python: select interpreter #تغییر در ورژن‌های پایتون در ویژوآل استودیو کد
-# 225. encapsulation: توابع و متغیرها و موارد را در یک کلاس قرار بدهیم
-# 226. __name__ --> name of the module(file)
+# vsCode--> python: select interpreter #تغییر در ورژن‌های پایتون در ویژوآل استودیو کد
+# encapsulation: توابع و متغیرها و موارد را در یک کلاس قرار بدهیم
+# __name__ --> name of the module(file)
 
 
 class User:
