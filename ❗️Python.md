@@ -2521,7 +2521,7 @@ unique = list(dict.fromkeys(lst))  # [1, 2, 3, 4]
 
 ```
 
-## 6.5. 🅱️ List Comprehension
+## 6.5. 🅱️ List Comprehension ► `[]`
 
 * روش کوتاه، خوانا برای ساخت لیست جدید از یک ایترابل (مثل لیست، رشته، دیکشنری و ...) است
 * تمام عناصر رو فوراً ایجاد می‌کنه و در حافظه نگه می‌دارد
@@ -2530,6 +2530,7 @@ unique = list(dict.fromkeys(lst))  # [1, 2, 3, 4]
     * generatorExpression: وقتی داده‌ها بزرگ هستند و نمی‌خوای همه رو یک‌جا در حافظه بگیری: `(x**2 for x in range(1000000))`
     * مورد `()filter()`+`map`: وقتی منطق پیچیده است
     * حلقه عادی: وقتی کد خیلی پیچیده یا چند خطی هست
+* نکته مهم: اگر به جای `[]` از `()` استفاده شود آنگاه دیگر `ListComprehension` نخواهد بود بلکه  `GeneratorExpression` خواهد شد
 
 ```python
 # Syntax: [expression for item in iterable if condition]
@@ -2901,24 +2902,185 @@ print(list(result))  # Output: ['amirali', 'mahmood']
 
 ```
 
-## 6.8. 🅱️ Generator_Expression
+## 6.8. 🅱️ Generator
 
-* Generator: create function as sequentional lazy items
-    * create or generate items only when ussing
-    * Generate values incrementally when need
-    * اگر کار با دیتای زیادی صورت می‌گیرد بهتر است از جنریتور استفاده شود
-    * دیتا یکباره لود نمی‌شود و یک به یک انجام می‌شود
-    * روشی برای ایجاد ایتریتور
-    * اگر دستورات را داخل یک پرانتز قرار بدهیم(در مثال تصریح شده است)
-    * بطور پیش‌فرض ایتریتور هستند و نیاز به تعریف تابع نکست ندارند
-    * اگر یک ماژول یک جنریتور برگرداند آنگاه ناگزیر باید روی آن پیمایش کرد تا به محتوی آن دست یافت
-* yield
-    * وضعیت تابع(شامل مقادیر متغیرها و موقعیت اجرای تابع) حفظ می‌شود
-    * قابلیت ادامه تابع از همان نقطه توقف
-    * عدم محاسبه و برگرداندن یکباره تمام مقادیر بلکه محاسبه و تولیدیکی پس از دیگری
+در پایتون، گاهی با داده‌های بسیار بزرگ سروکار داریم (مثلاً یک فایل ۱۰ گیگابایتی یا یک سری عددی بی‌نهایت) اگر تمام داده‌ها را در حافظه ذخیره کنیم (مثلاً در یک لیست)، ممکن است با مشکل مصرف بالای حافظه مواجه شویم.
 
-generator expression: عناصر رو به صورت تنبل (lazy) تولید می‌کنه — یعنی فقط وقتی که نیاز باشه.
-list comprehension: تمام عناصر رو فوراً ایجاد می‌کنه و در حافظه نگه می‌داره.
+**generator**: یک تابع یا عبارت که به جای بازگرداندن تمام مقادیر یک‌جا (مثل لیست)، مقادیر را یکی یکی و در زمان واقعی تولید می‌کند
+
+**هدف generator**: مصرف بسیار کم حافظه به دلیل استفاده از داده‌های پویا و lazy(یعنی تولید فقط در هنکام نیاز) تا تمام دیتا یکباره در حافظه ذخیره نگردد
+
+* بدلیل اینکه generatorها از نوع iterator هستند پس نیاز به تعریف تابع `next()` ندارند و فقط یک بار قابل پیمایش هستند
+* اگر یک ماژول یک generator برگرداند آنگاه ناگزیر باید روی آن پیمایش کرد تا به محتوی آن دست یافت
+* با کلمه کلیدی `yield` یا علامت `()` پیاده‌سازی می‌شود.
+* ۲نوع Generator در پایتون داریم
+    1. Generator Function با کلمه کلیدی `yield`
+    2. Generator Expression با علامت `()`
+        * شبیه List Comprehension با علامت `[]` 
+* کاربرد
+    * پردازش داده‌های بزرگ»:مثل فایل‌های بزرگ، لاگ‌ها» و CSV بدون بارگذاری کل داده
+    * «جریان داده (DataStreaming)»: شبیه‌سازی داده‌های زنده (مانند سنسورها)
+    * «پایپلاین پردازش داده»:`filter` → `map` → `reduce` با حافظه کم
+    * «تولید دنباله‌های بی‌نهایت»: اعداد فیبوناچی، اعداد اول، دنباله‌های ریاضی
+    * «کاهش مصرف حافظه»:وقتی نیازی به نگه‌داری تمام داده‌ها نیست
+
+### 6.8.1. ✅️ GeneratorFunction ► `yield`
+
+**GeneratorFunction**: تابعی که در آن از yield استفاده شده است
+
+* مهم: فراخوانی این تابع، مقدار را برنمی‌گرداند، بلکه یک `GeneratorObject` ایجاد می‌کند.
+* نحوه کار yield
+    * وقتی yield اجرا می‌شود، تابع موقتاً متوقف می‌شود و مقدار را برمی‌گرداند.
+    * وضعیت تابع (متغیرها، محل اجرا و ...) در حافظه نگه داشته می‌شود.
+    * در فراخوانی بعدی `next()`، اجرا از همان نقطه ادامه می‌یابد.
+* وضعیت تابع(شامل مقادیر متغیرها و موقعیت اجرای تابع) حفظ می‌شود
+* قابلیت ادامه تابع از همان نقطه توقف
+* عدم محاسبه و برگرداندن یکباره تمام مقادیر بلکه محاسبه و تولیدیکی پس از دیگری
+
+```python
+def my_generator():
+    yield 1
+    yield 2
+    yield 3
+```
+
+```python
+# Example1️⃣️: تولید اعداد ۱تا۳
+def count_up():
+    yield 1
+    yield 2
+    yield 3
+
+
+gen = count_up()  # ایجاد generator object
+print(next(gen))  # 1
+print(next(gen))  # 2
+print(next(gen))  # 3
+
+
+# print(next(gen))  # StopIteration
+
+# Example2️⃣️: تولید اعداد زوج تا یک حد مشخص
+def even_numbers(limit):
+    num = 0
+    while num <= limit:
+        yield num
+        num += 2
+
+
+gen = even_numbers(10)
+
+for n in gen:
+    print(n)
+
+
+# Output: 0, 2, 4, 6, 8, 10
+
+# Example3️⃣️: تولید بی‌نهایت اعداد فیبوناچی
+def fibonacci():
+    a, b = 0, 1
+    while True:
+        yield a
+        a, b = b, a + b
+
+
+fib = fibonacci()
+
+for _ in range(10):  # 10 item from fibonacci
+    print(next(fib))
+
+
+# Output: 0, 1, 1, 2, 3, 5, 8, 13, 21, 34
+
+# Example4️⃣️: پردازش خطوط یک فایل بدون بارگذاری کل فایل
+def read_large_file(filename):
+    with open(filename, 'r') as file:
+        for line in file:
+            yield line.strip()  # فقط یک خط در هر لحظه در حافظه است 
+
+
+for line in read_large_file("huge_log.txt"):
+    if "ERROR" in line:
+        print(line)
+
+# Example5️⃣️: تولید داده‌های شبیه‌سازی شده (مثلاً دما)
+import random
+
+
+def sensor_data():
+    while True:
+        temp = random.uniform(20, 30)
+        yield round(temp, 2)
+
+
+sensor = sensor_data()
+
+for _ in range(5):
+    print(f"دمای فعلی: {next(sensor)}°C")
+
+
+# Output: مثلاً 25.34, 27.12, 22.89, ...
+
+# Example6️⃣️: نمایش وضعیت متغیرها
+def counter_with_state():
+    count = 0
+    while count < 3:
+        print(f"Before yield: count = {count}")
+        yield count
+        count += 1
+        print(f"Ⓜ️After yield: count = {count}")
+
+
+gen = counter_with_state()
+print("Start:")
+print(next(gen))
+print("❗️After first next")
+print(next(gen))
+print(next(gen))
+
+# Output:
+## -----> Start:
+## -----> Before yield: count = 0
+## -----> 0
+## -----> ❗️After first next
+## -----> Ⓜ️After yield: count = 1
+## -----> Before yield: count = 1
+## -----> 1
+## -----> Ⓜ️After yield: count = 2
+## -----> Before yield: count = 2
+## -----> 2
+
+# Example7️⃣️: Generator + itertools
+import itertools
+
+
+# ۵ عدد اول از یک generator بی‌نهایت
+def infinite_evens():
+    n = 0
+    while True:
+        yield n
+        n += 2
+
+
+evens = infinite_evens()
+first_5 = itertools.islice(evens, 5)
+
+for n in first_5:
+    print(n)  # 0, 2, 4, 6, 8
+
+# Example8️⃣️: 
+gen = (x for x in [1, 2, 3])
+list(gen)  # Output: [1, 2, 3]
+list(gen)  # Output: [] — خالی! چون قبلاً تمام شده
+```
+
+### 6.8.2. ✅️ GeneratorExpression ► `()`
+
+* شبیه `list comprehension` است، اما به جای `[]` از `()` استفاده می‌کند و یک generator ایجاد می‌کند.
+
+```python
+# Syntax: (expression for item in iterable if condition)
+```
 
 ```python
 # Example1️⃣️: # simple for
@@ -2933,106 +3095,64 @@ print([num for num in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] if num % 2 == 0])  # Outpu
 
 # Example1️⃣️: generator expression
 print(list(num for num in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] if num % 2 == 0))  # Output: [2, 4, 6, 8, 10]
-```
 
-### 6.8.1. ✅️ Example 1️⃣️: yield
+# Example2️⃣️: even squares یا مربع اعداد زوج
+### ❗️By Loop
+squares = (x ** 2 for x in range(1, 10) if x % 2 == 0)
 
-```python
-def nums():
-    for num in range(20):
-        yield num
+for sq in squares:
+    print(sq)  # Output: 4, 16, 36, 64, 100 (ادامه)
 
+### ❗️Manual 
+squares = (x ** 2 for x in range(1, 10) if x % 2 == 0)
+print(next(squares))  # 4
+print(next(squares))  # 16
+print(next(squares))  # 36
+print(next(squares))  # 64
 
-g = nums()
-print(g)
-print(next(g))
-print(next(g))
-print(next(g))
-print(next(g))
-```
+# Example3️⃣️: فیلتر و تبدیل رشته‌ها
+words = ["hello", "", "world", "  ", "python"]
 
-### 6.8.2. ✅️ Example 2️⃣️: Generator
+clean_upper = (word.strip().upper() for word in words if word.strip())
 
-```python
-myGenerator = (num for num in range(20))
-print(myGenerator)
-print(next(myGenerator))
-print(next(myGenerator))
-print(next(myGenerator))
-print(next(myGenerator))
-```
+for w in clean_upper:
+    print(w)
+# Output: HELLO, WORLD, PYTHON
 
-### 6.8.3. ✅️ Example 3️⃣️: yield
+# Example4️⃣️: خواندن یک فایل
+line_gen = (line.strip() for line in open("data.txt", "r"))
 
-```python
-def func_generator(maximom):
-    count = 1
-    while count <= maximom:
-        yield count
-        count += 1
+for line in line_gen:
+    if line.startswith("#"):
+        continue
+    print(line)
 
-
-counter = func_generator(3)  # استفاده از حالت جنریتور
-print(next(counter))  # -> 1
-print(next(counter))  # -> 2
-print(next(counter))  # -> 3
-# 212. print(next(counter))  # if run error
-```
-
-### 6.8.4. ✅️ Example4️⃣️: Fibunachi()
-
-```python
-print("--------------------byList----------------------")
-
-
-def fib_list(maximom):  # 10
-    numbers = []  # [1,1]
-    a, b = 0, 1
-    while len(numbers) <= maximom:
-        numbers.append(b)
-        a, b = b, a + b
-    return numbers
-
-
-print(f"By List ===> {fib_list(10)}")
-for num in fib_list(10):
-    print(f"------> {num}")
-
-
-def fib_generator(maximom):
-    count = 0
-    a, b = 0, 1
-
-    while count < maximom:
-        a, b = b, a + b
-        yield b
-        count += 1
-
-
-print("-----------------byGenerator--------------------")
-
-print(f"By Generator ===> {fib_list(10)}")
-for num in fib_generator(10):  # استفاده از حالت جنریتور
-    print(f"------> {num}")
-```
-
-### 6.8.5. ✅️ Example 5️⃣️
-
-```python
+# Example5️⃣️: محاسبه تفاوت سرعت اجرا
 from time import time
 
 start_time = time()
-print(f"byGenerator: {sum(num for num in range(100000000))}")  # --> GeneratorExprerssion
+print(f"GeneratorExprerssion: {sum(num for num in range(1000000000))}")  # --> GeneratorExprerssion
 end_time = time()
-print(f"--------->  Time(s): {end_time - start_time}")
+print(f"----------> duration: {end_time - start_time} second")
 
 start_time = time()
-print(
-    f"ussing list: {sum([num for num in range(100000000)])}")  # Not GeneratorExprerssion, only send list to sum function
+print(f"ListComprehension: {sum([num for num in range(1000000000)])}")  # --> ListComprehension
 end_time = time()
-print(f"---------->  Time(s): {end_time - start_time}\n")
-
+print(f"-------> duration: {end_time - start_time} second")
 ```
+
+تفاوت Generator با List Comprehension
+
+| مورد          | List Comprehension               | Generator Expression                                 |
+|---------------|----------------------------------|------------------------------------------------------|
+| نحوه نوشتن    | `[x**2 for x in range(5)]`       | `(x**2 for x in range(5))`                           |
+| نوع خروجی     | لیست                             | generator object                                     |
+| ایجاد         | تمام عناصر رو فوراً ایجاد می‌کند | عناصر رو به صورت lazy(تنبل:درهنگام‌نیاز)تولید می‌کنه |
+| حافظه         | تمام عناصر در حافظه              | فقط یک عنصر در هر لحظه                               |
+| قابلیت پیمایش | چندباره                          | فقط یک‌بار                                           |
+| سرعت اولیه    | سریع (اما ممکن است کند باشد)     | فوری (چون هنوز تولید نشده)                           |
+
+
 
 ## 6.9. 🅱️ Zip
 
