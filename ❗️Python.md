@@ -4377,6 +4377,15 @@ print(p3)  # (4, 6)
     * `@classmethod`: آیا نیاز دارد اطلاعات کلاس (مثل cls.total) را ببیند یا شیء جدیدی بسازد؟
     * `@staticmethod`:  آیا فقط یک تابع منطقی است که هیچ state ای نمی‌خواهد؟
 
+| مورد                | توصیه                                                                                                         |
+|---------------------|---------------------------------------------------------------------------------------------------------------|
+| 📌 `@staticmethod`  | فقط وقتی استفاده کنید که متد **هیچ ارتباطی با `self` یا `cls` ندارد** — مثلاً یک تابع کمکی منطقی.             |
+| 📌 `@classmethod`   | برای Factoryها، متدهای جایگزین سازنده، یا دستکاری کلاس.                                                       |
+| 📌 متغیرهای استاتیک | در بدنه کلاس تعریف می‌شوند — اما با `cls.variable` دسترسی داشته باشید، نه `self.variable` (مگر در موارد خاص). |
+| 📌 Private Static   | با `_` یا `__` پیشوند بزنید و در `__setattr__` کنترل کنید.                                                    |
+| 📌 Caching          | از `@lru_cache` یا `@cache` روی متدهای استاتیک برای بهینه‌سازی استفاده کنید.                                  |
+| 📌 Type Hints       | حتی در متدهای استاتیک، حتماً از تایپ‌هینت استفاده کنید — به خصوص در پروژه‌های بزرگ.                           |
+
 ### 7.5.1. ✅️ StaticVariable
 
 متغیری که متعلق به کلاس است، نه به هر شیء (نمونه) از آن کلاس. یعنی اگر ۱۰۰ تا شیء از یک کلاس بسازید، این متغیر فقط یک عدد است و بین همه شیءها مشترک است.
@@ -4513,6 +4522,11 @@ print(Car.total_cars)  # 3
     * زیرا مرتبط با کلاس است(مثلا ماشین حساب، پردازش عدد)
     * برای سازماندهی کد(همه چیزهای مربوط به Calculator در یک جا)
     * همانند یک ابزار کمکی(Utility)
+* چه زمانی از StaticMethod استفاده نکنیم
+    * اگر متد نیاز به دسترسی به `self` یا ویژگی‌های `instance` دارد → متد عادی.
+    * اگر متد نیاز به `cls` یا تغییر/دسترسی به کلاس دارد آنگاه از `@classmethod` استفاده شود
+    * اگر منطق کاملاً مستقل است و جای دیگر هم می‌تواند باشد
+        * شاید بهتر است در ماژول سطح بالا تعریف شود، نه درون کلاس
 
 مثال1️⃣️:
 
@@ -4771,6 +4785,248 @@ acc2 = BankAccount("Sara", 2000)
 
 print(BankAccount.is_valid_amount(50))  # True
 print(BankAccount.get_bank_info())  # PyBank - Total Accounts: 2
+```
+
+مثال6️⃣️:متغیر استاتیک با کنترل دسترسی و اعتبارسنجی
+
+در این مثال _`count` یک متغیر استاتیک کنترل‌شده است که فقط از طریق متدهای کلاسی قابل دستکاری است
+
+```python
+class Counter:
+    _count = 0  # متغیر استاتیک "private"
+
+    @classmethod
+    def increment(cls):
+        cls._count += 1
+
+    @classmethod
+    def get_count(cls):
+        return cls._count
+
+    @classmethod
+    def reset(cls):
+        cls._count = 0
+
+    # جلوگیری از تغییر مستقیم با setattr
+    def __setattr__(self, name, value):
+        if name == '_count':
+            raise AttributeError("Cannot modify private static variable directly")
+        super().__setattr__(name, value)
+
+
+c1 = Counter()
+c2 = Counter()
+
+Counter.increment()
+Counter.increment()
+print(Counter.get_count())  # 2
+
+# c1._count = 10  # ❌️ خطا: Cannot modify private static variable directly
+```
+
+مثال7️⃣️:متد استاتیک به عنوان Factory Method با اعتبارسنجی
+
+در این مثال from_config یک factory method است که از یک دیکشنری، instance می‌سازد — و validate_db_type یک متد استاتیک برای منطق اعتبارسنجی.
+
+```python
+from typing import Literal, Union
+
+
+class DatabaseConnection:
+    def __init__(self, host: str, port: int, db_type: str):
+        self.host = host
+        self.port = port
+        self.db_type = db_type
+
+    @staticmethod
+    def validate_db_type(db_type: str) -> bool:
+        return db_type in ("mysql", "postgresql", "sqlite")
+
+    @classmethod
+    def from_config(cls, config: dict):
+        db_type = config.get("type")
+        if not cls.validate_db_type(db_type):
+            raise ValueError(f"Unsupported database type: {db_type}")
+        return cls(config["host"], config["port"], db_type)
+
+
+# استفاده:
+config = {"host": "localhost", "port": 5432, "type": "postgresql"}
+conn = DatabaseConnection.from_config(config)
+print(conn.db_type)  # postgresql
+```
+
+مثال8️⃣️: کَش کردن نتیجه متد استاتیک (Static Method Caching)
+
+در این مثال `@lru_cache` روی متد استاتیک، نتیجه را کَش می‌کند — حتی اگر از instance ها یا کلاس فراخوانی شود، کش مشترک است.
+
+```python
+from functools import lru_cache
+import time
+
+
+class MathUtils:
+
+    @staticmethod
+    @lru_cache(maxsize=128)
+    def fibonacci(n: int) -> int:
+        if n < 2:
+            return n
+        return MathUtils.fibonacci(n - 1) + MathUtils.fibonacci(n - 2)
+
+    @staticmethod
+    def cached_fib_with_timer(n: int) -> int:
+        start = time.perf_counter()
+        result = MathUtils.fibonacci(n)
+        end = time.perf_counter()
+        print(f"Computed fib({n}) in {end - start:.6f} seconds")
+        return result
+
+
+# تست:
+print(MathUtils.cached_fib_with_timer(35))  # اولی کند
+print(MathUtils.cached_fib_with_timer(35))  # دومی فوری (کش شده)
+```
+
+مثال9️⃣️: متد استاتیک Async
+
+در این مثال متد استاتیک `fetch_data` مستقل از instance است و می‌تواند async باشد(حتی در کلاس‌های معمولی)
+
+```python
+import asyncio
+
+
+class APIClient:
+    BASE_URL = "https://api.example.com"
+
+    @staticmethod
+    async def fetch_data(endpoint: str) -> dict:
+        # شبیه‌سازی درخواست async
+        await asyncio.sleep(1)
+        return {"data": f"Response from {endpoint}"}
+
+    @classmethod
+    async def get_user(cls, user_id: int):
+        return await cls.fetch_data(f"/user/{user_id}")
+
+
+# استفاده:
+async def main():
+    client = APIClient()
+    result = await APIClient.get_user(123)
+    print(result)  # {'data': 'Response from /user/123'}
+
+
+asyncio.run(main())
+```
+
+مثال1️⃣️0️⃣️: استفاده از متدهای استاتیک در متاکلاس (MetaClass)
+
+در این مثال متد استاتیک `get_instance_key` در متاکلاس، منطق تولید کلید را جدا کرده — بدون نیاز به `cls` یا `self`
+
+```python
+class SingletonMeta(type):
+    _instances = {}
+
+    @staticmethod
+    def get_instance_key(cls):
+        return cls.__name__
+
+    def __call__(cls, *args, **kwargs):
+        key = SingletonMeta.get_instance_key(cls)
+        if key not in cls._instances:
+            cls._instances[key] = super().__call__(*args, **kwargs)
+        return cls._instances[key]
+
+
+class Database(metaclass=SingletonMeta):
+    def __init__(self):
+        self.connection = "Connected"
+
+
+# تست:
+db1 = Database()
+db2 = Database()
+print(db1 is db2)  # True — چون متاکلاس از متد استاتیک برای کلید استفاده کرده
+```
+
+مثال1️⃣️1️⃣️: متد استاتیک با Type Dispatch (شبیه Overload استاتیک)
+
+توجه: در `singledispatch`، ترکیب با `@staticmethod` در نسخه‌های پایین‌تر پایتون ممکن است با خطا مواجه شود. در `python 3.9+` پشتیبانی می‌شود. برای نسخه‌های قدیمی‌تر، بهتر است `@classmethod` یا تابع معمولی خارج از کلاس استفاده شود.
+
+```python
+from functools import singledispatch
+
+
+class DataProcessor:
+
+    @staticmethod
+    @singledispatch
+    def process(data):
+        raise NotImplementedError("Unsupported type")
+
+    @process.register
+    @staticmethod
+    def _(str):
+        return data.upper()
+
+    @process.register
+    @staticmethod
+    def _(int):
+        return data * 2
+
+    @process.register
+    @staticmethod
+    def _(list):
+        return [DataProcessor.process(item) for item in data]
+
+
+# استفاده:
+print(DataProcessor.process("hello"))  # HELLO
+print(DataProcessor.process(5))  # 10
+print(DataProcessor.process(["a", 2]))  # ['A', 4]
+```
+
+مثال1️⃣️2️⃣️:متغیر استاتیک با مدیریت Thread-Safe
+
+در این مثال متغیر استاتیک `_count` با قفل، در محیط چند(thread ایمن است).
+
+```python
+import threading
+
+
+class ThreadSafeCounter:
+    _count = 0
+    _lock = threading.Lock()
+
+    @classmethod
+    def increment(cls):
+        with cls._lock:
+            cls._count += 1
+
+    @classmethod
+    def get_count(cls):
+        with cls._lock:
+            return cls._count
+
+
+# تست چند-thread:
+def worker():
+    for _ in range(1000):
+        ThreadSafeCounter.increment()
+
+
+threads = [threading.Thread(target=worker) for _ in range(10)]
+for t in threads: t.start()
+for t in threads: t.join()
+
+print(ThreadSafeCounter.get_count())  # 10000 — دقیق و thread-safe
+```
+
+مثال1️⃣️3️⃣️:
+
+```python
+
 ```
 
 # 8. 🅰️ File
