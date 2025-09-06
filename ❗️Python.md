@@ -3534,94 +3534,147 @@ print(f"-------> duration: {end_time - start_time} second")
 
 ## 6.9. 🅱️ Zip
 
+* برای ادغام عناصر چندین مجموعه قابل پیمایش (iterable) به صورت موازی به کار می‌رود.
+* این تابع یک ایتراتور (iterator) از چندتایی‌ها (tuples) برمی‌گرداند که هر کدام شامل عناصر متناظر از ورودی‌ها هستند.
+* کاربردهای رایج
+    * ساخت دیکشنری از دو لیست: `dict(zip(keys, values))`
+    * پیمایش موازی چند لیست: `for x, y in zip(list1, list2)`
+    * ترانهاده ماتریس: `list(zip(*matrix))`
+    * مقایسه عناصر:‌تشخیص تفاوت‌ها در دو لیست
+    * پردازش داده‌های موازی: داده‌های دانشجو، محصولات، و غیره
+    * تبدیل داده‌های عمودی به افقی: مثلا در پردازش CSV
+* نکات مهم:
+    * خروجی `zip()` یک `zip object` است پس باید با `list()` یا `tuple()` تبدیل شود
+    * فقط تا کوتاه‌ترین لیست ادامه می‌یابد: عناصر اضافی نادیده گرفته می‌شوند
+    * قابل استفاده با هر iterable نظیر لیست و تاپل و رشته و دیکشنری و غیره
+    * غیرقابل پیمایش مجدد: مثل generatorها، فقط یک بار قابل استفاده است
+    * برای بازگرداندن به حالت اولیه از `unzip()` استفاده می‌شود
+
 ```python
-# 213. تلفیق دو ایتِرِیت با یکدیگر تبدیل به یک ایتریت جدید که شامل هردوی آن‌ها می‌باشد
-# 214. اگر یک بار پیمایش شود خالی خواهد شد
+# Syntac: zip(iterable1, iterable2, ...)
+## --> Input:  iterable2 ==> Such as: List, Tuple, Dictionary, String, ...
+## --> Return: ZipObject ==> Iterator
+```
 
-from unittest import result
+```python
+# Example1️⃣️: 
+names = ['Ali', 'Sara', 'Reza']
+ages = [20, 19, 21]
+print(list(zip(names, ages)))  # Output: [('Ali', 20), ('Sara', 19), ('Reza', 21)]
 
-list1 = [1, 2, 3, 4, 5]
-list2 = [5, 6, 7, 8, 9, 10]
-students = ["mohammad", "iman", "sara"]
-midterm = [78, 80, 94]
-final = [91, 84, 97]
+# Example2️⃣️: ترکیب دو لیست
+names = ['Ali', 'Sara', 'Reza']
+scores = [85, 92, 78]
+print(list(zip(names, scores)))  # Output: [('Ali', 85), ('Sara', 92), ('Reza', 78)]
+
+# Example3️⃣️: ترکیب ۳ لیست
+names = ['Ali', 'Sara', 'Reza']
+ages = [20, 19, 21]
+cities = ['Tehran', 'Shiraz', 'Mashhad']
+print(list(zip(names, ages, cities)))  # Output: [('Ali', 20, 'Tehran'), ('Sara', 19, 'Shiraz'), ('Reza', 21, 'Mashhad')]
+
+# Example4️⃣️: استفاده در حلقه for
+names = ['Ali', 'Sara']
+scores = [85, 92]
+
+for name, score in zip(names, scores):
+    print(f"{name}: {score}")
+# Output:
+# Ali: 85
+# Sara: 92
+
+# Example5️⃣️: تبدلی داده‌های سطری به ستونی (Transpose)
+matrix = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+]
+
+transposed = list(zip(*matrix))
+print(transposed)  # Output: [(1, 4, 7), (2, 5, 8), (3, 6, 9)]
+
+# Example6️⃣️: ترکیب کلید و مقدار برای ساخت دیکشنری
+keys = ['name', 'age', 'city']
+values = ['Ali', 20, 'Tehran']
+print(dict(zip(keys, values)))  # Output: {'name': 'Ali', 'age': 20, 'city': 'Tehran'}
+
+# Example7️⃣️: ترکیب با رشته‌ها
+s1 = "abc"
+s2 = "123"
+print(list(zip(s1, s2)))  # Output: [('a', '1'), ('b', '2'), ('c', '3')]
+
+# Example8️⃣️: استفاده با range
+items = ['apple', 'banana', 'cherry']
+indexed = list(zip(range(len(items)), items))
+
+for index, item in indexed:
+    print(f"{index}: {item}")
+# Output: 0: apple
+# Output: 1: banana
+# Output: 2: cherry
+
+# Example9️⃣️: مقایسه دو لیست عنصر به عنصر
+list1 = [1, 2, 3]
+list2 = [1, 4, 3]
+
+differences = [(i, a, b) for i, (a, b) in enumerate(zip(list1, list2)) if a != b]
+print(differences)  # [(1, 2, 4)] → فقط عنصر اندیس ۱ متفاوت است
+
+# Example1️⃣️0️⃣️: ترکیب دیکشنری‌ها (کلیدها و مقادیر)
+d1 = {'a': 1, 'b': 2}
+d2 = {'a': 3, 'b': 4}
+
+# ترکیب مقادیر با کلیدهای مشترک
+result = {k: (v1, v2) for k, v1, v2 in zip(d1.keys(), d1.values(), d2.values())}
+print(result)  # Output: {'a': (1, 3), 'b': (2, 4)}
+
+# Example1️⃣️1️⃣️: پردازش داده‌های موازی
+names = ['Ali', 'Sara', 'Reza']
+midterm = [80, 90, 75]
+final = [85, 88, 80]
+
+for name, mid, final in zip(names, midterm, final):
+    average = (mid + final) / 2
+    print(f"{name}: میانگین = {average}")
+# Output:
+## Ali: میانگین = 82.5
+## Sara: میانگین = 89.0
+## Reza: میانگین = 77.5
+
+# Example1️⃣️2️⃣️: ترکیب fitler و  map
+numbers = [1, 2, 3]
+powers = [2, 3, 4]
+
+# محاسبهٔ عدد اول به توان عدد دوم
+results = list(map(pow, numbers, powers))  # print(results)  # [1**2, 2**3, 3**4] → [1, 8, 81]
+#  توجه: map و zip می‌توانند با هم کار کنند، اما در اینجا map به‌صورت خودکار zip را شبیه‌سازی می‌کند. 
 
 
-def func1_CreateZip():
-    result = zip(list1, list2)
-    print(f"[func1]=> combine {list1} and {list2}: -------> {list(result)}")
-    print(f"[func1]=> combine {list1} and {list2}: --2th--> {list(result)}\n")  # یکبار پیمایش سبب تخلیه می‌گردد
+# Example1️⃣️3️⃣️:  تشخیص تفاوت طول لیست‌ها
+a = [1, 2, 3, 4]
+b = [10, 20]
+print(list(zip(a, b)))  # Output: [(1, 10), (2, 20)] — فقط دو عنصر، چون b کوتاه‌تر است
 
+# Example1️⃣️4️⃣️: ussing itertools.zip_longest
+from itertools import zip_longest
 
-def func2_CreateZip():
-    finalGrades = [pair for pair in zip(students, midterm, final)]
-    # finalGrades = [pair for pair in zip(students,midterm)]
-    print(f"[func2]=> {list(finalGrades)}\n")
+a = [1, 2, 3, 4]
+b = [10, 20]
+print(list(zip_longest(a, b, fillvalue=0)))
+# Output: [(1, 10), (2, 20), (3, 0), (4, 0)]
 
+# Example1️⃣️5️⃣️: باز کردن (unzip) داده‌ها
+pairs = [('Ali', 20), ('Sara', 19), ('Reza', 21)]
+names, ages = zip(*pairs)
 
-def func3_Extract():
-    myList = [(1, 5), (3, 7), (6, 4), (7, 9)]
-    print(f"[func3]=> extract from {myList}: ----> {list(zip(*myList))}\n")
+print(names)  # Output: ('Ali', 'Sara', 'Reza')
+print(ages)  # Output: (20, 19, 21)
 
-
-def func4():
-    result = zip(midterm, final)
-    print(f"[func4]=> {list(result)}\n")
-
-
-def func5_max():
-    result = map(
-        lambda pair: max(pair),
-        zip(midterm, final)
-    )
-    print(f"[func5(max)]=> {list(result)}\n")
-
-
-def func6_MaxZip():
-    finalGrades = zip(
-        students,
-        map(
-            lambda pair: max(pair),
-            zip(midterm, final)
-        )
-    )
-    print(f"[func6(Max_Zip)]=> {dict(finalGrades)}")
-
-
-def func6_MaxZip_WithIndex():  # use index
-    finalGrades = {t[0]: max(t[1], t[2]) for t in zip(students, midterm, final)}
-    print(f"[func6(Max_Zip)]=> {finalGrades}")
-
-
-def func7_avg():
-    result = map(
-        lambda pair: (pair[0] + pair[1]) / 2,
-        zip(midterm, final)
-    )
-    print(f"[func7(avg)]=> {list(result)}")
-
-
-def func7_avg_WithIndex():
-    average = zip(
-        students,
-        map(
-            lambda pair: (pair[0] + pair[1]) / 2,
-            zip(midterm, final)
-        )
-    )
-    print(f"[func7(avg)]=> {dict(average)}")
-
-
-func1_CreateZip()
-func2_CreateZip()
-func3_Extract()
-func4()
-func5_max()
-func6_MaxZip()
-func6_MaxZip_WithIndex()
-func7_avg()
-func7_avg_WithIndex()
-
+# Example1️⃣️6️⃣️:
+# Example1️⃣️7️⃣️:
+# Example1️⃣️8️⃣️:
+# Example1️⃣️9️⃣️:
+# Example2️⃣️0️⃣️:
 ```
 
 # 7. 🅰️ OOP(Object Oriented Programming)
@@ -3631,17 +3684,6 @@ func7_avg_WithIndex()
 * کلمه پارامتر بعنوان ورودی در وقت استفاده از تابع است و کلمه آرگومان بعنوان ورودی‌های یک تابع در بدنه یک فانکشن است
 
 ```python
-# import random
-# import random as rand
-# from random import *
-# from random import randint, choice
-# from random import randint as r_i, choice as r_ch
-
-# vsCode--> python: select interpreter #تغییر در ورژن‌های پایتون در ویژوآل استودیو کد
-# encapsulation: توابع و متغیرها و موارد را در یک کلاس قرار بدهیم
-# __name__ --> name of the module(file)
-
-
 class User:
     def __init__(self, name, age):  # Constructor
         self.name = name
