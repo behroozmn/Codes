@@ -27,6 +27,378 @@
 | متغیرهای دیتابیس          | `db_`, `cursor`, `conn`        | نام‌های استاندارد برای متغیرهای دیتابیس                   | `db_connection`, `cursor.execute()`    | واضح‌سازی منبع داده                            |
 | متغیرهای JSON / API       | `payload`, `response`, `data`  | نام‌های استاندارد برای مدیریت داده‌های JSON و API         | `payload = {'name': 'Ali'}`            | سازگاری با API ها                              |
 
+## 1.2. 🅱️ LocalVariable: `_name`
+
+* در پایتون هیچ قلمرویی تحت عنوان private نداریم و پیرو قرارداد به این متغیرهای محلی گفته می‌شود اما در هرکجابه private می‌توان دسترسی داشت
+* در پیشنهادهای IDE نمایش داده نمی‌شود
+* این عضو برای استفاده داخلی کلاس یا ماژول طراحی شده و نباید توسط کاربران خارجی مستقیماً استفاده شود
+* مفسر پایتون به هیچ وجه دسترسی به آن را مسدود نمی‌کند.
+* فقط یک اخطار معنایی برای توسعه‌دهندگان است
+* در پایتون، هیچ سیستم دسترسی سفت و سختی (مانند private, protected در جاوا) وجود ندارد.
+  ش
+
+```python
+class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self._age = age  # Convention: Local variable
+
+    def get_age(self):
+        return self._age
+
+    def _private_method(self):  # Convention: Local Function
+        print("این متد فقط برای استفاده داخلی است")
+
+
+p = Person("Ali", 25)
+
+print(p.name)  # دسترسی مجاز
+print(p._age)  # دسترسی مجاز از نظر زبان، اما نقض قرارداد است زیرا بصورت پاپلیک استفاده شده است
+p._private_method()  # کار می‌کند، اما نباید فراخوانی شود
+```
+
+## 1.3. 🅱️ NameMangling: `__name`
+
+NameMangling: available only with _classname__variable in use time
+
+* وقتی از دو خط زیرین قبل از نام یک عضو کلاس استفاده می‌شود، پایتون عملی به نام `Name Mangling` انجام می‌دهد. این عمل:
+    1. نام عضو را به صورت خودکار تغییر می‌دهد تا دسترسی به آن از خارج کلاس دشوارتر شود.
+    2. نام جدید به صورت `_ClassName__name` خواهد بود.
+* هدف: جلوگیری از تداخل نام در کلاس‌های پایه و فرزند.
+* در پایتون همه نامگذاری‌ها قراردادی است ولی تنها نِیم‌مَنگِلینگ است که سبب تغییر در نام آیتم می‌شود
+
+```python
+# Example1️⃣️: 
+class Person:
+    def __init__(self, name):
+        self.__name = name  # Name Mangling اعمال می‌شود
+
+
+p = Person("Ali")
+
+# print(p.__name)  # ❌️ AttributeError: 'Person' object has no attribute '__name'
+print(p._Person__name)  # Ali — دسترسی مستقیم اما غیرمستقیم
+
+
+# Example2️⃣️: 
+class User:
+    _mobile = "0919XXXXXXX"  # Convention: Local variable
+    __password = "myPassword"  # only available by _User__password
+
+    def __init__(self, name, age):  # Constructor
+        self.name = name
+        self.age = age
+
+    @property
+    def get_mobile(self):
+        return self._mobile
+
+
+obj = User("behrooz", 33)
+print(obj.name)
+print("❌️:" + obj._mobile)  # استفاده از پارامتر محلی داخل یک کلاس به‌صورت مستقیم توصیه نمی‌شود
+print("✅️:" + obj.get_mobile)
+print(obj._User__password)  # وقتی یک پارامتر را با دوتا آندرلاین تعریف کنیم و توسط شکل فوق به آن دسترسی داشته باشیم را nameMangling می‌گویند
+
+
+# Example3️⃣️:  Name Mangling در وراثت
+class A:
+    def __init__(self):
+        self.__value = 10
+
+
+class B(A):
+    def __init__(self):
+        super().__init__()
+        self.__value = 20  # conflict prevention
+
+
+b = B()
+print(b._A__value)  # 10
+print(b._B__value)  # 20
+```
+
+## 1.4. 🅱️ DunderMethod
+
+* نام‌هایی که با دو خط زیرین شروع و به دو خط زیرین ختم می‌شوند (مانند __name__)
+    * Special Methods
+    * DunderMethods: Double Underscore Methods
+* این متدها:
+    * توسط مفسر پایتون به صورت خودکار فراخوانی می‌شوند.
+    * رفتار اشیاء را در عملیات استاندارد تعریف می‌کنند (مثل +, len(), print و غیره).
+    * بخشی از پروتکل‌های پایتون هستند (مانند iteration, context manager, و غیره).
+
+<div dir="ltr">
+
+| نام متد             | توضیحات                                           | مثال                             |
+|---------------------|---------------------------------------------------|----------------------------------|
+| `__init__`          | سازنده شیء: هنگام ساخت شیء فراخوانی می‌شود        | `obj = MyClass()`                |
+| `__new__`           | ایجاد شیء قبل از `__init__`                       | (کمتر استفاده می‌شود)            |
+| `__del__`           | تخریب شیء (هنگام حذف)                             | `del obj`                        |
+| `__str__`           | نمایش رشته‌ای قابل خواندن برای کاربر              | `str(obj)`, `print(obj)`         |
+| `__repr__`          | نمایش رسمی و دقیق شیء (برای دیباگ)                | `repr(obj)`                      |
+| `__len__`           | طول شیء                                           | `len(obj)`                       |
+| `__getitem__`       | دسترسی به آیتم با `[]`                            | `obj[key]`                       |
+| `__setitem__`       | تنظیم آیتم با `[]`                                | `obj[key] = value`               |
+| `__delitem__`       | حذف آیتم با `del`                                 | `del obj[key]`                   |
+| `__iter__`          | بازگرداندن یک ایتراتور                            | `iter(obj)`                      |
+| `__next__`          | بازگرداندن عنصر بعدی در حلقه                      | `next(obj)`                      |
+| `__contains__`      | بررسی عضویت با `in`                               | `'x' in obj`                     |
+| `__call__`          | امکان فراخوانی شیء مثل تابع                       | `obj()`                          |
+| `__getattr__`       | وقتی صفتی پیدا نشد فراخوانی می‌شود                | `obj.missing_attr`               |
+| `__getattribute__`  | هر دسترسی به صفت                                  | `obj.attr`                       |
+| `__setattr__`       | تنظیم یک صفت                                      | `obj.attr = 5`                   |
+| `__delattr__`       | حذف یک صفت                                        | `del obj.attr`                   |
+| `__dir__`           | لیست صفات و متدهای شیء                            | `dir(obj)`                       |
+| `__dict__`          | دیکشنری حاوی صفات شیء                             | `obj.__dict__`                   |
+| `__class__`         | کلاس شیء                                          | `obj.__class__`                  |
+| `__doc__`           | رشته توضیحات کلاس یا تابع                         | `obj.__doc__`                    |
+| `__module__`        | نام ماژولی که کلاس تعریف شده                      | `obj.__module__`                 |
+| `__bases__`         | والدین کلاس (برای کلاس‌ها)                        | `MyClass.__bases__`              |
+| `__name__`          | نام کلاس یا تابع                                  | `MyClass.__name__`               |
+| `__qualname__`      | نام کیفیت‌دار (با مسیر کامل)                      | `MyClass.__qualname__`           |
+| `__mro__`           | ترتیب حل روش (Method Resolution Order)            | `MyClass.__mro__`                |
+| `__subclasses__`    | زیرکلاس‌های مستقیم                                | `MyClass.__subclasses__()`       |
+| `__add__`           | جمع (`+`)                                         | `obj1 + obj2`                    |
+| `__sub__`           | تفریق (`-`)                                       | `obj1 - obj2`                    |
+| `__mul__`           | ضرب (`*`)                                         | `obj1 * obj2`                    |
+| `__truediv__`       | تقسیم (`/`)                                       | `obj1 / obj2`                    |
+| `__floordiv__`      | تقسیم صحیح (`//`)                                 | `obj1 // obj2`                   |
+| `__mod__`           | باقیمانده (`%`)                                   | `obj1 % obj2`                    |
+| `__divmod__`        | `(a // b, a % b)`                                 | `divmod(obj1, obj2)`             |
+| `__pow__`           | توان (`**`)                                       | `obj1 ** obj2`                   |
+| `__lshift__`        | شیفت چپ (`<<`)                                    | `obj1 << obj2`                   |
+| `__rshift__`        | شیفت راست (`>>`)                                  | `obj1 >> obj2`                   |
+| `__and__`           | AND بیتی (`&`)                                    | `obj1 & obj2`                    |
+| `__or__`            | OR بیتی (`\|`)                                    | `obj1 \| obj2`                   |
+| `__xor__`           | XOR بیتی (`^`)                                    | `obj1 ^ obj2`                    |
+| `__invert__`        | NOT بیتی (`~`)                                    | `~obj`                           |
+| `__radd__`          | جمع معکوس (`+` وقتی سمت چپ ناهمگون است)           | `int + obj`                      |
+| `__rsub__`          | تفریق معکوس                                       | `2 - obj`                        |
+| `__rmul__`          | ضرب معکوس                                         | `2 * obj`                        |
+| `__rtruediv__`      | تقسیم معکوس                                       | `2 / obj`                        |
+| `__rfloordiv__`     | تقسیم صحیح معکوس                                  | `2 // obj`                       |
+| `__rmod__`          | باقیمانده معکوس                                   | `2 % obj`                        |
+| `__rpow__`          | توان معکوس                                        | `2 ** obj`                       |
+| `__rlshift__`       | شیفت چپ معکوس                                     | `1 << obj`                       |
+| `__rrshift__`       | شیفت راست معکوس                                   | `1 >> obj`                       |
+| `__rand__`          | AND معکوس                                         | `1 & obj`                        |
+| `__ror__`           | OR معکوس                                          | `1 \| obj`                       |
+| `__rxor__`          | XOR معکوس                                         | `1 ^ obj`                        |
+| `__iadd__`          | جمع درجا (`+=`)                                   | `obj += x`                       |
+| `__isub__`          | تفریق درجا (`-=`)                                 | `obj -= x`                       |
+| `__imul__`          | ضرب درجا (`*=`)                                   | `obj *= x`                       |
+| `__itruediv__`      | تقسیم درجا (`/=`)                                 | `obj /= x`                       |
+| `__ifloordiv__`     | تقسیم صحیح درجا (`//=`)                           | `obj //= x`                      |
+| `__imod__`          | باقیمانده درجا (`%=`)                             | `obj %= x`                       |
+| `__ipow__`          | توان درجا (`**=`)                                 | `obj **= x`                      |
+| `__ilshift__`       | شیفت چپ درجا (`<<=`)                              | `obj <<= x`                      |
+| `__irshift__`       | شیفت راست درجا (`>>=`)                            | `obj >>= x`                      |
+| `__iand__`          | AND درجا (`&=`)                                   | `obj &= x`                       |
+| `__ior__`           | OR درجا (`\|=`)                                   | `obj \|= x`                      |
+| `__ixor__`          | XOR درجا (`^=`)                                   | `obj ^= x`                       |
+| `__eq__`            | برابری (`==`)                                     | `obj1 == obj2`                   |
+| `__ne__`            | نامساوی (`!=`)                                    | `obj1 != obj2`                   |
+| `__lt__`            | کوچکتر (`<`)                                      | `obj1 < obj2`                    |
+| `__le__`            | کوچکتر یا مساوی (`<=`)                            | `obj1 <= obj2`                   |
+| `__gt__`            | بزرگتر (`>`)                                      | `obj1 > obj2`                    |
+| `__ge__`            | بزرگتر یا مساوی (`>=`)                            | `obj1 >= obj2`                   |
+| `__hash__`          | محاسبه کلید هش (برای دیکشنری و مجموعه)            | `hash(obj)`                      |
+| `__bool__`          | مقدار بولی شیء (`bool()`)                         | `if obj:`                        |
+| `__format__`        | فرمت رشته (`format()`)                            | `format(obj, 'fmt')`             |
+| `__sizeof__`        | حجم شیء در حافظه                                  | `sys.getsizeof(obj)`             |
+| `__instancecheck__` | بررسی نمونه بودن (`isinstance`)                   | `isinstance(obj, Class)`         |
+| `__subclasscheck__` | بررسی زیرکلاس بودن (`issubclass`)                 | `issubclass(A, B)`               |
+| `__enter__`         | ورود به بلاک `with`                               | `with obj:`                      |
+| `__exit__`          | خروج از بلاک `with`                               | `with obj:`                      |
+| `__get__`           | دسترسی به دیسکریپتور                              | `obj.attr`                       |
+| `__set__`           | تنظیم دیسکریپتور                                  | `obj.attr = x`                   |
+| `__delete__`        | حذف دیسکریپتور                                    | `del obj.attr`                   |
+| `__set_name__`      | تنظیم نام دیسکریپتور در کلاس                      | (در تعریف کلاس)                  |
+| `__prepare__`       | آماده‌سازی namespace کلاس                         | `class MyClass(metaclass=Meta):` |
+| `__init_subclass__` | هنگام ساخت زیرکلاس                                | `class Child(Parent):`           |
+| `__class_getitem__` | زمان استفاده از `[]` روی کلاس (مثلاً `List[int]`) | `MyClass[int]`                   |
+| `__missing__`       | وقتی کلید در دیکشنری پیدا نشد                     | `dict[key]`                      |
+| `__reduce__`        | برای `pickle` — سریال‌سازی                        | `pickle.dumps(obj)`              |
+| `__reduce_ex__`     | نسخه گسترده `__reduce__`                          | `pickle.dumps(obj)`              |
+| `__fspath__`        | تبدیل به مسیر فایل سیستم                          | `os.fspath(obj)`                 |
+| `__index__`         | تبدیل به عدد صحیح (برای ایندکس)                   | `obj[1:obj]`                     |
+| `__await__`         | امکان استفاده در `await`                          | `await obj`                      |
+| `__aiter__`         | ایتراتور ناهمزمان                                 | `async for`                      |
+| `__anext__`         | عنصر بعدی ناهمزمان                                | `async for`                      |
+| `__aenter__`        | ورود به بلاک `async with`                         | `async with obj:`                |
+| `__aexit__`         | خروج از بلاک `async with`                         | `async with obj:`                |
+| `__length_hint__`   | حدس طول یک ایترابل                                | `operator.length_hint(iterable)` |
+| `__round__`         | گرد کردن                                          | `round(obj)`                     |
+| `__trunc__`         | قطع کردن (truncation)                             | `math.trunc(obj)`                |
+| `__floor__`         | کف عدد                                            | `math.floor(obj)`                |
+| `__ceil__`          | سقف عدد                                           | `math.ceil(obj)`                 |
+
+</div>
+
+### 1.4.1. ✅️ `__init__`
+
+نقش تابع سازنده در هر کلاس را ایفا می‌کند
+
+```python
+class User:
+    def __init__(self, name, age):  # Constructor
+        self.name = name
+        self.age = age
+
+    def show_data(self):
+        print(self.name, self.age)
+
+
+obj = User("behrooz", 33)
+obj.show_data()
+
+```
+
+### 1.4.2. ✅️ `__len__`
+
+تنها درصورتی می‌توان از تابع len استفاده کرد که تابع `__len__` از طریق برنامه‌نویس یا ارث‌بری در کلاس تعریف شده باشد
+
+```python
+class Behrooz:
+    def __init__(self, _name):  # Constructor
+        self.name = _name
+
+    def __len__(self):
+        return 20
+
+
+obj = Behrooz("Ali")
+print(len(obj))
+```
+
+### 1.4.3. ✅️ `__str__`
+
+* برای خوانایی بیشتر EndUser از یک شیء مورد استفاده قرار می‌گیرد
+* این متد زمانی فراخوانی می‌شود که توابعی مانند print یا str برای نمایش یک شیء استفاده شود
+* این متد باید یک رشته (str) برگرداند که نماینده‌ی شیء باشد.
+* اگر __str__ تعریف نشده باشد، پایتون به جای آن از متد __repr__ استفاده می‌کند.
+
+```python
+class Person:
+    def __init__(self, name, age):  # Constructor
+        self.name = name
+        self.age = age
+
+    def __str__(self):
+        return f"Person(name={self.name}, age={self.age})"
+
+
+person = Person("علی", 25)
+print(person)  # output: Person(name=علی, age=25)
+```
+
+### 1.4.4. ✅️  `__repr__`
+
+* باتعریف این تابع سبب می‌شویم در هنگام پرینت آبجکت تهیه شده از یک کلاس تابع اجرا شود وگرنه آدرس شیء در حافظه نمایش
+  می‌شود
+* تابع `__str__` دیتای خوانا به کاربر ارائه میدهد درحالی که تابع `__repr__` جنبه دیباگ داشته و دیتای فنی تر و جامع و کلیدی ارائه میدهد
+
+```python
+class Person:
+    def __init__(self, _name):  # Constructor
+        self.name = _name
+
+    def __repr__(self) -> str:
+        return f"behroooz class attribute is [{self.name}]"
+
+
+obj = Person("Ali")
+print(obj)
+
+```
+
+* می‌توانید رفتار repr() را در کلاس‌های خود با تعریف متد __repr__() تنظیم کنید
+
+```python
+class Person:
+    def __init__(self, name, age):  # Constructor
+        self.name = name
+        self.age = age
+
+    def __repr__(self):
+        return f"Person(name='{self.name}', age={self.age})"
+
+
+p = Person("Ali", 25)
+print(repr(p))  # Person(name='Ali', age=25)
+print(p)  # Person(name='Ali', age=25)
+# نکته: `print(p)` و `print(repr(p))` خروجی یکسان دارند زیرا print از str استفاده می‌کند، اما str وقتی `__str__` نباشد از repr استفاده می‌کند)
+```
+
+### 1.4.5. ✅️  `__add__`
+
+```python
+class Person:
+    def __init__(self, _name):  # Constructor
+        self.name = _name
+
+    # when ussing +
+    def __add__(self, other):
+        return f"{self.name} Plus {other}"
+
+
+obj = Person("Ali")
+print(obj)  # --------------> Output: <__main__.Person object at 0x7f5f43c13890>
+print(obj + "behrooz")  # --> Output: Ali Plus behrooz
+```
+
+### 1.4.6. ✅️   `__mul__`
+
+```python
+class Person:
+    def __init__(self, _name):  # Constructor
+        self.name = _name
+
+    # when ussing *
+    def __mul__(self, other):
+        return f"{self.name} multiplier {other}"
+
+
+obj = Person("Ali")
+print(obj)  # --------------> Output: <__main__.Person object at 0x7f5f43c13050>   
+print(obj * "behrooz")  # --> Output:  Ali multiplier behrooz
+```
+
+### 1.4.7. ✅️  `__truediv__`
+
+```python
+class Person:
+    def __init__(self, _name):  # Constructor
+        self.name = _name
+
+    # when ussing /
+    def __truediv__(self, other):
+        return f"{self.name} division {other}"
+
+
+obj = Person("Ali")
+print(obj)  # --------------> Output: <__main__.Person object at 0x7f5f43c31c10>    
+print(obj / "behrooz")  # --> Output: Ali division behrooz
+```
+
+### 1.4.8. ✅️   `__sub__`
+
+```python
+class Person:
+    def __init__(self, _name):  # Constructor
+        self.name = _name
+
+    # when ussing -
+    def __sub__(self, other):
+        return f"{self.name} minus {other}"
+
+
+obj = Person("Ali")
+print(obj)  # --------------> Output:  <__main__.Person object at 0x7f5f43c31e90>          
+print(obj - "behrooz")  # --> Output: Ali minus behrooz
+```
+
 # 2. 🅰️ Tools
 
 ## 2.1. 🅱️ Commands
@@ -733,173 +1105,7 @@ full_function(1, 2, 3, 4, 5, c=50, name="Sarah", age=25)
 # **kwargs: {'name': 'Sarah', 'age': 25}
 ```
 
-## 5.3. 🅱️ __NAME__
-
-### 5.3.1. ✅️ `__init__`
-
-نقش تابع سازنده در هر کلاس را ایفا می‌کند
-
-```python
-class User:
-    def __init__(self, name, age):  # Constructor
-        self.name = name
-        self.age = age
-
-    def show_data(self):
-        print(self.name, self.age)
-
-
-obj = User("behrooz", 33)
-obj.show_data()
-
-```
-
-### 5.3.2. ✅️ `__len__`
-
-تنها درصورتی می‌توان از تابع len استفاده کرد که تابع `__len__` از طریق برنامه‌نویس یا ارث‌بری در کلاس تعریف شده باشد
-
-```python
-class Behrooz:
-    def __init__(self, _name):  # Constructor
-        self.name = _name
-
-    def __len__(self):
-        return 20
-
-
-obj = Behrooz("Ali")
-print(len(obj))
-```
-
-### 5.3.3. ✅️ `__str__`
-
-* برای خوانایی بیشتر EndUser از یک شیء مورد استفاده قرار می‌گیرد
-* این متد زمانی فراخوانی می‌شود که توابعی مانند print یا str برای نمایش یک شیء استفاده شود
-* این متد باید یک رشته (str) برگرداند که نماینده‌ی شیء باشد.
-* اگر __str__ تعریف نشده باشد، پایتون به جای آن از متد __repr__ استفاده می‌کند.
-
-```python
-class Person:
-    def __init__(self, name, age):  # Constructor
-        self.name = name
-        self.age = age
-
-    def __str__(self):
-        return f"Person(name={self.name}, age={self.age})"
-
-
-person = Person("علی", 25)
-print(person)  # output: Person(name=علی, age=25)
-```
-
-### 5.3.4. ✅️  `__repr__`
-
-* باتعریف این تابع سبب می‌شویم در هنگام پرینت آبجکت تهیه شده از یک کلاس تابع اجرا شود وگرنه آدرس شیء در حافظه نمایش
-  می‌شود
-* یعنی اگر بخواهیم که بچای نمایش دیتای فنی دیتای خوانا به کاربر نمایش داده شود
-* برای نمایش "رسمی" و دقیق‌تر شیء استفاده می‌شود (معمولاً برای دیباگ یا لاگ‌گیری).
-
-```python
-class Person:
-    def __init__(self, _name):  # Constructor
-        self.name = _name
-
-    def __repr__(self) -> str:
-        return f"behroooz class attribute is [{self.name}]"
-
-
-obj = Person("Ali")
-print(obj)
-
-```
-
-* می‌توانید رفتار repr() را در کلاس‌های خود با تعریف متد __repr__() تنظیم کنید
-
-```python
-class Person:
-    def __init__(self, name, age):  # Constructor
-        self.name = name
-        self.age = age
-
-    def __repr__(self):
-        return f"Person(name='{self.name}', age={self.age})"
-
-
-p = Person("Ali", 25)
-print(repr(p))  # Person(name='Ali', age=25)
-print(p)  # Person(name='Ali', age=25)
-# نکته: `print(p)` و `print(repr(p))` خروجی یکسان دارند زیرا print از str استفاده می‌کند، اما str وقتی `__str__` نباشد از repr استفاده می‌کند)
-```
-
-### 5.3.5. ✅️  `__add__`
-
-```python
-class Person:
-    def __init__(self, _name):  # Constructor
-        self.name = _name
-
-    # when ussing +
-    def __add__(self, other):
-        return f"{self.name} Plus {other}"
-
-
-obj = Person("Ali")
-print(obj)  # --------------> Output: <__main__.Person object at 0x7f5f43c13890>
-print(obj + "behrooz")  # --> Output: Ali Plus behrooz
-```
-
-### 5.3.6. ✅️   `__mul__`
-
-```python
-class Person:
-    def __init__(self, _name):  # Constructor
-        self.name = _name
-
-    # when ussing *
-    def __mul__(self, other):
-        return f"{self.name} multiplier {other}"
-
-
-obj = Person("Ali")
-print(obj)  # --------------> Output: <__main__.Person object at 0x7f5f43c13050>   
-print(obj * "behrooz")  # --> Output:  Ali multiplier behrooz
-```
-
-### 5.3.7. ✅️  `__truediv__`
-
-```python
-class Person:
-    def __init__(self, _name):  # Constructor
-        self.name = _name
-
-    # when ussing /
-    def __truediv__(self, other):
-        return f"{self.name} division {other}"
-
-
-obj = Person("Ali")
-print(obj)  # --------------> Output: <__main__.Person object at 0x7f5f43c31c10>    
-print(obj / "behrooz")  # --> Output: Ali division behrooz
-```
-
-### 5.3.8. ✅️   `__sub__`
-
-```python
-class Person:
-    def __init__(self, _name):  # Constructor
-        self.name = _name
-
-    # when ussing -
-    def __sub__(self, other):
-        return f"{self.name} minus {other}"
-
-
-obj = Person("Ali")
-print(obj)  # --------------> Output:  <__main__.Person object at 0x7f5f43c31e90>          
-print(obj - "behrooz")  # --> Output: Ali minus behrooz
-```
-
-## 5.4. 🅱️ Function as Object
+## 5.3. 🅱️ Function as Object
 
 * توابع در پایتون شیء هستند
 * توابع در پایتون می‌توانند
@@ -919,7 +1125,7 @@ func = greet  # تابع رو به یک متغیر نسبت دادیم
 print(func())  # Hello!
 ```
 
-## 5.5. 🅱️ Higher-Order Functions
+## 5.4. 🅱️ Higher-Order Functions
 
 * یک تابع مرتبه‌بالا(Higher-Order Function) به تابعی گفته می‌شه که: یکی از موارد زیر باشد
     * 1️⃣️یک تابع دیگر را به عنوان ورودی بگیرد،
@@ -938,7 +1144,7 @@ def caller(func):
 caller(greet)  # "Hello!"
 ```
 
-### 5.5.1. 1️⃣️ Function as input
+### 5.4.1. 1️⃣️ Function as input
 
 * تابعی که تابع دیگری را به عنوان ورودی می‌گیرد
 * Example: map(), filter(), sorted(), sum()
@@ -988,7 +1194,7 @@ print(evens)  # [2, 4]
 
 ```
 
-### 5.5.2. 2️⃣️ Function return Function
+### 5.4.2. 2️⃣️ Function return Function
 
 * این نوع معمولاً در دکوراتورها یا ** Closureها** دیده می‌شه.
 * مثال: تابعی که یک تابع جدید بسازد
@@ -1010,7 +1216,7 @@ print(double(5))  # 10
 print(triple(5))  # 15
 ```
 
-### 5.5.3. 3️⃣️ Combine
+### 5.4.3. 3️⃣️ Combine
 
 ```python
 def add_logger(func):
@@ -1034,7 +1240,7 @@ logged_square(4)
 ########: Result: 16
 ```
 
-## 5.6. 🅱️ Function Inside Function
+## 5.5. 🅱️ Function Inside Function
 
 توابع می‌توانند در داخل تابع دیگر تعریف شوند (توابع تو در تو)
 
@@ -1092,7 +1298,7 @@ def func2_sum(number, func):
 print(func2_sum(5, func1_square))  # Output: 55
 ```
 
-## 5.7. 🅱️ Decorator
+## 5.6. 🅱️ Decorator
 
 دِکوراتور یک تابع است که یک تابع دیگر را می‌گیرد، رفتار آن را تغییر می‌دهد و یک تابع جدید را برمی‌گرداند
 
@@ -1138,7 +1344,7 @@ def decorator(func):
 | `@retry`          | اجرای مجدد تابع در صورت خطا             |
 | `@property`       | تبدیل متد به ویژگی (در کلاس‌ها)         |
 
-### 5.7.1. ✅️ Custom
+### 5.6.1. ✅️ Custom
 
 ```python
 def exec_after_before(func):
@@ -1159,7 +1365,7 @@ say_hello()
 
 ```
 
-### 5.7.2. ✅️ `@timer`
+### 5.6.2. ✅️ `@timer`
 
 اگر بخواهیم قبل و بعد از اجرای تابع، زمان رو چک کنه
 
@@ -1207,7 +1413,7 @@ def behrooz():
 slow_function = timer(behrooz)
 ```
 
-### 5.7.3. ✅️ `@debug`
+### 5.6.3. ✅️ `@debug`
 
 ```python
 def debug(func):
@@ -1232,7 +1438,7 @@ add(3, 5)
 ## 8
 ```
 
-### 5.7.4. ✅️ `@wraps`
+### 5.6.4. ✅️ `@wraps`
 
 * وقتی از یک دکوراتور استفاده می‌کنیم، در واقع تابع اصلی رو با یک تابع جدید (معمولاً wrapper) جایگزین می‌کنیم.
 * اما مشکل جایگزینی این است که اطلاعات متاداده تابع اصلی (مثل نام، توضیحات، مستندات) از بین می‌رود و به جای آن اطلاعات تابع wrapper نمایش داده می‌شود
@@ -1281,7 +1487,7 @@ print(hello.__name__)  # Output: hello ✅
 print(hello.__doc__)  # Output: Says hello ✅
 ```
 
-### 5.7.5. ✅️ `@lru_cache`
+### 5.6.5. ✅️ `@lru_cache`
 
 * ذخیره نتایج برای جلوگیری از محاسبه مجدد
 * در پایتون از نسخه 3.9 به بعد، یک دکوراتور جدید به نام @cache به ماژول functools اضافه شد که نسخه ساده‌شده و پیش‌فرض از @lru_cache است.
@@ -1330,7 +1536,7 @@ print(fibonacci(5))  # 5 ← بدون محاسبه دوباره
 
 * بدون کش، fibonacci(35) ممکنه چند ثانیه طول بکشه. با کش، لحظه‌ای اجرا می‌شه.
 
-### 5.7.6. ✅️ `@cache`
+### 5.6.6. ✅️ `@cache`
 
 ```python
 # Example1️⃣️: فرض کنیم یک تابع کند داریم که جمع اعداد تا n رو حساب می‌کنه 
@@ -1382,7 +1588,7 @@ print(factorial(5))
 
 ```
 
-### 5.7.7. ✅️ `@retry`
+### 5.6.7. ✅️ `@retry`
 
 * اجرای مجدد تابع در صورت خطا
 * اگر تابعی به دلیل خطا (مثلاً شبکه قطع شد) شکست خورد، چند بار دوباره امتحان کن.
@@ -1427,7 +1633,7 @@ unstable_function()
 ##### عملیات با موفقیت انجام شد.
 ```
 
-### 5.7.8. ✅️ `@login_required`
+### 5.6.8. ✅️ `@login_required`
 
 * قبل از اجرای یک تابع (مثل دسترسی به پروفایل)، بررسی کن که کاربر وارد شده (logged in) باشد.
 * این دکوراتور معمولاً در فریم‌ورک‌هایی مثل Flask یا Django وجود داره. اینجا یک نسخه ساده‌شده می‌زنیم.
@@ -1456,7 +1662,7 @@ view_profile()
 
 ```
 
-### 5.7.9. ✅️ `@property`
+### 5.6.9. ✅️ `@property`
 
 * property: تبدیل تابع به ویزگی(property) یا صفت(attribute)
 * برای دسترسی به متد باید حتما پرانتز باز و بسته گذاشته بشود ولی برای حالت property نباید پرانتز گذاشت
@@ -1497,7 +1703,7 @@ p = Person("Ali", 1990)
 print(p.age)  # Output: مثلاً 34
 ```
 
-### 5.7.10. ✅️ PropertyGetterSetter
+### 5.6.10. ✅️ PropertyGetterSetter
 
 * getter: یک تابع که برای استفاده می‌بایست همراه پرانتز باشد ولی هنگامیکه با `@property` آمده‌باشد نیاز به استفاده از پرانتز نیست
 
@@ -1538,7 +1744,7 @@ print(obj1.age)
 print(obj1.fullName)
 ```
 
-### 5.7.11. ✅️ ClassMethod
+### 5.6.11. ✅️ ClassMethod
 
 * تغییر عملکرد یک تابع بطوریکه به‌جای استفاده از منابع نمونه از منابع کلاس استفاده می‌کند
 * دسترسی مستقیم به دیتای کلاس بدون ساخت شیء نمونه
@@ -1562,7 +1768,7 @@ print(obj1.func1())
 
 ```
 
-### 5.7.12. ✅️ Comprehensive Advance Examples
+### 5.6.12. ✅️ Comprehensive Advance Examples
 
 ```python
 def before_after(func):
@@ -3699,47 +3905,131 @@ print("آیا شیء یک نمونه از کلاس است؟", isinstance(obj, Us
 
 ```
 
-## 7.1. 🅱️ NameMangling
+## 7.1. 🅱️ Override
 
-```python
-# 227. _name    => define local variable
-# 228. Note: در پایتون هیچ قلمرویی تحت عنوان پرایویت نداریم
-# 229. Note: استفاده از یک آندرلاین قبل متغیر تنها یک قرارداد است ولی باز در هرکجا به پرایویت می‌توان دسترسی داشت
+تعریف مجدد یک متد یا ویژگی در یک کلاس فرزند (زیرکلاس) است که قبلاً در کلاس والد (Superclass) تعریف شده است. هدف از بازنویسی، تغییر یا گسترش رفتار یک متد بدون تغییر نام آن است
 
-# 230. __name   => name mangling: available only with _classname__variable in use time
-# 231. Note: در پایتون همه نامگذاری‌ها قراردادی است ولی تنها نِیم‌مَنگِلینگ است که سبب تغییر در نام آیتم می‌شود
+برایOverride کردن یک متد، کافی است در کلاس فرزند، متدی با همان نام و همان پارامترها (هرچند پارامترها می‌توانند متفاوت باشند، اما بهتر است سازگار باشند) تعریف شود. مفسر پایتون به طور خودکار متد فرزند را در صورت فراخوانی از طریق یک نمونه از کلاس فرزند، اجرا می‌کند.
 
-# 232. __name__ => in python special function define in this form such as __init__ as construction
+* در پایتون، مکانیسم `Override` به صورت پویا (dynamic) انجام می‌شود و در زمان اجرا (runtime) تعیین می‌گردد که کدام نسخه از متد فراخوانی شود.
+* عدم نیاز به کلیدواژه خاص: برخلاف زبان‌هایی مانند Java، پایتون نیازی به کلیدواژه‌ای مانند `@Override` ندارد. بازنویسی به صورت ضمنی انجام می‌شود.
+* استفاده از super(): برای دسترسی به رفتار کلاس والد، از تابع `super()` استفاده می‌شود.
+* موضوع `Override` امکان چندشکلی (Polymorphism) را فراهم می‌کند. یعنی یک متغیر می‌تواند نمونه‌های مختلفی از کلاس‌های فرزند را نگه دارد و متد مناسب را فراخوانی کند.
+* نام و پارامترها: برای رعایت قرارداد، بهتر است نام و تعداد پارامترهای متد بازنویسی‌شده با کلاس والد یکسان باشد.
 
-
-class User:
-    _mobile = "09191671085"  # بعنوان پیشنهاد در لیست intelliSence نمایش داده نمی‌شود و تلویحاً بعنوان متغیر محلی تلفی‌می‌شود
-    __password = "myPassword"  # Generally __password is not available. only available by _User__password
-
-    def __init__(self, name, age):  # Constructor
-        self.name = name
-        self.age = age
-
-    @property
-    def get_mobile(self):
-        return self._mobile
-
-
-obj = User("behrooz", 33)
-print(obj.name)
-print("☓️:" + obj._mobile)  # استفاده از پارامتر محلی داخل یک کلاس بصورت مستقیم توصیه نمی‌شود
-print("✓:" + obj.get_mobile)
-print(
-    obj._User__password)  # وقتی یک پارامتر را با دوتا آندرلاین تعریف کنیم و توسط شکل فوق به آن دسترسی داشته باشیم را nameMangling می‌گویند
-
-```
-
-## 7.2. 🅱️ Override
+مثال1️⃣️: `Override` متد `speak()` در کلاس‌های حیوانات
 
 ```python
 class Animal:
-    def makeSound(
-            self): raise NotImplementedError  # بدنه کلاس را در زیر کلاس باید تعریف کنیم وگرنه به ارور برخورد خواهیم کرد
+    def speak(self):
+        return "An animal makes a sound"
+
+
+class Dog(Animal):
+    def speak(self):
+        return "Woof!"
+
+
+class Cat(Animal):
+    def speak(self):
+        return "Meow!"
+
+
+# استفاده
+animals = [Dog(), Cat()]
+for animal in animals:
+    print(animal.speak())
+
+# Output:
+## ----> Woof!
+## ----> Meow!
+```
+
+مثال2️⃣️:متد `__str__` برای نمایش سفارشی
+
+```python
+class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    def __str__(self):
+        return f"Person: {self.name}, {self.age} years old"
+
+
+class Student(Person):
+    def __init__(self, name, age, student_id):
+        super().__init__(name, age)
+        self.student_id = student_id
+
+    def __str__(self):
+        return f"Student: {self.name}, ID: {self.student_id}"
+
+
+# استفاده
+p = Person("Ali", 30)
+s = Student("Sara", 20, "12345")
+print(p)  # Person: Ali, 30 years old
+print(s)  # Student: Sara, ID: 12345
+```
+
+مثال3️⃣️: استفاده از `super()` برای گسترش رفتار
+
+```python
+class Vehicle:
+    def start(self):
+        return "Vehicle engine started"
+
+
+class Car(Vehicle):
+    def start(self):
+        parent_result = super().start()
+        return f"{parent_result} and car is ready to drive."
+
+
+# استفاده
+car = Car()
+print(car.start())  # Output: Vehicle engine started and car is ready to drive.
+```
+
+مثال4️⃣️:متد `area()` در اشکال هندسی
+
+```python
+class Shape:
+    def area(self):  # این متد از نوع Abstract خواهد بود زیرا دربدنه اصلی تعریف نشده است و اگر در زیر کلاس تعریف نشود ارور میدهد
+        raise NotImplementedError("Subclass must implement abstract method")
+
+
+class Circle(Shape):
+    def __init__(self, radius):
+        self.radius = radius
+
+    def area(self):
+        return 3.14159 * self.radius ** 2
+
+
+class Rectangle(Shape):
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+
+    def area(self):
+        return self.width * self.height
+
+
+# استفاده
+shapes = [Circle(5), Rectangle(4, 6)]
+for shape in shapes:
+    print(shape.area())
+# Output:
+## ---> 78.53975 
+## ---> 24
+```
+
+```python
+class Animal:
+    def makeSound(self):
+        raise NotImplementedError  # بدنه کلاس را در زیر کلاس باید تعریف کنیم وگرنه به ارور برخورد خواهیم کرد
 
 
 class Dog(Animal):
@@ -3759,6 +4049,110 @@ print(dog.makeSound())
 print(worm.makeSound())
 
 ```
+
+
+## 7.2. 🅱️ Overload
+
+درپایتون موضوع `Overload` نداریم. یعنی شما نمی‌توانید چندین تابع با نام یکسان در یک حوزه(مثلا در یک کلاس) تعریف کنید و اگر این کار را انجام دهید، آخرین تعریف، تعاریف قبلی را بازنویسی (override) می‌کند.
+
+موارد زیر پایتون را از موضوع `overload` بی‌نیاز کرده است
+
+1. Default Arguments
+```python
+def add(a, b):
+    return a + b
+
+def add(a, b, c):
+    return a + b + c
+
+# فقط نسخه دوم وجود دارد
+# print(add(1, 2))        # ❌ TypeError: missing 1 required argument
+print(add(1, 2, 3))       # 6 ✅
+```
+2. `**kwargs` و `*args`
+```python
+def add(*args):
+    return sum(args)
+
+print(add(1, 2))        # 3
+print(add(1, 2, 3, 4))  # 10
+```
+3. چک کردن نوع و تعداد آرگومان‌ها در بدنه تابع
+```python
+def process(data):
+    if isinstance(data, str):
+        return data.upper()
+    elif isinstance(data, list):
+        return [x.upper() for x in data]
+    else:
+        raise TypeError("Unsupported type")
+
+print(process("hello"))      # HELLO
+print(process(["a", "b"]))   # ['A', 'B']
+```
+4. استفاده از functools.singledispatch (Overload بر اساس نوع اولین آرگومان)
+```python
+from functools import singledispatch
+
+@singledispatch
+def process(data):
+    print(f"Unknown type: {type(data)}")
+
+@process.register
+def _(data: str):
+    print(f"String: {data.upper()}")
+
+@process.register
+def _(data: int):
+    print(f"Integer: {data * 2}")
+
+process("hello")   # String: HELLO
+process(5)         # Integer: 10
+process(3.14)      # Unknown type: <class 'float'>
+```
+5. استفاده از کتابخانه multipledispatch (برای Overload کامل)
+```python
+# pip install multipledispatch
+from multipledispatch import dispatch
+
+@dispatch(int, int)
+def add(a, b):
+    return a + b
+
+@dispatch(str, str)
+def add(a, b):
+    return a + " " + b
+
+@dispatch(int, str)
+def add(a, b):
+    return str(a) + b
+
+print(add(2, 3))        # 5
+print(add("Hello", "World"))  # Hello World
+print(add(5, " apples"))      # 5 apples
+```
+6. انجام Overload عملگرها (Operator Overloading) با متدهای خاص (`__add__`, `__str__`, ...)
+```python
+class Point:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __add__(self, other):
+        return Point(self.x + other.x, self.y + other.y)
+
+    def __str__(self):
+        return f"({self.x}, {self.y})"
+
+p1 = Point(1, 2)
+p2 = Point(3, 4)
+p3 = p1 + p2
+print(p3)  # (4, 6)
+```
+
+
+
+
 
 ## 7.3. 🅱️ Static
 
