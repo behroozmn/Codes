@@ -4509,6 +4509,25 @@ car3 = Car("Benz")
 print(Car.total_cars)  # 3
 ```
 
+مثال4️⃣️: ساخت "استاتیک ReadOnly" با `@classmethod` + `@property`
+
+دراین مثال این یک متغیر استاتیک فقط-خواندنی است(کاملاً شبیه `StaticFinal` در جاوا). همچنین `@classmethod` + `@property` فقط از پایتون `3.9` پشتیبانی م‌شود
+
+```python
+class MathConstants:
+    _PI = 3.1415926535
+
+    @classmethod
+    @property
+    def PI(cls):
+        return cls._PI
+
+print(MathConstants.PI)  # 3.1415926535
+
+# خطا در هنگام تلاش برای تغییر:
+# MathConstants.PI = 3.14 # ❌️ AttributeError: can't set attribute
+```
+
 ### 7.5.2. ✅️ StaticMethod ► `@staticmethod`
 
 متدی که هیچ ارتباطی با شیء یا کلاس ندارد(فقط منطقاً داخل کلاس گذاشته شده) یعنی نه self می‌گیرد، نه cls. مثل یک تابع معمولی است که داخل کلاس قرار گرفته
