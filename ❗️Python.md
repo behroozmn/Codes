@@ -3905,7 +3905,182 @@ print("آیا شیء یک نمونه از کلاس است؟", isinstance(obj, Us
 
 ```
 
-## 7.1. 🅱️ Override
+## 7.1. 🅱️ `self`
+
+* مربوط به نمونه (Instance)
+* هر self فقط به همان شیء اشاره می‌کند که متد روی آن فراخوانی شده است
+* اولین پارامتر در متدهای عادی کلاس است و به شیء ایجاد شده اشاره می‌کند
+
+```python
+class Dog:
+    def __init__(self, name):
+        self.name = name
+
+    def bark(self):
+        print(f"{self.name} is barking!")
+
+
+dog1 = Dog("Rex")
+dog2 = Dog("Buddy")
+
+dog1.bark()  # Output: Rex is barking!
+dog2.bark()  # Output: Buddy is barking!
+```
+
+## 7.2. 🅱️ `cls`
+
+* مربوط به کلاس (Class)
+* اولین پارامتر در متدهای کلاسی (@classmethod) است و به خود کلاس اشاره می‌کند
+    * نه به یک شیء خاص
+* همیشه به کلاس اشاره می‌کند(حتی اگر از روی یک شیء فراخوانی شود)
+
+مثال1️⃣️:
+
+```python
+class Dog:
+    species = "Canis lupus"  # متغیر استاتیک — متعلق به کلاس
+    total_dogs = 0
+
+    def __init__(self, name):
+        self.name = name
+        Dog.total_dogs += 1  # یا self.__class__.total_dogs += 1
+
+    @classmethod
+    def get_species(cls):  # cls ---> Dog(یعنی خود کلاس داگ)
+        return cls.species  # معادل Dog.species
+
+    @classmethod
+    def create_anonymous(cls):  # cls ---> Dog(یعنی خود کلاس داگ)
+        return cls("Anonymous")  # معادل: Dog("Anonymous")
+
+
+print(Dog.get_species())  # Output: Canis lupus -----> call from CLASS
+
+dog1 = Dog.create_anonymous()  # ceate object by cls
+dog2 = Dog("Rex")
+
+print(dog1.name)  # Output: Anonymous
+print(dog2.get_species())  # Output: "Canis lupus"
+```
+
+تصویر ذهنی
+
+```
+کلاس Dog (cls → Dog)
+│
+├── species = "Canis lupus" ← cls.species
+├── total_dogs = 3          ← cls.total_dogs
+│
+├── dog1 (self → dog1)
+├── dog2 (self → dog2)
+└── dog3 (self → dog3)
+```
+
+مثال2️⃣️:
+
+```python
+class Car:
+    brand = "Generic"  # StaticVariable
+    count = 0
+
+    def __init__(self, model):
+        self.model = model
+        Car.count += 1  # یا self.__class__.count += 1
+
+    def show_model(self):
+        return f"Model: {self.model}"
+
+    @classmethod
+    def show_brand(cls):
+        return f"Brand: {cls.brand}"
+
+    @classmethod
+    def total_cars(cls):
+        return f"Total: {cls.count}"
+
+
+car1 = Car("Model S")
+print(car1.show_model())  # Model: Model S ← self
+
+car2 = Car("Model X")
+print(car2.show_model())  # Model: Model X ← self
+
+print(Car.show_brand())  # Brand: Generic ← cls
+print(Car.total_cars())  # Total: 2 ← cls
+
+print(car1.show_brand())  # Brand: Generic --> حتی از روی شیء هم می‌شود فراخوانی کرد
+# Output:
+## ---> Model: Model S
+## ---> Model: Model X
+## ---> Brand: Generic
+## ---> Total: 2
+## ---> Brand: Generic
+```
+
+فرض کنید یک کلاس فرزند دارید
+
+```python
+class Tesla(Car):
+    brand = "Tesla"
+
+
+car = Tesla("Model Y")
+print(car.show_brand())  # Output: Tesla ----> Because: cls is Tesla
+```
+
+اگر در `show_brand` به جای `cls.brand` بنویسید `Car.brand`، همیشه "Generic" چاپ می‌شد(حتی برای Tesla) اما cls هوشمندانه به کلاس واقعی شیء اشاره می‌کند(حتی اگر فرزند باشد).
+
+این رفتار به چندشکلی (Polymorphism) و وراثت (Inheritance) کمک می‌کند.
+
+مثال3️⃣️:
+
+```python
+class Person:
+    population = 0
+
+    def __init__(self, name):
+        self.name = name
+        Person.population += 1
+
+    def introduce(self):
+        return f"Hi, I'm {self.name}"
+
+    @classmethod
+    def get_population(cls):
+        return f"Population: {cls.population}"
+
+    @classmethod
+    def create_anonymous(cls):
+        return cls("Anonymous")
+
+    @staticmethod
+    def is_valid_name(name):  # متد استاتیک — هیچ!
+        return isinstance(name, str) and len(name) > 0
+
+
+p1 = Person("Ali")
+p2 = Person.create_anonymous()
+
+print(p1.introduce())  # Hi, I'm Ali ← self
+print(Person.get_population())  # Population: 2 ← cls
+print(Person.is_valid_name("Ali"))  # True ← static
+
+# Output:
+## ---> Hi, I'm Ali
+## ---> Population: 2
+## ---> True
+```
+
+چه زمانی چه چیزی استفاده نماییم
+
+| موقعیت                                                                               | استفاده کنید از                        |
+|--------------------------------------------------------------------------------------|----------------------------------------|
+| می‌خواهید به **داده‌های یک شیء خاص** دسترسی داشته باشید (مثل `name`, `age`, `model`) | `self` → متد عادی                      |
+| می‌خواهید **شیء جدیدی بسازید** با روش جایگزین (مثل `from_string`, `create_default`)  | `cls` → `@classmethod`                 |
+| می‌خواهید به **متغیرهای کلاسی** دسترسی داشته باشید (مثل `total_count`, `species`)    | `cls` → `@classmethod`                 |
+| می‌خواهید **منطقی مستقل** داشته باشید که نه به شیء و نه به کلاس وابسته است           | `@staticmethod` (نه `self` و نه `cls`) |
+
+## 7.3. 🅱️ Override
 
 تعریف مجدد یک متد یا ویژگی در یک کلاس فرزند (زیرکلاس) است که قبلاً در کلاس والد (Superclass) تعریف شده است. هدف از بازنویسی، تغییر یا گسترش رفتار یک متد بدون تغییر نام آن است
 
@@ -4050,34 +4225,41 @@ print(worm.makeSound())
 
 ```
 
-
-## 7.2. 🅱️ Overload
+## 7.4. 🅱️ Overload
 
 درپایتون موضوع `Overload` نداریم. یعنی شما نمی‌توانید چندین تابع با نام یکسان در یک حوزه(مثلا در یک کلاس) تعریف کنید و اگر این کار را انجام دهید، آخرین تعریف، تعاریف قبلی را بازنویسی (override) می‌کند.
 
 موارد زیر پایتون را از موضوع `overload` بی‌نیاز کرده است
 
 1. Default Arguments
+
 ```python
 def add(a, b):
     return a + b
 
+
 def add(a, b, c):
     return a + b + c
 
+
 # فقط نسخه دوم وجود دارد
 # print(add(1, 2))        # ❌ TypeError: missing 1 required argument
-print(add(1, 2, 3))       # 6 ✅
+print(add(1, 2, 3))  # 6 ✅
 ```
+
 2. `**kwargs` و `*args`
+
 ```python
 def add(*args):
     return sum(args)
 
-print(add(1, 2))        # 3
+
+print(add(1, 2))  # 3
 print(add(1, 2, 3, 4))  # 10
 ```
+
 3. چک کردن نوع و تعداد آرگومان‌ها در بدنه تابع
+
 ```python
 def process(data):
     if isinstance(data, str):
@@ -4087,51 +4269,66 @@ def process(data):
     else:
         raise TypeError("Unsupported type")
 
-print(process("hello"))      # HELLO
-print(process(["a", "b"]))   # ['A', 'B']
+
+print(process("hello"))  # HELLO
+print(process(["a", "b"]))  # ['A', 'B']
 ```
+
 4. استفاده از functools.singledispatch (Overload بر اساس نوع اولین آرگومان)
+
 ```python
 from functools import singledispatch
+
 
 @singledispatch
 def process(data):
     print(f"Unknown type: {type(data)}")
 
+
 @process.register
 def _(data: str):
     print(f"String: {data.upper()}")
+
 
 @process.register
 def _(data: int):
     print(f"Integer: {data * 2}")
 
-process("hello")   # String: HELLO
-process(5)         # Integer: 10
-process(3.14)      # Unknown type: <class 'float'>
+
+process("hello")  # String: HELLO
+process(5)  # Integer: 10
+process(3.14)  # Unknown type: <class 'float'>
 ```
+
 5. استفاده از کتابخانه multipledispatch (برای Overload کامل)
+
 ```python
 # pip install multipledispatch
 from multipledispatch import dispatch
+
 
 @dispatch(int, int)
 def add(a, b):
     return a + b
 
+
 @dispatch(str, str)
 def add(a, b):
     return a + " " + b
+
 
 @dispatch(int, str)
 def add(a, b):
     return str(a) + b
 
-print(add(2, 3))        # 5
+
+print(add(2, 3))  # 5
 print(add("Hello", "World"))  # Hello World
-print(add(5, " apples"))      # 5 apples
+print(add(5, " apples"))  # 5 apples
 ```
+
 6. انجام Overload عملگرها (Operator Overloading) با متدهای خاص (`__add__`, `__str__`, ...)
+
 ```python
 class Point:
     def __init__(self, x, y):
@@ -4144,21 +4341,74 @@ class Point:
     def __str__(self):
         return f"({self.x}, {self.y})"
 
+
 p1 = Point(1, 2)
 p2 = Point(3, 4)
 p3 = p1 + p2
 print(p3)  # (4, 6)
 ```
 
+## 7.5. 🅱️ Static
 
-
-
-
-## 7.3. 🅱️ Static
-
+* مفهوم Static به صورت ذاتی در زبان پایتون تعریف نشده است.
+* اما توسط مفهوم شی‌گرایی و مفهوم Decorator می‌توان این مفهوم و رفتارهای «استاتیک» را شبیه‌سازی و پیاده‌سازی کرد.
 * اگر یک متغیر را در داخل کلاس و خارج توابع تعریف کنیم آنگاه آن را استاتیک خواندنی درنظر می‌گیرد
-* یعنی با تغییر در شیء‌نمونه‌ها ازین پس مقادیر آنها مستقل خواهند شد
-* تابع آی‌دی شماره هر متغیر را که در حافظه دارد را نشان می‌دهد
+
+```python
+# TODO: استاتیک نوشتنی هم مگر داریم
+```
+
+* در سطح پیشرفته مفهوم استاتیک می‌تواند دامنه موارد زیر را شامل شود
+    * متغیرهای کلاسی با کنترل دسترسی (مثل private static)
+    * کش متدهای استاتیک
+    * متدهای استاتیک با اعتبارسنجی نوع (type-checking)
+    * متدهای استاتیک به عنوان Factory یا Strategy
+    * متدهای استاتیک در متاکلاس‌ها
+    * متدهای استاتیک async
+
+| نوع               | ورودی                  | دسترسی به | کاربرد رایج                               | مثال                                  |
+|-------------------|------------------------|-----------|-------------------------------------------|---------------------------------------|
+| **متغیر استاتیک** | —                      | کلاس      | ذخیره اطلاعات مشترک بین همه اشیاء         | `Car.total_cars`                      |
+| **متد استاتیک**   | هیچ (`@staticmethod`)  | هیچ!      | توابع کمکی/منطقی داخل کلاس                | `Calculator.add(2,3)`                 |
+| **متد کلاسی**     | `cls` (`@classmethod`) | کلاس      | ساخت شیء جایگزین، دسترسی به متغیرهای کلاس | `Person.from_full_name("Ali Rezaei")` |
+
+* برای درک بهتر از زمان استفاده ۱-متغیراستاتیک ۲-متداستاتیک ۳-متدکلاسی
+    * **متد عادی**: آیا این متد نیاز دارد اطلاعات یک شیء خاص (مثل self.name) را ببیند؟
+    * `@classmethod`: آیا نیاز دارد اطلاعات کلاس (مثل cls.total) را ببیند یا شیء جدیدی بسازد؟
+    * `@staticmethod`:  آیا فقط یک تابع منطقی است که هیچ state ای نمی‌خواهد؟
+
+### 7.5.1. ✅️ StaticVariable
+
+متغیری که متعلق به کلاس است، نه به هر شیء (نمونه) از آن کلاس. یعنی اگر ۱۰۰ تا شیء از یک کلاس بسازید، این متغیر فقط یک عدد است و بین همه شیءها مشترک است.
+
+* متغیری است که به کلاس تعلق دارد، نه به نمونه(instance)
+* بین تمام instance ها مشترک است
+
+مثال1️⃣️:
+
+```python
+# Translate: ---> species: گونه
+class Dog:
+    species = "Canis lupus"  # StaticVariable
+
+    def __init__(self, name):
+        self.name = name  # 👈 این یک متغیر نمونه (instance variable) است
+
+
+dog1 = Dog("Rex")
+dog2 = Dog("Buddy")
+
+print(dog1.species)  # Output: Canis lupus
+print(dog2.species)  # Output: Canis lupus
+
+# Change by CLASS
+Dog.species = "Wolf"
+
+print(dog1.species)  # Output: Wolf  تغییر کرد
+print(dog2.species)  # Output: Wolf  تغییر کرد
+```
+
+مثال2️⃣️
 
 ```python
 class User:
@@ -4168,7 +4418,7 @@ class User:
 one = User()
 two = User()
 
-print("--------Initial value---------------")
+print("--------Initial value---------------")  # تابع آی‌دی شماره هر متغیر را که در حافظه دارد را نشان می‌دهد
 print(f"staticData in User[id: {id(User.staticData)}] ==========> {User.staticData}")
 print(f"staticData in one [id: {id(one.staticData)} ] ---> {one.staticData}")
 print(f"staticData in two [id: {id(two.staticData)} ] ---> {two.staticData}")
@@ -4193,6 +4443,334 @@ print(f"staticData in User[id: {id(User.staticData)}] ==========> {User.staticDa
 print(f"staticData in one [id: {id(one.staticData)} ] ---> {one.staticData}")
 print(f"staticData in two [id: {id(two.staticData)} ] ---> {two.staticData}")
 
+# Output:
+## ---> --------Initial value---------------
+## ---> staticData in User[id: 10864392] ==========> 100
+## ---> staticData in one [id: 10864392 ] ---> 100
+## ---> staticData in two [id: 10864392 ] ---> 100
+## ---> --------change in class---------------
+## ---> staticData in User[id: 10861192] ==========> 0
+## ---> staticData in one [id: 10861192 ] ---> 0
+## ---> staticData in two [id: 10861192 ] ---> 0
+## ---> --------Change objects---------------
+## ---> staticData in User[id: 10861192] ==========> 0
+## ---> staticData in one [id: 10861224 ] ---> 1
+## ---> staticData in two [id: 10861256 ] ---> 2
+## ---> --------change in class---------------
+## ---> staticData in User[id: 10861288] ==========> 3
+## ---> staticData in one [id: 10861224 ] ---> 1
+## ---> staticData in two [id: 10861256 ] ---> 2
+```
+
+مثال3️⃣️: فرض کنید می‌خواهید تعداد کل سگ‌هایی که ساخته‌اید را بشمارید
+
+نکته: اگر self.total_dogs += 1 می‌نوشتید، هر شیء یک کپی جداگانه می‌ساخت — و جواب اشتباه می‌شد!
+
+```python
+class Dog:
+    total_dogs = 0  # متغیر استاتیک برای شمارش
+
+    def __init__(self, name):
+        self.name = name
+        Dog.total_dogs += 1  # هر بار که شیء جدید می‌سازیم، یکی اضافه می‌کنیم
+
+
+dog1 = Dog("Rex")
+dog2 = Dog("Buddy")
+dog3 = Dog("Max")
+
+print(Dog.total_dogs)  # 3 ← همه شیءها یک متغیر مشترک دارند
+```
+
+مثال4️⃣️:متغیر استاتیک برای شمارش تعداد اشیاء ساخته شده
+
+کاربرد: برای آمار، لاگ، محدودیت تعداد instanceها و...
+
+```python
+class Car:
+    total_cars = 0  # متغیر استاتیک — متعلق به کلاس
+
+    def __init__(self, name):
+        self.name = name
+        Car.total_cars += 1  # یا self.__class__.total_cars += 1
+
+
+# ساخت چند شیء:
+car1 = Car("BMW")
+car2 = Car("Tesla")
+car3 = Car("Benz")
+
+print(Car.total_cars)  # 3
+```
+
+### 7.5.2. ✅️ StaticMethod ► `@staticmethod`
+
+متدی که هیچ ارتباطی با شیء یا کلاس ندارد(فقط منطقاً داخل کلاس گذاشته شده) یعنی نه self می‌گیرد، نه cls. مثل یک تابع معمولی است که داخل کلاس قرار گرفته
+
+* متدی که نیازی به `self` یا `cls` ندارد و مستقل از نمونه یا کلاس اجرا می‌شود
+* چک می‌کند مقدار معتبر است یا نه
+* دلیل قرار دادن در داخل کلاس
+    * زیرا مرتبط با کلاس است(مثلا ماشین حساب، پردازش عدد)
+    * برای سازماندهی کد(همه چیزهای مربوط به Calculator در یک جا)
+    * همانند یک ابزار کمکی(Utility)
+
+مثال1️⃣️:
+
+```python
+class Calculator:
+    @staticmethod
+    def add(a, b):
+        return a + b
+
+    @staticmethod
+    def is_even(number):
+        return number % 2 == 0
+
+
+# فراخوانی بدون ساخت شیء:
+print(Calculator.add(5, 3))  # 8
+print(Calculator.is_even(4))  # True
+
+# حتی اگر شیء بسازید:
+calc = Calculator()
+print(calc.add(10, 20))  # 30 ← کار می‌کند، اما نیازی نیست!
+```
+
+مثال2️⃣️ [اشتباه رایج❌️] این قطعه کد تولید خطا میکند زیرا متد استاتیک، self ندارد
+
+```python
+class Dog:
+    @staticmethod
+    def bark():
+        print(self.name + " is barking!")  # ❌️ خطا! self تعریف نشده
+```
+
+مثال 3️⃣️:فرض کنید می‌خواهید یک کلاس برای محاسبات ریاضی داشته باشید که نیازی به ساخت شیء ندارد
+
+چرا استاتیک؟ چون این توابع به داده‌های داخل شیء (self) یا کلاس (cls) وابسته نیستند — فقط منطق ریاضی هستند.
+
+```python
+class MathUtils:
+    @staticmethod
+    def add(a, b):
+        return a + b
+
+    @staticmethod
+    def multiply(a, b):
+        return a * b
+
+
+# فراخوانی بدون نیاز به ساخت instance:
+print(MathUtils.add(5, 3))  # 8
+print(MathUtils.multiply(4, 6))  # 24
+```
+
+مثال4️⃣️: متد استاتیک برای اعتبارسنجی (Validation)
+
+فرض کنید می‌خواهید قبل از ساخت شیء، ورودی‌ها را چک کنید
+
+```python
+class User:
+    def __init__(self, email):
+        if not User.is_valid_email(email):
+            raise ValueError("Invalid email!")
+        self.email = email
+
+    @staticmethod
+    def is_valid_email(email):
+        return "@" in email and "." in email
+
+
+# استفاده:
+user1 = User("ali@gmail.com")  # ✅ OK
+# user2 = User("invalid-email") # ❌ Error!
+```
+
+مثال5️⃣️: متد استاتیک برای تبدیل واحد (Unit Conversion)
+
+```python
+class Temperature:
+    @staticmethod
+    def celsius_to_fahrenheit(c):
+        return (c * 9 / 5) + 32
+
+    @staticmethod
+    def fahrenheit_to_celsius(f):
+        return (f - 32) * 5 / 9
+
+
+print(Temperature.celsius_to_fahrenheit(0))  # 32.0
+print(Temperature.fahrenheit_to_celsius(32))  # 0.0
+```
+
+مثال6️⃣️: متد استاتیک برای فرمت‌دهی متن (String Formatting)
+
+کاربرد: پیش‌پردازش متن در سیستم‌های چت، وب‌سایت‌ها، یا پایگاه داده
+
+```python
+class TextFormatter:
+    @staticmethod
+    def clean_spaces(text):
+        return " ".join(text.split())
+
+    @staticmethod
+    def to_title_case(text):
+        return text.title()
+
+
+# استفاده:
+dirty_text = "   hello    world   "
+clean = TextFormatter.clean_spaces(dirty_text)
+title = TextFormatter.to_title_case(clean)
+
+print(clean)  # "hello world"
+print(title)  # "Hello World"
+```
+
+### 7.5.3. ✅️ ClassMethod ► `@classmethod`
+
+متدی که به جای شیء، به کلاس دسترسی دارد
+
+* اِلِمان `cls` را به عنوان اولین ورودی می‌گیرد
+* برای ساخت شیءهای جایگزین، دستکاری کلاس، یا دسترسی به متغیرهای استاتیک استفاده می‌شود
+
+مثال1️⃣️: ساخت شیء با فرمت جایگزین
+
+```python
+class Person:
+    def __init__(self, first_name, last_name):
+        self.first_name = first_name
+        self.last_name = last_name
+
+    @classmethod
+    def from_full_name(cls, full_name):
+        first, last = full_name.split(" ", 1)
+        return cls(first, last)  # 👈 cls همان Person است
+
+
+p1 = Person("Ali", "Rezaei")
+p2 = Person.from_full_name("Sara Ahmadi")  # ← روش جایگزین ساخت شیء
+
+print(p2.first_name)  # Sara
+print(p2.last_name)  # Ahmadi
+```
+
+مثال2️⃣️: دسترسی به متغیر استاتیک
+
+```python
+class Student:
+    school_name = "PySchool"
+    total_students = 0
+
+    def __init__(self, name):
+        self.name = name
+        Student.total_students += 1
+
+    @classmethod
+    def get_school_info(cls):
+        return f"{cls.school_name} has {cls.total_students} students."
+
+
+s1 = Student("Ali")
+s2 = Student("Sara")
+
+print(Student.get_school_info())  # PySchool has 2 students.
+```
+
+مثال3️⃣️: در این مثال ۱-متغیراستاتیک ۲-متداستاتیک ۳-متدکلاسی استفاده شده است
+
+```python
+class Car:
+    brand = "Generic"  # متغیر استاتیک — متعلق به کلاس
+    total_cars = 0  # متغیر استاتیک — شمارنده
+
+    def __init__(self, model):
+        self.model = model  # متغیر نمونه — متعلق به هر شیء
+        Car.total_cars += 1  # یا self.__class__.total_cars += 1
+
+    @staticmethod
+    def is_valid_model(model):  # فقط چک می‌کند — وابسته به چیزی نیست
+        return len(model) > 0
+
+    @classmethod
+    def get_brand_info(cls):  # به کلاس دسترسی دارد — cls.brand
+        return f"Brand: {cls.brand}, Total Cars: {cls.total_cars}"
+
+    @classmethod
+    def create_default(cls):  # یک شیء پیش‌فرض می‌سازد
+        return cls("DefaultModel")
+
+
+# ✅ متغیر استاتیک:
+print(Car.brand)  # Generic
+
+# ✅ متد استاتیک:
+print(Car.is_valid_model("Tesla"))  # True
+
+# ✅ متد کلاسی:
+car1 = Car.create_default()  # ← با متد کلاسی شیء ساختیم
+print(Car.get_brand_info())  # Brand: Generic, Total Cars: 1
+```
+
+مثال4️⃣️:
+
+```python
+class BankAccount:
+    bank_name = "PyBank"  # متغیر استاتیک
+    accounts_count = 0  # متغیر استاتیک
+
+    def __init__(self, owner, balance=0):
+        if not BankAccount.is_valid_owner(owner):  # ← متد استاتیک
+            raise ValueError("Invalid owner name!")
+        self.owner = owner
+        self.balance = balance
+        BankAccount.accounts_count += 1
+
+    @staticmethod
+    def is_valid_owner(name):
+        return isinstance(name, str) and len(name.strip()) > 0
+
+    @classmethod
+    def get_bank_status(cls):  # ← متد کلاسی
+        return f"{cls.bank_name} has {cls.accounts_count} accounts."
+
+    @classmethod
+    def create_empty_account(cls, owner):
+        return cls(owner, 0)  # ← متد کلاسی برای ساخت سریع
+
+
+# --- استفاده ---
+acc1 = BankAccount.create_empty_account("Ali")
+print(BankAccount.get_bank_status())  # PyBank has 1 accounts.
+```
+
+مثال5️⃣️: ترکیب متغیر استاتیک + متد کلاسی + متد استاتیک
+
+```python
+class BankAccount:
+    bank_name = "PyBank"  # متغیر استاتیک
+    total_accounts = 0  # متغیر استاتیک برای شمارش
+
+    def __init__(self, owner, balance=0):
+        self.owner = owner
+        self.balance = balance
+        BankAccount.total_accounts += 1
+
+    @staticmethod
+    def is_valid_amount(amount):
+        return amount > 0
+
+    @classmethod
+    def get_bank_info(cls):
+        return f"{cls.bank_name} - Total Accounts: {cls.total_accounts}"
+
+
+# استفاده:
+acc1 = BankAccount("Ali", 1000)
+acc2 = BankAccount("Sara", 2000)
+
+print(BankAccount.is_valid_amount(50))  # True
+print(BankAccount.get_bank_info())  # PyBank - Total Accounts: 2
 ```
 
 # 8. 🅰️ File
