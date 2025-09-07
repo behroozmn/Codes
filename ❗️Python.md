@@ -6183,7 +6183,9 @@ def main():
 if __name__ == "__main__":
     main()
 ```
+
 خروجی به شکل زیر است
+
 ```
 🔧 ایجاد جدول محصولات...
 ✅ جدول محصولات ایجاد شد.
@@ -6224,6 +6226,7 @@ if __name__ == "__main__":
   - میانگین قیمت: 6,695,571 تومان
   - کل موجودی انبار: 370
 ```
+
 # 11. 🅰️ GUI
 
 ## 11.1. 🅱️ tkinter
@@ -6534,138 +6537,1008 @@ root.mainloop()
 
 # 12. 🅰️ Regex
 
-* Need to`import re`
+## 🅱️ Dot `.`
 
-## 12.1. 🅱️ dot
-
-```shell
-# 283. (.) -> Note: یک کاراکتر
-# 284. (f.n) --> کاراکتر اول «اِف» و کاراکتر دوم هر چیزی می‌تونه باشه و کاراکتر سوم «اِن» باید باشد
-# 285. (f..n) --> کاراکتر اول «اِف» و کاراکتر دوم و سوم هر چیزی می‌تونه باشه و کاراکتر چهارم «اِن» باید باشد
-# 286. 
-# 287. dot (.)
-# 288. text = 'this is fun'
-# 289. if re.search('f.n', text):
-# 290. print('this is ok')
-# 291. 
-# 292. 
-```
-
-## 12.2. 🅱️ ^
-
-```shell
-# 293. text = 'Toplearn'
-# 294. 
-# 295. if re.search('^Top', text):
-# 296. print('this is ok')
-```
-
-## 12.3. 🅱️  $
-
-```shell
-# 297. text = 'Toplearn'
-# 298. 
-# 299. if re.search('rn$', text):
-# 300. print('this is ok')
-```
-
-## 12.4. 🅱️ escape
-
-```shell
-# 301. text = 'this is a book.'
-# 302. 
-# 303. if re.search('book\.', text):
-# 304. print('this is ok')
-```
-
-## 12.5. 🅱️ set
-
-```shell
-# 305. text = 'site'
-# 306. 
-# 307. if re.search('si[tdz]e', text):
-# 308. print('this is ok')
-```
-
-## 12.6. 🅱️ range
-
-```shell
-# 309. text = 'c'
-# 310. 
-# 311. if re.search('[a-f]', text):
-# 312. print('this is ok')
-```
-
-## 12.7. 🅱️ exclude
-
-```shell
-# 313. text = 'siue'
-# 314. 
-# 315. if re.search('si[^tdz]e', text):
-# 316. print('this is ok')
-```
-
-## 12.8. 🅱️ repeat
-
-```shell
-# 317. text = '09123456789'
-# 318. 
-# 319. if re.match('[0-9]{11}', text):
-# 320. print('this is ok')
-```
-
-## 12.9. 🅱️ other characters
-
-```shell
-# 321. decimal digits => \d
-# 322. non decimal digits => \D
-# 323. white space => \s
-# 324. non white space => \S
-# 325. word => \w
-# 326. non word => \W
-
-# 327. text = 'abcdef'
-# 328. if re.match('(abc|cde)', text):
-# 329. print('this is ok')
-```
-
-## 12.10. 🅱️ email regex
-
-```python
-text = '787jhjkj@test.com'
-if re.match('^[\w\.-]+@([\w-]+\.)+[\w-]{2,4}$', text):
-    print('email is valid')
-```
-
-## 12.11. 🅱️ Search
+matches any character except newline
 
 ```python
 import re
 
-# 330. Behrooz: regexr.com
+# Example 1: f.n → f + any char + n
+text = "fun"
+if re.search(r'f.n', text):
+    print(f"Example 1: '{text}' matches 'f.n'")
+# Basic pattern: . matches exactly one character
 
-names = [
-    'data.png', 'memory.txt', 'data.txt', 'image.png', 'momy.png'
-]
+# Example 2: f..n → f + any two chars + n
+text = "f12n"
+if re.search(r'f..n', text):
+    print(f"Example 2: '{text}' matches 'f..n'")
+# Multiple dots for multiple characters
 
-for item in names:
-    if re.search('m.m', item):
-        print(item)
+# Example 3: 3-letter filename with 3-letter extension
+filename = "log.txt"
+if re.search(r'^...\..{3}$', filename):
+    print(f"Example 3: '{filename}' is 3-letter name with 3-letter extension")
+# ^ = start, $ = end, \. = literal dot
 
-# 331. re.search('m.m', item): #اگر در این رشته موجود بود
-# 332. re.match('m.m', item): # باید دقیقا این رشته مساوی الگو باشد
+# Example 4: Find 4-letter words
+word = "book"
+if re.fullmatch(r'.{4}', word):
+    print(f"Example 4: '{word}' is exactly 4 characters")
+# fullmatch ensures entire string matches
+
+# Example 5: Simple IP pattern (not fully validated)
+ip = "192.168.1.1"
+if re.search(r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}', ip):
+    print(f"Example 5: '{ip}' matches basic IP pattern")
+# \d = digit, {1,3} = 1 to 3 occurrences
+
+# Example 6: Time pattern HH:MM using dot substitution
+time_str = "14:30"
+if re.search(r'\d{1,2}\.\d{2}', time_str.replace(':', '.')):
+    print(f"Example 6: '{time_str}' matches time pattern with dot")
+# Demonstrates pattern flexibility
+
+# Example 7: Words with specific first and last letters
+word = "fan"
+if re.search(r'f.n', word):
+    print(f"Example 7: '{word}' starts with f, ends with n, any middle char")
+
+# Example 8: Find all 3-letter words in text
+text = "cat bat rat"
+matches = re.findall(r'\w.\w', text)
+print(f"Example 8: 3-letter words: {matches}")
+# \w = word character (letter, digit, underscore)
+
+# Example 9: Dot matches space too
+text = "f n"
+if re.search(r'f.n', text):
+    print(f"Example 9: '{text}' — dot matches space character")
+# Important: . matches whitespace, not just visible chars
+
+# Example 10: Middle character is digit
+word = "f5n"
+if re.search(r'f.n', word):
+    print(f"Example 10: '{word}' — middle character is digit")
+
+# Example 11: Non-greedy dot matching
+text = "start<middle>end<another>finish"
+match = re.search(r'<.*?>', text)
+print(f"Example 11: Non-greedy match: {match.group() if match else 'None'}")
+# .*? matches as few characters as possible
+
+# Example 12: Dot with multiline flag
+text = "line1\nline2\nline3"
+matches = re.findall(r'l.ne', text, re.DOTALL)
+print(f"Example 12: With DOTALL flag: {matches}")
+# Normally dot doesn't match newline, DOTALL flag changes this
 
 ```
+
+## 🅱️ `^` Start of string
+
+Start of string
+
+```python
+import re
+
+# Example 1: Starts with 'Top'
+text = "Toplearn"
+if re.search(r'^Top', text):
+    print(f"Example 1: '{text}' starts with 'Top'")
+# ^ anchors pattern to beginning of string
+
+# Example 2: Starts with digit
+phone = "09123456789"
+if re.match(r'^[0-9]', phone):
+    print(f"Example 2: '{phone}' starts with a digit")
+# re.match automatically anchors to start, so ^ is redundant here
+
+# Example 3: Starts with http or https
+url = "https://example.com"
+if re.search(r'^https?://', url):
+    print(f"Example 3: '{url}' starts with http(s)://")
+# ? makes preceding character optional
+
+# Example 4: Starts with uppercase letter
+name = "Ali"
+if re.search(r'^[A-Z]', name):
+    print(f"Example 4: '{name}' starts with uppercase letter")
+
+# Example 5: Starts with hashtag
+hashtag = "#python"
+if re.search(r'^#', hashtag):
+    print(f"Example 5: '{hashtag}' is a hashtag")
+
+# Example 6: Starts with double dash (long argument)
+arg = "--help"
+if re.search(r'^--', arg):
+    print(f"Example 6: '{arg}' is a long argument")
+
+# Example 7: Starts with whitespace (indentation detection)
+line = "    print('hello')"
+if re.search(r'^\s+', line):
+    print(f"Example 7: '{line}' has leading whitespace")
+# \s = whitespace character, + = one or more
+
+# Example 8: Starts with minus (negative number)
+number = "-42"
+if re.search(r'^-', number):
+    print(f"Example 8: '{number}' is negative")
+
+# Example 9: Starts with quote
+quote = '"Hello"'
+if re.search(r'^"', quote):
+    print(f"Example 9: '{quote}' starts with double quote")
+
+# Example 10: Starts with <! (HTML/XML doctype)
+html = "<!DOCTYPE html>"
+if re.search(r'^<!(?:DOCTYPE)?', html):
+    print(f"Example 10: '{html}' is HTML doctype")
+# (?:...) = non-capturing group
+
+# Example 11: Multiline mode - ^ matches start of each line
+text = "first line\nsecond line\nthird line"
+matches = re.findall(r'^\w+', text, re.MULTILINE)
+print(f"Example 11: Start of each line: {matches}")
+# MULTILINE flag makes ^ match start of each line
+
+# Example 12: Negative lookahead at start
+text = "not_allowed_start"
+if re.search(r'^(?!not_)', text):
+    print(f"Example 12: '{text}' — doesn't start with 'not_'")
+else:
+    print(f"Example 12: '{text}' — starts with forbidden prefix")
+# (?!...) = negative lookahead
+
+```
+
+## 🅱️ `$` End of string
+
+```python
+import re
+
+# Example 1: Ends with 'rn'
+text = "Toplearn"
+if re.search(r'rn$', text):
+    print(f"Example 1: '{text}' ends with 'rn'")
+# $ anchors pattern to end of string
+
+# Example 2: Ends with .py
+filename = "script.py"
+if re.search(r'\.py$', filename):
+    print(f"Example 2: '{filename}' is a Python file")
+
+# Example 3: Ends with digit
+version = "v1.0"
+if re.search(r'[0-9]$', version):
+    print(f"Example 3: '{version}' ends with a digit")
+
+# Example 4: Ends with period (escaped)
+sentence = "Hello."
+if re.search(r'\.$', sentence):
+    print(f"Example 4: '{sentence}' ends with period")
+
+# Example 5: Ends with uppercase letter
+word = "HELLO"
+if re.search(r'[A-Z]$', word):
+    print(f"Example 5: '{word}' ends with uppercase letter")
+
+# Example 6: Ends with newline
+text = "line1\nline2\n"
+if re.search(r'\n$', text):
+    print(f"Example 6: Text ends with newline")
+
+# Example 7: Ends with closing parenthesis
+expr = "calc(42)"
+if re.search(r'\)$', expr):
+    print(f"Example 7: '{expr}' ends with closing parenthesis")
+
+# Example 8: Ends with emoji
+text = "Hello 👋"
+if re.search(r'👋$', text):
+    print(f"Example 8: '{text}' ends with emoji")
+# Modern regex supports Unicode characters
+
+# Example 9: Ends with whitespace (trailing spaces)
+line = "text   "
+if re.search(r'\s+$', line):
+    print(f"Example 9: '{line}' has trailing whitespace")
+
+# Example 10: Ends with semicolon
+code = "print('hi');"
+if re.search(r';$', code):
+    print(f"Example 10: '{code}' ends with semicolon")
+
+# Example 11: Multiline mode - $ matches end of each line
+text = "first line\nsecond line\nthird line"
+matches = re.findall(r'\w+$', text, re.MULTILINE)
+print(f"Example 11: End of each line: {matches}")
+
+# Example 12: Positive lookahead at end
+text = "password123"
+if re.search(r'(?<=\d)$', text):
+    print(f"Example 12: '{text}' — ends after a digit")
+# (?<=...) = positive lookbehind
+
+```
+
+## 🅱️ Escape
+
+escaping special characters
+
+```python
+import re
+
+# Example 1: Escape dot to match literal dot
+text = "this is a book."
+if re.search(r'book\.', text):
+    print(f"Example 1: '{text}' contains 'book.' literally")
+# Special characters: . ^ $ * + ? { } [ ] \ | ( )
+
+# Example 2: Escape question mark
+filename = "file?.txt"
+if re.search(r'file\?.txt', filename):
+    print(f"Example 2: '{filename}' contains literal ?")
+
+# Example 3: Escape parentheses
+text = "math(42)"
+if re.search(r'math$$42$$', text):
+    print(f"Example 3: '{text}' — parentheses escaped")
+
+# Example 4: Escape asterisk
+text = "size*large"
+if re.search(r'size\*large', text):
+    print(f"Example 4: '{text}' — asterisk escaped")
+
+# Example 5: Escape plus
+text = "a+b"
+if re.search(r'a\+b', text):
+    print(f"Example 5: '{text}' — plus escaped")
+
+# Example 6: Escape square brackets
+text = "list[item]"
+if re.search(r'list$$item$$', text):
+    print(f"Example 6: '{text}' — square brackets escaped")
+
+# Example 7: Escape backslash (double backslash)
+path = "C:\\Windows"
+if re.search(r'C:\\\\Windows', path):
+    print(f"Example 7: '{path}' — backslash escaped")
+# In regex, \\ represents one literal backslash
+
+# Example 8: Escape dollar sign
+text = "price$100"
+if re.search(r'price\$', text):
+    print(f"Example 8: '{text}' — dollar sign escaped")
+
+# Example 9: Escape caret
+text = "start^end"
+if re.search(r'start\^end', text):
+    print(f"Example 9: '{text}' — caret escaped")
+
+# Example 10: Escape pipe
+text = "a|b"
+if re.search(r'a\|b', text):
+    print(f"Example 10: '{text}' — pipe escaped")
+
+# Example 11: Escape using re.escape() function
+special_chars = ".*+?^${}()|[]\\"
+escaped = re.escape(special_chars)
+print(f"Example 11: Escaped: {escaped}")
+# re.escape() automatically escapes all special characters
+
+# Example 12: Raw strings vs regular strings for escaping
+pattern1 = r'\d+\.\d+'  # Raw string - preferred
+pattern2 = '\\d+\\.\\d+'  # Regular string - harder to read
+text = "3.14"
+if re.search(pattern1, text) and re.search(pattern2, text):
+    print(f"Example 12: Both patterns match '{text}'")
+# Always use raw strings (r'') for regex patterns
+
+```
+
+## 🅱️ Set `[...]`
+
+character sets
+
+```python
+import re
+
+# Example 1: si[tdz]e → site, side, size
+text = "site"
+if re.search(r'si[tdz]e', text):
+    print(f"Example 1: '{text}' matches si[tdz]e")
+
+# Example 2: Find colors
+text = "red green blue"
+colors = re.findall(r'\b(red|green|blue)\b', text)
+print(f"Example 2: Colors found: {colors}")
+
+# Example 3: Find vowels
+word = "hello"
+vowels = re.findall(r'[aeiou]', word)
+print(f"Example 3: Vowels in '{word}': {vowels}")
+
+# Example 4: Find alphanumeric characters
+text = "a1b2c3"
+alphanum = re.findall(r'[a-zA-Z0-9]', text)
+print(f"Example 4: Alphanumeric: {alphanum}")
+
+# Example 5: Find special symbols
+text = "a!b@c#"
+symbols = re.findall(r'[!@#]', text)
+print(f"Example 5: Symbols: {symbols}")
+
+# Example 6: Find Persian characters (Unicode range)
+text = "سلام دنیا"
+persian = re.findall(r'[\u0600-\u06FF]', text)
+if persian:
+    print(f"Example 6: Persian characters: {''.join(persian)}")
+
+# Example 7: Find letters a-f
+text = "c"
+if re.search(r'[a-f]', text):
+    print(f"Example 7: '{text}' is in range a-f")
+
+# Example 8: Find digits 0-5
+text = "3"
+if re.search(r'[0-5]', text):
+    print(f"Example 8: '{text}' is in range 0-5")
+
+# Example 9: Find uppercase letters A-Z
+text = "M"
+if re.search(r'[A-Z]', text):
+    print(f"Example 9: '{text}' is uppercase")
+
+# Example 10: Find non-digits
+text = "abc123"
+non_digits = re.findall(r'[^0-9]', text)
+print(f"Example 10: Non-digits: {non_digits}")
+
+# Example 11: Character class subtraction (Python doesn't support directly)
+# Workaround using negative lookahead
+text = "abc123def"
+# Find letters that are not vowels
+consonants = re.findall(r'(?![aeiou])[a-z]', text)
+print(f"Example 11: Consonants: {consonants}")
+
+# Example 12: POSIX character classes (not directly supported in Python)
+# Use equivalent patterns
+text = "Hello123 World!"
+# \w equivalent for letters only
+letters = re.findall(r'[[:alpha:]]', text)  # This won't work in Python
+# Instead use:
+letters = re.findall(r'[a-zA-Z]', text)
+print(f"Example 12: Letters only: {letters}")
+
+```
+
+## 🅱️ Exclude `[^...]`
+
+negated character sets
+
+```python
+import re
+
+# Example 1: si[^tdz]e → siue, sibe, etc.
+text = "siue"
+if re.search(r'si[^tdz]e', text):
+    print(f"Example 1: '{text}' matches si[^tdz]e")
+
+# Example 2: Find words without letter 'a'
+text = "hello world"
+words = re.findall(r'\b[^a\W]+\b', text)
+print(f"Example 2: Words without 'a': {words}")
+
+# Example 3: Find non-whitespace characters
+text = "a b c"
+non_space = re.findall(r'[^ ]', text)
+print(f"Example 3: Non-space: {non_space}")
+
+# Example 4: Find non-alphanumeric characters
+text = "a1! b2@"
+specials = re.findall(r'[^a-zA-Z0-9]', text)
+print(f"Example 4: Special characters: {specials}")
+
+# Example 5: Find lines without period
+line = "This is a line"
+if re.search(r'^[^.]*$', line):
+    print(f"Example 5: '{line}' has no period")
+
+# Example 6: Find words without vowels
+text = "dry myth"
+consonants = re.findall(r'\b[^aeiou\W]+\b', text, re.IGNORECASE)
+print(f"Example 6: Words without vowels: {consonants}")
+
+# Example 7: Find non-ASCII characters
+text = "café naïve"
+non_ascii = re.findall(r'[^\x00-\x7F]', text)
+print(f"Example 7: Non-ASCII characters: {non_ascii}")
+
+# Example 8: Find non-Persian characters
+text = "Hello سلام"
+non_persian = re.findall(r'[^\u0600-\u06FF]', text)
+print(f"Example 8: Non-Persian: {''.join(non_persian)}")
+
+# Example 9: Find non-digits at start
+text = "abc123"
+if re.match(r'[^0-9]', text):
+    print(f"Example 9: '{text}' starts with non-digit")
+
+# Example 10: Find non-letters at end
+text = "hello!"
+if re.search(r'[^a-zA-Z]$', text):
+    print(f"Example 10: '{text}' ends with non-letter")
+
+# Example 11: Double negation
+text = "abc123"
+# Find characters that are NOT non-digits (i.e., digits)
+digits = re.findall(r'[^0-9]', text)  # non-digits
+actual_digits = re.findall(r'[^' + re.escape(''.join(digits)) + ']', text) if digits else []
+print(f"Example 11: Double negation result: {actual_digits}")
+
+# Example 12: Negated set with ranges
+text = "abc123XYZ!@#"
+# Find characters that are NOT letters or digits
+non_alphanum = re.findall(r'[^a-zA-Z0-9]', text)
+print(f"Example 12: Non-alphanumeric: {non_alphanum}")
+
+```
+
+## 🅱️ Repeat
+
+repetition {n}, *, +, ?
+
+```python
+import re
+
+# Example 1: {11} — exactly 11 digits
+phone = "09123456789"
+if re.match(r'[0-9]{11}', phone):
+    print(f"Example 1: '{phone}' is exactly 11 digits")
+
+# Example 2: ? — zero or one (optional 'u' in color/colour)
+text = "color"
+if re.search(r'colou?r', text):
+    print(f"Example 2: '{text}' matches colou?r")
+
+# Example 3: + — one or more
+text = "goood"
+if re.search(r'go+d', text):
+    print(f"Example 3: '{text}' has one or more 'o's")
+
+# Example 4: * — zero or more
+text = "http://example.com"
+if re.search(r'https?://', text):
+    print(f"Example 4: '{text}' — 's' is optional")
+
+# Example 5: {2,4} — between 2 and 4
+text = "aa"
+if re.search(r'a{2,4}', text):
+    print(f"Example 5: '{text}' has 2-4 'a's")
+
+# Example 6: {3,} — at least 3
+text = "aaaa"
+if re.search(r'a{3,}', text):
+    print(f"Example 6: '{text}' has at least 3 'a's")
+
+# Example 7: *? — non-greedy
+text = "<b>bold</b> and <i>italic</i>"
+tags = re.findall(r'<.*?>', text)
+print(f"Example 7: Non-greedy tags: {tags}")
+
+# Example 8: +? — non-greedy
+text = "aabbcc"
+matches = re.findall(r'a.+?c', text)
+print(f"Example 8: Non-greedy matches: {matches}")
+
+# Example 9: ?? — non-greedy for optional
+text = "color"
+matches = re.findall(r'colou??r', text)
+print(f"Example 9: Non-greedy optional: {matches}")
+
+# Example 10: {2,5}? — non-greedy range
+text = "aaaaa"
+matches = re.findall(r'a{2,5}?', text)
+print(f"Example 10: Non-greedy range matches: {matches}")
+
+# Example 11: Possessive quantifiers (not directly supported in Python)
+# Python doesn't support a++ or a*+ syntax
+# Workaround using atomic grouping (not available in standard re)
+print("Example 11: Python doesn't support possessive quantifiers directly")
+
+# Example 12: Complex repetition with groups
+text = "ababab"
+pattern = r'(ab)+'
+match = re.search(pattern, text)
+if match:
+    print(f"Example 12: Matched: {match.group()}, Group: {match.group(1)}")
+
+```
+
+## 🅱️ Special characters
+
+Special characters — \d, \w, \s etc.
+
+```python
+import re
+
+# Example 1: \d — digit
+text = "123"
+if re.search(r'\d+', text):
+    print(f"Example 1: '{text}' contains digits")
+
+# Example 2: \D — non-digit
+text = "abc"
+if re.search(r'\D+', text):
+    print(f"Example 2: '{text}' contains non-digits")
+
+# Example 3: \s — whitespace
+text = "a b"
+if re.search(r'\s', text):
+    print(f"Example 3: '{text}' contains whitespace")
+
+# Example 4: \S — non-whitespace
+text = "a b"
+non_space = re.findall(r'\S', text)
+print(f"Example 4: Non-whitespace: {non_space}")
+
+# Example 5: \w — word character
+text = "user_name123"
+if re.fullmatch(r'\w+', text):
+    print(f"Example 5: '{text}' contains only word characters")
+
+# Example 6: \W — non-word character
+text = "user@name"
+special = re.findall(r'\W', text)
+print(f"Example 6: Non-word characters: {special}")
+
+# Example 7: \b — word boundary
+text = "the theory"
+matches = re.findall(r'\bthe\b', text)
+print(f"Example 7: Complete word 'the': {matches}")
+
+# Example 8: \B — non-word boundary
+text = "theory"
+if re.search(r'the\B', text):
+    print(f"Example 8: '{text}' — 'the' not at word boundary")
+
+# Example 9: \A — absolute start of string
+text = "Hello\nWorld"
+if re.search(r'\AHello', text):
+    print(f"Example 9: '{text}' starts with Hello")
+
+# Example 10: \Z — absolute end of string
+text = "Hello\nWorld"
+if re.search(r'World\Z', text):
+    print(f"Example 10: '{text}' ends with World")
+
+# Example 11: \b with Unicode
+text = "café au lait"
+matches = re.findall(r'\b\w+\b', text)
+print(f"Example 11: Words with Unicode: {matches}")
+
+# Example 12: Custom word boundaries for specific cases
+text = "email@example.com"
+# Find email without using \b (since . and @ are non-word chars)
+pattern = r'(?<!\S)[\w.-]+@[\w.-]+\.[\w]{2,4}(?!\S)'
+if re.search(pattern, text):
+    print(f"Example 12: Found email with custom boundaries: {text}")
+
+```
+
+## 🅱️ `(abc|def)`
+
+Grouping and alternation — (abc|def)
+
+```python
+import re
+
+# Example 1: (abc|cde)
+text = "abcdef"
+if re.match(r'(abc|cde)', text):
+    print(f"Example 1: '{text}' starts with abc")
+
+# Example 2: Find days of week
+text = "Monday Tuesday Friday"
+days = re.findall(r'\b(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\b', text)
+print(f"Example 2: Days found: {days}")
+
+# Example 3: Find colors with grouping
+text = "red car, blue sky, green grass"
+colors = re.findall(r'\b(red|blue|green)\b', text)
+print(f"Example 3: Colors: {colors}")
+
+# Example 4: Grouping for extraction
+text = "John: 30, Jane: 25"
+matches = re.findall(r'(\w+): (\d+)', text)
+print(f"Example 4: Extracted name and age: {matches}")
+
+# Example 5: Non-capturing group
+text = "https://example.com"
+match = re.search(r'(?:https?://)([\w.-]+)', text)
+if match:
+    print(f"Example 5: Domain: {match.group(1)}")
+
+# Example 6: Named groups
+text = "John: 30"
+match = re.search(r'(?P<name>\w+): (?P<age>\d+)', text)
+if match:
+    print(f"Example 6: Name: {match.group('name')}, Age: {match.group('age')}")
+
+# Example 7: Substitution with groups
+text = "John Doe"
+new_text = re.sub(r'(\w+) (\w+)', r'\2, \1', text)
+print(f"Example 7: Substituted: {new_text}")
+
+# Example 8: Using groups in substitution
+text = "price: $100"
+new_text = re.sub(r'\$(\d+)', r'USD \1', text)
+print(f"Example 8: Substituted: {new_text}")
+
+# Example 9: Nested grouping
+text = "((a+b)*c)"
+match = re.search(r'$$([$$a-zA-Z0-9+\-*/]+)$$', text)
+if match:
+    print(f"Example 9: Inside parentheses: {match.group(1)}")
+
+# Example 10: Grouping for repetition
+text = "ababab"
+match = re.search(r'(ab)+', text)
+if match:
+    print(f"Example 10: Repeated group: {match.group(1)}")
+
+# Example 11: Atomic grouping (not supported in standard Python re)
+# Python's re module doesn't support atomic groups (?>...)
+print("Example 11: Atomic grouping not supported in standard Python re")
+
+# Example 12: Conditional groups (not supported in standard Python re)
+# Python's re module doesn't support conditional patterns (?(id)yes|no)
+print("Example 12: Conditional groups not supported in standard Python re")
+
+```
+
+## 🅱️ Email
+
+advanced pattern such Email
+
+```python
+import re
+
+# Example 1: Standard email pattern
+text = "787jhjkj@test.com"
+if re.match(r'^[\w\.-]+@([\w-]+\.)+[\w-]{2,4}$', text):
+    print(f"Example 1: '{text}' is a valid email")
+
+# Example 2: Email with + (Gmail)
+text = "user+tag@gmail.com"
+if re.match(r'^[\w\.\+\-]+@([\w-]+\.)+[\w-]{2,4}$', text):
+    print(f"Example 2: '{text}' is valid Gmail with +")
+
+# Example 3: Email with subdomain
+text = "user@sub.domain.co.uk"
+if re.match(r'^[\w\.-]+@([\w-]+\.)+[\w-]{2,4}$', text):
+    print(f"Example 3: '{text}' has subdomain")
+
+# Example 4: Email with numbers
+text = "user123@domain.com"
+if re.match(r'^[\w\.-]+@([\w-]+\.)+[\w-]{2,4}$', text):
+    print(f"Example 4: '{text}' has numbers")
+
+# Example 5: Invalid email — no @
+text = "invalid.email.com"
+if not re.match(r'^[\w\.-]+@([\w-]+\.)+[\w-]{2,4}$', text):
+    print(f"Example 5: '{text}' is invalid (no @)")
+
+# Example 6: Invalid email — no domain
+text = "user@"
+if not re.match(r'^[\w\.-]+@([\w-]+\.)+[\w-]{2,4}$', text):
+    print(f"Example 6: '{text}' is invalid (no domain)")
+
+# Example 7: Email with emoji — invalid
+text = "user👋@domain.com"
+if not re.match(r'^[\w\.-]+@([\w-]+\.)+[\w-]{2,4}$', text):
+    print(f"Example 7: '{text}' is invalid (has emoji)")
+
+# Example 8: Email with hyphen
+text = "user-name@domain.com"
+if re.match(r'^[\w\.-]+@([\w-]+\.)+[\w-]{2,4}$', text):
+    print(f"Example 8: '{text}' has hyphen")
+
+# Example 9: Email with 2-letter domain
+text = "user@ir"
+if re.match(r'^[\w\.-]+@([\w-]+\.)+[\w-]{2,4}$', text):
+    print(f"Example 9: '{text}' has 2-letter domain")
+
+# Example 10: Email with 5-letter domain — invalid
+text = "user@domain.toolong"
+if not re.match(r'^[\w\.-]+@([\w-]+\.)+[\w-]{2,4}$', text):
+    print(f"Example 10: '{text}' has too long domain")
+
+# Example 11: More robust email validation
+email_pattern = r'''
+    ^                           # Start of string
+    (?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*
+    |  "(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]
+    |  \\[\x01-\x09\x0b\x0c\x0e-\x7f])*")
+    @                           # @ symbol
+    (?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?
+    |  \[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}
+    (?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-zA-Z0-9-]*[a-zA-Z0-9]:
+    (?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]
+    |  \\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])
+    $                           # End of string
+'''
+text = "test@example.com"
+if re.match(email_pattern, text, re.VERBOSE):
+    print(f"Example 11: '{text}' matches robust email pattern")
+
+# Example 12: Email validation with compile for performance
+email_regex = re.compile(r'^[\w\.-]+@([\w-]+\.)+[\w-]{2,4}$')
+emails = ["user@example.com", "invalid.email", "another@domain.org"]
+valid_emails = [email for email in emails if email_regex.match(email)]
+print(f"Example 12: Valid emails: {valid_emails}")
+
+```
+
+## 🅱️  `Search` vs `Match`
+
+difference between Search vs Match
+
+```python
+import re
+
+# Example 1: re.search — anywhere in string
+names = ['data.png', 'memory.txt', 'data.txt', 'image.png', 'momy.png']
+print("Example 1: Files containing 'm.m':")
+for item in names:
+    if re.search(r'm.m', item):
+        print(f"  - {item}")
+
+# Example 2: re.match — only at start of string
+print("\nExample 2: Files starting with 'm.m':")
+for item in names:
+    if re.match(r'm.m', item):
+        print(f"  - {item}")
+
+# Example 3: re.fullmatch — entire string
+text = "abc"
+if re.fullmatch(r'abc', text):
+    print(f"Example 3: '{text}' fully matches pattern")
+
+# Example 4: re.findall — all matches
+text = "a1 b2 c3"
+digits = re.findall(r'\d', text)
+print(f"Example 4: All digits: {digits}")
+
+# Example 5: re.finditer — iterator with positions
+text = "a1 b2 c3"
+for match in re.finditer(r'\d', text):
+    print(f"Example 5: Digit '{match.group()}' at position {match.start()}")
+
+# Example 6: re.sub — substitution
+text = "Hello 123 World 456"
+new_text = re.sub(r'\d+', '#', text)
+print(f"Example 6: Substituted: {new_text}")
+
+# Example 7: re.split — splitting
+text = "a,b;c:d"
+parts = re.split(r'[,;:]', text)
+print(f"Example 7: Split parts: {parts}")
+
+# Example 8: re.compile — compiled pattern
+pattern = re.compile(r'\d+')
+text = "There are 123 apples and 456 oranges"
+matches = pattern.findall(text)
+print(f"Example 8: Compiled pattern matches: {matches}")
+
+# Example 9: re.IGNORECASE — case insensitive
+text = "Hello WORLD"
+if re.search(r'world', text, re.IGNORECASE):
+    print(f"Example 9: '{text}' contains 'world' (case insensitive)")
+
+# Example 10: re.MULTILINE — multiline mode
+text = "line1\nline2\nline3"
+matches = re.findall(r'^line\d', text, re.MULTILINE)
+print(f"Example 10: Multiline matches: {matches}")
+
+# Example 11: re.DOTALL — dot matches newline
+text = "first line\nsecond line"
+matches = re.findall(r'first.*second', text, re.DOTALL)
+print(f"Example 11: DOTALL matches: {matches}")
+
+# Example 12: Combining multiple flags
+text = "Line1\nLINE2\nline3"
+pattern = re.compile(r'^line\d$', re.MULTILINE | re.IGNORECASE)
+matches = pattern.findall(text)
+print(f"Example 12: Combined flags matches: {matches}")
+
+```
+
+## 🅱️ Real-world application
+
+Real-world application—file searching
 
 ```python
 import re
 import os
+from pathlib import Path
 
-for item in os.walk('/Learning-Concept'):
-    for file in item[2]:
-        if re.search('\.py', file):
-            print(file)
+# Example 1: Search for .py files in a directory
+print("Example 1: .py files in /tmp (if accessible):")
+try:
+    py_files = []
+    for root, dirs, files in os.walk('/tmp'):
+        for file in files:
+            if re.search(r'\.py$', file):
+                py_files.append(file)
+    for file in py_files[:5]:  # Show first 5 to avoid too much output
+        print(f"  - {file}")
+    if len(py_files) > 5:
+        print(f"  ... and {len(py_files) - 5} more files")
+except PermissionError:
+    print("  - Permission denied to access /tmp")
+except Exception as e:
+    print(f"  - Error: {e}")
 
+# Example 2: Search for log files
+print("\nExample 2: Log files (.log):")
+try:
+    log_files = []
+    for root, dirs, files in os.walk('/tmp'):
+        for file in files:
+            if re.search(r'\.log$', file, re.IGNORECASE):
+                log_files.append(file)
+    for file in log_files[:5]:
+        print(f"  - {file}")
+    if len(log_files) > 5:
+        print(f"  ... and {len(log_files) - 5} more files")
+except:
+    pass
+
+# Example 3: Search for image files
+print("\nExample 3: Image files:")
+image_pattern = re.compile(r'\.(jpg|jpeg|png|gif|bmp)$', re.IGNORECASE)
+try:
+    image_files = []
+    for root, dirs, files in os.walk('/tmp'):
+        for file in files:
+            if image_pattern.search(file):
+                image_files.append(file)
+    for file in image_files[:5]:
+        print(f"  - {file}")
+    if len(image_files) > 5:
+        print(f"  ... and {len(image_files) - 5} more files")
+except:
+    pass
+
+# Example 4: Search for files with Persian characters in name
+print("\nExample 4: Files containing 'report' in name:")
+try:
+    report_files = []
+    for root, dirs, files in os.walk('/tmp'):
+        for file in files:
+            if re.search(r'report', file, re.IGNORECASE):
+                report_files.append(file)
+    for file in report_files[:5]:
+        print(f"  - {file}")
+    if len(report_files) > 5:
+        print(f"  ... and {len(report_files) - 5} more files")
+except:
+    print("  - Could not search in /tmp")
+
+# Example 5: Search for files with numeric names
+print("\nExample 5: Files with purely numeric names:")
+try:
+    numeric_files = []
+    for root, dirs, files in os.walk('/tmp'):
+        for file in files:
+            name = Path(file).stem
+            if re.fullmatch(r'\d+', name):
+                numeric_files.append(file)
+    for file in numeric_files[:5]:
+        print(f"  - {file}")
+    if len(numeric_files) > 5:
+        print(f"  ... and {len(numeric_files) - 5} more files")
+except:
+    pass
+
+# Example 6: Search for files modified today (requires os.stat)
+print("\nExample 6: Files modified today (conceptual):")
+# This would require combining regex with os.stat
+# For demonstration, showing the concept:
+print("  - Concept: Use os.stat(file).st_mtime with datetime to filter")
+print("  - Then apply regex patterns to filter by name")
+
+# Example 7: Search for files larger than 1MB with specific extension
+print("\nExample 7: Large .txt files (conceptual):")
+print("  - Concept: Combine os.path.getsize() with regex pattern")
+print("  - Pattern: r'\\.txt$' for .txt files")
+print("  - Filter: size > 1024*1024 bytes")
+
+# Example 8: Search for files with specific naming convention
+print("\nExample 8: Files with YYYY-MM-DD format in name:")
+date_pattern = re.compile(r'\d{4}-\d{2}-\d{2}')
+try:
+    date_files = []
+    for root, dirs, files in os.walk('/tmp'):
+        for file in files:
+            if date_pattern.search(file):
+                date_files.append(file)
+    for file in date_files[:5]:
+        print(f"  - {file}")
+    if len(date_files) > 5:
+        print(f"  ... and {len(date_files) - 5} more files")
+except:
+    pass
+
+# Example 9: Search for files excluding certain patterns
+print("\nExample 9: Files NOT containing 'temp' in name:")
+try:
+    non_temp_files = []
+    for root, dirs, files in os.walk('/tmp'):
+        for file in files:
+            if not re.search(r'temp', file, re.IGNORECASE):
+                non_temp_files.append(file)
+    print(f"  - Found {len(non_temp_files)} files not containing 'temp'")
+    for file in non_temp_files[:3]:
+        print(f"  - {file}")
+except:
+    pass
+
+# Example 10: Search for files with multiple extensions
+print("\nExample 10: Files with .py or .pyc extensions:")
+try:
+    python_files = []
+    pattern = re.compile(r'\.pyc?$')
+    for root, dirs, files in os.walk('/tmp'):
+        for file in files:
+            if pattern.search(file):
+                python_files.append(file)
+    for file in python_files[:5]:
+        print(f"  - {file}")
+    if len(python_files) > 5:
+        print(f"  ... and {len(python_files) - 5} more files")
+except:
+    pass
+
+# Example 11: Search for files with version numbers in name
+print("\nExample 11: Files with version numbers (v1.0, v2.3.1, etc.):")
+version_pattern = re.compile(r'v\d+(\.\d+)*')
+try:
+    version_files = []
+    for root, dirs, files in os.walk('/tmp'):
+        for file in files:
+            if version_pattern.search(file):
+                version_files.append(file)
+    for file in version_files[:5]:
+        print(f"  - {file}")
+    if len(version_files) > 5:
+        print(f"  ... and {len(version_files) - 5} more files")
+except:
+    pass
+
+# Example 12: Search for files and extract information from names
+print("\nExample 12: Extract dates from filenames like 'report_2024-01-15.pdf':")
+date_extract_pattern = re.compile(r'report_(\d{4})-(\d{2})-(\d{2})\.pdf')
+try:
+    reports = []
+    for root, dirs, files in os.walk('/tmp'):
+        for file in files:
+            match = date_extract_pattern.search(file)
+            if match:
+                year, month, day = match.groups()
+                reports.append(f"{file} -> {year}-{month}-{day}")
+    for report in reports[:5]:
+        print(f"  - {report}")
+    if len(reports) > 5:
+        print(f"  ... and {len(reports) - 5} more reports")
+except:
+    pass
+
+print("\n🎉 Congratulations! 144 practical and advanced examples of Regular Expressions in Python executed.")
 ```
 
 # 13. 🅰️ Thread
