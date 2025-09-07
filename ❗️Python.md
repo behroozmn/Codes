@@ -6537,7 +6537,7 @@ root.mainloop()
 
 # 12. 🅰️ Regex
 
-## 🅱️ Dot `.`
+## 12.1. 🅱️ Dot `.`
 
 matches any character except newline
 
@@ -6616,7 +6616,7 @@ print(f"Example 12: With DOTALL flag: {matches}")
 
 ```
 
-## 🅱️ `^` Start of string
+## 12.2. 🅱️ `^` Start of string
 
 Start of string
 
@@ -6694,7 +6694,7 @@ else:
 
 ```
 
-## 🅱️ `$` End of string
+## 12.3. 🅱️ `$` End of string
 
 ```python
 import re
@@ -6764,7 +6764,7 @@ if re.search(r'(?<=\d)$', text):
 
 ```
 
-## 🅱️ Escape
+## 12.4. 🅱️ Escape
 
 escaping special characters
 
@@ -6839,7 +6839,7 @@ if re.search(pattern1, text) and re.search(pattern2, text):
 
 ```
 
-## 🅱️ Set `[...]`
+## 12.5. 🅱️ Set `[...]`
 
 character sets
 
@@ -6915,7 +6915,7 @@ print(f"Example 12: Letters only: {letters}")
 
 ```
 
-## 🅱️ Exclude `[^...]`
+## 12.6. 🅱️ Exclude `[^...]`
 
 negated character sets
 
@@ -6987,7 +6987,7 @@ print(f"Example 12: Non-alphanumeric: {non_alphanum}")
 
 ```
 
-## 🅱️ Repeat
+## 12.7. 🅱️ Repeat
 
 repetition {n}, *, +, ?
 
@@ -7058,7 +7058,7 @@ if match:
 
 ```
 
-## 🅱️ Special characters
+## 12.8. 🅱️ Special characters
 
 Special characters — \d, \w, \s etc.
 
@@ -7129,7 +7129,7 @@ if re.search(pattern, text):
 
 ```
 
-## 🅱️ `(abc|def)`
+## 12.9. 🅱️ `(abc|def)`
 
 Grouping and alternation — (abc|def)
 
@@ -7200,7 +7200,7 @@ print("Example 12: Conditional groups not supported in standard Python re")
 
 ```
 
-## 🅱️ Email
+## 12.10. 🅱️ Email
 
 advanced pattern such Email
 
@@ -7283,7 +7283,7 @@ print(f"Example 12: Valid emails: {valid_emails}")
 
 ```
 
-## 🅱️  `Search` vs `Match`
+## 12.11. 🅱️  `Search` vs `Match`
 
 difference between Search vs Match
 
@@ -7357,7 +7357,7 @@ print(f"Example 12: Combined flags matches: {matches}")
 
 ```
 
-## 🅱️ Real-world application
+## 12.12. 🅱️ Real-world application
 
 Real-world application—file searching
 
