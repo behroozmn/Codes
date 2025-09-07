@@ -5202,7 +5202,7 @@ import glob
 python_files = glob.glob("**/*.py", recursive=True)
 for f in python_files:
     print(f)
-    
+
 # Example1️⃣️4️⃣️:
 # Example1️⃣️5️⃣️:
 # Example1️⃣️6️⃣️:
@@ -5341,11 +5341,11 @@ if os.path.exists("/etc/passwd"):
 
 # Example1️⃣️1️⃣️: حذف فایل
 output_path = Path("/tmp/salam.txt")
-os.unlink(output_path)  
+os.unlink(output_path)
 print(f"🗑️ Deleted {output_path} using os.unlink()")
 
 # Example1️⃣️2️⃣️: ایجاد یک درخت پوشه (حتی اگر والدین وجود نداشته باشند)
-os.makedirs("/tmp/demo/subdir1/subdir2", exist_ok=True) # اگر قبلا موجود بود خطا ندهد و عبور کند
+os.makedirs("/tmp/demo/subdir1/subdir2", exist_ok=True)  # اگر قبلا موجود بود خطا ندهد و عبور کند
 print("✅ Created nested directories with os.makedirs()")
 
 # Example1️⃣️3️⃣️: حذف یک پوشه خالی os.rmdir()
@@ -5359,8 +5359,6 @@ for root, dirs, files in os.walk('/tmp'):
     print(f"\n📁 Root: {root}")
     print(f"📂 Directories: {dirs}")
     print(f"📄 Files: {files}")
-
-
 
 # Example1️⃣️5️⃣️: WALK with topdown=False (bottom-up)
 for root, dirs, files in os.walk('/tmp', topdown=False):
@@ -5392,10 +5390,11 @@ with open(source_file, 'r') as f:
     print("✅ Read via open (for shutil context):")
     print(f.read())
 
-# Example2️⃣️: نوشتن — shutil write ندارد → از open یا pathlib استفاده کنید
-# (قبلاً نوشتیم)
+# Example2️⃣️: write
+# ماژول shutil نوشتن ندارد
 
-# Example3️⃣️:الحاق — shutil append ندارد → از open با mode='a'
+# Example3️⃣️: append
+# ماژول shutil الحاق ندارد
 
 # Example4️⃣️: جستجو — shutil search ندارد → با open + خواندن
 
@@ -5439,106 +5438,792 @@ print(f"💾 Disk Usage — Total: {total // (2 ** 30)} GB, Free: {free // (2 **
 
 # 9. 🅰️ JSON
 
+* به صورت پیش‌فرض، `json.dumps()` تمام کاراکترهای غیر `ASCII` (مثل فارسی، عربی، چینی) را به `\uXXXX` تبدیل می‌کند.
+* با` ensure_ascii=False`، این تبدیل انجام نمی‌شود و کاراکترهای اصلی (مثلاً "علی") در خروجی باقی می‌مانند
+* `encode('utf-8').decode()`: در برخی محیط‌های قدیمی یا وب (مثل بعضی سرورها یا مرورگرها) ممکن است نیاز باشد رشته را به بایت‌های UTF-8 تبدیل و دوباره به رشته برگردانید تا کدگذاری به درستی اعمال شود.
+* مثال از متن
+
+```python
+# در پایتون مدرن و فایل‌های محلی معمولاً نیازی نیست — اما اگر مشکل داشتید
+text = "سلام دنیا"
+safe_text = text.encode('utf-8').decode('utf-8')  # فقط برای اطمینان از کدگذاری
+```
+
+* در JSON، کافی است از ensure_ascii=False و encoding='utf-8' استفاده کنید — نیازی به encode().decode() نیست
+
+| موقعیت       | راه‌حل                                                                       |
+|--------------|------------------------------------------------------------------------------|
+| نوشتن JSON   | `json.dumps(data, ensure_ascii=False)` + `file.write(..., encoding='utf-8')` |
+| خواندن JSON  | `open(file, encoding='utf-8')` + `json.load(f)`                              |
+| چاپ در کنسول | `print(json.dumps(data, ensure_ascii=False, indent=2))`                      |
+| API / وب     | همیشه هدر `Content-Type: application/json; charset=utf-8` را تنظیم کنید      |
+| دیتابیس      | مطمئن شوید ستون‌ها از `utf8mb4` (در MySQL) یا معادل پشتیبانی می‌کنند         |
+
 ```python
 import json
-from json2html import *
+import os
+from pathlib import Path
+from datetime import datetime
+from typing import Any
+
+# ────────────────────────────────────────────────────────
+# ✅ ۱. تعریف مسیرهای فایل‌های JSON — با پشتیبانی UTF-8
+# ────────────────────────────────────────────────────────
+input_json = Path("/tmp/data_fa.json")  # تغییر نام برای شفافیت
+output_json = Path("/tmp/output_fa.json")
+
+# 🌍 داده نمونه با متن فارسی — نام، شهر و پیام‌ها به فارسی
+sample_data = {
+    "شرکت": "فناوران پیشرو",  # Persian key & value
+    "تاسیس": 1394,  # Persian year
+    "کارمندان": [
+        {"نام": "علی", "سن": 30, "شهر": "تهران", "فعال": True},
+        {"نام": "سارا", "سن": 27, "شهر": "شیراز", "فعال": True},
+        {"نام": "رضا", "سن": 35, "شهر": "مشهد", "فعال": False}
+    ],
+    "متادیتا": {
+        "آخرین_به‌روزرسانی": "۱۴۰۳-۰۳-۱۲",  # Persian date string
+        "نسخه": 1.1
+    },
+    "پیام_سیستم": "✅ داده‌های اولیه با موفقیت بارگذاری شدند."
+}
+
+# ────────────────────────────────────────────────────────
+# ✅ ۲. نوشتن JSON در فایل — با ensure_ascii=False برای پشتیبانی فارسی
+# ────────────────────────────────────────────────────────
+print("📝 در حال نوشتن داده‌های نمونه به فایل ورودی...")
+# ⚠️ نکته: `ensure_ascii=False` باعث می‌شود کاراکترهای غیر-ASCII (مثل فارسی) به صورت اصلی ذخیره شوند
+# ⚠️ نکته: `encoding='utf-8'` برای ذخیره صحیح در فایل ضروری است
+input_json.write_text(
+    json.dumps(sample_data, indent=2, ensure_ascii=False),
+    encoding='utf-8'
+)
+print(f"✅ داده‌ها در {input_json} ذخیره شدند.")
+
+# 🧪 تست: خواندن فایل و چاپ محتوا برای اطمینان از صحت فارسی
+print("\n🧪 تست خواندن فایل نوشته شده (برای اطمینان از صحت فارسی):")
+print(input_json.read_text(encoding='utf-8')[:200] + "...")
+
+# ────────────────────────────────────────────────────────
+# ✅ ۳. خواندن JSON از فایل — با encoding='utf-8'
+# ────────────────────────────────────────────────────────
+print("\n📂 در حال خواندن JSON از فایل...")
+with open(input_json, 'r', encoding='utf-8') as f:
+    loaded_data = json.load(f)
+
+print("✅ داده‌ها با موفقیت بارگذاری شدند:")
+# ⚠️ دوباره ensure_ascii=False برای چاپ صحیح فارسی در کنسول
+print(json.dumps(loaded_data, indent=2, ensure_ascii=False))
+
+# ────────────────────────────────────────────────────────
+# ✅ ۴. جستجو (Search) — پیدا کردن کارمند با نام فارسی
+# ────────────────────────────────────────────────────────
+target_name = "سارا"  # نام فارسی
+found = None
+for emp in loaded_data["کارمندان"]:
+    if emp["نام"] == target_name:
+        found = emp
+        break
+
+if found:
+    print(f"\n🔍 کارمند پیدا شد: {json.dumps(found, ensure_ascii=False)}")
+else:
+    print(f"\n❌ کارمند '{target_name}' یافت نشد.")
+
+# ────────────────────────────────────────────────────────
+# ✅ ۵. به‌روزرسانی (Update) — تغییر سن و افزودن تاریخ به‌روزرسانی
+# ────────────────────────────────────────────────────────
+for emp in loaded_data["کارمندان"]:
+    if emp["نام"] == "علی":
+        emp["سن"] = 31
+        emp["آخرین_تغییر"] = str(datetime.now().date())
+        print(f"🔄 سن علی به {emp['سن']} به‌روزرسانی شد.")
+
+# ────────────────────────────────────────────────────────
+# ✅ ۶. اضافه کردن (Append) — افزودن کارمند جدید با نام فارسی
+# ────────────────────────────────────────────────────────
+new_employee = {
+    "نام": "نرگس",
+    "سن": 29,
+    "شهر": "اصفهان",
+    "فعال": True
+}
+loaded_data["کارمندان"].append(new_employee)
+print(f"➕ کارمند جدید اضافه شد: {new_employee['نام']}")
+
+# ────────────────────────────────────────────────────────
+# ✅ ۷. حذف (Delete) — حذف کارمندان غیرفعال
+# ────────────────────────────────────────────────────────
+before_count = len(loaded_data["کارمندان"])
+loaded_data["کارمندان"] = [emp for emp in loaded_data["کارمندان"] if emp["فعال"]]
+after_count = len(loaded_data["کارمندان"])
+print(f"🗑️ {before_count - after_count} کارمند غیرفعال حذف شدند.")
+
+# ────────────────────────────────────────────────────────
+# ✅ ۸. نوشتن با فرمت زیبا — ensure_ascii=False برای حفظ فارسی
+# ────────────────────────────────────────────────────────
+print(f"\n💾 در حال نوشتن داده‌های به‌روز شده در {output_json}...")
+with open(output_json, 'w', encoding='utf-8') as f:
+    json.dump(loaded_data, f, indent=4, ensure_ascii=False, sort_keys=False)
+
+print("✅ فایل JSON با فرمت زیبا و پشتیبانی فارسی ذخیره شد.")
+
+# ────────────────────────────────────────────────────────
+# ✅ ۹. خواندن و پارس کردن رشته JSON فارسی (String Parsing)
+# ────────────────────────────────────────────────────────
+json_string_fa = '''
+{
+    "وضعیت": "موفق",
+    "پیام": "✅ پردازش داده‌ها با موفقیت انجام شد.",
+    "تعداد": 42
+}
+'''
+
+# ⚠️ حتی برای رشته‌های JSON فارسی هم باید ensure_ascii=False استفاده کنیم
+parsed_from_string = json.loads(json_string_fa)
+print(f"\n💬 پیام پردازش: {parsed_from_string['پیام']} (تعداد: {parsed_from_string['تعداد']})")
+
+# ────────────────────────────────────────────────────────
+# ✅ ۱۰. مدیریت خطا — حتی برای JSON فارسی
+# ────────────────────────────────────────────────────────
+invalid_json_fa = '{"نام": "علی", "سن": }'  # ❌ ناقص — حتی با فارسی!
+
+try:
+    broken = json.loads(invalid_json_fa)
+except json.JSONDecodeError as e:
+    print(f"\n❌ خطای پارس JSON: {e.msg} در خط {e.lineno}، ستون {e.colno}")
 
 
-def createJson(obj):
-    # obj = {
-    #             "word": "behroooz",
-    #             "type": "behrooz"
-    #         }
-    jsonStr = json.dumps(obj, ensure_ascii=False).encode('utf-8').decode()
-    print(jsonStr)
+# ────────────────────────────────────────────────────────
+# ✅ ۱۱. اعتبارسنجی ساختار — برای داده‌های فارسی
+# ────────────────────────────────────────────────────────
+def validate_employee_fa(emp: dict) -> bool:
+    # کلیدهای فارسی را چک می‌کنیم
+    required_keys = {"نام", "سن", "شهر", "فعال"}
+    return required_keys.issubset(emp.keys()) and isinstance(emp["سن"], int)
 
 
-def importFromFile(filename):
-    f = open('/tmp/json.json')
-    jData = json.load(f)
-    return jData
+print("\n✅ اعتبارسنجی کارمندان:")
+for emp in loaded_data["کارمندان"]:
+    is_valid = validate_employee_fa(emp)
+    status = "✅ معتبر" if is_valid else "❌ نامعتبر"
+    print(f"   {emp['نام']}: {status}")
 
 
-def EditJson(filename):
-    f = open('/tmp/Quran/Input.json')
-    jData = json.load(f)
-    # print(jData)
+# ────────────────────────────────────────────────────────
+# ✅ ۱۲. تبدیل شیء سفارشی به JSON — با پشتیبانی فارسی
+# ────────────────────────────────────────────────────────
+class UserFa:
+    def __init__(self, name: str, signup_date: datetime):
+        self.نام = name  # Persian attribute name!
+        self.تاریخ_عضویت = signup_date
 
-    for x in range(0, 6236):
-        if jData[x]['SuraNumber'] == "003" and jData[x]['VerseNumber'] == "003":
-            jData[x]['Farsi'] = "NewData"
 
-    json_str = json.dumps(jData, ensure_ascii=False).encode('utf-8').decode()
-    with open('/tmp/Quran/Output.json', 'w') as ff:
-        ff.write(json_str)
-    f.close()
-    ff.close()
+class DateTimeEncoderFa(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, datetime):
+            return obj.isoformat()
+        # برای پشتیبانی از کلیدهای فارسی در خروجی JSON
+        return super().default(obj)
+
+
+user_fa = UserFa("محمد", datetime(2024, 5, 20))
+# ⚠️ ensure_ascii=False برای نمایش صحیح "محمد" در خروجی
+user_json_fa = json.dumps(
+    user_fa.__dict__,
+    cls=DateTimeEncoderFa,
+    indent=2,
+    ensure_ascii=False
+)
+print(f"\n👤 تبدیل شیء سفارشی به JSON (با نام فارسی):\n{user_json_fa}")
+
+
+# ────────────────────────────────────────────────────────
+# ✅ ۱۳. تبدیل JSON به شیء سفارشی — با کلیدهای فارسی
+# ────────────────────────────────────────────────────────
+def user_decoder_fa(dct):
+    # چک می‌کنیم که کلید فارسی وجود دارد
+    if 'تاریخ_عضویت' in dct:
+        dct['تاریخ_عضویت'] = datetime.fromisoformat(dct['تاریخ_عضویت'])
+        return UserFa(dct['نام'], dct['تاریخ_عضویت'])
+    return dct
+
+
+user_data_str_fa = '{"نام": "لیلا", "تاریخ_عضویت": "2024-04-15T00:00:00"}'
+decoded_user_fa = json.loads(user_data_str_fa, object_hook=user_decoder_fa)
+print(f"\n🔄 تبدیل JSON به شیء: {decoded_user_fa.نام}، عضویت در {decoded_user_fa.تاریخ_عضویت}")
+
+# ────────────────────────────────────────────────────────
+# ✅ ۱۴. فشرده‌سازی — بدون از دست دادن فارسی
+# ────────────────────────────────────────────────────────
+# ⚠️ حتی در حالت فشرده، ensure_ascii=False برای حفظ فارسی ضروری است
+compact_json_fa = json.dumps(loaded_data, separators=(',', ':'), ensure_ascii=False)
+print(f"\n📦 طول JSON فشرده: {len(compact_json_fa)} کاراکتر")
+print(f"   (در مقابل حالت زیبا: {len(json.dumps(loaded_data, indent=2, ensure_ascii=False))} کاراکتر)")
+
+
+# ────────────────────────────────────────────────────────
+# ✅ ۱۵. استخراج کلیدهای منحصر به فرد — شامل کلیدهای فارسی
+# ────────────────────────────────────────────────────────
+def extract_keys_fa(obj: Any, keys: set = None) -> set:
+    if keys is None:
+        keys = set()
+    if isinstance(obj, dict):
+        keys.update(obj.keys())  # کلیدهای فارسی هم اضافه می‌شوند
+        for value in obj.values():
+            extract_keys_fa(value, keys)
+    elif isinstance(obj, list):
+        for item in obj:
+            extract_keys_fa(item, keys)
+    return keys
+
+
+all_keys_fa = extract_keys_fa(loaded_data)
+print(f"\n🔑 تمام کلیدهای منحصر به فرد یافت شده: {sorted(all_keys_fa)}")
+
+# ────────────────────────────────────────────────────────
+# ✅ ۱۶. فیلتر کردن — بر اساس شهر فارسی
+# ────────────────────────────────────────────────────────
+tehran_employees_fa = [emp for emp in loaded_data["کارمندان"] if emp["شهر"] == "تهران"]
+print(f"\n🏙️ کارمندان ساکن تهران: {[emp['نام'] for emp in tehran_employees_fa]}")
+
+# ────────────────────────────────────────────────────────
+# ✅ ۱۷. مرتب‌سازی — بر اساس سن
+# ────────────────────────────────────────────────────────
+sorted_by_age_fa = sorted(loaded_data["کارمندان"], key=lambda x: x["سن"])
+ages_str = [f"{emp['نام']}({emp['سن']})" for emp in sorted_by_age_fa]
+print(f"\n👴 مرتب‌سازی بر اساس سن: {ages_str}")
+
+# ────────────────────────────────────────────────────────
+# ✅ ۱۸. آمار — میانگین سن
+# ────────────────────────────────────────────────────────
+ages_fa = [emp["سن"] for emp in loaded_data["کارمندان"]]
+avg_age_fa = sum(ages_fa) / len(ages_fa) if ages_fa else 0
+print(f"\n📊 میانگین سن کارمندان: {avg_age_fa:.1f}")
+
+# ────────────────────────────────────────────────────────
+# ✅ ۱۹. مقایسه دو JSON — حتی با کلیدهای فارسی
+# ────────────────────────────────────────────────────────
+original_fa = {"الف": 1, "ب": 2}
+modified_fa = {"الف": 1, "ب": 3, "پ": 4}
+
+
+def json_diff_fa(old: dict, new: dict) -> dict:
+    diff = {}
+    all_keys = set(old.keys()) | set(new.keys())
+    for key in all_keys:
+        old_val = old.get(key, "__مفقود__")
+        new_val = new.get(key, "__مفقود__")
+        if old_val != new_val:
+            diff[key] = {"قدیم": old_val, "جدید": new_val}
+    return diff
+
+
+changes_fa = json_diff_fa(original_fa, modified_fa)
+# برای چاپ صحیح کلیدهای فارسی در دیکشنری
+print(f"\n⚖️  تغییرات: {json.dumps(changes_fa, ensure_ascii=False, indent=2)}")
+
+# ────────────────────────────────────────────────────────
+# ✅ ۲۰. پاک‌سازی و خروجی نهایی — با تأیید فارسی
+# ────────────────────────────────────────────────────────
+print(f"\n✅ خروجی نهایی در: {output_json}")
+print(f"📁 اندازه فایل: {output_json.stat().st_size} بایت")
+
+# نمایش محتوای نهایی — با اطمینان از صحت فارسی
+print("\n📋 محتوای نهایی فایل (۳۰۰ کاراکتر اول):")
+final_content = output_json.read_text(encoding='utf-8')
+print(final_content[:300] + "..." if len(final_content) > 300 else final_content)
+
+# 🧪 تست نهایی: آیا فارسی به درستی ذخیره شده؟
+if "علی" in final_content and "تهران" in final_content and "نرگس" in final_content:
+    print("\n✅🎉 تبریک! تمام داده‌های فارسی به درستی ذخیره و خوانده شدند.")
+else:
+    print("\n❌ هشدار: مشکلی در ذخیره‌سازی داده‌های فارسی وجود دارد!")
+```
+
+## 9.1. 🅱️ ماژول json2html
+
+* ماژول json2html یک ابزار ساده و سریع برای تبدیل داده‌های JSON به جدول HTML است.
+* نکته: این ماژول فقط جدول تولید می‌کند — برای استایل‌دهی یا تعاملی بودن نیاز به CSS/JS جداگانه دارید
+* چون json2html.convert() یک رشته HTML برمی‌گرداند (نه داده JSON)، نیازی به json.dumps نیست
+    * (و نیازی به encode().decode() هم نیست)
+    * کافی است مستقیماً با encoding='utf-8' بنویسید.
+*
+
+```python
+# Install: pip install json2html
+# Syntax: json2html.convert(json=..., ...)
+## ---> json: داده JSON (دیکشنری یا لیست)
+## ---> table_attributes: ویژگی‌های HTML جدول — مثلclass,id,border
+## ---> escape(Default:True): برای امنیت وب آیا محتوی escape بشود یا خیر
+## ---> clubbingDefault:True): آیا کلیدهای تکراری در ردیف‌های مجاور ادغام شوند یا خیر
+```
+
+| نکته                      | توضیح                                                                     |
+|---------------------------|---------------------------------------------------------------------------|
+| `escape=False`            | برای نمایش فارسی ضروری است — اما در وب‌اپلیکیشن‌های عمومی، XSS را چک کنید |
+| `table_attributes`        | برای افزودن کلاس‌های Bootstrap یا استایل‌های سفارشی                       |
+| `dir="rtl"` + `lang="fa"` | برای نمایش صحیح فارسی در مرورگر                                           |
+| فونت‌های فارسی            | در CSS از `font-family: Tahoma, Arial, sans-serif` استفاده کنید           |
+| `clubbing=False`          | اگر نمی‌خواهید کلیدهای تکراری ادغام شوند (مثلاً در لیست سرورها)           |
+| خروجی تمیز                | همیشه یک هدر HTML کامل با متا charset اضافه کنید                          |
+
+مثال1️⃣️️:تبدیل داده کارمندان به جدول HTML
+
+📌 خروجی: یک فایل HTML با جدول زیبا که شامل نام‌های فارسی است.
+
+```python
+from json2html import json2html
+import json
+
+employees_data = {
+    "شرکت": "فناوران رایانش ابری",
+    "کارمندان": [
+        {"نام": "علی رضایی", "سمت": "توسعه‌دهنده", "دپارتمان": "فنی", "حقوق": 15000000},
+        {"نام": "سارا محمدی", "سمت": "تحلیلگر داده", "دپارتمان": "تحلیل", "حقوق": 18000000},
+        {"نام": "رضا احمدی", "سمت": "مدیر پروژه", "دپارتمان": "مدیریت", "حقوق": 25000000}
+    ]
+}
+
+# Convert To HTML
+html_table = json2html.convert(
+    json=employees_data,
+    table_attributes="class='table table-striped' style='border-collapse: collapse; width: 100%;'",
+    escape=False  # برای نمایش صحیح فارسی — اما در وب حتماً امنیت را چک کنید
+)
+
+# ذخیره در فایل — با پشتیبانی فارسی
+with open("employees.html", "w", encoding="utf-8") as f:
+    # ⚠️ نیازی به encode/decode نیست — فقط ensure_ascii=False در json.dumps کافی است
+    # ولی ما مستقیماً HTML را می‌نویسیم — پس اصلاً نیازی به json.dumps نیست!
+    f.write(html_table)
+
+print("✅ جدول HTML با داده‌های فارسی ذخیره شد: employees.html")
+```
+
+مثال2️⃣️:گزارش سیستم — لاگ سرورها
+
+📌 خروجی: یک صفحه HTML کامل با استایل RTL، فونت فارسی و رنگ‌بندی وضعیت.
+
+```python
+from json2html import json2html
+
+servers_status = [
+    {"سرور": "web-01", "آی‌پی": "192.168.1.10", "وضعیت": "🟢 سالم", "آخرین_چک": "1403-03-15"},
+    {"سرور": "db-01", "آی‌پی": "192.168.1.20", "وضعیت": "🔴 خطا", "آخرین_چک": "1403-03-15"},
+    {"سرور": "cache-01", "آی‌پی": "192.168.1.30", "وضعیت": "🟡 هشدار", "آخرین_چک": "1403-03-15"}
+]
+
+html = json2html.convert(
+    json=servers_status,
+    table_attributes="""
+        border="1" 
+        style="border-collapse: collapse; width: 100%; text-align: right; direction: rtl;"
+    """,
+    escape=False
+)
+
+# افزودن هدر HTML برای پشتیبانی RTL و فونت فارسی
+full_html = f"""
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <title>📊 گزارش وضعیت سرورها</title>
+    <style>
+        body {{ font-family: Tahoma, Arial, sans-serif; margin: 20px; }}
+        table {{ border-collapse: collapse; width: 100%; }}
+        th, td {{ border: 1px solid #ddd; padding: 8px; text-align: right; }}
+        th {{ background-color: #f2f2f2; }}
+        .green {{ color: green; }}
+        .red {{ color: red; }}
+        .yellow {{ color: #cc9900; }}
+    </style>
+</head>
+<body>
+    <h1>📊 گزارش وضعیت سرورها — {datetime.now().strftime('%Y-%m-%d %H:%M')}</h1>
+    {html}
+</body>
+</html>
+"""
+
+with open("server_report.html", "w", encoding="utf-8") as f:
+    f.write(full_html)
+
+print("✅ گزارش سرورها با پشتیبانی RTL و فارسی ذخیره شد.")
+```
+
+مثال3️⃣️:داده تو در تو (Nested) — اطلاعات محصول + مشخصات فنی
+
+```python
+product_data = {
+    "محصول": "لپ‌تاپ گیمینگ XYZ",
+    "قیمت": "۲۵,۰۰۰,۰۰۰ تومان",
+    "مشخصات": {
+        "پردازنده": "Intel i7-12700H",
+        "رم": "32GB DDR5",
+        "گرافیک": "NVIDIA RTX 4070",
+        "ذخیره‌سازی": "1TB NVMe SSD",
+        "ابعاد": {
+            "وزن": "2.3 kg",
+            "ضخامت": "20 mm"
+        }
+    },
+    "توضیحات": "✅ مناسب برای گیم و رندرینگ — گارانتی ۲۴ ماهه"
+}
+
+html = json2html.convert(
+    json=product_data,
+    table_attributes="class='table' style='width: 100%; direction: rtl; text-align: right;'",
+    escape=False
+)
+
+with open("product_detail.html", "w", encoding="utf-8") as f:
+    f.write(f"""
+    <!DOCTYPE html>
+    <html dir="rtl" lang="fa">
+    <head><meta charset="utf-8"><title>{product_data['محصول']}</title></head>
+    <body style="font-family: Tahoma; padding: 20px;">
+        <h2>{product_data['محصول']}</h2>
+        <h3>قیمت: {product_data['قیمت']}</h3>
+        {html}
+        <p><strong>توضیحات:</strong> {product_data['توضیحات']}</p>
+    </body>
+    </html>
+    """)
+
+print("✅ صفحه محصول با ساختار تو در تو ایجاد شد.")
+```
+
+مثال4️⃣️: لیست دیکشنری‌ها — نتایج جستجو (مثال واقعی برای وب‌اپلیکیشن)
+
+```python
+search_results = [
+    {
+        "عنوان": "راهنمای خرید لپ‌تاپ",
+        "خلاصه": "بهترین لپ‌تاپ‌های سال 1403 برای کاربران حرفه‌ای",
+        "امتیاز": 4.8,
+        "تاریخ_انتشار": "1403-02-10"
+    },
+    {
+        "عنوان": "مقایسه موبایل‌های پرچم‌دار",
+        "خلاصه": "مقایسه جامع آیفون 15 پرو و سامسونگ گلکسی S24 الترا",
+        "امتیاز": 4.9,
+        "تاریخ_انتشار": "1403-02-15"
+    }
+]
+
+html = json2html.convert(
+    json=search_results,
+    table_attributes="""
+        class="search-results"
+        style="width: 100%; border: 1px solid #eee; direction: rtl; text-align: right;"
+    """,
+    escape=False
+)
+
+css = """
+<style>
+.search-results th { background-color: #007bff; color: white; }
+.search-results td { padding: 10px; border-bottom: 1px solid #eee; }
+.search-results tr:hover { background-color: #f8f9fa; }
+</style>
+"""
+
+with open("search_results.html", "w", encoding="utf-8") as f:
+    f.write(f"""
+    <!DOCTYPE html>
+    <html dir="rtl" lang="fa">
+    <head>
+        <meta charset="utf-8">
+        <title>نتایج جستجو</title>
+        {css}
+    </head>
+    <body style="font-family: Tahoma; padding: 20px;">
+        <h2>🔍 نتایج جستجو ({len(search_results)} مورد)</h2>
+        {html}
+    </body>
+    </html>
+    """)
+
+print("✅ نتایج جستجو به صورت جدول HTML ذخیره شد.")
+```
+
+مثال5️⃣️:خطاها و لاگ‌های سیستم — برای تیم DevOps
+
+```python
+system_logs = [
+    {"زمان": "1403-03-15 10:23:45", "سطح": "ERROR", "پیام": "اتصال به دیتابیس قطع شد", "ماژول": "database.py"},
+    {"زمان": "1403-03-15 10:25:12", "سطح": "WARNING", "پیام": "حافظه RAM به 85% رسید", "ماژول": "monitor.py"},
+    {"زمان": "1403-03-15 10:30:00", "سطح": "INFO", "پیام": "سرویس با موفقیت ری‌استارت شد", "ماژول": "service.py"}
+]
+
+
+# رنگ‌بندی بر اساس سطح لاگ
+def colorize_log(row):
+    level = row.get('سطح', '')
+    color = "red" if "ERROR" in level else "orange" if "WARNING" in level else "green"
+    return f"<span style='color:{color}; font-weight:bold;'>{level}</span>"
+
+
+# Convert To HTML
+html = json2html.convert(json=system_logs, escape=False)
+
+# جایگزینی سطح لاگ با نسخه رنگی
+for log in system_logs:
+    colored_level = colorize_log(log)
+    html = html.replace(f"<td>{log['سطح']}</td>", f"<td>{colored_level}</td>")
+
+with open("system_logs.html", "w", encoding="utf-8") as f:
+    f.write(f"""
+    <!DOCTYPE html>
+    <html dir="rtl" lang="fa">
+    <head><meta charset="utf-8"><title>📊 لاگ‌های سیستم</title></head>
+    <body style="font-family: Tahoma; padding: 20px;">
+        <h2>📊 لاگ‌های سیستم — {len(system_logs)} رکورد</h2>
+        {html}
+    </body>
+    </html>
+    """)
+
+print("✅ لاگ‌های سیستم با رنگ‌بندی ذخیره شد.")
+```
+
+مثال6️⃣️:تابع toHtml شما — اصلاح شده برای پشتیبانی فارسی و بهینه‌سازی
+
+```python
+from json2html import json2html
+import json
 
 
 def toHtml(inputFileName, outputFileName):
-    f = open(inputFileName)
-    jData = json.load(f)
-    data = json2html.convert(json={"data": jData})
-    with open(outputFileName, 'w') as ff:
-        ff.write(json.dumps(data, ensure_ascii=False).encode('utf-8').decode())
-    f.close()
-    ff.close()
+    """
+    تبدیل فایل JSON به فایل HTML با پشتیبانی کامل فارسی
+    """
+    # خواندن JSON — با encoding='utf-8'
+    with open(inputFileName, 'r', encoding='utf-8') as f:
+        jData = json.load(f)
+
+    # Convert To HTML (For Farsi: escape=False)
+    data = json2html.convert(
+        json={"data": jData},  # بسته‌بندی در یک کلید برای جلوگیری از flat شدن
+        table_attributes="class='table' style='width: 100%; direction: rtl; text-align: right;'",
+        escape=False
+    )
+
+    # افزودن هدر HTML کامل برای پشتیبانی فارسی
+    full_html = f"""
+    <!DOCTYPE html>
+    <html dir="rtl" lang="fa">
+    <head>
+        <meta charset="UTF-8">
+        <title>📊 گزارش JSON</title>
+        <style>
+            body {{ font-family: Tahoma, Arial, sans-serif; padding: 20px; }}
+            table {{ border-collapse: collapse; width: 100%; margin: 20px 0; }}
+            th, td {{ border: 1px solid #ddd; padding: 12px; text-align: right; }}
+            th {{ background-color: #f8f9fa; }}
+            tr:nth-child(even) {{ background-color: #f2f2f2; }}
+        </style>
+    </head>
+    <body>
+        <h1>📊 گزارش داده‌ها</h1>
+        {data}
+    </body>
+    </html>
+    """
+
+    # نوشتن مستقیم — بدون encode/decode — چون data از قبل رشته است
+    with open(outputFileName, 'w', encoding='utf-8') as ff:
+        ff.write(full_html)
+
+    print(f"✅ فایل HTML ایجاد شد: {outputFileName}")
 
 
-# 265. toHtml("/tmp/All.json", "/tmp/All.html")
+# تست تابع
+if __name__ == "__main__":
+    # ایجاد فایل JSON نمونه با فارسی
+    sample = {
+        "گزارش": "فروش ماهانه",
+        "داده‌ها": [
+            {"ماه": "فروردین", "فروش": "۱۲۰,۰۰۰,۰۰۰ تومان", "تعداد_سفارش": 150},
+            {"ماه": "اردیبهشت", "فروش": "۱۸۰,۰۰۰,۰۰۰ تومان", "تعداد_سفارش": 220}
+        ]
+    }
 
+    with open("input.json", "w", encoding="utf-8") as f:
+        json.dump(sample, f, ensure_ascii=False, indent=2)
 
-def showData():
-    json_string = '{ "1":"Red", "2":"Blue", "3":"Green"}'
-    parsed_json = json.loads(json_string)
-    print(parsed_json['2'])
-
+    toHtml("input.json", "output.html")
 ```
 
 # 10. 🅰️Database
 
+* CEUD
+    * Create (ایجاد جدول + افزودن محصول)
+    * Read (نمایش محصولات — جستجوی فارسی)
+    * Update (به‌روزرسانی قیمت)
+    * Delete (حذف محصول منقضی شده)
+
 ## 10.1. 🅱️ SQLlight
+
+مثال کامل و کاربردی: مدیریت محصولات فروشگاه (با پشتیبانی فارسی)
 
 ```python
 import sqlite3
+from pathlib import Path
 
-connection = sqlite3.connect("/tmp//my-database.db")
-cursor = connection.cursor()
 
-# 266. 1️⃣️
-sql = """
-    CREATE TABLE IF NOT EXISTS user (
-        userId INTEGER ,
-        name VARCHAR (60),
-        family VARCHAR (60),
-        email VARCHAR (60)
-    );
-"""
+def main():
+    """مثال کاربردی: مدیریت محصولات فروشگاه آنلاین با SQLite و پشتیبانی فارسی"""
 
-cursor.execute(sql)
-connection.commit()
-connection.close()
+    db_path = Path("/tmp/shop_products.db")
 
-# 267. 2️⃣️ Multiple sql command
+    # 🔧 اتصال به دیتابیس با context manager (اتصال خودکار + بسته شدن امن)
+    with sqlite3.connect(db_path) as conn:
+        cursor = conn.cursor()
 
-sql = """
-    INSERT INTO Product VALUES (2,'kotlin course',3000,'this is kotlin course');
-    INSERT INTO Product VALUES (3,'vue course',4000,'this is vue course');
+        # ✅ 1. CREATE TABLE — ایجاد جدول محصولات (با پشتیبانی فارسی)
+        print("🔧 ایجاد جدول محصولات...")
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS products (
+                id INTEGER PRIMARY KEY AUTOINCREMENT, -- تولید آی دی خودکار
+                name TEXT NOT NULL,          -- نام محصول (پشتیبانی فارسی)
+                price INTEGER NOT NULL,      -- قیمت به تومان
+                category TEXT,               -- دسته‌بندی
+                description TEXT,            -- توضیحات (پشتیبانی فارسی)
+                stock INTEGER DEFAULT 0      -- موجودی انبار
+            )
+        """)
+        conn.commit()
+        print("✅ جدول محصولات ایجاد شد.")
 
-"""
-cursor.execute(sql)
-cursor.executescript(sql)
+        # ✅ 2. INSERT — افزودن محصولات (یکی یکی + گروهی)
+        print("\n📥 درج محصولات اولیه...")
 
-# 268. 3️⃣️
+        # درج تکی — شامل یک محصول فارسی
+        cursor.execute("""
+            INSERT INTO products (name, price, category, description, stock)
+            VALUES (?, ?, ?, ?, ?)
+        """, ("کتاب آموزش پایتون", 120000, "کتاب", "📚 کتاب جامع برای یادگیری پایتون — مناسب مبتدی تا پیشرفته", 50))
 
-sql = """
-    SELECT * FROM Product WHERE description LIKE "%python%"
-"""
-cursor.execute(sql)
-for product in cursor:
-    print(product)
+        # درج گروهی با executemany
+        products_bulk = [
+            ("دوره آنلاین React", 850000, "دوره آموزشی", "⚛️ آموزش ری‌اکت از صفر تا حرفه‌ای", 100),
+            ("ماوس گیمینگ RGB", 450000, "سخت‌افزار", "🖱️ ماوس با نور RGB و DPI قابل تنظیم", 75),
+            ("کیبورد مکانیکی", 950000, "سخت‌افزار", "⌨️ کیبورد مکانیکی با کلیدهای قابل تعویض", 30),
+            ("دوره هوش مصنوعی", 1200000, "دوره آموزشی", "🤖 آموزش مفاهیم پایه تا پیشرفته هوش مصنوعی", 60),
+            ("کوله پشتی لپ‌تاپ", 350000, "اکسسوری", "🎒 کوله پشتی مناسب برای لپ‌تاپ ۱۷ اینچی", 40),
+            # ✅ مثال فارسی — فقط یک مورد کافی است طبق درخواست شما
+            ("لپ‌تاپ گیمینگ ASUS", 45000000, "لپ‌تاپ", "💻 لپ‌تاپ گیمینگ با کارت گرافیک RTX 4060 — مناسب بازی‌های سنگین", 15)
+        ]
+
+        cursor.executemany("""
+            INSERT INTO products (name, price, category, description, stock)
+            VALUES (?, ?, ?, ?, ?)
+        """, products_bulk)
+
+        conn.commit()
+        print(f"✅ {len(products_bulk) + 1} محصول با موفقیت اضافه شدند.")
+
+        # ✅ 3. SELECT — نمایش تمام محصولات
+        print("\n📋 لیست تمام محصولات:")
+        cursor.execute("SELECT id, name, price, stock FROM products ORDER BY id")
+        for row in cursor.fetchall():  # دریافت تمام نتایج برای نمایش
+            print(f"  - #{row[0]}: {row[1]} — {row[2]:,} تومان (موجودی: {row[3]})")
+
+        # ✅ 4. SELECT + LIKE — جستجوی فارسی در توضیحات
+        print("\n🔍 جستجوی محصولات مرتبط با 'گیمینگ' (پشتیبانی فارسی):")
+        search_term = "%گیمینگ%"
+        cursor.execute("SELECT name, price FROM products WHERE description LIKE ?", (search_term,))
+        gaming_products = cursor.fetchall()  # دریافت تمام نتایج برای نمایش
+        if gaming_products:
+            for prod in gaming_products:
+                print(f"  - {prod[0]}: {prod[1]:,} تومان")
+        else:
+            print("  - ❌ محصولی یافت نشد.")
+
+        # ✅ 5. UPDATE — به‌روزرسانی قیمت یک محصول
+        print("\n🔄 به‌روزرسانی قیمت محصول...")
+        product_id = 2  # فرض: دوره آنلاین React
+        new_price = 799000
+        cursor.execute("UPDATE products SET price = ? WHERE id = ?", (new_price, product_id))
+        if cursor.rowcount > 0:
+            print(f"✅ قیمت محصول #{product_id} به {new_price:,} تومان به‌روزرسانی شد.")
+        else:
+            print(f"❌ محصول با ID {product_id} یافت نشد.")
+
+        # ✅ 6. DELETE — حذف محصول با موجودی صفر
+        print("\n🗑️ حذف محصولات با موجودی صفر...")
+        cursor.execute("DELETE FROM products WHERE stock = 0")
+        deleted_count = cursor.rowcount
+        if deleted_count > 0:
+            print(f"✅ {deleted_count} محصول با موجودی صفر حذف شدند.")
+        else:
+            print("✅ هیچ محصولی برای حذف یافت نشد.")
+
+        # ✅ 7. SELECT بعد از تغییرات — برای تأیید
+        print("\n📊 وضعیت نهایی محصولات:")
+        cursor.execute("SELECT id, name, price, stock FROM products ORDER BY price DESC")
+        for row in cursor.fetchall():  # دریافت تمام نتایج برای نمایش
+            print(f"  - #{row[0]}: {row[1]} — {row[2]:,} تومان (موجودی: {row[3]})")
+
+        # ✅ 8. گزارش آماری — تعداد و میانگین قیمت
+        cursor.execute("SELECT COUNT(*), AVG(price), SUM(stock) FROM products")
+        count, avg_price, total_stock = cursor.fetchone()
+        print(f"\n📈 آمار کلی:")
+        print(f"  - تعداد محصولات: {count}")
+        print(f"  - میانگین قیمت: {int(avg_price):,} تومان")
+        print(f"  - کل موجودی انبار: {total_stock}")
+
+    print(f"\n✅ عملیات با موفقیت به پایان رسید. دیتابیس در {db_path} ذخیره شد.")
+
+
+# اجرای مثال
+if __name__ == "__main__":
+    main()
 ```
+خروجی به شکل زیر است
+```
+🔧 ایجاد جدول محصولات...
+✅ جدول محصولات ایجاد شد.
 
+📥 درج محصولات اولیه...
+✅ 7 محصول با موفقیت اضافه شدند.
+
+📋 لیست تمام محصولات:
+  - #1: کتاب آموزش پایتون — 120,000 تومان (موجودی: 50)
+  - #2: دوره آنلاین React — 850,000 تومان (موجودی: 100)
+  - #3: ماوس گیمینگ RGB — 450,000 تومان (موجودی: 75)
+  - #4: کیبورد مکانیکی — 950,000 تومان (موجودی: 30)
+  - #5: دوره هوش مصنوعی — 1,200,000 تومان (موجودی: 60)
+  - #6: کوله پشتی لپ‌تاپ — 350,000 تومان (موجودی: 40)
+  - #7: لپ‌تاپ گیمینگ ASUS — 45,000,000 تومان (موجودی: 15)
+
+🔍 جستجوی محصولات مرتبط با 'گیمینگ' (پشتیبانی فارسی):
+  - ماوس گیمینگ RGB: 450,000 تومان
+  - لپ‌تاپ گیمینگ ASUS: 45,000,000 تومان
+
+🔄 به‌روزرسانی قیمت محصول...
+✅ قیمت محصول #2 به 799,000 تومان به‌روزرسانی شد.
+
+🗑️ حذف محصولات با موجودی صفر...
+✅ هیچ محصولی برای حذف یافت نشد.
+
+📊 وضعیت نهایی محصولات:
+  - #7: لپ‌تاپ گیمینگ ASUS — 45,000,000 تومان (موجودی: 15)
+  - #5: دوره هوش مصنوعی — 1,200,000 تومان (موجودی: 60)
+  - #4: کیبورد مکانیکی — 950,000 تومان (موجودی: 30)
+  - #2: دوره آنلاین React — 799,000 تومان (موجودی: 100)
+  - #3: ماوس گیمینگ RGB — 450,000 تومان (موجودی: 75)
+  - #6: کوله پشتی لپ‌تاپ — 350,000 تومان (موجودی: 40)
+  - #1: کتاب آموزش پایتون — 120,000 تومان (موجودی: 50)
+
+📈 آمار کلی:
+  - تعداد محصولات: 7
+  - میانگین قیمت: 6,695,571 تومان
+  - کل موجودی انبار: 370
+```
 # 11. 🅰️ GUI
 
 ## 11.1. 🅱️ tkinter
