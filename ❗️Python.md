@@ -3875,12 +3875,6 @@ names, ages = zip(*pairs)
 
 print(names)  # Output: ('Ali', 'Sara', 'Reza')
 print(ages)  # Output: (20, 19, 21)
-
-# Example1️⃣️6️⃣️:
-# Example1️⃣️7️⃣️:
-# Example1️⃣️8️⃣️:
-# Example1️⃣️9️⃣️:
-# Example2️⃣️0️⃣️:
 ```
 
 # 7. 🅰️ OOP(Object Oriented Programming)
@@ -4505,6 +4499,7 @@ class MathConstants:
     def PI(cls):
         return cls._PI
 
+
 print(MathConstants.PI)  # 3.1415926535
 
 # خطا در هنگام تلاش برای تغییر:
@@ -4516,7 +4511,7 @@ print(MathConstants.PI)  # 3.1415926535
 متدی که هیچ ارتباطی با شیء یا کلاس ندارد(فقط منطقاً داخل کلاس گذاشته شده) یعنی نه self بعنوان آرگومان ورودی می‌گیرد، نه cls. مثل یک تابع معمولی است که داخل کلاس قرار گرفته
 
 * متدی که نیازی به `self` یا `cls` ندارد و مستقل از نمونه یا کلاس اجرا می‌شود
-* دلایل قرارگرفتن این گونه توابع در داخل کلاس: 
+* دلایل قرارگرفتن این گونه توابع در داخل کلاس:
     * توابع مرتبط با کلاس هستند وبرای پیاده‌سازی منطق کد نیاز هست در کلاس از آنها استفاده شود
     * برای سازماندهی کد درون کلاس تعریف می‌شوند(مثلا تمام توابع ماشین حساب داخل کلاس ماشین‌حساب قرار داده شود)
     * همانند یک ابزار کمکی(Utility)
@@ -4543,7 +4538,7 @@ class Calculator:
 print(Calculator.add(5, 3))  # 8
 print(Calculator.is_even(4))  # True
 
-calc = Calculator() # حتی اگر شیء بسازید کار میکند ولی نیاز نیست
+calc = Calculator()  # حتی اگر شیء بسازید کار میکند ولی نیاز نیست
 print(calc.add(10, 20))  # Output: 30
 ```
 
@@ -4656,11 +4651,11 @@ class Person:
     @classmethod
     def from_full_name(cls, full_name):
         first, last = full_name.split(" ", 1)
-        return cls(first, last)  # 👈 cls همان Person است
+        return cls(first, last)  # cls is Person
 
 
 p1 = Person("Ali", "Rezaei")
-p2 = Person.from_full_name("Sara Ahmadi")  # ← روش جایگزین ساخت شیء
+p2 = Person.from_full_name("Sara Ahmadi")  # روش جایگزین ساخت شیء
 
 print(p2.first_name)  # Sara
 print(p2.last_name)  # Ahmadi
@@ -5028,172 +5023,418 @@ print(ThreadSafeCounter.get_count())  # 10000 — دقیق و thread-safe
 
 # 8. 🅰️ File
 
-## 8.1. 🅱️ Read
+* mode:
+    * a: append
+    * w: read
+    * r: write
 
 ```python
-data = open("/etc/passwd")
 
-# 233. 1)
-# 234. print(data.read())
-# 235. data.seek(2) # جابجایی کرسر به نقطه خاص از فایل
-# 236. print(data.read())
+# Example1️⃣️: 
+file_passwd = open("/etc/passwd")
+print(file_passwd.read())
+file_passwd.seek(2)  # دو کاراکتر را نادیده بگیر و بقیه را لحاظ کن
+print(file_passwd.read())
 
-# 237. 2)
-# 238. textLines = data.readlines() # یک لیست از خطوط که آخر هر خط یک بک‌اسلش‌اِن قرار میدهد
-# 239. print(textLines)
-# 240. print(f"----> {textLines[5]}")
+# Example2️⃣️: 
+file_passwd = open("/etc/passwd")
+textLines = file_passwd.readlines()  # یک لیست از خطوط که آخر هر خط یک \ قرار میدهد
+print(textLines)  # Output: ['root:x:0:0:root:/root:/bin/bash\n', 'daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin\n', ...]
+print(f"----> {textLines[5]}")  # Output: games:x:5:60:games:/usr/games:/usr/sbin/nologin ---> خط ششم از فایل
 
+# Example3️⃣️:
 
-# 241. 3)
 with open("/etc/passwd", encoding='UTF-8', mode="r") as bFile:
     for l in bFile:
         line = l.strip()
         # mylist = lines.rsplit(",")
         print(line)
 
-```
-
-## 8.2. 🅱️ Write
-
-```python
-# 242. mode:
-# 243. a: append
-# 244. w: read
-# 245. r: write
-
-
+# Example4️⃣️: 
 with open("/tmp/salam.txt", encoding='UTF-8', mode="w") as bFile:
     bFile.write("STRIIIIIIIIIIIIIIIIIIIIIIIIIIING\n")
+```
 
+نکات:
+
+* در درجه اول سعی کنید از ماژول pathlib استفاده نمایید
+    * خوانایی بالاتر
+    * `CrossPlatform` (خودش `/` یا `\` را مدیریت می‌کند)
+    * شیءگرا و زنجیره‌ای (`path.parent / "file.txt"`)
+* از ماژول `shutil`برای عملیات‌های "سیستمی" و "مدیریتی" استفاده شود
+    * برای `copy`, `move`, `copytree`, `rmtree`, `disk_usage`
+* از ماژول `os` برای موارد زیر استفاده نمایید
+    * دسترسی به متغیرهای محیطی (os.getenv)
+    * ایجاد/حذف دایرکتوری (`os.mkdir`, `os.rmdir`)
+    * اجرا دستورات سیستمی (`os.system` — اما ترجیحاً از `subprocess` استفاده کنید)
+    * وقتی نیاز به سطح پایین‌تر دارید
+* بصورت خلاصه
+    * `pathlib`: برای همه کارهای مربوط به مسیر و فایل‌های منفرد(مدرن، خوانا، توصیه‌شده).
+    * `os`: برای بررسی وجود، اطلاعات فایل، حذف یا تغییر نام، و کارهای سیستمی.
+    * `shutil`: برای کپی یا جابجایی یا حذف در سطح بالا(به خصوص برای پوشه‌ها و متادیتا).
+
+| عملیات       | `pathlib` (شیءگرا)      | `os` (سنتی)         | `shutil` (کمکی برای os)    |
+|--------------|-------------------------|---------------------|----------------------------|
+| خواندن       | `.read_text()`          | `open().read()`     | ❌ ندارد                    |
+| نوشتن        | `.write_text()`         | `open('w')`         | ❌ ندارد                    |
+| الحاق        | `.open('a')`            | `open('a')`         | ❌ ندارد                    |
+| جستجو        | `.read_text() + filter` | `open() + filter`   | ❌ ندارد                    |
+| کپی          | ندارد                   | ندارد               | ✅ `copy()`, `copy2()`      |
+| جابجایی      | `.rename()`             | `os.rename()`       | ✅ `move()`                 |
+| تغییر نام    | `.rename()`             | `os.rename()`       | ❌ (اما `move` جایگزین است) |
+| حذف          | `.unlink()`             | `os.remove()`       | `rmtree` (فقط پوشه)        |
+| وجود دارد؟   | `.exists()`             | `os.path.exists()`  | ❌                          |
+| اطلاعات فایل | `.stat()`               | `os.stat()`         | ❌                          |
+| کپی پوشه     | ❌                       | ❌                   | ✅ `copytree()`             |
+| حذف پوشه     | `.rmdir()` (خالی)       | `os.rmdir()` (خالی) | ✅ `rmtree()` (با محتوا)    |
+| فضای دیسک    | ❌                       | ❌                   | ✅ `disk_usage()`           |
+
+## 8.3. 🅱️ module glob
+
+ابزار پایتون برای جستجوی فایل‌ها و پوشه‌ها بر اساس الگوی نام است. ماژول glob (مخفف global) در پایتون برای پیدا کردن مسیرهای فایل/پوشه با استفاده از الگوهای وایلدکارت (wildcard) استفاده می‌شود
+
+* دو تابع اصلی دارد
+    * `glob.glob()`: لیست تمام موارد مطابق الگو را برمی‌گرداند
+    * `glob.iglob()`: یک Generator برمی‌گرداند (برای فایل‌های زیاد — حافظه‌بهینه)
+* همیشه از `recursive=True` برای `**` استفاده کنید
+* جمع‌آوری تمام فایل‌های تست: `tests/**/test_*.py`
+* پیدا کردن فایل‌های لاگ قدیمی: `logs/*2023*.log`
+* پیدا کردن فایل‌های پیکربندی: `**/*.conf`
+* پیدا کردن تصاویر: `images/**/*.jpg`
+
+```python
+# Example1️⃣️: 
+import glob
+
+py_files = glob.glob("*.py")  # پیدا کردن تمام فایل‌های .py در پوشه فعلی
+print(py_files)  # ['main.py', 'utils.py', 'test_script.py']
+
+# Example2️⃣️: `**` جستجوی بازگشتی (Recursive)
+import glob
+
+# پیدا کردن تمام فایل‌های .py در تمام زیرپوشه‌ها
+all_py_files = glob.glob("**/*.py", recursive=True)  # الگوی `**` بدون recursive=True کار نمیکند 
+for f in all_py_files:
+    print(f)  # main.py, src/utils.py, tests/test_main.py, docs/conf.py
+
+# Example3️⃣️: فایل‌های دارای دو رقم در نام
+# تمام فایل‌هایی که شامل دو رقم متوالی هستند
+digit_files = glob.glob("*[0-9][0-9]*")
+print(digit_files)  # ['report2024.txt', 'log_05_backup.log', 'data12.csv']
+
+# Example4️⃣️: فایل‌های log با یک حرف در پسوند
+log_files = glob.glob("*.log?")
+print(log_files)  # ['app.log1', 'error.logA']
+
+# Example5️⃣️:
+from pathlib import Path
+import glob
+
+# تبدیل خروجی glob به Path برای کارهای پیشرفته‌تر
+for path_str in glob.glob("**/*.py", recursive=True):
+    path = Path(path_str)
+    print(f"{path.name} → size: {path.stat().st_size} bytes")
+
+# Example6️⃣️:برای فایل‌های زیاد (حافظه‌بهینه)
+import glob
+
+# به جای لود کردن تمام مسیرها در حافظه، یکی یکی برمی‌گرداند
+for file_path in glob.iglob("**/*.log", recursive=True):
+    print("Processing:", file_path)
+    # پردازش سنگین روی فایل — بدون اشغال حافظه
+# Example7️⃣️:
+import glob
+from pathlib import Path
+
+# glob.glob
+files1 = glob.glob("*.py")
+
+# Path.glob
+files2 = list(Path(".").glob("*.py"))
+
+# هر دو یک نتیجه می‌دهند — اما files2 از نوع Path است
+
+# Example8️⃣️:مثال عملی با فایل‌های: /etc/passwd و /tmp/salam.txt
+import glob
+
+# جستجوی فایل‌هایی که با "pass" شروع می‌شوند در /etc
+passwd_matches = glob.glob("/etc/pass*")
+print("🔍 Found in /etc:", passwd_matches)  # Output: ['/etc/passwd', '/etc/passwd-'] (اگر وجود داشته باشند)
+
+# جستجوی فایل‌های txt در /tmp
+tmp_txt = glob.glob("/tmp/*.txt")
+print("📄 .txt files in /tmp:", tmp_txt)  # Output: ['/tmp/salam.txt', '/tmp/test.txt', ...]
+
+# Example9️⃣️:
+# ❌️ اشتباه — بدون recursive=True، ** کار نمی‌کند
+glob.glob("**/*.py")
+
+# ✅ درست
+glob.glob("**/*.py", recursive=True)
+
+# Example1️⃣️0️⃣️:برای فایل‌های زیاد از iglob استفاده کنید
+# بهینه از نظر حافظه
+for file in glob.iglob("huge_dir/**/*.log", recursive=True):
+    process(file)
+
+# Example1️⃣️1️⃣️:اگر می‌خواهید فقط فایل‌ها را فیلتر کنید — با Path.is_file() ترکیب کنید
+from pathlib import Path
+import glob
+
+for path_str in glob.glob("**/*", recursive=True):
+    path = Path(path_str)
+    if path.is_file() and path.suffix == ".py":
+        print(path)
+
+# Example1️⃣️2️⃣️:برای الگوهای پیچیده‌تر از fnmatch یا re استفاده کنید
+import fnmatch
+import os
+
+# جستجوی پیچیده‌تر
+for file in os.listdir('.'):
+    if fnmatch.fnmatch(file, 'data_??_*.csv'):
+        print(file)
+
+# Example1️⃣️3️⃣️:  اگر بخواهید یک دستور find لینوکسی در پایتون بنویسید — glob اولین انتخاب شماست
+import glob
+
+# معادل: find . -name "*.py"
+python_files = glob.glob("**/*.py", recursive=True)
+for f in python_files:
+    print(f)
+    
+# Example1️⃣️4️⃣️:
+# Example1️⃣️5️⃣️:
+# Example1️⃣️6️⃣️:
+# Example1️⃣️7️⃣️:
+# Example1️⃣️8️⃣️:
+# Example1️⃣️9️⃣️:
+# Example2️⃣️0️⃣️:
+
+```
+
+## 8.3. 🅱️ module pathlib
+
+ماژول pathlib (مدرن‌ترین و شیءگرا — توصیه می‌شود)
+
+```python
+from pathlib import Path
+
+# تعریف مسیرها
+passwd_path = Path("/etc/passwd")
+output_path = Path("/tmp/salam.txt")
+
+# Example1️⃣️: Read(خواندن کامل فایل)
+if passwd_path.exists():
+    content = passwd_path.read_text(encoding='utf-8')
+    print("✅ Read from /etc/passwd (first 100 chars):")
+    print(content[:100] + "...")
+
+# Example2️⃣️:  write(جایگزین محتوای قبلی)
+output_path.write_text("Hello from pathlib!\n", encoding='utf-8')
+print(f"✅ Wrote to {output_path}")
+
+# Example3️⃣️: الحاق (append)
+with output_path.open('a', encoding='utf-8') as f:
+    f.write("Appended line via pathlib.\n")
+print("✅ Appended to file")
+
+# Example4️⃣️:  جستجو در محتوا (search)
+lines = passwd_path.read_text().splitlines()
+users_with_bin = [line for line in lines if "/bin/bash" in line]
+print(f"✅ Found {len(users_with_bin)} users with /bin/bash")
+
+# Example5️⃣️: 
+
+# Example6️⃣️: rename
+renamed_path = Path("/tmp/hello.txt")
+output_path.rename(renamed_path)
+print(f"✅ Renamed {output_path} → {renamed_path}")
+output_path = renamed_path  # آپدیت مسیر
+
+# Example7️⃣️: move
+moved_path = Path("/tmp/moved_hello.txt")
+output_path.rename(moved_path)
+print(f"✅ Moved {output_path} → {moved_path}")
+output_path = moved_path
+
+# Example8️⃣️: delete
+if output_path.exists():
+    output_path.unlink()  # حذف فایل
+    print(f"✅ Deleted {output_path}")
+
+# Example9️⃣️: بررسی وجود فایل
+if not output_path.exists():
+    print("✅ File deleted successfully.")
+
+# Example1️⃣️0️⃣️: دریافت اطلاعات فایل
+if passwd_path.exists():
+    stat = passwd_path.stat()
+    print(f"📄 Size: {stat.st_size} bytes")
+    print(f"🕒 Modified: {stat.st_mtime}")
+
+# Example1️⃣️1️⃣️: حذف پوشه خالی ---> اگر خالی نباشد باید با کد پایتون پوشه را خالی نمایید
+test_dir = Path("/tmp/empty_test_dir")
+test_dir.rmdir()
+print(f"✅ {test_dir} deleted (was empty).")
 ```
 
 ## 8.3. 🅱️ module os
 
-```python
-import os
-import time
-import fnmatch
-import glob
-
-print(os.listdir('/'))
-print(os.path.isdir('/'))
-
-print("---------------")
-
-result = os.scandir('/home/Files')
-for item in result:
-    if item.is_file():  # if item.is_file():
-        print(f'File {item.name}: {time.ctime(item.stat().st_mtime)}')
-
-# 246. result = os.stat('./my_files/doc.txt')
-# 247. print(time.ctime(result.st_mtime))
-
-# 248. os.mkdir('test')  # 1-Error if exist 2-Error with subDirectory
-# 249. os.makedirs('/tmp/test/sub_ddsfdsfdsfsirectory1')  # 1-Error if exist
-
-
-print('################')
-print('#### Delete ####')
-print('################')
-
-# 250. os.remove("/tmp/test/sub_ddsfdsfdsfdsfsirectory1"); # اگر فایل موجود نباشد خطا برمی‌گرداند
-# 251. os.unlink("/tmp/test/sub_ddsfdsfdsfsdfsdfsdfsdfdsfdsfsirectory1"); # اگر فایل موجود نباشد خطا برمی‌گرداند
-
-# 252. os.rmdir("/tmp/test/sub_ddsfdsfdsfsdfsdfsdfsdfdsfdsfsirectory1"); # فقط پوشه های خالی رو پاک میکنه
-
-
-# 253. ---------------------------------------------------------------------------------------------------------
-
-import fnmatch
-import glob
-import os
-
-print('################')
-print('#### Search ####')
-print('################')
-
-for file_name in os.listdir(''):
-    if file_name.endswith('.py'):
-        print(file_name)
-
-print('#### only content \'Read\'')
-for file_name in os.listdir(''):
-    if 'read' in file_name:
-        print(file_name)
-
-print('#### Search by fnmatch ####')
-
-print(fnmatch.fnmatch('/Learning-Concept/_SRCFiles/File_Pathlib.py', '*.py'))  # ‌آیا فایل با الگو تطابق دارد یا خیر
-
-for file_name in os.listdir(''):
-    if fnmatch.fnmatch(file_name, '*_*.py'):  # *[0-9][0-9]* : وجود فایل دارای دو رقم عدد
-        print(file_name)
-
-print(glob.glob('**/*[0-9][0-9]*', recursive=True))
-
-print('#### WALK: Search all directory and subDirectory####')
-for data in os.walk(''):  # os.walk('dir',topdown=False) از تویی ترین مسیر شروع میکنه و اقدام به بررسی محتویات می‌کنه
-    print(data)
-
-
-
-```
-
-## 8.4. 🅱️ Module Pathlib
+ماژول os (سطوح پایین‌تر — قدیمی‌تر اما قدرتمند)
 
 ```python
-import pathlib
-import shutil
+import os
 from pathlib import Path
 
-directory = Path('/home/Files')
-for item in directory.iterdir():
-    print(item)
-print("---------------")
+passwd_file = "/etc/passwd"
+output_file = "/tmp/salam_os.txt"
 
-path = Path('/tmp/salam')
-path.mkdir(exist_ok=True)  # [false: error on exist][True: not Error on exist]
+# Example1️⃣️: read
+if os.path.exists(passwd_file):
+    with open(passwd_file, 'r', encoding='utf-8') as f:
+        content = f.read(100)  # فقط 100 کاراکتر اول
+        print("✅ Read via os (first 100 chars):", content + "...")
 
-print('################')
-print('#### Delete ####')
-print('################')
+# Example2️⃣️: write
+with open(output_file, 'w', encoding='utf-8') as f:
+    f.write("Hello from os module!\n")
+print(f"✅ Wrote to {output_file}")
 
-file_path = pathlib.Path('/tmp/salam/fsdfsdfsd.txt')
-# 254. file_path.unlink() # حذف فایل
-# 255. file_path.rmdir() # حذف فولدر خالی
+# Example3️⃣️:append
+with open(output_file, 'a', encoding='utf-8') as f:
+    f.write("Appended line via os.\n")
+print("✅ Appended via os")
 
-print('################')
-print('#### Search ####')
-print('################')
+# Example4️⃣️: search
+with open(passwd_file, 'r') as f:
+    lines = f.readlines()
+    filtered = [line for line in lines if "root" in line]
+    print(f"✅ Found {len(filtered)} lines containing 'root'")
 
-shutil.rmtree('./test', ignore_errors=True)
+# Example5️⃣️:
 
-path = Path('')  # root of projects
-data = path.glob('**/*.py')
-print(list(data))
+# Example6️⃣️:تغییر نام (rename)
+os.rename(output_file, "/tmp/hello_os.txt")
+output_file = "/tmp/hello_os.txt"
+print("✅ Renamed via os.rename")
 
+# Example7️⃣️:جابجایی (move) — همان os.rename است
+os.rename(output_file, "/tmp/moved_hello_os.txt")
+output_file = "/tmp/moved_hello_os.txt"
+print("✅ Moved via os.rename")
+
+# Example8️⃣️:حذف (delete)
+if os.path.exists(output_file):
+    os.remove(output_file)
+    print("✅ Deleted via os.remove")
+
+# Example9️⃣️:بررسی وجود
+if not os.path.exists(output_file):
+    print("✅ File no longer exists.")
+
+# Example1️⃣️0️⃣️:اطلاعات فایل
+if os.path.exists("/etc/passwd"):
+    stat = os.stat("/etc/passwd")
+    print(f"📄 Size: {stat.st_size} bytes")
+    print(f"🕒 Modified: {stat.st_mtime}")
+
+# Example1️⃣️1️⃣️: حذف فایل
+output_path = Path("/tmp/salam.txt")
+os.unlink(output_path)  
+print(f"🗑️ Deleted {output_path} using os.unlink()")
+
+# Example1️⃣️2️⃣️: ایجاد یک درخت پوشه (حتی اگر والدین وجود نداشته باشند)
+os.makedirs("/tmp/demo/subdir1/subdir2", exist_ok=True) # اگر قبلا موجود بود خطا ندهد و عبور کند
+print("✅ Created nested directories with os.makedirs()")
+
+# Example1️⃣️3️⃣️: حذف یک پوشه خالی os.rmdir()
+os.rmdir("/tmp/demo/subdir1/subdir2")
+os.rmdir("/tmp/demo/subdir1")
+os.rmdir("/tmp/demo")
+print("✅ Removed empty directories with os.rmdir()")
+
+# Example1️⃣️4️⃣️: WALK: Search all directories and subdirectories
+for root, dirs, files in os.walk('/tmp'):
+    print(f"\n📁 Root: {root}")
+    print(f"📂 Directories: {dirs}")
+    print(f"📄 Files: {files}")
+
+
+
+# Example1️⃣️5️⃣️: WALK with topdown=False (bottom-up)
+for root, dirs, files in os.walk('/tmp', topdown=False):
+    print(f"➡️  {root}")
 ```
 
 ## 8.5. 🅱️ Module shutil
 
+ماژول shutil (برای عملیات سطح بالا: کپی، جابجایی، حذف درختی و ...)
+
 ```python
-import os
 import shutil
+import os
+from pathlib import Path
 
-# 256. shutil.copy('src', 'Des') # Only copy file
-# 257. print(os.stat('./my_files/data-1.txt'))
-# 258. print(os.stat('./new_my_files/new-data-1.txt'))
+passwd_file = "/etc/passwd"
+tmp_dir = Path("/tmp/demo_shutil")
+tmp_dir.mkdir(exist_ok=True)  # اگر قبلا موجود بود خطا ندهد و عبور کند
 
-# 259. shutil.copy2('./my_files/data-2.txt', 'Des') # copy file with metadata
-# 260. print(os.stat('./my_files/data-2.txt'))
-# 261. print(os.stat('./new_my_files/new-data-2.txt'))
+source_file = tmp_dir / "source.txt"
+target_file = tmp_dir / "target.txt"
+backup_file = tmp_dir / "backup.txt"
 
-# 262. shutil.copytree('src', 'Des') #create Backup[all _SRCFiles and subDir and Subfiles]
+# ایجاد فایل نمونه
+source_file.write_text("Sample content for shutil demo.\nLine with keyword: python\n", encoding='utf-8')
 
-# 263. shutil.move('src', 'Des')
+# Example1️⃣️:خواندن — shutil خودش read ندارد، پس از open یا pathlib استفاده می‌کنیم
+with open(source_file, 'r') as f:
+    print("✅ Read via open (for shutil context):")
+    print(f.read())
 
-# 264. os.rename('src', 'Des')
+# Example2️⃣️: نوشتن — shutil write ندارد → از open یا pathlib استفاده کنید
+# (قبلاً نوشتیم)
 
+# Example3️⃣️:الحاق — shutil append ندارد → از open با mode='a'
+
+# Example4️⃣️: جستجو — shutil search ندارد → با open + خواندن
+
+# Example5️⃣️:کپی (copy)
+shutil.copy(source_file, target_file)
+print(f"✅ Copied {source_file} → {target_file}")
+
+# Example6️⃣️:کپی با مجوزها و متادیتا (copy2)
+shutil.copy2(source_file, backup_file)
+print(f"✅ Copied with metadata → {backup_file}")
+
+# Example7️⃣️: جابجایی (move)
+moved_file = tmp_dir / "moved.txt"
+shutil.move(target_file, moved_file)
+print(f"✅ Moved {target_file} → {moved_file}")
+
+# Example8️⃣️:Rename — shutil rename ندارد → از os.rename یا pathlib.rename
+
+# Example9️⃣️: Remove — shutil برای فایل‌های تکی remove ندارد → از os.remove یا pathlib.unlink
+# اما برای پوشه‌ها: shutil.rmtree
+
+# Example1️⃣️0️⃣️:کپی کل پوشه (مثال اضافه)
+demo_src = Path("/tmp/src_demo")
+demo_dst = Path("/tmp/dst_demo")
+demo_src.mkdir(exist_ok=True)  # اگر قبلا موجود بود خطا ندهد و عبور کند
+(demo_src / "file1.txt").write_text("Hello")
+(demo_src / "file2.txt").write_text("World")
+
+shutil.copytree(demo_src, demo_dst, dirs_exist_ok=True)  # exist_ok=True ---> # اگر قبلا موجود بود خطا ندهد و عبور کند
+print(f"✅ Copied directory {demo_src} → {demo_dst}")
+
+# Example1️⃣️1️⃣️:حذف پوشه با محتوا
+shutil.rmtree(demo_src)
+shutil.rmtree(demo_dst)
+print("✅ Removed demo directories")
+
+# Example1️⃣️2️⃣️:بررسی فضای دیسک (عملیات سیستمی)
+total, used, free = shutil.disk_usage("/")
+print(f"💾 Disk Usage — Total: {total // (2 ** 30)} GB, Free: {free // (2 ** 30)} GB")
 ```
 
 # 9. 🅰️ JSON
