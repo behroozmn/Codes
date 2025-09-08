@@ -4,9 +4,11 @@
 
 ## 1.1. 🅱️ `__init__.py`
 
+* دایرکتوری که حاولی این فایل است یعنی این دایرکتوری یک پکیج (package) است
 * یک فولدر(دایرکتوری) حاوی فایل __init__.py بعنوان یک package(بسته) شناخته می‌شود و بدون این فایل پایتون نمی‌تواند دایرکتوری را به‌عنوان یک بسته شناسایی کند
 * هرگاه یک بسته(ماژول) import شود، آنگاه کد داخل این فایل به منظور راه‌انداز(پیکربندی ماژول‌ها) اجرا می‌شود
 * وقتی یک package ایمپورت می‌شود، فایل __init__.py اولین چیزی است که اجرا می‌شود
+* 
 
 ### 1.1.1. ✅️ advantages of package directory
 
@@ -39,6 +41,14 @@ myproject/
 
 ```python
 from mypackage import module_a
+# or
+from mypackage.module_a import add
+print(add(2, 3))  # 5
+# or
+import mypackage.module_a as calc
+
+print(calc.add(2, 3))  # 5
+
 ``` 
 
 و در فایل `module_a.py` می‌توانید بنویسید
