@@ -242,6 +242,20 @@ echo "$(tput setaf 7)"white text")(tput sgr0)"
 
 ```
 
+## 🅱️ Grep
+
+```shell
+# Add to sysctl.conf for persistence across reboots
+CONF_FILE="/etc/sysctl.conf"
+LINE="net.ipv6.conf.$IFACE.disable_ipv6 = 1"
+
+if ! grep -q "$LINE" $CONF_FILE; then  # ✅️ به این خط توجه شود
+  echo "$LINE" >> $CONF_FILE
+  echo "✅ Persistent setting added to $CONF_FILE."
+else
+  echo "ℹ️ Persistent setting already exists in $CONF_FILE."
+fi
+```
 ## 🅱️ differentStarAndAtsign
 
 ```shell
