@@ -7571,4 +7571,79 @@ Waiter().start()
 print("Done")
 ```
 
+# 13. 🅰️ Documentation
+
+```python
+def calculate_discount(price: float, discount_percent: float = 10.0, max_discount: float = 50.0) -> float:
+    """
+    محاسبه قیمت پس از اعمال تخفیف
+    
+    Args:
+        price (float): قیمت اصلی محصول
+        discount_percent (float, optional): درصد تخفیف. پیش‌فرض 10.0
+        max_discount (float, optional): حداکثر مبلغ تخفیف. پیش‌فرض 50.0
+    
+    Returns:
+        float: قیمت نهایی پس از تخفیف
+    
+    Raises:
+        ValueError: اگر قیمت منفی باشد
+        
+    Examples:
+        >>> calculate_discount(100, 20)
+        80.0
+        >>> calculate_discount(200, 25, 40)
+        160.0
+    """
+    if price < 0:
+        raise ValueError("Price cannot be negative")
+
+    discount_amount = min(price * discount_percent / 100, max_discount)
+    return price - discount_amount
+
+
+# مشاهده مستندات
+help(calculate_discount)
+# Output:
+## ---> Help on function calculate_discount in module __main__:
+## ---> calculate_discount(price: float, discount_percent: float = 10.0, max_discount: float = 50.0) -> float
+## --->     محاسبه قیمت پس از اعمال تخفیف
+## --->     
+## --->     Args:
+## --->         price (float): قیمت اصلی محصول
+## --->         discount_percent (float, optional): درصد تخفیف. پیش‌فرض 10.0
+## --->         max_discount (float, optional): حداکثر مبلغ تخفیف. پیش‌فرض 50.0
+## --->     
+## --->     Returns:
+## --->         float: قیمت نهایی پس از تخفیف
+## --->     
+## --->     Raises:
+## --->         ValueError: اگر قیمت منفی باشد
+## --->     
+## --->     Examples:
+## --->         >>> calculate_discount(100, 20)
+## --->         80.0
+## --->         >>> calculate_discount(200, 25, 40)
+## --->         160.0
+
+
+print(calculate_discount.__doc__)
+
+# Output:
+## --->   محاسبه قیمت پس از اعمال تخفیف
+## --->   Args:
+## --->       price (float): قیمت اصلی محصول
+## --->       discount_percent (float, optional): درصد تخفیف. پیش‌فرض 10.0
+## --->       max_discount (float, optional): حداکثر مبلغ تخفیف. پیش‌فرض 50.0
+## --->   Returns:
+## --->       float: قیمت نهایی پس از تخفیف
+## --->   Raises:
+## --->       ValueError: اگر قیمت منفی باشد
+## --->   Examples:
+## --->       >>> calculate_discount(100, 20)
+## --->       80.0
+## --->       >>> calculate_discount(200, 25, 40)
+## --->       160.0
+```
+
 </div>
