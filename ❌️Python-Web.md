@@ -2,126 +2,21 @@
 
 # 1. 🅰️ Django
 
-File: `main_urls.py`
-
-```python
-from django.contrib import admin
-from django.urls import path
-from . import views
-
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', views.mainindex),
-]
-```
-
-File: `main_views.py`
-
-```python
-from django.http import HttpResponse
-
-
-def mainindex(request):
-    return HttpResponse("index page(صفحه اصلی)")
-```
-
 ## 1.1. 🅱️ pages
 
-### 1.1.1. ✅️ 404
-
-> نام فایل باید دقیقا ۴۰۴ باشد و اگر نام دیگری باشد مورد پذیرش نیست و باید داخل مسیر تمپلیت باشد
-
-```python
-from django.shortcuts import render
-from django.http import Http404, HttpResponseNotFound, HttpResponseRedirect
-from django.template.loader import render_to_string
-
-days = {
-    'saturday': 'this is satureday in dictionary',
-    'sunday': 'this is sunday in dictionary',
-    'monday': 'this is monday in dictionary',
-    'tuesday': 'this is tuesday in dictionary',
-    'wednesday': 'this is wednesday in dictionary',
-    'thursday': 'this is thursday in dictionary',
-    'friday': 'this is friday in dictionary'
-}
-
-
-def dynamic_days(reqeust, day):
-    day_data = days.get(day)
-
-    if day_data is None:
-        # روش اول
-        raise Http404  # اتوماتیک در پوشه تمپلیت دنبال فایل با نام ۴۰۴ می‌گردد
-
-        # روش دوم
-        # response_data = render_to_string('404.html') 
-        # return HttpResponseNotFound(response_data)
-
-    context = {
-        "data": day_data,
-        "day": f'selected DAY is {day}'
-    }
-    return render(reqeust, 'challenges/challenge.html', context)
-```
-
-### 1.1.2. ✅️ masterPage or MainPage or BasePage or LayoutePage
-
-با هدف ایجاد یک صفحه اصلی که بعنوان صفحه پیش‌فرض مد نظر قرار گیرد و بقیه صفحات از آن مشتق شده و هر صفحه بتواند تگ های سفارشی خود را داشته باشد
+### 1.1.1. ✅️ masterPage or MainPage or BasePage or LayoutePage
 
 1. create `base.html` in `template` Directory
-   > Note: دایرکتوری «تمپلیت» باید در فایل ستینگ بعنوان مسیر پیش‌فرض تمپلیت‌های پروژه لحاظ شده باشد
+   > Note:
 
-3. File: `base.html`
-   ```html
-   <!DOCTYPE html>
-   <html lang="en">
-   <head>
-       <meta charset="UTF-8">
-       <title>{% block title %}{% endblock %}</title>
-       {% block header_reference %}{% endblock %}
-   </head>
-   <body>
-   {% block content %}{% endblock %}
-   {% block footer_references %}{% endblock %}
-   </body>
-   </html>
-   ```
-   > در هرصفحه‌ای که ازاین صفحه ارث‌بری نماید، بااستفاده از نام بلاک‌های بالا، می‌توان دیتای سفارشی همان صفحه را در محتوی بلاک‌ها درج نمود
-4. File: `subPage1.html`
-   ```html
-     {% extends 'base.html' %}      #✅️ برای ارث بری باید این خط در ابتدا باشد
-     {% block title %}My Blog{% endblock %}
-     {% block content %}
-         <header id="main-navigation">
-             <h1><a href="">Toplearn Blog</a></h1>
-             <nav>
-                 <a href="">All Posts</a>
-             </nav>
-         </header>
-       <section id="welcome">
-       <header>
-              <img src="{% static 'blog/images/master.jpg' %}" alt="Toplearn - Author Of This blog">
-              <h2>Toplearn blog project</h2>
-          </header>
-          <p>Hi, My name is mohammad, Im a Teacher in Toplearn</p>
-      </section>
-     {% endblock %}
-         ```
-5. File: `view.py`
-   ```
-   from django.shortcuts import render
-   def index(request):
-       return render(request, 'subPage1.html')
-   ```
+3.
+>
+4.
+5.
 
-Note: [URL](https://docs.djangoproject.com/en/5.1/ref/templates/builtins/#block)
+### 1.1.2. ✅️Include
 
-### 1.1.3. ✅️ Include
-
-تهیه بخش های متفاوت از تکه‌ها صفحه و استفاده در صفحه اصلی
-
-> note: `include` tag must use in `Content` block\
+ 
 > یعنی معمولا در بدنه مورد استفاده قرار میگیرید
 
 در بخش زیر یک تکه کد را خواهید دید که قرار است به بدنه صفحه ای متصل گردد\
@@ -146,7 +41,7 @@ File: `index.html`
 {% endblock %}
 ```
 
-### 1.1.4. ✅️ Include by `send Parameter`
+### 1.1.3. ✅️ Include by `send Parameter`
 
 تهیه بخش های متفاوت از تکه‌ها صفحه و استفاده در صفحه اصلی
 
@@ -194,7 +89,7 @@ File: `page2.html`
 {% endblock  %}
 ```
 
-### 1.1.5. ✅️ استفاده از جاوااسکریپ در برخی از صفحات
+### 1.1.4. ✅️ استفاده از جاوااسکریپ در برخی از صفحات
 
 ```python
 { % block
