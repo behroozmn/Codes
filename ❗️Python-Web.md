@@ -403,7 +403,6 @@ File: `templates/admin/dashboard.html`
 File: `templates/includes/login_form.html`
 
 ```html
-
 <form method="post" action="{% url 'login' %}">
     {% csrf_token %}
     <div>
@@ -454,7 +453,6 @@ File: `templates/home.html` صفحه اصلی(فرم ورود در فوتر)
 
 * قابلیت انتقال دیتا از طریق کلمه کلیدی `with` در سازوکار `include` وجود دارد
 * همیشه از `with` استفاده کنید(حتی اگر متغیر موجود است تا از عدم شفافیت جلوگیری کنید)
-
 
 File: `templates/products/list.html` (لیست محصولات)
 
