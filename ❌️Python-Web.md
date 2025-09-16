@@ -2,143 +2,11 @@
 
 # 1. 🅰️ Django
 
-## 1.1. 🅱️ pages
+## 1.1. 🅱️ File
 
-### 1.1.1. ✅️ masterPage or MainPage or BasePage or LayoutePage
+### 1.1.1. ✅️ Upload
 
-1. create `base.html` in `template` Directory
-   > Note:
-
-3.
->
-4.
-5.
-
-### 1.1.2. ✅️Include
-
- 
-> یعنی معمولا در بدنه مورد استفاده قرار میگیرید
-
-در بخش زیر یک تکه کد را خواهید دید که قرار است به بدنه صفحه ای متصل گردد\
-File: `topic.html`
-
-```html
-
-<header>
-    <nav>
-        <a href="http://itsee.ir">روزهای هفته</a>
-    </nav>
-</header>
-```
-
-صفحه ای که تکه کد بالا باید به آن وصل گردد\
-File: `index.html`
-
-```html
-{% extends 'base.html' %}
-{% block content %}
-{% include "topic.html"%}✅️
-{% endblock %}
-```
-
-### 1.1.3. ✅️ Include by `send Parameter`
-
-تهیه بخش های متفاوت از تکه‌ها صفحه و استفاده در صفحه اصلی
-
-File: `topic.html`
-
-```html
-
-<header>
-    <nav>
-        <a href="{% url 'days_list' %}">روزهای هفته</a>
-    </nav>
-    <p>{{ active_page|title }}</p>
-</header>
-```
-
-صفحه ای که تکه کد بالا باید به آن وصل گردد\
-File: `index.html`
-
-```html
-{% extends 'base.html' %}
-{% block content %}
-{% include "topic.html" with active_page="daysIndex" %}✅️
-<ul>
-    {% for item in days %}
-    <li><a href="{% url 'days-of-week' item %}"> {{item}} </a></li>  <!--  {% url 'days-of-week' day %}: USSING Reverse URL -->
-    {% endfor %}
-</ul>
-{% endblock %}
-```
-
-File: `page2.html`
-
-```html
-{% extends 'base.html' %}
-
-{% block page_title %}days info{% endblock  %}
-
-{% block content %}
-{% include "topic.html" with active_page="dayDetail" %}✅️
-{% if data is not None %}
-<h2>{{ data }}</h2> <!-- متغیر دیتا چیزی است که در تابع پایتون استفاده شد است و در آن فایل پایتون به این صفحه اشاره شده است-->
-{% else %}
-<p>there is no data</p>
-{% endif %}
-{% endblock  %}
-```
-
-### 1.1.4. ✅️ استفاده از جاوااسکریپ در برخی از صفحات
-
-```python
-{ % block
-footer_references %}
-< script >
-console.log('hello')
-< / script >
-{ % endblock %}
-
-```
-
-> Note: میتوان در تکه صفحه‌ها تگ اسکریپت یعنی جاوا اسکریپت را هم درج نماییم
-
-## 1.2. 🅱️ StaticFiles
-
-1. مسیر فایل‌های استاتیک پروژه باید درفایل تنظیمات تعریف شده باشد
-   `INSTALLED_APPS = [ ...'django.contrib.staticfiles' ... ]`
-2. File: `settings.py`
-
-> * `STATICFILES_DIRS = [BASE_DIR / 'static' ]`
-
-3. بالای فایل اچ تی ام ال عبارت زیر را درج نمایید
-   `{% load static %}`
-4. اگر بخوایم فایلی از فایل‌های استاتیک را به پروژه وصل نمایید باید از روش زیر استفاده نمایید
-
-   ```html
-   {% load static %}
-   <!DOCTYPE html>
-   <html lang="en">
-   <head>
-       <meta charset="UTF-8">
-       <title>{% block title %}{% endblock %}</title>
-       <link rel="stylesheet" href="{% static 'CustomCSS.css' %}">
-       {% block header_reference %}{% endblock %}
-   </head>
-   <body>
-   {% block content %}{% endblock %}
-   {% block footer_references %}{% endblock %}
-   </body>
-   </html>
-   ```
-
-> اگر اپلیکیشن بالا بود و با ارور ۴۰۴ مواجه شدیم باید سرویس جنگو را ریست نماییم
-
-## 1.3. 🅱️ File
-
-### 1.3.1. ✅️ Upload
-
-#### 1.3.1.1. ❇️ Legacy
+#### 1.1.1.1. ❇️ Legacy
 
 Files: `views.py`
 
@@ -203,9 +71,9 @@ Files: `create_profile_page.html`
 {% endblock %}
 ```
 
-#### 1.3.1.2. ❇️ Upload [By Class]]
+#### 1.1.1.2. ❇️ Upload [By Class]]
 
-#### 1.3.1.3. ❇️ Upload [By Class]]
+#### 1.1.1.3. ❇️ Upload [By Class]]
 
 save name in Database and save in custome dir
 
@@ -304,7 +172,7 @@ File: `setting.py`
 
 * بدلیل تغییرات در دیتابیس باید دستورات تغییرات در دیتابیس زده شود
 
-#### 1.3.1.4. ❇️ Filter[Upload Only Image]
+#### 1.1.1.4. ❇️ Filter[Upload Only Image]
 
 1. `python -m pip install pillow`
 2. Files: `forms.py`
@@ -318,7 +186,7 @@ File: `setting.py`
       image = models.ImageField(upload_to='images')  # درفایل تنظیمات تصریح شده است که این فولدر «ایمیچ» باید در داخل کدام مسیر ایجاد شود و سبب نگهداری فایل‌ها گردد
    ```
 
-#### 1.3.1.5. ❇️ Upload [By CreateView]
+#### 1.1.1.5. ❇️ Upload [By CreateView]
 
 1. Files: `views.py`
    ```python
@@ -342,7 +210,7 @@ File: `setting.py`
       user_image = forms.ImageField() # ❌ به این نیازی نخواهد بود
    ```
 
-### 1.3.2. ✅️ Show
+### 1.1.2. ✅️ Show
 
 1. Files: `views.py`
    ```python
@@ -409,9 +277,9 @@ File: `setting.py`
    urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
    ```
 
-## 1.4. 🅱️ Database Model
+## 1.2. 🅱️ Database Model
 
-### 1.4.1. ✅️ Info
+### 1.2.1. ✅️ Info
 
 * نکته: به هیچ عنوان به محتویات پوشه «ماگریشن» دستکاری نکنید و این موارد باید اتوماتیک ساخته شوند
 * اگر تغییراتی در مدل داده شد نیاز به بازسازی است و گرنه اگر در بدنه و دستورات پایتون بود نیازی نیست
@@ -424,7 +292,7 @@ python3 manage.py shell # دسترسی به شل یا همان پایتون کن
 
 ```
 
-### 1.4.2. ✅️ Models
+### 1.2.2. ✅️ Models
 
 Example1️⃣️: File: `models.py`
 

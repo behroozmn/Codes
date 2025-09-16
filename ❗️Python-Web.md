@@ -403,6 +403,7 @@ File: `templates/admin/dashboard.html`
 File: `templates/includes/login_form.html`
 
 ```html
+
 <form method="post" action="{% url 'login' %}">
     {% csrf_token %}
     <div>
@@ -524,5 +525,362 @@ File: `templates/post/detail.html`
 {% include "includes/comment_list.html" with comments=post.comments.all only %}
 {% endblock %}
 ```
+
+## 1.3. 🅱️‌StaticFiles
+
+* جنگو از الگوی "اپ‌محور" استفاده می‌کند. بنابراین، بهترین روش این است که برای هر اپ، یک پوشه به نام static بسازید
+    * نکته مهم: حتماً یک زیرپوشه با نام اپ (مثل myapp/) داخل static/ بسازید. این از تداخل نام فایل‌ها در اپ‌های مختلف جلوگیری می‌کند
+* عبارت `{% load static %}` باید بالای هر فایل HTML که از فایل‌های استاتیک استفاده می‌کند درج گردد
+* `STATIC_URL`: نشان‌دهنده URL پیش‌فرض برای دسترسی به فایل‌های استاتیک در مرورگر است.
+* `STATICFILES_DIRS`:اگر فایل‌های استاتیک مشترکی دارید که در تمام اپ‌ها استفاده می‌شوند (مثلاً فایل‌های عمومی پروژه)، آنها را در یک پوشه خارج از اپ‌ها قرار دهید
+* `STATIC_ROOT`:وقتی دستور `collectstatic` را اجرا می‌کنید، تمام فایل‌های استاتیک از اپ‌ها و `STATICFILES_DIRS` را در این مسیر جمع‌آوری می‌کند
+    * این مسیر فقط در محیط تولید (production) استفاده می‌شود
+    * این پوشه نباید در git قرار گیرد (در `.gitignore` اضافه کنید)
+
+```
+myapp/
+    ├── static/
+    │   └── myapp/
+    │       ├── css/
+    │       │   └── style.css
+    │       ├── js/
+    │       │   └── script.js
+    │       └── images/
+    │           └── logo.png
+    ├── templates/
+    ├── models.py
+    └── views.py
+```
+
+File: `setting.py`
+
+```python
+STATIC_URL = 'static/'  # Default url on clients browser
+STATIC_ROOT = BASE_DIR / "staticfiles"
+# ╔═══════════════════╗
+# ║ STATICFILES_DIRS ║
+# ╚═══════════════════╝
+# myproject/               ←  اگر ساختار شبیه ساختار ذیل بود
+#     ├── static/          ← فایل‌های استاتیک عمومی پروژه
+#     │   ├── css/
+#     │   └── js/
+#     ├── myapp/
+#     │   └── static/myapp/...
+#     └── settings.py
+import os
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",  # پوشه استاتیک اصلی پروژه (در کنار manage.py)
+]
+```
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/main.css' %}"> <!--If ussing "STATICFILES_DIRS"-->
+    <link rel="stylesheet" href="{% static 'myapp/css/style.css' %}">
+    <script src="{% static 'myapp/js/script.js' %}"></script>
+</head>
+<body>
+<img src="{% static 'myapp/images/logo.png' %}" alt="Logo">
+</body>
+</html>
+```
+
+**محیط Production**
+
+در محیط توسعه (development)، جنگو به طور خودکار فایل‌های استاتیک را سرو می‌کند.اما در تولید (مثلاً روی سرور با Nginx یا Apache)، باید همه فایل‌های استاتیک را در یک مکان جمع کنید. این دستور تمام فایل‌های استاتیک از همه اپ‌ها و STATICFILES_DIRS را در STATIC_ROOT کپی می‌کند. پس از اجرای این دستور، سرور وب (مثل Nginx) باید مستقیماً از STATIC_ROOT فایل‌ها را سرو کند (نه از جنگو!).
+
+```shell
+python manage.py collectstatic
+
+# ╔══════╗
+# ║ NGINX ║
+# ╚══════╝
+location /static/ {
+    alias /path/to/your/project/staticfiles;
+}
+```
+
+* اگر می‌خواهید فایل‌های استاتیک را روی Heroku، Railway، Render یا Docker راه‌اندازی کنید، همین ساختار کافی است. فقط حتماً collectstatic را در مرحله ساخت (build) اجرا کنید.
+
+**محیط Development**
+
+* جنگو در تولید برای سرو فایل‌های استاتیک مناسب نیست
+* در محیط توسعه، جنگو به صورت خودکار فایل‌های استاتیک را سرو می‌کند اما فقط اگر`DEBUG = True`باشد و در `urls.py` پروژه خط زیر اضافه شده باشد
+
+```python
+from django.conf import settings
+from django.conf.urls.static import static
+from django.urls import path
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    # ... سایر مسیرها
+]
+
+# فقط در محیط توسعه! و هیچوقت این خطوط را در محیط تولید نگذارید!
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  # اگر media هم دارید
+```
+
+**FINAL:**
+
+جمع‌بند از فایل `settings.py`
+
+```python
+import os
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+STATIC_URL = 'static/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",  # فایل‌های عمومی پروژه
+]
+
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# اگر از Media (آپلود فایل‌ها) هم استفاده می‌کنید:
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / "media"
+```
+
+## 1.3. 🅱️‌TemplateTag
+
+جنگو از یک Template Engine مبتنی بر HTML + متغیرها + تگ‌ها + فیلترها استفاده می‌کند. این ماشین، فایل `.html` را پردازش می‌کند، متغیرها را جایگزین می‌کند، و دستورات تگ‌ها را اجرا می‌نماید — و نهایتاً HTML خالص تولید می‌کند.
+
+### ✅️Tag
+
+| دسته                 | تگ‌های ضروری                                        | کاربرد                                     |
+|----------------------|-----------------------------------------------------|--------------------------------------------|
+| **شرطی**             | `{% if %}`, `{% else %}`, `{% elif %}`              | نمایش محتوا بر اساس شرط                    |
+| **حلقه**             | `{% for %}`, `{% empty %}`                          | پیمایش لیست‌ها و مدیریت حالت خالی          |
+| **متغیرها**          | `{% with %}`, `{% get_current_time ... as today %}` | ذخیره مقدار موقت برای بهینه‌سازی           |
+| **قالب‌بندی**        | `{% now %}`                                         | نمایش زمان فعلی                            |
+| **توابع تکرارپذیر**  | `{% include %}`, `{% extends %}`, `{% block %}`     | ساخت قالب‌های قابل بازاستفاده و مادر-فرزند |
+| **امنیت و فرم‌ها**   | `{% csrf_token %}`                                  | امنیت فرم‌های POST                         |
+| **فایل‌های استاتیک** | `{% load static %}`, `{% static %}`                 | لینک به CSS/JS/تصاویر                      |
+| **آدرس‌ها**          | `{% url %}`                                         | ایجاد لینک‌های پویا بدون Hardcode          |
+| **کش**               | `{% cache %}`                                       | بهبود عملکرد با کش کردن قطعات سنگین        |
+| **کامنت / خطایابی**  | `{% comment %}`, `{% debug %}`                      | نوت‌نویسی و رفع اشکال در توسعه             |
+| **فضای سفید**        | `{% spaceless %}`                                   | کاهش حجم HTML با حذف فاصله‌های اضافی       |
+
+### ✅️Filter
+
+فیلتر(Filter) یک تابع ساده است که یک مقدار(value) را دریافت می‌کند، آن را پردازش می‌کند، و یک خروجی جدید برمی‌گرداند
+
+* فیلترها همیشه رشته برمی‌گردانند
+* اگر بخواهید HTML را رندر کنید(حتماً `|safe` را اضافه کنید.)
+
+```
+Syntax: {{ variable|filter_name:argument }}
+```
+
+| گروه                                                  | عناصر                                                                                                                                                                 |
+|-------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **رشته‌ها (String Manipulation)**                     | `upper`, `lower`, `title`, `capfirst`, `slugify`, `truncatechars`, `truncatewords`, `truncatewords_html`, `escape`, `safe`, `linebreaks`, `linebreaksbr`, `striptags` |
+| **اعداد (Number Operations)**                         | `floatformat`, `add`, `sub`, `multiply`, `divide`, `mod`, `abs`, `intcomma`                                                                                           |
+| **لیست‌ها و آرایه‌ها (List/Array Operations)**        | `length`, `join`, `slice`, `first`, `last`, `random`, `dictsort`, `dictsortreversed`                                                                                  |
+| **امنیت و HTML (Security & XSS)**                     | `escape`, `safe`, `striptags`                                                                                                                                         |
+| **تاریخ و زمان (Date & Time Formatting)**             | `date`, `time`, `timesince`, `timeuntil`, `naturalday`, `naturaltime`                                                                                                 |
+| **مقادیر پیش‌فرض و جایگزینی (Defaults & Fallbacks)**  | `default`, `default_if_none`, `yesno`                                                                                                                                 |
+| **جمع‌بندی و صرفه‌جویی (Pluralization & Conversion)** | `pluralize`, `phone2numeric`                                                                                                                                          |
+| **حذف و اصلاح تگ‌های خاص (Tag Filtering)**            | `removetags`                                                                                                                                                          |
+
+```
+## Examples:
+# ╔═════════╗
+# ║ STRING  ║   ← String Manipulation
+# ╚═════════╝
+
+{{ name|upper }} ← change all characters to uppercase
+input:"ali reza" ▶️ "ALI REZA"
+
+{{ name|lower }} ← change all characters to lowercase
+input:"HELLO WORLD" ▶️ "hello world"
+
+{{ name|title }} ← capitalize first letter of each word
+input:"john doe" ▶️ "John Doe"
+
+{{ name|capfirst }} ← capitalize only the first character of the string
+input:"john doe" ▶️ "John doe"
+
+{{ name|slugify }} ← convert string to URL-safe slug (replace spaces with hyphens, remove special chars)
+input:"Hello, World! 2025" ▶️ "hello-world-2025"
+
+{{ name|truncatechars:10 }} ← truncate string to 10 characters and append "…"
+input:"This is a very long text" ▶️ "This is a…"
+
+{{ name|truncatewords:3 }} ← truncate string to 3 words and append "…"
+input:"The quick brown fox jumps over the lazy dog" ▶️ "The quick brown…"
+
+{{ name|truncatewords_html:3 }} ← truncate to 3 words while preserving HTML tags
+input:"<p>Hello <strong>World</strong></p>" ▶️ "<p>Hello <strong>World</strong>…</p>"
+
+{{ name|escape }} ← escape HTML characters to prevent XSS attacks
+input:"<script>alert('XSS')</script>" ▶️ "<script>alert(&#x27;XSS&#x27;)</script>"
+
+{{ name|safe }} ← render raw HTML (use only if content is trusted)
+input:"<strong>Bold Text</strong>" ▶️ "<strong>Bold Text</strong>"
+
+{{ name|linebreaks }} ← convert newlines (\n) to <p> tags
+input:"Line 1\nLine 2\nLine 3" ▶️ "<p>Line 1</p><p>Line 2</p><p>Line 3</p>"
+
+{{ name|linebreaksbr }} ← convert newlines (\n) to <br> tags
+input:"Line 1\nLine 2" ▶️ "Line 1<br>Line 2"
+
+{{ name|striptags }} ← remove all HTML tags, keep only text
+input:"<p>Hello <b>World</b></p><script>malicious()</script>" ▶️ "Hello World"
+
+
+# ╔══════════╗
+# ║ NUMBERS  ║   ← Number Operations
+# ╚══════════╝
+
+{{ price|floatformat:2 }} ← round number to 2 decimal places
+input:3.14159 ▶️ "3.14"
+
+{{ price|floatformat:"-2" }} ← remove trailing zeros from decimal
+input:5.000 ▶️ "5"
+
+{{ number|add:5 }} ← add the given number to the value
+input:10 ▶️ 15
+
+{{ number|sub:3 }} ← subtract the given number from the value (Django 3.2+)
+input:10 ▶️ 7
+
+{{ number|multiply:4 }} ← multiply the value by the given number
+input:6 ▶️ 24
+
+{{ number|divide:2 }} ← divide the value by the given number (Django 3.2+)
+input:12 ▶️ 6
+
+{{ number|mod:5 }} ← return remainder after division by the given number (Django 3.2+)
+input:17 ▶️ 2
+
+{{ number|abs }} ← return absolute value
+input:-7 ▶️ 7
+
+{{ price|intcomma }} ← add commas as thousands separators (e.g., for USD/EUR)
+input:1000000 ▶️ "1,000,000"
+
+
+# ╔════════════════╗
+# ║ ARRAY or LIST  ║  ← List/Array Operations
+# ╚════════════════╝
+
+{{ items|length }} ← return number of items in list
+input:["apple", "banana", "cherry"] ▶️ 3
+
+{{ items|join:", " }} ← join list elements with specified separator
+input:["a", "b", "c"] ▶️ "a, b, c"
+
+{{ items|slice:":2" }} ← slice list from start to index 2 (like Python [0:2])
+input:["a", "b", "c", "d"] ▶️ ["a", "b"]
+
+{{ items|slice:"1:3" }} ← slice list from index 1 to 3
+input:["a", "b", "c", "d"] ▶️ ["b", "c"]
+
+{{ items|slice:"::-1" }} ← reverse the list
+input:["a", "b", "c"] ▶️ ["c", "b", "a"]
+
+{{ items|first }} ← return the first item of the list
+input:["a", "b", "c"] ▶️ "a"
+
+{{ items|last }} ← return the last item of the list
+input:["a", "b", "c"] ▶️ "c"
+
+{{ items|random }} ← return a random item from the list (Django 2.2+)
+input:["red", "green", "blue"] ▶️ "green"
+
+{{ users|dictsort:"name" }} ← sort list of dictionaries by the given key
+input:[{"name":"Zahra"},{"name":"Ali"}] ▶️ [{"name":"Ali"},{"name":"Zahra"}]
+
+{{ users|dictsortreversed:"age" }} ← sort list of dictionaries by key in descending order
+input:[{"name":"Ali","age":20},{"name":"Zahra","age":25}] ▶️ [{"name":"Zahra","age":25},{"name":"Ali","age":20}]
+
+
+# ╔═══════════╗
+# ║ SECURITY  ║ ← Security & XSS Prevention
+# ╚═══════════╝
+
+{{ user_input|escape }} ← escape HTML to prevent XSS attacks (Django does this by default)
+input:"<script>alert('XSS')</script>" ▶️ "<script>alert(&#x27;XSS&#x27;)</script>"
+
+{{ html_content|safe }} ← render unescaped HTML (use only with trusted content)
+input:"<strong>Important</strong>" ▶️ "<strong>Important</strong>"
+
+{{ html_with_script|striptags }} ← remove all HTML tags, keep only plain text
+input:"<p>Hello</p><script>evil()</script>" ▶️ "Hello"
+
+
+# ╔══════════╗
+# ║ DATE/TIME ║   ← Date & Time Formatting
+# ╚══════════╝
+
+{{ now|date:"Y-m-d" }} ← format date as YYYY-MM-DD
+input:datetime(2025, 4, 5, 10, 30) ▶️ "2025-04-05"
+
+{{ now|date:"j F Y" }} ← format date in human-readable form: Day Month Year
+input:datetime(2025, 4, 5, 10, 30) ▶️ "5 April 2025"
+
+{{ now|time:"H:i" }} ← format time in 24-hour format: HH:MM
+input:datetime(2025, 4, 5, 10, 30) ▶️ "10:30"
+
+{{ created_at|timesince }} ← display how long ago the datetime occurred (e.g., "1 day, 2 hours")
+input:datetime(2025, 4, 4, 8, 0) ▶️ "1 day, 2 hours"
+
+{{ event_date|timeuntil }} ← display how much time remains until the datetime (e.g., "5 days")
+input:datetime(2025, 4, 10, 14, 0) ▶️ "5 days"
+
+{{ created_at|naturalday }} ← show "today", "yesterday", or normal date (requires {% load humanize %})
+input:datetime.today() ▶️ "today"
+
+{{ created_at|naturaltime }} ← show relative time like "2 hours ago" (requires {% load humanize %})
+input:datetime(2025, 4, 4, 15, 0) ▶️ "2 hours ago"
+
+
+# ╔════════╗
+# ║ OTHER  ║  ← Miscellaneous Filters
+# ╚════════╝
+
+{{ value|default:"N/A" }} ← return fallback value if input is falsy (None, "", 0, False, [])
+input:None ▶️ "N/A"
+
+{{ value|default_if_none:"Unknown" }} ← return fallback value only if input is exactly None
+input:None ▶️ "Unknown"
+
+{{ is_active|yesno:"فعال,غیرفعال" }} ← convert True/False to custom strings separated by comma
+input:True ▶️ "فعال"
+
+{{ is_active|yesno:"✅,❌" }} ← convert True/False to emojis or custom symbols
+input:False ▶️ "❌"
+
+{{ count|pluralize }} ← return empty string if value is 1, otherwise return "s" (for pluralization)
+input:1 ▶️ ""
+
+{{ count|pluralize:"s" }} ← return empty string if value is 1, else return suffix (e.g., "s")
+input:1 ▶️ ""
+
+{{ count|pluralize:"s" }} ← return suffix when value is not 1 (e.g., "s" for plural)
+input:3 ▶️ "s"
+
+{{ phone|phone2numeric }} ← convert phone letters to numbers (e.g., A→2, C→2, L→5)
+input:"1-800-CALL-NOW" ▶️ "1-800-2255-669"
+
+{{ html|removetags:"script style" }} ← remove specific HTML tags while keeping others
+input:"<p>Hello <script>bad()</script></p><style>...</style>" ▶️ "<p>Hello </p>"
+```
+
+## 1.3. 🅱️‌FunctionBaseView
+
+## 1.3. 🅱️‌ClassBaseView
+
+
 
 </div>
