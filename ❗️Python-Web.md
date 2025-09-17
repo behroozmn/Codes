@@ -1,10 +1,8 @@
 <div dir="rtl">
 
-# 1. 🅰️Django
+# 1. 🅰️BasicRenderingMethods
 
-## 1.1. 🅱️‌BasicRenderingMethods
-
-### 1.1.1. ✅️django.http.HttpResponse
+## 1.1. 🅱️django.http.HttpResponse
 
 * نمایش صفحه `HTML` با تولید دستی رشته‌های `HTML` در کد پایتون
 * این روش هیچ تمپلیتی ندارد. شما کل `HTML` را به صورت رشته‌ای (string) در کد پایتون می‌نویسید و با `HttpResponse` آن را به مرورگر می‌فرستید.
@@ -31,7 +29,7 @@ def home_view(request):
     return HttpResponse(html)
 ```
 
-### 1.1.2. ✅️HttpResponse+template(context)
+## 1.2. 🅱️HttpResponse+template(context)
 
 * نمایش صفحه با استفاده از فایل تمپلیت (.html) و پردازش دستی آن در پایتون
 * قبل از `render()` اولین روش صحیح برای نماش صفحات در جنگو بود
@@ -104,7 +102,7 @@ urlpatterns = [
 ]
 ```
 
-### 1.1.3. ✅️django.shortcuts.render()
+## 1.3. 🅱️django.shortcuts.render()
 
 * render() یک تابع کمکی (helper function) است که در جنگو برای ساده‌سازی نمایش صفحات HTML طراحی شده است.
 
@@ -172,7 +170,7 @@ render(request, 'welcome.html', context=None)
 render(request, 'feed.xml', context, content_type='application/xml')
 ```
 
-### 1.1.4. ✅️Http404
+## 1.4. 🅱️Http404
 
 ```python
 
@@ -204,9 +202,27 @@ def func(reqeust, day):
     return render(reqeust, 'page.html', context)
 ```
 
-## 1.2. 🅱️‌Page
+# 2. 🅰️TemplateTag
 
-### 1.2.1. ✅️BasePage(block)
+جنگو از یک Template Engine مبتنی بر HTML + متغیرها + تگ‌ها + فیلترها استفاده می‌کند. این ماشین، فایل `.html` را پردازش می‌کند، متغیرها را جایگزین می‌کند، و دستورات تگ‌ها را اجرا می‌نماید(و نهایتاً HTML خالص تولید می‌کند).
+
+## 2.1. 🅱️Tag
+
+| دسته                 | تگ‌های ضروری                                        | کاربرد                                     |
+|----------------------|-----------------------------------------------------|--------------------------------------------|
+| **شرطی**             | `{% if %}`, `{% else %}`, `{% elif %}`              | نمایش محتوا بر اساس شرط                    |
+| **حلقه**             | `{% for %}`, `{% empty %}`                          | پیمایش لیست‌ها و مدیریت حالت خالی          |
+| **متغیرها**          | `{% with %}`, `{% get_current_time ... as today %}` | ذخیره مقدار موقت برای بهینه‌سازی           |
+| **قالب‌بندی**        | `{% now %}`                                         | نمایش زمان فعلی                            |
+| **توابع تکرارپذیر**  | `{% include %}`, `{% extends %}`, `{% block %}`     | ساخت قالب‌های قابل بازاستفاده و مادر-فرزند |
+| **امنیت و فرم‌ها**   | `{% csrf_token %}`                                  | امنیت فرم‌های POST                         |
+| **فایل‌های استاتیک** | `{% load static %}`, `{% static %}`                 | لینک به CSS/JS/تصاویر                      |
+| **آدرس‌ها**          | `{% url %}`                                         | ایجاد لینک‌های پویا بدون Hardcode          |
+| **کش**               | `{% cache %}`                                       | بهبود عملکرد با کش کردن قطعات سنگین        |
+| **کامنت / خطایابی**  | `{% comment %}`, `{% debug %}`                      | نوت‌نویسی و رفع اشکال در توسعه             |
+| **فضای سفید**        | `{% spaceless %}`                                   | کاهش حجم HTML با حذف فاصله‌های اضافی       |
+
+### 2.1.1. ✅️BasePage(block)
 
 * همه نام‌های masterPage یا MainPage یا BasePage یا LayoutePage به یک مفهوم اشاره دارند
 * ایجاد یک صفحه‌اصلی(صفحه پیش‌فرض)تا بقیه صفحات از آن مشتق شود و در ادامه بتوان توسط تگ‌های دلخواه هر صفحه قابلیت سفارشی‌سازی محقق شود
@@ -273,7 +289,7 @@ File: `templates/basePage.html`
 * اختیاری: `block extra_css` و  `extra_js` برای صفحات نیازمند سفارشی‌سازی
 * [URL](https://docs.djangoproject.com/en/5.1/ref/templates/builtins/#block)
 
-### 1.2.2. ✅️subPage(extends)
+### 2.1.2. ✅️subPage(extends)
 
 «صفحه‌لایه‌پایین‌تر» که از «صفحه‌اصلی» ارث‌بری میکند و تمام صفحات یک ساختار واحد خواهند داشت(ولی هر کدام محتوا، استایل و اسکریپت خاص خود را دارند)
 
@@ -328,7 +344,7 @@ def index(request):
     return render(request, 'subPage1.html')
 ```
 
-#### 1.2.2.1. ❇️block.super
+#### 2.1.2.1. ❇️block.super
 
 اگر از کلمه کلیدی  `block.super` استفاده نمایید محتوی والد حفظ خواهد شد و تنها محتوی به بلاک «صفحه‌لایه‌پایین‌تر» افزوده خواهد شد
 
@@ -389,7 +405,7 @@ File: `templates/admin/dashboard.html`
 {% endblock %}
 ```
 
-### 1.2.3. ✅️Include
+### 2.1.3. ✅️Include
 
 * تهیه بخش های متفاوت از تکه‌ها صفحه و استفاده در صفحه اصلی یا هر صفحه دلخواه
 * نکته: بلوک `include` معمولا در بدنه یعنی `Content` مورد استفاده قرار می‌گیرد
@@ -450,7 +466,7 @@ File: `templates/home.html` صفحه اصلی(فرم ورود در فوتر)
 {% endblock %}
 ```
 
-#### 1.2.3.1. ❇️context(with)
+#### 2.1.3.1. ❇️Context(with)
 
 * قابلیت انتقال دیتا از طریق کلمه کلیدی `with` در سازوکار `include` وجود دارد
 * همیشه از `with` استفاده کنید(حتی اگر متغیر موجود است تا از عدم شفافیت جلوگیری کنید)
@@ -491,7 +507,7 @@ File: `templates/includes/product_card.html`
 * `with product=product` متغیر `product` را فقط برای این `include` تعریف می‌کند.
 * بدون `with` اگر `product` در کانتکست والد وجود نداشته باشد، خطا می‌دهد
 
-#### 1.2.3.2. ❇️contextWith(only)
+#### 2.1.3.2. ❇️ContextWith(only)
 
 * فقط متغیرهایی که با `with` به همراه `=`  و  `only` تعریف کردید در تمپلیت داخلی در دسترس هستند.
 * بقیه متغیرهای والد حذف می‌شوند
@@ -526,151 +542,7 @@ File: `templates/post/detail.html`
 {% endblock %}
 ```
 
-## 1.3. 🅱️‌StaticFiles
-
-* جنگو از الگوی "اپ‌محور" استفاده می‌کند. بنابراین، بهترین روش این است که برای هر اپ، یک پوشه به نام static بسازید
-    * نکته مهم: حتماً یک زیرپوشه با نام اپ (مثل myapp/) داخل static/ بسازید. این از تداخل نام فایل‌ها در اپ‌های مختلف جلوگیری می‌کند
-* عبارت `{% load static %}` باید بالای هر فایل HTML که از فایل‌های استاتیک استفاده می‌کند درج گردد
-* `STATIC_URL`: نشان‌دهنده URL پیش‌فرض برای دسترسی به فایل‌های استاتیک در مرورگر است.
-* `STATICFILES_DIRS`:اگر فایل‌های استاتیک مشترکی دارید که در تمام اپ‌ها استفاده می‌شوند (مثلاً فایل‌های عمومی پروژه)، آنها را در یک پوشه خارج از اپ‌ها قرار دهید
-* `STATIC_ROOT`:وقتی دستور `collectstatic` را اجرا می‌کنید، تمام فایل‌های استاتیک از اپ‌ها و `STATICFILES_DIRS` را در این مسیر جمع‌آوری می‌کند
-    * این مسیر فقط در محیط تولید (production) استفاده می‌شود
-    * این پوشه نباید در git قرار گیرد (در `.gitignore` اضافه کنید)
-
-```
-myapp/
-    ├── static/
-    │   └── myapp/
-    │       ├── css/
-    │       │   └── style.css
-    │       ├── js/
-    │       │   └── script.js
-    │       └── images/
-    │           └── logo.png
-    ├── templates/
-    ├── models.py
-    └── views.py
-```
-
-File: `setting.py`
-
-```python
-STATIC_URL = 'static/'  # Default url on clients browser
-STATIC_ROOT = BASE_DIR / "staticfiles"
-# ╔═══════════════════╗
-# ║ STATICFILES_DIRS ║
-# ╚═══════════════════╝
-# myproject/               ←  اگر ساختار شبیه ساختار ذیل بود
-#     ├── static/          ← فایل‌های استاتیک عمومی پروژه
-#     │   ├── css/
-#     │   └── js/
-#     ├── myapp/
-#     │   └── static/myapp/...
-#     └── settings.py
-import os
-
-STATICFILES_DIRS = [
-    BASE_DIR / "static",  # پوشه استاتیک اصلی پروژه (در کنار manage.py)
-]
-```
-
-```html
-<!DOCTYPE html>
-<html>
-<head>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/main.css' %}"> <!--If ussing "STATICFILES_DIRS"-->
-    <link rel="stylesheet" href="{% static 'myapp/css/style.css' %}">
-    <script src="{% static 'myapp/js/script.js' %}"></script>
-</head>
-<body>
-<img src="{% static 'myapp/images/logo.png' %}" alt="Logo">
-</body>
-</html>
-```
-
-**محیط Production**
-
-در محیط توسعه (development)، جنگو به طور خودکار فایل‌های استاتیک را سرو می‌کند.اما در تولید (مثلاً روی سرور با Nginx یا Apache)، باید همه فایل‌های استاتیک را در یک مکان جمع کنید. این دستور تمام فایل‌های استاتیک از همه اپ‌ها و STATICFILES_DIRS را در STATIC_ROOT کپی می‌کند. پس از اجرای این دستور، سرور وب (مثل Nginx) باید مستقیماً از STATIC_ROOT فایل‌ها را سرو کند (نه از جنگو!).
-
-```shell
-python manage.py collectstatic
-
-# ╔══════╗
-# ║ NGINX ║
-# ╚══════╝
-location /static/ {
-    alias /path/to/your/project/staticfiles;
-}
-```
-
-* اگر می‌خواهید فایل‌های استاتیک را روی Heroku، Railway، Render یا Docker راه‌اندازی کنید، همین ساختار کافی است. فقط حتماً collectstatic را در مرحله ساخت (build) اجرا کنید.
-
-**محیط Development**
-
-* جنگو در تولید برای سرو فایل‌های استاتیک مناسب نیست
-* در محیط توسعه، جنگو به صورت خودکار فایل‌های استاتیک را سرو می‌کند اما فقط اگر`DEBUG = True`باشد و در `urls.py` پروژه خط زیر اضافه شده باشد
-
-```python
-from django.conf import settings
-from django.conf.urls.static import static
-from django.urls import path
-
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    # ... سایر مسیرها
-]
-
-# فقط در محیط توسعه! و هیچوقت این خطوط را در محیط تولید نگذارید!
-if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  # اگر media هم دارید
-```
-
-**FINAL:**
-
-جمع‌بند از فایل `settings.py`
-
-```python
-import os
-from pathlib import Path
-
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-STATIC_URL = 'static/'
-
-STATICFILES_DIRS = [
-    BASE_DIR / "static",  # فایل‌های عمومی پروژه
-]
-
-STATIC_ROOT = BASE_DIR / "staticfiles"
-
-# اگر از Media (آپلود فایل‌ها) هم استفاده می‌کنید:
-MEDIA_URL = 'media/'
-MEDIA_ROOT = BASE_DIR / "media"
-```
-
-## 1.3. 🅱️‌TemplateTag
-
-جنگو از یک Template Engine مبتنی بر HTML + متغیرها + تگ‌ها + فیلترها استفاده می‌کند. این ماشین، فایل `.html` را پردازش می‌کند، متغیرها را جایگزین می‌کند، و دستورات تگ‌ها را اجرا می‌نماید — و نهایتاً HTML خالص تولید می‌کند.
-
-### ✅️Tag
-
-| دسته                 | تگ‌های ضروری                                        | کاربرد                                     |
-|----------------------|-----------------------------------------------------|--------------------------------------------|
-| **شرطی**             | `{% if %}`, `{% else %}`, `{% elif %}`              | نمایش محتوا بر اساس شرط                    |
-| **حلقه**             | `{% for %}`, `{% empty %}`                          | پیمایش لیست‌ها و مدیریت حالت خالی          |
-| **متغیرها**          | `{% with %}`, `{% get_current_time ... as today %}` | ذخیره مقدار موقت برای بهینه‌سازی           |
-| **قالب‌بندی**        | `{% now %}`                                         | نمایش زمان فعلی                            |
-| **توابع تکرارپذیر**  | `{% include %}`, `{% extends %}`, `{% block %}`     | ساخت قالب‌های قابل بازاستفاده و مادر-فرزند |
-| **امنیت و فرم‌ها**   | `{% csrf_token %}`                                  | امنیت فرم‌های POST                         |
-| **فایل‌های استاتیک** | `{% load static %}`, `{% static %}`                 | لینک به CSS/JS/تصاویر                      |
-| **آدرس‌ها**          | `{% url %}`                                         | ایجاد لینک‌های پویا بدون Hardcode          |
-| **کش**               | `{% cache %}`                                       | بهبود عملکرد با کش کردن قطعات سنگین        |
-| **کامنت / خطایابی**  | `{% comment %}`, `{% debug %}`                      | نوت‌نویسی و رفع اشکال در توسعه             |
-| **فضای سفید**        | `{% spaceless %}`                                   | کاهش حجم HTML با حذف فاصله‌های اضافی       |
-
-### ✅️Filter
+## 2.2. 🅱️Filter
 
 فیلتر(Filter) یک تابع ساده است که یک مقدار(value) را دریافت می‌کند، آن را پردازش می‌کند، و یک خروجی جدید برمی‌گرداند
 
@@ -877,10 +749,246 @@ input:"1-800-CALL-NOW" ▶️ "1-800-2255-669"
 input:"<p>Hello <script>bad()</script></p><style>...</style>" ▶️ "<p>Hello </p>"
 ```
 
-## 1.3. 🅱️‌FunctionBaseView
+# 3. 🅰️Files
 
-## 1.3. 🅱️‌ClassBaseView
+## 3.1. 🅱️Static
+
+* جنگو از الگوی "اپ‌محور" استفاده می‌کند. بنابراین، بهترین روش این است که برای هر اپ، یک پوشه به نام static بسازید
+    * نکته مهم: حتماً یک زیرپوشه با نام اپ (مثل myapp/) داخل static/ بسازید. این از تداخل نام فایل‌ها در اپ‌های مختلف جلوگیری می‌کند
+* عبارت `{% load static %}` باید بالای هر فایل HTML که از فایل‌های استاتیک استفاده می‌کند درج گردد
+* `STATIC_URL`: نشان‌دهنده URL پیش‌فرض برای دسترسی به فایل‌های استاتیک در مرورگر است.
+* `STATICFILES_DIRS`:اگر فایل‌های استاتیک مشترکی دارید که در تمام اپ‌ها استفاده می‌شوند (مثلاً فایل‌های عمومی پروژه)، آنها را در یک پوشه خارج از اپ‌ها قرار دهید
+* `STATIC_ROOT`:وقتی دستور `collectstatic` را اجرا می‌کنید، تمام فایل‌های استاتیک از اپ‌ها و `STATICFILES_DIRS` را در این مسیر جمع‌آوری می‌کند
+    * این مسیر فقط در محیط تولید (production) استفاده می‌شود
+    * این پوشه نباید در git قرار گیرد (در `.gitignore` اضافه کنید)
+
+```
+myapp/
+    ├── static/
+    │   └── myapp/
+    │       ├── css/
+    │       │   └── style.css
+    │       ├── js/
+    │       │   └── script.js
+    │       └── images/
+    │           └── logo.png
+    ├── templates/
+    ├── models.py
+    └── views.py
+```
+
+File: `setting.py`
+
+```python
+STATIC_URL = 'static/'  # Default url on clients browser
+STATIC_ROOT = BASE_DIR / "staticfiles"
+# ╔═══════════════════╗
+# ║ STATICFILES_DIRS ║
+# ╚═══════════════════╝
+# myproject/               ←  اگر ساختار شبیه ساختار ذیل بود
+#     ├── static/          ← فایل‌های استاتیک عمومی پروژه
+#     │   ├── css/
+#     │   └── js/
+#     ├── myapp/
+#     │   └── static/myapp/...
+#     └── settings.py
+import os
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",  # پوشه استاتیک اصلی پروژه (در کنار manage.py)
+]
+```
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/main.css' %}"> <!--If ussing "STATICFILES_DIRS"-->
+    <link rel="stylesheet" href="{% static 'myapp/css/style.css' %}">
+    <script src="{% static 'myapp/js/script.js' %}"></script>
+</head>
+<body>
+<img src="{% static 'myapp/images/logo.png' %}" alt="Logo">
+</body>
+</html>
+```
+
+**محیط Production**
+
+در محیط توسعه (development)، جنگو به طور خودکار فایل‌های استاتیک را سرو می‌کند.اما در تولید (مثلاً روی سرور با Nginx یا Apache)، باید همه فایل‌های استاتیک را در یک مکان جمع کنید. این دستور تمام فایل‌های استاتیک از همه اپ‌ها و STATICFILES_DIRS را در STATIC_ROOT کپی می‌کند. پس از اجرای این دستور، سرور وب (مثل Nginx) باید مستقیماً از STATIC_ROOT فایل‌ها را سرو کند (نه از جنگو!).
+
+```shell
+python manage.py collectstatic
+
+# ╔══════╗
+# ║ NGINX ║
+# ╚══════╝
+location /static/ {
+    alias /path/to/your/project/staticfiles;
+}
+```
+
+* اگر می‌خواهید فایل‌های استاتیک را روی Heroku، Railway، Render یا Docker راه‌اندازی کنید، همین ساختار کافی است. فقط حتماً collectstatic را در مرحله ساخت (build) اجرا کنید.
+
+**محیط Development**
+
+* جنگو در تولید برای سرو فایل‌های استاتیک مناسب نیست
+* در محیط توسعه، جنگو به صورت خودکار فایل‌های استاتیک را سرو می‌کند اما فقط اگر`DEBUG = True`باشد و در `urls.py` پروژه خط زیر اضافه شده باشد
+
+```python
+from django.conf import settings
+from django.conf.urls.static import static
+from django.urls import path
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    # ... سایر مسیرها
+]
+
+# فقط در محیط توسعه! و هیچوقت این خطوط را در محیط تولید نگذارید!
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  # اگر media هم دارید
+```
+
+**FINAL:**
+
+جمع‌بند از فایل `settings.py`
+
+```python
+import os
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+STATIC_URL = 'static/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",  # فایل‌های عمومی پروژه
+]
+
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# اگر از Media (آپلود فایل‌ها) هم استفاده می‌کنید:
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / "media"
+```
+
+# 4. 🅰️ClassBaseView
+
+**FunctionBaseView**:در این حالت View ها به‌صورت تابع معمولی پایتون همانند ️BasicRenderingMethods که از django.http.HttpResponse استفاده می‌کند نوشته می‌شوند.
+
+* مزایا:
+    *     ساده و شهودی برای مبتدیان
+    * کنترل کامل روی منطق
+    * مناسب برای منطق‌های غیراستاندارد یا پیچیده
+* معایب
+    *     تکرار کد در پروژه‌های بزرگ (مثلاً برای Create/Edit/Delete)
+    * نیاز به نوشتن دستی چیزهایی مثل فرم‌ها، اعتبارسنجی، redirect و ...
+
+**Class-Based Views (CBV)**:ویوها به‌صورت کلاس پایتون نوشته می‌شوند و از وراثت و Mixinها برای استفاده مجدد کد استفاده می‌کنند.
+
+* نکته: GenericViewها از ترکیب Mixinها + View ساخته شده‌اند
+* نکته:Mixinها خودشان View نیستند، اما اجزای سازنده Viewها هستند
+* در دسته‌بندی `TemplateView` (که در عمل پس از View ساده‌ترین CBV است) را ذیل Generic نیز آوردند 
 
 
+```
+🆑️ → Class or کلاس 
+🅾️ → Object or شیء
+Ⓜ️ → Method or function or تابع
+p  → parent
+
+Django Views
+│
+├── 1. Function-Based Views (FBV)
+│    ├── my_view[Ⓜ️]
+│    ├── list_view → [Ⓜ️]
+│    ├── detail_view → [Ⓜ️]
+│    ├── create_view → [Ⓜ️]
+│    ├── update_view → [Ⓜ️]
+│    ├── delete_view → [Ⓜ️]
+│    └── api_view → [Ⓜ️(return JsonResponse)] )
+│
+└── 2. Class-Based Views (CBV)
+     │
+     ├── 2.1. Base Views
+     │    ├── View[🆑️] → (base for all CBVs) ⟹ (handles HTTP methods)
+     │    ├── TemplateView[🆑️] → (p: View) ⟹ (renders template) [پرکاربرد]
+     │    └── RedirectView[🆑️] → (p: View) ⟹ (redirects to URL)
+     │
+     ├── 2.2. Generic Display Views
+     │    ├── ListView[🆑️] → (ps: MultipleObjectMixin + TemplateResponseMixin + View)  ⟹ (handles list display) [پرکاربرد]
+     │    ├── DetailView[🆑️] → (ps: SingleObjectMixin + TemplateResponseMixin + View)  ⟹ (handles single object)
+     │    ├── ArchiveIndexView[🆑️] → (p: ListView) ⟹ (grouped by date)
+     │    ├── YearArchiveView[🆑️] → (p: ArchiveIndexView) ⟹ (filter by year)
+     │    ├── MonthArchiveView[🆑️] → (p: ArchiveIndexView) ⟹ (filter by month)
+     │    ├── WeekArchiveView[🆑️] → (p: ArchiveIndexView) ⟹ (filter by week)
+     │    ├── DayArchiveView[🆑️] → (p: ArchiveIndexView) ⟹ (filter by day)
+     │    └── DateDetailView[🆑️] → (ps: SingleObjectMixin + TemplateResponseMixin + View) ⟹ (single object by date + slug)
+     │
+     ├── 2.3. Generic Editing Views
+     │    ├── FormView[🆑️] → (ps: FormMixin + TemplateResponseMixin + View) ⟹ (handles forms)
+     │    ├── CreateView[🆑️] → (ps: ModelFormMixin + ProcessFormView + FormMixin + TemplateResponseMixin + View) ⟹ (creates model instance)
+     │    ├── UpdateView[🆑️] → (ps: ModelFormMixin + ProcessFormView + SingleObjectMixin + FormMixin + TemplateResponseMixin + View) ⟹ (edits model instance)
+     │    └── DeleteView[🆑️] → (ps: DeletionMixin + SingleObjectMixin + TemplateResponseMixin + View) ⟹ (deletes object with confirmation)
+     │
+     ├── 2.4. Authentication Views
+     │    ├── LoginView[🆑️] → (p: FormView) ⟹ (handles login)
+     │    ├── LogoutView[🆑️] → (p: RedirectView)
+     │    ├── PasswordChangeView[🆑️] → (p: FormView)
+     │    ├── PasswordChangeDoneView[🆑️] → (p: TemplateView)
+     │    ├── PasswordResetView[🆑️] → (p: FormView)
+     │    ├── PasswordResetDoneView[🆑️] → (p: TemplateView)
+     │    ├── PasswordResetConfirmView[🆑️] → (p: FormView)
+     │    └── PasswordResetCompleteView[🆑️] → (p: TemplateView)
+     │
+     ├── 2.5. Mixins
+     │    ├── ContextMixin[🅾️] → (adds context to template)
+     │    ├── TemplateResponseMixin[🅾️] → (handles template rendering)
+     │    ├── SingleObjectMixin[🅾️] → (retrieves single object)
+     │    ├── MultipleObjectMixin[🅾️] → (retrieves list of objects)
+     │    ├── FormMixin[🅾️] → (handles form logic)
+     │    ├── ModelFormMixin[🆑️] → (p: FormMixin) ⟹ (binds ModelForm)
+     │    ├── ProcessFormView[🅾️] → (process GET/POST for forms)
+     │    ├── LoginRequiredMixin[🅾️] → (requires authenticated user)
+     │    ├── UserPassesTestMixin[🅾️] → (custom permission logic)
+     │    ├── PermissionRequiredMixin[🅾️] → (requires Django permission)
+     │    └── SuccessMessageMixin[🅾️] → (adds success message after form)
+     │
+     ├── 2.6. API & Specialized Views
+     │    ├── JSONResponseMixin[🅾️] → (provides JSON response)
+     │    ├── DeletionMixin[🅾️] → (deletion helper)
+     │    ├── AsyncView[🆑️] → (p: View) ⟹ (supports async HTTP)
+     │    ├── APIView[🆑️] → (p: View) ⟹ (base API view)
+     │    ├── GenericAPIView[🆑️] → (p: APIView) ⟹ (adds queryset/form handling)
+     │    ├── ListModelMixin[🅾️] → (API list endpoint)
+     │    ├── CreateModelMixin[🅾️] → (API create endpoint)
+     │    ├── RetrieveModelMixin[🅾️] → (API retrieve endpoint)
+     │    ├── UpdateModelMixin[🅾️] → (API update endpoint)
+     │    ├── DestroyModelMixin[🅾️] → (API delete endpoint)
+     │    ├── ViewSet[🅾️] → (groups API actions)
+     │    └── ModelViewSet[🆑️] → (ps: ViewSet + GenericAPIView + mixins) ⟹ (full CRUD API)
+     │
+     └── 2.7. Advanced CBV Patterns
+          ├── BaseListView[🆑️] → (p: ListView) ⟹ (customizable list view)
+          ├── BaseDetailView[🆑️] → (p: DetailView) ⟹ (customizable detail view)
+          ├── ModelPermissionMixin[🅾️] → (map HTTP methods to permissions)
+          ├── OwnerRequiredMixin[🅾️] → (restrict object access to owner)
+          └── BulkActionView[🆑️] → (p: View) ⟹ (handle bulk create/update/delete)
+```
+## 🅱️
+## 🅱️
+## 🅱️
+## 🅱️
+## 🅱️
+## 🅱️
+## 🅱️
+## 🅱️
+## 🅱️
+## 🅱️
+## 🅱️
+## 🅱️
 
 </div>
