@@ -1036,10 +1036,15 @@ class MyView(View):
 
 * برای نمایش یک تمپلیت HTML بدون ارتباط با مدل یا فرم.
 * در دسته‌بندی `TemplateView` (که در عمل پس از View ساده‌ترین CBV است) را ذیل Generic نیز آوردند
-*     امکان افزودن داده به context
+* امکان افزودن داده به context
+* متد `get_context_data()` برای افزودن داده به تمپلیت
 *      فقط نمایش تمپلیت
 *     بدون ارتباط با مدل یا فرم
 *     از `TemplateResponseMixin` + `ContextMixin` + `View` ارث‌بری می‌کند.
+* و ویو `TemplateView` در وضعیت بدون مدل،‌ جزو سریع‌ترین View برای صفحات استاتیک است
+* خطاهای رایج
+    * فراموش کردن `as_view()` در `urls.py` که سبب وقوع ارور `TypeError: view must be a callable` می‌شود
+    * نام تمپلیت اشتباه وارد شود که سبب وقوع ارور `TemplateDoesNotExist` می‌شود
 
 ```python
 from django.views.generic import TemplateView
@@ -1052,6 +1057,57 @@ class AboutView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['title'] = "درباره ما"
         return context
+```
+
+می‌توانید extra_context هم در URL استفاده کنید:
+
+```python
+# url.py
+path('about/', TemplateView.as_view(template_name='about.html', extra_context={'title': 'درباره ما'}))
+```
+
+#### ❇️Example1:withoutModel
+
+File: `View.py`
+
+```python
+from django.views.generic import TemplateView
+
+
+class AboutView(TemplateView):
+    template_name = "about.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "درباره ما"
+        context['team_size'] = 15
+        return context
+```
+
+File: `urls.py`
+
+```python
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('about/', views.AboutView.as_view(), name='about'),
+]
+```
+
+File: `templates/about.html`
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ title }}</title>
+</head>
+<body>
+<h1>{{ title }}</h1>
+<p>تیم ما شامل {{ team_size }} نفر است.</p>
+</body>
+</html>
 ```
 
 ### 4.2.2. ✅️FormView
