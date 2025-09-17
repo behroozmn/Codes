@@ -916,23 +916,30 @@ Django Views
      │    ├── TemplateView[🆑️] → (p: View) ⟹ (renders template) [پرکاربرد]
      │    └── RedirectView[🆑️] → (p: View) ⟹ (redirects to URL)
      │
-     ├── 2.2. Generic Display Views
-     │    ├── ListView[🆑️] → (ps: MultipleObjectMixin + TemplateResponseMixin + View)  ⟹ (handles list display) [پرکاربرد]
-     │    ├── DetailView[🆑️] → (ps: SingleObjectMixin + TemplateResponseMixin + View)  ⟹ (handles single object)
-     │    ├── ArchiveIndexView[🆑️] → (p: ListView) ⟹ (grouped by date)
-     │    ├── YearArchiveView[🆑️] → (p: ArchiveIndexView) ⟹ (filter by year)
-     │    ├── MonthArchiveView[🆑️] → (p: ArchiveIndexView) ⟹ (filter by month)
-     │    ├── WeekArchiveView[🆑️] → (p: ArchiveIndexView) ⟹ (filter by week)
-     │    ├── DayArchiveView[🆑️] → (p: ArchiveIndexView) ⟹ (filter by day)
-     │    └── DateDetailView[🆑️] → (ps: SingleObjectMixin + TemplateResponseMixin + View) ⟹ (single object by date + slug)
+     ├── 2.2. Generic Views
+     │    │
+     │    ├── 2.2.1. DisplayView
+     │    │   ├── TemplateView[🆑️] → (p: View) ⟹ (renders template) [پرکاربرد]
+     │    │   ├── ListView[🆑️] → (p: MultipleObjectMixin + TemplateResponseMixin + View)  ⟹ (handles list display) [پرکاربرد]
+     │    │   ├── DetailView[🆑️] → (p: SingleObjectMixin + TemplateResponseMixin + View)  ⟹ (handles single object)
+     │    │   └── ArchiveIndexView[🆑️] → (p: ListView) ⟹ (show archive time)
+     │    │        ├── YearArchiveView[🆑️] → (p: ArchiveIndexView) ⟹ (filter by year)
+     │    │        ├── MonthArchiveView[🆑️] → (p: ArchiveIndexView) ⟹ (filter by month)
+     │    │        ├── WeekArchiveView[🆑️] → (p: ArchiveIndexView) ⟹ (filter by week)
+     │    │        ├── DayArchiveView[🆑️] → (p: ArchiveIndexView) ⟹ (filter by day)
+     │    │        └── DateDetailView[🆑️] → (p: SingleObjectMixin + TemplateResponseMixin + View) ⟹ (single object by date + slug)
+     │    │
+     │    ├── 2.2.2. EditingViews
+     │    │   ├── CreateView[🆑️] → (p: ModelFormMixin + ProcessFormView + FormMixin + TemplateResponseMixin + View) ⟹ (creates model instance)
+     │    │   ├── UpdateView[🆑️] → (p: ModelFormMixin + ProcessFormView + SingleObjectMixin + FormMixin + TemplateResponseMixin + View) ⟹ (edits model instance)
+     │    │   └── DeleteView[🆑️] → (p: DeletionMixin + SingleObjectMixin + TemplateResponseMixin + View) ⟹ (deletes object with confirmation)
+     │    │
+     │    └── 2.2.3. FormHandlingViews
+     │        ├── FormView[🆑️] → (ps: FormMixin + TemplateResponseMixin + View) ⟹ (handles forms)
+     │        ├── ProcessFormView[🆑️] → (p: View) ⟹ (process GET/POST for forms)
+     │        └── ModelFormMixin[🆑️] → (p: FormMixin) ⟹ (binds ModelForm)
      │
-     ├── 2.3. Generic Editing Views
-     │    ├── FormView[🆑️] → (ps: FormMixin + TemplateResponseMixin + View) ⟹ (handles forms)
-     │    ├── CreateView[🆑️] → (ps: ModelFormMixin + ProcessFormView + FormMixin + TemplateResponseMixin + View) ⟹ (creates model instance)
-     │    ├── UpdateView[🆑️] → (ps: ModelFormMixin + ProcessFormView + SingleObjectMixin + FormMixin + TemplateResponseMixin + View) ⟹ (edits model instance)
-     │    └── DeleteView[🆑️] → (ps: DeletionMixin + SingleObjectMixin + TemplateResponseMixin + View) ⟹ (deletes object with confirmation)
-     │
-     ├── 2.4. Authentication Views
+     ├── 2.3. Authentication Views
      │    ├── LoginView[🆑️] → (p: FormView) ⟹ (handles login)
      │    ├── LogoutView[🆑️] → (p: RedirectView)
      │    ├── PasswordChangeView[🆑️] → (p: FormView)
@@ -942,20 +949,18 @@ Django Views
      │    ├── PasswordResetConfirmView[🆑️] → (p: FormView)
      │    └── PasswordResetCompleteView[🆑️] → (p: TemplateView)
      │
-     ├── 2.5. Mixins
+     ├── 2.4. Mixins
      │    ├── ContextMixin[🅾️] → (adds context to template)
      │    ├── TemplateResponseMixin[🅾️] → (handles template rendering)
      │    ├── SingleObjectMixin[🅾️] → (retrieves single object)
      │    ├── MultipleObjectMixin[🅾️] → (retrieves list of objects)
-     │    ├── FormMixin[🅾️] → (handles form logic)
-     │    ├── ModelFormMixin[🆑️] → (p: FormMixin) ⟹ (binds ModelForm)
-     │    ├── ProcessFormView[🅾️] → (process GET/POST for forms)
      │    ├── LoginRequiredMixin[🅾️] → (requires authenticated user)
      │    ├── UserPassesTestMixin[🅾️] → (custom permission logic)
+     │    ├── FormMixin[🅾️] → (handles form logic)
      │    ├── PermissionRequiredMixin[🅾️] → (requires Django permission)
      │    └── SuccessMessageMixin[🅾️] → (adds success message after form)
      │
-     ├── 2.6. API & Specialized Views
+     ├── 2.5. API & Specialized Views
      │    ├── JSONResponseMixin[🅾️] → (provides JSON response)
      │    ├── DeletionMixin[🅾️] → (deletion helper)
      │    ├── AsyncView[🆑️] → (p: View) ⟹ (supports async HTTP)
@@ -967,9 +972,9 @@ Django Views
      │    ├── UpdateModelMixin[🅾️] → (API update endpoint)
      │    ├── DestroyModelMixin[🅾️] → (API delete endpoint)
      │    ├── ViewSet[🅾️] → (groups API actions)
-     │    └── ModelViewSet[🆑️] → (ps: ViewSet + GenericAPIView + mixins) ⟹ (full CRUD API)
+     │    └── ModelViewSet[🆑️] → (p: ViewSet + GenericAPIView + mixins) ⟹ (full CRUD API)
      │
-     └── 2.7. Advanced CBV Patterns
+     └── 2.6. Advanced CBV Patterns
           ├── BaseListView[🆑️] → (p: ListView) ⟹ (customizable list view)
           ├── BaseDetailView[🆑️] → (p: DetailView) ⟹ (customizable detail view)
           ├── ModelPermissionMixin[🅾️] → (map HTTP methods to permissions)
