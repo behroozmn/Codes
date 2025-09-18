@@ -1042,7 +1042,6 @@ class MyView(View):
 | `UpdateView`   | از همان تمپلیت CreateView        | `get_object()` برای کنترل دسترسی                    |
 | `DeleteView`   | حتماً `success_url`              | صفحه تأیید الزامی — از `POST` برای حذف استفاده کنید |
 
-
 ![python_Django_CBV.jpg](./_srcFiles/Images/python_Django_CBV.jpg "python_Django_CBV.jpg")
 
 ### 4.2.1. ✅️TemplateView
@@ -1079,7 +1078,7 @@ class AboutView(TemplateView):
 path('about/', TemplateView.as_view(template_name='about.html', extra_context={'title': 'درباره ما'}))
 ```
 
-#### ❇️Example1:withoutModel
+#### 4.2.1.1. ❇️Example1:withoutModel
 
 File: `View.py`
 
@@ -1576,24 +1575,431 @@ File: `templates/article_confirm_delete.html`
 * اگر `success_url` قرار داده نشود آنگاه با ارور `ImproperlyConfigured` مواجه خواهید شد
 * فراموش کردن `csrf_token` سبب وقوع 403 Forbidden خواهد شد
 
-## 4.3. 🅱️
+# 5. 🅰️Mixin
 
-## 4.4. 🅱️
+یک کلاس کمکی است که به تنهایی استفاده نمی‌شوند فقط برای افزودن یک قابلیت خاص به کلاس‌های دیگر طراحی شده‌اند و به کد افزوده می‌شوند(و نه برای استفاده مستقیم). این فکر که میکسین(Mixin) یک View مستقل است اشتباه است زیرا Mixin فقط یک «افزونه» می‌باشد
 
-## 4.5. 🅱️
+نکته بسیار مهم: * میکسین(Mixin)ها همیشه قبل از View اصلی نوشته می‌شوند مثلا ویوکلاس `LoginRequiredMixin` باید قبل از کلاس  `ListView` در درون کد آمده باشد
 
-## 4.6. 🅱️
+```python
+# class ArticleListView(ListView, LoginRequiredMixin):  # ❌️ غلط است
+# class ArticleListView(LoginRequiredMixin, ListView):  # ✅️ صحیح است
+```
 
-## 4.7. 🅱️
+نکات مهم
 
-## 4.8. 🅱️
+* نکته‌مهم:میکسین(Mixin)ها با Override کردن متدهای View (مثل `dispatch`, `get_queryset` , `get`, `get_context_data`) رفتار جدیدی اضافه می‌کنند.
+* میکسین‌ها می‌توانند با هم ترکیب شوند(مثل `LoginRequiredMixin` + `PageTitleMixin` + `ListView`
+* در هنگام ترکیب میکسین‌ها ترتیب میکسین‌ها مهم است(میکسین‌هایی که متدها را Override می‌کنند باید اول بیایند)
+* متد `dispatch`:متد اولین متدی که در CBV فراخوانی می‌شود(بهترین جا برای چک‌های امنیتی)
+* متد `handle_no_permission`:یک متد داخلی جنگو برای هدایت کاربر است که قابلیت Override دارد
+* متد `super()` باید حتماً در آخر Mixinها فراخوانی شود وگرنه View اصلی اجرا نمی‌شود. مخصوصا در متدهای `get_context_data` و `dispatch`و`form_valid`و `get_queryset`
+* امنیت در اولویت باشد یعنی Mixinهای امنیتی (`LoginRequiredMixin`, `PermissionRequiredMixin`) را همیشه اول قرار دهید.
+* میکسین‌ها را ترکیب کنید و نه جایگزین زیرا هر میکسین یک ویژگی واحد را اضافه می‌کند
 
-## 4.9. 🅱️
+نکات
 
-## 4.10. 🅱️
+* میکسین(Mixin)ها معمولاً از `object` ارث‌بری می‌کنند(نه از View)
+* فراموش کردن `login_url` در `LoginRequiredMixin` سبب بروز خطا می‌شود.
+    * اگر پارامتر `LOGIN_URL` در فایل `settings.py` تنظیم شده باشد ارور نخواهد داد
+* اگر در هنگام دریافت Context استفاده از متد `super()` را فراموش کنید آنگاه context یا داده‌ها ناقص می‌شوند.
+* درصورت استفاده از متغیر تکراری در دو میکسین آنگاه آن میکسین که آخرین مقدار دهی را انجام داده لحاظ خواهد شد
+* اگر ترتیب نوشته شدن Mixinها اشتباه باشد آنگاه متد get_context_data به‌درستی Override نخواهد شد
 
-## 4.11. 🅱️
 
-## 4.12. 🅱️
+| Mixin                     | کاربرد                                                          | متدهای کلیدی                                                                                            |
+|---------------------------|-----------------------------------------------------------------|---------------------------------------------------------------------------------------------------------|
+| `LoginRequiredMixin`      | اجبار کاربر به لاگین قبل از دسترسی به View                      | 1.`dispatch` 2.`handle_no_permission`                                                                   |
+| `PermissionRequiredMixin` | بررسی مجوزهای کاربر (بر اساس `Permission`های مدل)               | 1.`has_permission` 2.`dispatch` 3.`get_permission_required` 4.`handle_no_permission`                    |
+| `UserPassesTestMixin`     | تست سفارشی برای دسترسی کاربر (مثلاً فقط نویسنده مقاله)          | 1.`test_func` 2.`dispatch` 3.`get_test_func` 4.`handle_no_permission`                                   |
+| `SuccessMessageMixin`     | نمایش پیام موفقیت پس از عملیات موفق (مثل ذخیره فرم)             | 1.`form_valid` 2.`get_success_message`                                                                  |
+| `ContextMixin`            | افزودن داده‌های اضافی به context تمپلیت                         | 1.`get_context_data`                                                                                    |
+| `FormMixin`               | افزودن قابلیت مدیریت فرم به View (پایه FormView و ...)          | 1.`get_form` 2.`get_form_class` 3.`get_form_kwargs` 4.`get_success_url` 5.`form_valid` 6.`form_invalid` |
+| `ModelFormMixin`          | افزودن قابلیت کار با `ModelForm` (پایه CreateView و UpdateView) | 1.`get_form_class` 2.`get_form_kwargs` 3.`get_success_url` 4.`form_valid` 5.`get_context_data`          |
+| `SingleObjectMixin`       | کار با یک شیء واحد (پایه DetailView و UpdateView و DeleteView)  | 1.`get_object` 2.`get_queryset` 3.`get_slug_field` 4.`get_context_data`                                 |
+| `MultipleObjectMixin`     | کار با لیستی از اشیاء (پایه ListView)                           | 1.`get_queryset` 2.`get_ordering` 3.`paginate_queryset` 4.`get_context_data` 5.`get_paginate_by`        |
+| `TemplateResponseMixin`   | افزودن قابلیت رندر کردن تمپلیت                                  | 1.`render_to_response` 2.`get_template_names` 3.`get_context_data`                                      |
+| `DeletionMixin`           | افزودن قابلیت حذف شیء (پایه DeleteView)                         | 1.`delete` 2.`post` 3.`get_success_url`                                                                 |
+| `ProcessFormView`         | مدیریت درخواست‌های GET و POST برای فرم‌ها (پایه FormView و ...) | 1.`get` 2.`post` 3.`http_method_not_allowed`                                                            |
+
+## 5.1. 🅱️LoginRequiredMixin
+
+مثال۱: فرض کنید می‌خواهید فقط کاربران لاگین‌کرده بتوانند لیست مقالات را ببینند. و اگر کاربر لاگین نکرده، او را به صفحه لاگین بفرستد
+
+File: `model.py`
+
+```python
+from django.db import models
+
+
+class Article(models.Model):
+    title = models.CharField(max_length=200, verbose_name="عنوان")
+    content = models.TextField(verbose_name="محتوا")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = "مقاله"
+        verbose_name_plural = "مقالات"
+```
+
+File: `view.py`
+
+```python
+from django.views.generic import ListView
+from django.contrib.auth.mixins import LoginRequiredMixin  # ← این یک میکسین است!
+from .models import Article
+
+
+class ArticleListView(LoginRequiredMixin, ListView):  # نکته‌بسیارمهم: میکسین را قبل از ویو اصلی می‌نویسیم
+    model = Article
+    template_name = 'articles.html'
+    context_object_name = 'articles'
+    paginate_by = 5
+
+    login_url = '/admin/login/'  # or '/accounts/login/' اگر کاربر لاگین نکرده باشد، به کجا هدایت شود
+```
+
+File: `urls.py`
+
+```python
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('articles/', views.ArticleListView.as_view(), name='article_list'),
+]
+```
+
+File: `templates/articles.html`
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>مقالات</title>
+</head>
+<body>
+{% if user.is_authenticated %}
+<p>سلام {{ user.username }}! 👋</p>
+{% endif %}
+
+<h1>لیست مقالات</h1>
+
+{% for article in articles %}
+<div style="border: 1px solid #ccc; padding: 10px; margin: 10px 0;">
+    <h3>{{ article.title }}</h3>
+    <small>{{ article.created_at }}</small>
+</div>
+{% empty %}
+<p>مقاله‌ای وجود ندارد.</p>
+{% endfor %}
+
+<!-- صفحه‌بندی -->
+{% if page_obj.has_previous %}
+<a href="?page=1">اول</a>
+<a href="?page={{ page_obj.previous_page_number }}">قبلی</a>
+{% endif %}
+
+صفحه {{ page_obj.number }} از {{ page_obj.paginator.num_pages }}
+
+{% if page_obj.has_next %}
+<a href="?page={{ page_obj.next_page_number }}">بعدی</a>
+<a href="?page={{ page_obj.paginator.num_pages }}">آخر</a>
+{% endif %}
+</body>
+</html>
+```
+
+## 5.2. 🅱️PageTitleMixin
+
+مثال۲: ساخت یک Mixin ساده و سفارشی شده بنام `PageTitleMixin` برای افزودن عنوان صفحه به همه Viewهایی که از این Mixin استفاده می‌کنند
+
+در این مثال LoginRequiredMixin متد dispatch را Override می‌کند و قبل از اجرای View، چک می‌کند که کاربر لاگین کرده یا نه.
+
+File: `model.py`
+
+```python
+from django.db import models
+
+
+class Article(models.Model):
+    title = models.CharField(max_length=200, verbose_name="عنوان")
+    content = models.TextField(verbose_name="محتوا")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = "مقاله"
+        verbose_name_plural = "مقالات"
+```
+
+File: `view.py`
+
+```python
+from django.views.generic import TemplateView, ListView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from .models import Article
+
+
+# ✅ میکسین سفارشی: افزودن عنوان صفحه
+class PageTitleMixin:
+    """میکسین برای افزودن عنوان صفحه به کانتکس"""
+    page_title = "بدون عنوان"  # مقدار پیش‌فرض
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)  # فراخوانی متد والد
+        context['page_title'] = self.page_title  # افزودن عنوان به کانتکس
+        return context
+
+
+class ArticleListView(LoginRequiredMixin, PageTitleMixin, ListView):  # 👈️
+    model = Article
+    template_name = 'articles.html'
+    context_object_name = 'articles'
+    paginate_by = 5
+    login_url = '/admin/login/'
+    page_title = "لیست مقالات 📄"  # ← عنوان سفارشی
+
+
+class AboutView(PageTitleMixin, TemplateView):  # ✅ ussing in TemplateView
+    template_name = 'about.html'
+    page_title = "درباره ما 🏠"
+```
+
+File: `urls.py`
+
+```python
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('articles/', views.ArticleListView.as_view(), name='article_list'),
+    path('about/', views.AboutView.as_view(), name='about'),
+]
+```
+
+File: `templates/base.html`
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ page_title }}</title>  <!-- ← عنوان از میکسین -->
+</head>
+<body>
+<h1>{{ page_title }}</h1>
+{% block content %}{% endblock %}
+</body>
+</html>
+```
+
+File: `templates/articles.html`(بروزرسانی می‌کنیم)
+
+```html
+{% extends 'base.html' %}
+
+{% block content %}
+{% for article in articles %}
+<div style="border: 1px solid #ccc; padding: 10px; margin: 10px 0;">
+    <h3>{{ article.title }}</h3>
+    <small>{{ article.created_at }}</small>
+</div>
+{% empty %}
+<p>مقاله‌ای وجود ندارد.</p>
+{% endfor %}
+
+<!-- صفحه‌بندی -->
+{% if page_obj.has_previous %}
+<a href="?page=1">اول</a>
+<a href="?page={{ page_obj.previous_page_number }}">قبلی</a>
+{% endif %}
+
+صفحه {{ page_obj.number }} از {{ page_obj.paginator.num_pages }}
+
+{% if page_obj.has_next %}
+<a href="?page={{ page_obj.next_page_number }}">بعدی</a>
+<a href="?page={{ page_obj.paginator.num_pages }}">آخر</a>
+{% endif %}
+{% endblock %}
+```
+
+File: `templates/about.html`
+
+```html
+{% extends 'base.html' %}
+
+{% block content %}
+<p>ما یک تیم عالی هستیم! 😊</p>
+{% endblock %}
+```
+
+## 5.3. 🅱️UserPassesTestMixin
+
+هدف: فقط کاربری که نویسنده مقاله است، بتواند آن را ویرایش کند.اگر کاربر دیگری (حتی اگر لاگین کرده باشد) بخواهد ویرایش کند خطای 403 Forbidden نمایش داده خواهد شد
+
+* توسط `UserPassesTestMixin` می‌توانید هر شرط دلخواهی را برای دسترسی به View تعریف کنید
+* حتماً `test_func` را تعریف کنید.
+* حتماً `super()` را فراخوانی کنید
+* 403: شما اجازه ندارید(ولی منبع وجود دارد)
+* 404: منبع اصلاً وجود ندارد.
+
+
+1. کاربر روی لینک ویرایش مقاله کلیک می‌کند → /article/5/edit/
+2. جنگو ArticleUpdateView را فراخوانی می‌کند.
+3. ابتدا LoginRequiredMixin چک می‌کند که کاربر لاگین کرده است یا خیر.
+4. اگر لایگن نکرده باشد به صفحه لاگین هدایت می‌شود
+5. سپس UserPassesTestMixin فعال می‌شود
+6. متد test_func را اجرا می‌کند
+7. در test_func
+    1. self.get_object()  مقاله با pk=5 را برمی‌گرداند.
+    2. article.author همان نویسنده مقاله (مثلاً کاربر ali) خواهد بود
+    3. self.request.user کاربر جاری (مثلاً کاربر reza)  خواهد بود
+8. اگر کاربرلاگین کرده و نویسنده مقاله متفاوت باشند آنگاه دسترسی رد می‌شود و ارور 403 Forbidden خواهد شد
+9. اگر کاربرلاگین کرده و نویسنده مقاله یکسان باشند فرم ویرایش نمایش داده می‌شود.
+
+File: `model.py` مدل مقاله + ارتباط با کاربر
+
+```python
+from django.db import models
+from django.contrib.auth.models import User  # ← کاربر پیش‌فرض جنگو
+
+
+class Article(models.Model):
+    title = models.CharField(max_length=200, verbose_name="عنوان")
+    content = models.TextField(verbose_name="محتوا")
+    author = models.ForeignKey(
+        User,  # ← ارتباط با کاربر — نویسنده مقاله
+        on_delete=models.CASCADE,
+        verbose_name="نویسنده"
+    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = "مقاله"
+        verbose_name_plural = "مقالات"
+```
+
+اضافه شدن فیلد author از نوع ForeignKey به User (یعنی هر مقاله یک نویسنده دارد)
+
+File: `view.py`
+
+```python
+from django.views.generic import UpdateView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin  # ← میکسین‌های امنیتی
+from django.urls import reverse_lazy
+from django.shortcuts import get_object_or_404
+from .models import Article
+
+
+# ویو ویرایش مقاله(فقط برای نویسنده مقاله)
+class ArticleUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):  # فقط کاربر لاگین‌کرده‌ای که نویسنده مقاله است، می‌تواند آن را ویرایش کند.
+    model = Article
+    fields = ['title', 'content']  # ← فیلدهای قابل ویرایش
+    template_name = 'article_form.html'
+    success_url = reverse_lazy('article_list')  # ← بعد از موفقیت به کجا برود؟
+
+    # call by UserPassesTestMixin 
+    def test_func(self):  # Check: article.author(نویسنده مقاله) = self.request.user(کاربر جاری لاگین کرده)
+        article = self.get_object()  # get ArticleObject by pk or slug
+        is_author = article.author == self.request.user
+
+        # is_author=true  👉️ AllowAccess
+        # is_author=False 👉️ Error 403 Forbidden
+        return is_author
+
+        # if article.author != self.request.user:
+        #    raise PermissionDenied("شما نویسنده این مقاله نیستید و نمی‌توانید آن را ویرایش کنید.")
+        # return True
+
+    def get_context_data(self, **kwargs):  # برای افزودن داده‌ها(مثل عنوان صفحه) به تمپلیت
+        context = super().get_context_data(**kwargs)  # ← فراخوانی متد والد — حتماً این خط باشد!
+        context['page_title'] = "ویرایش مقاله"
+        return context
+
+    def form_valid(self, form):  # اختاری: قبل از ذخیره فرم اجرا می‌شود
+        """
+        اگر بخواهیم قبل از ذخیره، تغییری در داده‌ها ایجاد کنیم — اینجا انجام می‌شود.
+        در این مثال نیازی نیست — چون author قبلاً تنظیم شده و نباید تغییر کند.
+        """
+        # مثلاً می‌توانیم تاریخ ویرایش را آپدیت کنیم — اگر فیلد داشتیم:
+        # form.instance.updated_at = timezone.now()
+        return super().form_valid(form)
+```
+
+File: `urls.py`
+
+```python
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    # مقدار pk در URL است وبرای پیدا کردن مقاله خاص است
+    path('article/<int:pk>/edit/', views.ArticleUpdateView.as_view(), name='article_update'),
+]
+```
+
+File: `templates/article_form.html` تمپلیت فرم ویرایش
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ page_title }}</title>
+</head>
+<body>
+<h1>{{ page_title }}</h1>
+
+<!-- نمایش پیام‌های موفقیت/خطا -->
+{% if messages %}
+{% for message in messages %}
+<div style="background: #d4edda; color: #155724; padding: 10px; margin: 10px 0;">
+    {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+
+<!-- فرم ویرایش -->
+<form method="post">
+    {% csrf_token %} <!-- حملات CSRF را جلوگیری می‌کند — حتماً باشد! -->
+    {{ form.as_p }}  <!-- نمایش فرم به صورت پاراگرافی -->
+    <button type="submit">ذخیره تغییرات</button>
+</form>
+
+<!-- لینک بازگشت -->
+<p><a href="{% url 'article_list' %}">← بازگشت به لیست مقالات</a></p>
+</body>
+</html>
+```
+
+File: `templates/403.html` صفحه خطا (اگر این فایل را نسازید، جنگو یک صفحه 403 پیش‌فرض نشان می‌دهد)
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>دسترسی ممنوع</title>
+</head>
+<body>
+<h1>⛔ دسترسی ممنوع</h1>
+<p>شما مجوز لازم برای ویرایش این مقاله را ندارید.</p>
+<p>اگر فکر می‌کنید اشتباه است، با مدیر سیستم تماس بگیرید.</p>
+<a href="{% url 'article_list' %}">بازگشت به لیست مقالات</a>
+</body>
+</html>
+```
+
+## 5.4. 🅱️
+
+## 5.5. 🅱️
+
+## 5.6. 🅱️
 
 </div>
