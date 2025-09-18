@@ -1042,6 +1042,9 @@ class MyView(View):
 | `UpdateView`   | از همان تمپلیت CreateView        | `get_object()` برای کنترل دسترسی                    |
 | `DeleteView`   | حتماً `success_url`              | صفحه تأیید الزامی — از `POST` برای حذف استفاده کنید |
 
+
+![python_Django_CBV.jpg](./_srcFiles/Images/python_Django_CBV.jpg "python_Django_CBV.jpg")
+
 ### 4.2.1. ✅️TemplateView
 
 * برای نمایش یک تمپلیت HTML بدون ارتباط با مدل یا فرم.
