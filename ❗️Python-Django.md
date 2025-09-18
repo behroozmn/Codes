@@ -1032,6 +1032,16 @@ class MyView(View):
 * استفاده از Mixinها برای افزودن قابلیت (مثل LoginRequiredMixin)
 * همگی از `View` یا زیرکلاس‌های آن (مثل `TemplateResponseMixin`) ارث‌بری می‌کنند.
 
+| View           | بهترین شیوه                      | نکته حرفه‌ای                                        |
+|----------------|----------------------------------|-----------------------------------------------------|
+| `TemplateView` | برای صفحات استاتیک               | از `extra_context` برای داده ساده استفاده کنید      |
+| `FormView`     | برای فرم‌های غیرمدلی             | `form_valid()` را Override کنید برای پردازش         |
+| `ListView`     | همیشه `paginate_by` و `ordering` | `get_queryset()` برای فیلتر کردن                    |
+| `DetailView`   | از `slug` برای سئو               | `query_pk_and_slug=True` برای امنیت                 |
+| `CreateView`   | `fields` یا `form_class`         | `form_valid()` برای افزودن داده خودکار (مثلauthor)  |
+| `UpdateView`   | از همان تمپلیت CreateView        | `get_object()` برای کنترل دسترسی                    |
+| `DeleteView`   | حتماً `success_url`              | صفحه تأیید الزامی — از `POST` برای حذف استفاده کنید |
+
 ### 4.2.1. ✅️TemplateView
 
 * برای نمایش یک تمپلیت HTML بدون ارتباط با مدل یا فرم.
