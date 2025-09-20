@@ -1298,17 +1298,33 @@ Django Views
 │
 └── 2. Class-Based Views (CBV)
      │
-     ├── 2.1. Base Views
-     │    ├── View[🆑️] → (base for all CBVs) ⟹ (handles HTTP methods)
-     │    ├── TemplateView[🆑️] → (p: View) ⟹ (renders template) [پرکاربرد]
+     ├── View[🆑️] → (base for all CBVs) ⟹ (handles HTTP methods)
+     │    │
+     │    ├── TemplateView[🆑️]──┬─➤ Parents: View
+     │    │    │                └─➤ CombineFrom: [View🆑️] + [RendersTemplate]
+     │    │    │
+     │    │    ├── ListView[🆑️] ───➤ Parents: MultipleObjectMixin + TemplateResponseMixin + View
+     │    │    └── DetailView[🆑️] ─➤ Parents: SingleObjectMixin + TemplateResponseMixin + View
+     │    │
+     │    ├── FormView[🆑️] ──┬─➤ Parent: FormMixin + TemplateResponseMixin + View) ⏩️ handlesForms and CreatesModelInstance
+     │    │    │             └─➤ CombineFrom: [View🆑️ Or TemplateView🆑️] + HandleForm(GET/POST + validation + success/fail)
+     │    │    │ 
+     │    │    ├── CreateView[🆑️]──┬─➤ Parent: ModelFormMixin + ProcessFormView + FormMixin + TemplateResponseMixin + View ⏩️ (creates model instance) 
+     │    │    │                   └─➤ CombineFrom: [FormView🆑️] + DataBase
+     │    │    │ 
+     │    │    │ 
+     │    │    ├── UpdateView[🆑️]──┬─➤ Parent: ModelFormMixin + ProcessFormView + SingleObjectMixin + FormMixin + TemplateResponseMixin + View) ⏩️ (edits model instance)
+     │    │    │                   └─➤ CombineFrom: [FormView🆑️] + DataBase
+     │    │    │ 
+     │    │    │ 
+     │    │    └── DeleteView[🆑️]──┬─➤ Parent: DeletionMixin + SingleObjectMixin + TemplateResponseMixin + View) ⏩️ (deletes object with confirmation)
+     │    │                        └─➤ CombineFrom: [FormView🆑️] + DataBase
+     │    │
      │    └── RedirectView[🆑️] → (p: View) ⟹ (redirects to URL)
      │
-     ├── 2.2. Generic Views
-     │    │
+     ├── 2.2. Other Generic Views
      │    ├── 2.2.1. DisplayView
-     │    │   ├── TemplateView[🆑️] → (p: View) ⟹ (renders template) [پرکاربرد]
-     │    │   ├── ListView[🆑️] → (p: MultipleObjectMixin + TemplateResponseMixin + View)  ⟹ (handles list display) [پرکاربرد]
-     │    │   ├── DetailView[🆑️] → (p: SingleObjectMixin + TemplateResponseMixin + View)  ⟹ (handles single object)
+     │    │   │
      │    │   └── ArchiveIndexView[🆑️] → (p: ListView) ⟹ (show archive time)
      │    │        ├── YearArchiveView[🆑️] → (p: ArchiveIndexView) ⟹ (filter by year)
      │    │        ├── MonthArchiveView[🆑️] → (p: ArchiveIndexView) ⟹ (filter by month)
@@ -1316,13 +1332,7 @@ Django Views
      │    │        ├── DayArchiveView[🆑️] → (p: ArchiveIndexView) ⟹ (filter by day)
      │    │        └── DateDetailView[🆑️] → (p: SingleObjectMixin + TemplateResponseMixin + View) ⟹ (single object by date + slug)
      │    │
-     │    ├── 2.2.2. EditingViews
-     │    │   ├── CreateView[🆑️] → (p: ModelFormMixin + ProcessFormView + FormMixin + TemplateResponseMixin + View) ⟹ (creates model instance)
-     │    │   ├── UpdateView[🆑️] → (p: ModelFormMixin + ProcessFormView + SingleObjectMixin + FormMixin + TemplateResponseMixin + View) ⟹ (edits model instance)
-     │    │   └── DeleteView[🆑️] → (p: DeletionMixin + SingleObjectMixin + TemplateResponseMixin + View) ⟹ (deletes object with confirmation)
-     │    │
-     │    └── 2.2.3. FormHandlingViews
-     │        ├── FormView[🆑️] → (ps: FormMixin + TemplateResponseMixin + View) ⟹ (handles forms)
+     │    └── 2.2.2. FormHandlingViews
      │        ├── ProcessFormView[🆑️] → (p: View) ⟹ (process GET/POST for forms)
      │        └── ModelFormMixin[🆑️] → (p: FormMixin) ⟹ (binds ModelForm)
      │
@@ -1419,7 +1429,6 @@ class MyView(View):
 * قابلیت شخصی‌سازی با Override
 * استفاده از Mixinها برای افزودن قابلیت (مثل LoginRequiredMixin)
 * همگی از `View` یا زیرکلاس‌های آن (مثل `TemplateResponseMixin`) ارث‌بری می‌کنند.
-
 
 | View           | بهترین شیوه                      | نکته حرفه‌ای                                        |
 |----------------|----------------------------------|-----------------------------------------------------|
@@ -1538,9 +1547,9 @@ File: `templates/about.html`
 * `CreateView` = `FormView` + `create object in DB`
 * `UpdateView` = `FormView` + `update object in DB`
 * `DeleteView` = `FormView` + `delete object in DB `
-* متد `get_form_class()` مدل(Model) یا `form_class` را می‌خواند 
+* متد `get_form_class()` مدل(Model) یا `form_class` را می‌خواند
 * متد `form_valid()` متد `save()` را به اجرا درمی‌آورد
-* متد `get_context_data()` مقادیر `{'form': form, 'view': self}` را می‌سازد 
+* متد `get_context_data()` مقادیر `{'form': form, 'view': self}` را می‌سازد
 
 ```
 View
