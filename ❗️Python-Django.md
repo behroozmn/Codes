@@ -1487,7 +1487,7 @@ class AboutView(TemplateView):
 path('about/', TemplateView.as_view(template_name='about.html', extra_context={'title': 'درباره ما'}))
 ```
 
-#### 5.2.1.1. ❇️Example1:withoutModel
+مثال۱:دراین مثال از مدل استفاده نشده است
 
 File: `View.py`
 
@@ -1530,6 +1530,159 @@ File: `templates/about.html`
 </body>
 </html>
 ```
+
+#### 5.2.1.2. ❇️ ListView
+
+نمایش لیستی از اشیاء یک مدل(مثل لیست مقالات)
+
+* paginate_by برای صفحه‌بندی خودکار استفاده می‌شود. می‌توان از page_obj در تمپلیت استفاده کرد
+* نام تمپلیت اشتباه → پیش‌فرض: app_name/modelname_list.html
+* مرتب‌سازی را فراموش نکنید زیرا برای نمایش مهم است وگرنه درهم و نامرتب نمایش خواهد شد
+* متد get_queryset() در ListView, DetailView قرار وجود دارد و اگر نوشته‌نشود model.objects.all() را می‌گیرد.
+
+File: `models.py`
+
+```python
+from django.db import models
+
+
+class Article(models.Model):
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+```
+
+File: `views.py`
+
+```python
+from django.views.generic import ListView
+from .models import Article
+
+
+class ArticleListView(ListView):
+    model = Article
+    template_name = 'article_list.html'
+    context_object_name = 'articles'  # نام متغیر در تمپلیت
+    paginate_by = 5  # صفحه‌بندی — 5 مورد در هر صفحه
+    ordering = ['-created_at']  # مرتب‌سازی بر اساس تاریخ (جدیدترین اول)
+```
+
+File: `urls.py`
+
+```python
+path('articles/', views.ArticleListView.as_view(), name='article_list'),
+```
+
+File: `templates/article_list.html`
+
+```html
+<!DOCTYPE html>
+<html>
+<head><title>مقالات</title></head>
+<body>
+<h1>لیست مقالات</h1>
+{% for article in articles %}
+<div>
+    <h3>{{ article.title }}</h3>
+    <small>{{ article.created_at }}</small>
+    <hr>
+</div>
+{% endfor %}
+
+<!-- صفحه‌بندی -->
+<div>
+    {% if page_obj.has_previous %}
+    <a href="?page=1">اول</a>
+    <a href="?page={{ page_obj.previous_page_number }}">قبلی</a>
+    {% endif %}
+
+    صفحه {{ page_obj.number }} از {{ page_obj.paginator.num_pages }}
+
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}">بعدی</a>
+    <a href="?page={{ page_obj.paginator.num_pages }}">آخر</a>
+    {% endif %}
+</div>
+</body>
+</html>
+```
+
+نکته:تابع `get_queryset()` را برای فیلتر کردن Override کنید
+
+```python
+def get_queryset(self):
+    return Article.objects.filter(title__icontains='django')
+```
+
+#### 5.2.1.3. ❇️ DetailView
+
+نمایش جزئیات یک رکورد(همانند صفحه یک مقاله)
+
+* `get_object()` برای سفارشی‌سازی نحوه پیدا کردن شیء.
+* `slug_field` و `slug_url_kwarg` برای استفاده از `slug` به جای `pk`.
+* می‌توانید `query_pk_and_slug = True` کنید(برای امنیت SEO.)
+* اگر pk یا slug وجود نداشته باشد آنگاه با 404 مواجه خوهید شد
+* فراموش کردن `context_object_name` که بصورت پیش‌فرض object است سبب گمراه‌کنندگی خواهد شد
+* متد get_queryset() در ListView, DetailView قرار وجود دارد و اگر نوشته‌نشود model.objects.all() را می‌گیرد.
+
+File: `models.py`
+
+```python
+from django.db import models
+
+
+class Article(models.Model):
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+```
+
+File: `views.py`
+
+```python
+from django.views.generic import DetailView
+from .models import Article
+
+
+class ArticleDetailView(DetailView):
+    model = Article
+    template_name = 'article_detail.html'
+    context_object_name = 'article'
+    # پیش‌فرض: جستجو با pk — اگر می‌خواهید با slug:
+    # slug_field = 'slug'
+    # slug_url_kwarg = 'slug'
+```
+
+File: `urls.py`
+
+```python
+path('article/<int:pk>/', views.ArticleDetailView.as_view(), name='article_detail'),
+# Or with slug:
+# path('article/<slug:slug>/', views.ArticleDetailView.as_view(), name='article_detail'),
+```
+
+File: `templates/article_detail.html`
+
+```html
+<!DOCTYPE html>
+<html>
+<head><title>{{ article.title }}</title></head>
+<body>
+<h1>{{ article.title }}</h1>
+<small>{{ article.created_at }}</small>
+<div>{{ article.content|linebreaks }}</div>
+<hr>
+<a href="{% url 'article_list' %}">بازگشت به لیست</a>
+</body>
+</html>
+```
+
 
 ### 5.2.2. ✅️FormView
 
@@ -1633,165 +1786,7 @@ File: `templates/contact.html`
 * اگر  `form_class` فراموش شود آنگاه ارور `ImproperlyConfigured` میدهد
 * اگر  `success_url` فراموش شود آنگاه ارور `No URL to redirect to` میدهد
 
-### 5.2.3. ✅️ListView
-
-نمایش لیستی از اشیاء یک مدل(مثل لیست مقالات)
-
-* paginate_by برای صفحه‌بندی خودکار استفاده می‌شود. می‌توان از page_obj در تمپلیت استفاده کرد
-* نام تمپلیت اشتباه → پیش‌فرض: app_name/modelname_list.html
-* مرتب‌سازی را فراموش نکنید زیرا برای نمایش مهم است وگرنه درهم و نامرتب نمایش خواهد شد
-* متد get_queryset() در ListView, DetailView قرار وجود دارد و اگر نوشته‌نشود model.objects.all() را می‌گیرد.
-
-File: `models.py`
-
-```python
-from django.db import models
-
-
-class Article(models.Model):
-    title = models.CharField(max_length=200)
-    content = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.title
-```
-
-File: `views.py`
-
-```python
-from django.views.generic import ListView
-from .models import Article
-
-
-class ArticleListView(ListView):
-    model = Article
-    template_name = 'article_list.html'
-    context_object_name = 'articles'  # نام متغیر در تمپلیت
-    paginate_by = 5  # صفحه‌بندی — 5 مورد در هر صفحه
-    ordering = ['-created_at']  # مرتب‌سازی بر اساس تاریخ (جدیدترین اول)
-```
-
-File: `urls.py`
-
-```python
-path('articles/', views.ArticleListView.as_view(), name='article_list'),
-```
-
-File: `templates/article_list.html`
-
-```html
-<!DOCTYPE html>
-<html>
-<head><title>مقالات</title></head>
-<body>
-<h1>لیست مقالات</h1>
-{% for article in articles %}
-<div>
-    <h3>{{ article.title }}</h3>
-    <small>{{ article.created_at }}</small>
-    <hr>
-</div>
-{% endfor %}
-
-<!-- صفحه‌بندی -->
-<div>
-    {% if page_obj.has_previous %}
-    <a href="?page=1">اول</a>
-    <a href="?page={{ page_obj.previous_page_number }}">قبلی</a>
-    {% endif %}
-
-    صفحه {{ page_obj.number }} از {{ page_obj.paginator.num_pages }}
-
-    {% if page_obj.has_next %}
-    <a href="?page={{ page_obj.next_page_number }}">بعدی</a>
-    <a href="?page={{ page_obj.paginator.num_pages }}">آخر</a>
-    {% endif %}
-</div>
-</body>
-</html>
-```
-
-نکته:تابع `get_queryset()` را برای فیلتر کردن Override کنید
-
-```python
-def get_queryset(self):
-    return Article.objects.filter(title__icontains='django')
-```
-
-### 5.2.4. ✅️DetailView
-
-نمایش جزئیات یک رکورد(همانند صفحه یک مقاله)
-
-* `get_object()` برای سفارشی‌سازی نحوه پیدا کردن شیء.
-* `slug_field` و `slug_url_kwarg` برای استفاده از `slug` به جای `pk`.
-* می‌توانید `query_pk_and_slug = True` کنید(برای امنیت SEO.)
-* اگر pk یا slug وجود نداشته باشد آنگاه با 404 مواجه خوهید شد
-* فراموش کردن `context_object_name` که بصورت پیش‌فرض object است سبب گمراه‌کنندگی خواهد شد
-* متد get_queryset() در ListView, DetailView قرار وجود دارد و اگر نوشته‌نشود model.objects.all() را می‌گیرد.
-
-File: `models.py`
-
-```python
-from django.db import models
-
-
-class Article(models.Model):
-    title = models.CharField(max_length=200)
-    content = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.title
-```
-
-File: `views.py`
-
-```python
-from django.views.generic import DetailView
-from .models import Article
-
-
-class ArticleDetailView(DetailView):
-    model = Article
-    template_name = 'article_detail.html'
-    context_object_name = 'article'
-    # پیش‌فرض: جستجو با pk — اگر می‌خواهید با slug:
-    # slug_field = 'slug'
-    # slug_url_kwarg = 'slug'
-```
-
-File: `urls.py`
-
-```python
-path('article/<int:pk>/', views.ArticleDetailView.as_view(), name='article_detail'),
-# Or with slug:
-# path('article/<slug:slug>/', views.ArticleDetailView.as_view(), name='article_detail'),
-```
-
-File: `templates/article_detail.html`
-
-```html
-<!DOCTYPE html>
-<html>
-<head><title>{{ article.title }}</title></head>
-<body>
-<h1>{{ article.title }}</h1>
-<small>{{ article.created_at }}</small>
-<div>{{ article.content|linebreaks }}</div>
-<hr>
-<a href="{% url 'article_list' %}">بازگشت به لیست</a>
-</body>
-</html>
-```
-
-File: ``
-
-```python
-
-```
-
-### 5.2.5. ✅️CreateView
+#### 5.2.2.1. ❇️ CreateView
 
 ایجاد رکورد جدید در مدل با استفاده از فرم.
 
@@ -1869,7 +1864,7 @@ def form_valid(self, form):
     return super().form_valid(form)
 ```
 
-### 5.2.6. ✅️UpdateView
+#### 5.2.2.2. ❇️ UpdateView
 
 * UpdateView = FormView + عملیات دیتابیس
 * ویرایش یک رکورد موجود(فرم با داده‌های فعلی پر می‌شود)
@@ -1948,7 +1943,7 @@ def form_valid(self, form):
     return super().form_valid(form)
 ```
 
-### 5.2.7. ✅️DeleteView
+#### 5.2.2.3. ❇️ DeleteView
 
 حذف یک رکورد(با صفحه تأیید)
 
@@ -2012,6 +2007,10 @@ File: `templates/article_confirm_delete.html`
 * تابع `get_object()` برای سفارشی‌سازی نحوه پیدا کردن شیء مورد استفاده قرار می‌گیرد
 * اگر `success_url` قرار داده نشود آنگاه با ارور `ImproperlyConfigured` مواجه خواهید شد
 * فراموش کردن `csrf_token` سبب وقوع 403 Forbidden خواهد شد
+
+
+
+
 
 # 6. 🅰️Mixin
 
