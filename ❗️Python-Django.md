@@ -1089,173 +1089,848 @@ python manage.py runserver
 
 اگر لاگین نکنید و به `/profile/1/` بروید، به `/login/` ریدایرکت می‌شوید
 
-# 4. 🅰️Files
+# 4. 🅰️Model
 
-## 4.1. 📁️Setting.py
+در جنگو، مدل (Model) یک کلاس پایتونی است که ساختار دیتابیس را تعریف می‌کند. هر مدل به یک جدول دیتابیس مپ می‌شود و هر فیلد (Field) در مدل، یک ستون (Column) در جدول است. مدل‌ها در فایل `models.py` هر اپ تعریف می‌شوند.
 
-* `INSTALL_APPS`
-    * `INSTALL_APPS=[... , 'rest_framework' ,...]`
-    * `INSTALL_APPS=[... , 'rest_framework.authtoken' ,...]`
-    * `INSTALL_APPS=[... , 'drf-spectacular' ,...]` # Swagget
-* `LANGUAGE_CODE = 'fa-ir'` تغییر زبان داشبورد از انگلیسی به فارسی
-* `TEMPLATES`
-    * `'APP_DIRS': True`  بصورت خودکار در هر اپلیکیشن اضافه‌شده دنبال پوشه تمپلیت بگرد و آن را بخوان
-* `MEDIA_ROOT = BASE_DIR / 'MyDir'` مدیاهای ارسالی کاربر بصورت پیش‌فرض کجا ذخیره گردد
-    * must be absolute name
-* `MEDIA_URL = 'MyDir'` باز کردن یک مسیر خاص در آدرس‌های داخلی جنگو
-    * بصورت پیش‌فرض همه مسیرهای جنگو بسته است مگر که مسیر خاصی را باز نمایید که باید در فایل یوآراِل نیز این گزینه را اضافه نمایید
-* `SESSION_COOKIE_AGE = 120` مقدار زمان عمر سشن را روی ۲دقیقه تنظیم می‌کند
-    * بصورت پیش‌فرض مقدار آن دو هفته است
-* `AUTH_USER_MODEL = 'account_module.user'` تعیین نام مدل[جدول دیتابیس] که باید بابت احراز هویت مورد استفاده قرار بگیرد
-    * نام مآژول و یک نقطه و نانم کلاس مدل یعنی نیاز به آوردن نام فایل نیست
-* `REST_FRAMEWORK = {...}` تنظیمات «دی‌آراِف» و رست را این قسمت قرار می‌دهیم
-    * `'DEFAULT_PAGINATION_CLASS'`
-        * `REST_FRAMEWORK = {...,'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',...}` # use «page=۱|۲|۳|......» for pagenumber
-        * `REST_FRAMEWORK = {...,'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',...}` # use «limit» for X record in one page and «offset» for begin at X record
-    * `'DEFAULT_AUTHENTICATION_CLASSES'`
-        * `REST_FRAMEWORK = {...,'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.BasicAuthentication'],...}` # send user and pass for all pages
-        * `REST_FRAMEWORK = {...,'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.TokenAuthentication'],...}` # Use Token for authenticate
-    * `'DEFAULT_PERMISSION_CLASSES'`
-        * `REST_FRAMEWORK = {...,'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated'],...}` # execute code when authenticate is valid(when user logedin)
-    * `'DEFAULT_SCHEMA_CLASS'` # Swagger
-        * `REST_FRAMEWORK = {...,'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',...}`
-* `SIMPLE_JWT = {...}` customize JWT authentication's behavior [URL](https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html)
-    * `'ACCESS_TOKEN_LIFETIME'` # عمر توکن اکسس
-        * `"SIMPLE_JWT = {...,ACCESS_TOKEN_LIFETIME": timedelta(minutes=5)}`
-    * `'REFRESH_TOKEN_LIFETIME'` عمر توکن رفرش
-        * `"SIMPLE_JWT = {...,REFRESH_TOKEN_LIFETIME": timedelta(days=1)}`
-    * `'AUTH_HEADER_TYPES'`
-        * `"SIMPLE_JWT = {...,AUTH_HEADER_TYPES": ("Bearer",)}` # نام ارسالی همراه توکن باید چه باشد
-* `SPECTACULAR_SETTINGS = {...}` # SWAGGER  [URL](https://drf-spectacular.readthedocs.io/en/latest/readme.html)
-    * `SPECTACULAR_SETTINGS = {...,'TITLE': 'Your Project API',...}`
-    * `SPECTACULAR_SETTINGS = {...,'DESCRIPTION': 'Your project description',...}`
-    * `SPECTACULAR_SETTINGS = {...,'VERSION': '1.0.0',...}`
-    * `SPECTACULAR_SETTINGS = {...,'SERVE_INCLUDE_SCHEMA': False,...}`
-* `ALLOWED_HOSTS = ['*']` # Need to run `python3 manage.py runserver 0.0.0.0:8000`
-    * `ALLOWED_HOSTS = ['192.168.1.100', 'example.com', '127.0.0.1']`
-
-## 4.2. 🅱️Static
-
-* جنگو از الگوی "اپ‌محور" استفاده می‌کند. بنابراین، بهترین روش این است که برای هر اپ، یک پوشه به نام static بسازید
-    * نکته مهم: حتماً یک زیرپوشه با نام اپ (مثل myapp/) داخل static/ بسازید. این از تداخل نام فایل‌ها در اپ‌های مختلف جلوگیری می‌کند
-* عبارت `{% load static %}` باید بالای هر فایل HTML که از فایل‌های استاتیک استفاده می‌کند درج گردد
-* `STATIC_URL`: نشان‌دهنده URL پیش‌فرض برای دسترسی به فایل‌های استاتیک در مرورگر است.
-* `STATICFILES_DIRS`:اگر فایل‌های استاتیک مشترکی دارید که در تمام اپ‌ها استفاده می‌شوند (مثلاً فایل‌های عمومی پروژه)، آنها را در یک پوشه خارج از اپ‌ها قرار دهید
-* `STATIC_ROOT`:وقتی دستور `collectstatic` را اجرا می‌کنید، تمام فایل‌های استاتیک از اپ‌ها و `STATICFILES_DIRS` را در این مسیر جمع‌آوری می‌کند
-    * این مسیر فقط در محیط تولید (production) استفاده می‌شود
-    * این پوشه نباید در git قرار گیرد (در `.gitignore` اضافه کنید)
-
-```
-myapp/
-    ├── static/
-    │   └── myapp/
-    │       ├── css/
-    │       │   └── style.css
-    │       ├── js/
-    │       │   └── script.js
-    │       └── images/
-    │           └── logo.png
-    ├── templates/
-    ├── models.py+
-    └── views.py
-```
-
-File: `setting.py`
+ساختار کلی مدل‌ها به شکل زیر است
 
 ```python
-STATIC_URL = 'static/'  # Default url on clients browser
-STATIC_ROOT = BASE_DIR / "staticfiles"
-# ╔═══════════════════╗
-# ║ STATICFILES_DIRS ║
-# ╚═══════════════════╝
-# myproject/               ←  اگر ساختار شبیه ساختار ذیل بود
-#     ├── static/          ← فایل‌های استاتیک عمومی پروژه
-#     │   ├── css/
-#     │   └── js/
-#     ├── myapp/
-#     │   └── static/myapp/...
-#     └── settings.py
-import os
+from django.db import models
 
-STATICFILES_DIRS = [
-    BASE_DIR / "static",  # پوشه استاتیک اصلی پروژه (در کنار manage.py)
+
+class MyModel(models.Model):
+    field1 = models.CharField(max_length=100)
+    field2 = models.IntegerField()
+```
+
+* هر مدل باید از `models.Model` ارث‌بری کند.
+* انواع فیلدهای پرکاربرد
+    * `CharField`:متن کوتاه (نیازمندmax_length)
+    * `TextField`:متن بلند
+    * `IntegerField`:عدد صحیح
+    * `FloatField` or `DecimalField`:اعداد اعشاری
+    * `BooleanField`:True/False
+    * `DateField` or `DateTimeField`:تاریخ / تاریخ و زمان
+    * `EmailField`:ایمیل (اعتبارسنجی دارد)
+    * `URLField`:آدرس URL
+    * `FileField` or `ImageField`:فایل / تصویر
+    * `ForeignKey`:رابطه یک-به-چند
+    * `ManyToManyField`:رابطه چند-به-چند
+    * `OneToOneField`:رابطه یک-به-یک
+
+## 4.1. 🅱️Options
+
+هر فیلد در Django می‌تواند پارامترهای اختیاری زیر را داشته باشد(این‌ها مهم‌ترین و پرکاربردترین‌ها هستند):
+
+### 4.1.1. ✅️null
+
+* Type: Boolean
+* Default:False (یعنی بصورت پیش‌فرض مقدار `Null` نتواند در دیتابیس ذخیره شود)
+* null=`True` (مقدار `null` بتواند در دیتابیس ذخیره شود)
+* برای فیلدهای عددی یا تاریخی مناسب است.
+* برای فیلدهای متنی (`CharField`, `TextField`) بهتر است به‌جای `null=True` از `blank=True` استفاده کنید، زیرا رشته خالی '' بهتر از `NULL` است.
+
+```python
+age = models.IntegerField(null=True)
+```
+
+### 4.1.2. ✅️blank
+
+* Type: Boolean
+* Default:False
+* blank=`True` (یعنی فیلد اختیاری است)
+* در فرم‌ها(مثلا `admin`, `ModelForm`) تعیین می‌کند که فیلد اجباری است یا خیر.
+* نکته: null مربوط به دیتابیس است، blank مربوط به اعتبارسنجی فرم
+
+```python
+bio = models.TextField(blank=True)
+```
+
+### 4.1.3. ✅️choices
+
+* برای محدود کردن مقادیر ممکن فیلد
+* باتوجه به مثال زیر:مقدار ذخیره شده در دیتابیس `d` خواهد بود و مقدار قابل نمایش `Draft` خواهد بود
+
+```python
+STATUS_CHOICES = [
+    ('d', 'Draft'),
+    ('p', 'Published'),
+    ('a', 'Archived'),
+]
+
+status = models.CharField(max_length=1, choices=STATUS_CHOICES)
+```
+
+### 4.1.4. ✅️default
+
+* مقدار پیش‌فرض فیلد (در دیتابیس و فرم‌ها)
+* می‌تواند مقدار ثابت یا تابع باشد (مثل timezone.now)
+
+```python
+is_active = models.BooleanField(default=True)
+created_at = models.DateTimeField(default=timezone.now)
+```
+
+### 4.1.5. ✅️help_text
+
+* متن راهنما که در فرم‌ها نمایش داده می‌شود
+
+```python
+email = models.EmailField(help_text="Please enter a valid email address.")
+```
+
+### 4.1.6. ✅️verbose_name
+
+*     نام خوانا و انسانی برای فیلد (در ادمین و فرم‌ها نمایش داده می‌شود).
+
+```python
+first_name = models.CharField("First Name", max_length=50)
+# or
+first_name = models.CharField(max_length=50, verbose_name="First Name")
+```
+
+### 4.1.7. ✅️primary_key
+
+* اگر `True` باشد، این فیلد به جای `id` پیش‌فرض، کلید اصلی می‌شود.
+* اگر تنظیم کنید، Django دیگر فیلد id ایجاد نمی‌کند.
+
+```python
+student_id = models.CharField(max_length=10, primary_key=True)
+```
+
+### 4.1.8. ✅️unique
+
+* اگر `True` باشد، مقدار فیلد در کل جدول باید منحصر به فرد باشد.
+* هردو پارامتر ForeignKey و unique=True به صورت خودکار ایندکس می‌شوند.
+
+```python
+email = models.EmailField(unique=True)
+```
+
+### 4.1.9. ✅️db_index
+
+* اگر `True` باشد، روی این فیلد ایندکس ایجاد می‌شود (برای بهبود عملکرد جستجو)
+* هردو پارامتر ForeignKey و unique=True به صورت خودکار ایندکس می‌شوند.
+
+```python
+slug = models.SlugField(db_index=True)
+```
+
+### 4.1.10. ✅️editable
+
+*     اگر `False` باشد، در فرم‌های ادمین و `ModelForm` نمایش داده نمی‌شود.
+* فیلدهای `auto_now=True` و `auto_now_add=True` به صورت خودکار `editable=False` هستند
+
+```python
+created_at = models.DateTimeField(auto_now_add=True, editable=False)
+```
+
+### 4.1.11. ✅️auto_now or auto_now_add
+
+* `auto_now=True`:هر بار که رکورد ذخیره می‌شود (save)، زمان آخرین بروزرسانی ذخیره می‌شود.
+* `auto_now_add=True`:فقط هنگام ایجاد اولیه رکورد، زمان ثبت می‌شود
+* این فیلدها به صورت خودکار `editable=False` هستند
+
+```python
+created_at = models.DateTimeField(auto_now_add=True)
+updated_at = models.DateTimeField(auto_now=True)
+```
+
+### 4.1.12. ✅️max_length(CharField or SlugField or EmailField or ...)
+
+* حداکثر طول رشته را تعیین میکند
+* برای موارد خاص الزامی است.
+
+```python
+title = models.CharField(max_length=200)
+```
+
+### 4.1.13. ✅️upload_to (FileField or ImageField)
+
+* مسیر ذخیره‌سازی فایل نسبت به `MEDIA_ROOT`
+
+```python
+avatar = models.ImageField(upload_to='avatars/')
+```
+
+### 4.1.14. ✅️on_delete (ForeignKey or OneToOneField)
+
+*     تعیین می‌کند چه اتفاقی بیفتد اگر رکورد مرتبط حذف شود.
+* مقادیر رایج:
+    * models.CASCADE: حذف رکورد وابسته (پیش‌فرض نیست! باید تنظیم شود)
+    * models.SET_NULL: مقدار فیلد را NULL کن (فقط اگر null=True)
+    * models.PROTECT: جلوگیری از حذف
+    * models.SET_DEFAULT: مقدار پیش‌فرض را تنظیم کن
+    * models.DO_NOTHING: هیچ کاری نکن (خطرناک!)
+
+```python
+author = models.ForeignKey(User, on_delete=models.CASCADE)
+```
+
+### 4.1.15. ✅️related_name
+
+* نام معکوس رابطه برای دسترسی از مدل مرتبط.
+
+```python
+# in Post model :
+author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
+
+# حالا می‌توانیم بگوییم:
+user.posts.all()  # همه پست‌های یک کاربر
+```
+
+### 4.1.16. ✅️through(ManyToManyField)
+
+* برای استفاده از یک مدل واسطه برای رابطه چند به چند.
+
+```python
+members = models.ManyToManyField(User, through='Membership')
+```
+
+## 4.2. 🅱️MetaClass
+
+داخل کلاس Meta می‌توانید تنظیماتی مثل نام جدول، مرتب‌سازی پیش‌فرض، محدودیت‌های منحصربه‌فرد و ... را تعریف کنید.
+
+```python
+# moldel.py
+
+class Meta:
+    ordering = ['-created_at']  # مرتب‌سازی پیش‌فرض
+    verbose_name = "Article"
+    verbose_name_plural = "Articles"
+    db_table = 'my_custom_table_name'
+    unique_together = [['title', 'author']]  # ترکیب منحصربه‌فرد
+    indexes = [
+        models.Index(fields=['title', 'status']),
+    ]
+```
+
+## 4.3. 🅱️ModelMethods
+
+### 4.3.1. ✅️`__str__`
+
+* نحوه نمایش شیء در ادمین و shell
+
+```python
+def __str__(self):
+    return self.title
+```
+
+### 4.3.2. ✅️get_absolute_url
+
+* آدرس کامل به صفحه جزئیات شیء(برای ادمین و redirect)
+
+```python
+from django.urls import reverse
+
+
+def get_absolute_url(self):
+    return reverse('article_detail', args=[self.slug])
+```
+
+## 4.3. 🅱️Example
+
+فرض کنید می‌خواهیم یک مدل پیشرفته برای مقاله (Article) بسازیم که:
+
+* دارای عنوان، محتوا، اسلاگ، نویسنده، وضعیت، تگ‌ها، تاریخ ایجاد/بروزرسانی، تصویر شاخص و ...
+* تمام پارامترهای مهم فیلدها را پوشش دهد.
+* متدها و Meta کامل داشته باشد.
+* اسلاگ به صورت خودکار از عنوان ساخته بشود
+
+```
+myproject/
+├── manage.py
+├── myproject/
+│   ├── __init__.py
+│   ├── settings.py
+│   ├── urls.py          ← اصلی
+│   └── wsgi.py
+└── blog/
+    ├── __init__.py
+    ├── admin.py         ← مدیریت ادمین
+    ├── apps.py
+    ├── forms.py         ← فرم‌های مقاله
+    ├── models.py        ← مدل‌های دیتابیس (Article, Tag)
+    ├── urls.py          ← URLهای اپ وبلاگ
+    ├── views.py         ← ویوها (لیست، جزئیات، ایجاد، ...)
+    └── templates/
+        └── blog/
+            ├── base.html
+            ├── article_list.html
+            ├── article_detail.html
+            └── article_form.html
+```
+
+File: `blog/models.py`
+
+```python
+
+```
+
+File: `blog/admin.py` اختیاری و برای نمایش در ادمین
+
+```python
+# blog/models.py
+from django.db import models
+from django.contrib.auth.models import User
+from django.urls import reverse
+from django.utils import timezone
+from django.utils.text import slugify
+import uuid
+
+
+class Tag(models.Model):
+    name = models.CharField("نام تگ", max_length=50, unique=True)
+    slug = models.SlugField("اسلاگ", unique=True, allow_unicode=True)
+
+    class Meta:
+        verbose_name = "تگ"
+        verbose_name_plural = "تگ‌ها"
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name, allow_unicode=True)
+        super().save(*args, **kwargs)
+
+
+class Article(models.Model):
+    title = models.CharField(
+        "عنوان",
+        max_length=200,
+        help_text="حداکثر 200 کاراکتر",
+        db_index=True,
+    )
+    slug = models.SlugField(
+        "اسلاگ",
+        max_length=220,
+        unique=True,
+        allow_unicode=True,
+        blank=True,
+    )
+    content = models.TextField("محتوا")
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name="نویسنده",
+        related_name="articles",
+    )
+    tags = models.ManyToManyField(
+        Tag,
+        verbose_name="تگ‌ها",
+        blank=True,
+        related_name="articles",
+    )
+    STATUS_CHOICES = [
+        ('draft', 'پیش‌نویس'),
+        ('published', 'منتشر شده'),
+        ('archived', 'بایگانی شده'),
+    ]
+    status = models.CharField(
+        "وضعیت",
+        max_length=10,
+        choices=STATUS_CHOICES,
+        default='draft',
+        db_index=True,
+    )
+    is_featured = models.BooleanField("ویژه", default=False)
+    created_at = models.DateTimeField("ایجاد شده در", auto_now_add=True, editable=False)
+    updated_at = models.DateTimeField("آخرین بروزرسانی", auto_now=True, editable=False)
+    published_at = models.DateTimeField("تاریخ انتشار", null=True, blank=True)
+    views = models.PositiveIntegerField("بازدیدها", default=0)
+    uuid = models.UUIDField("شناسه یکتا", default=uuid.uuid4, editable=False, unique=True)
+    cover_image = models.ImageField(
+        "تصویر شاخص",
+        upload_to='articles/covers/%Y/%m/%d/',
+        blank=True,
+        null=True,
+    )
+
+    def __str__(self):
+        return f"{self.title} ({self.get_status_display()})"
+
+    def get_absolute_url(self):
+        return reverse('blog:article_detail', kwargs={'slug': self.slug})
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title, allow_unicode=True)
+            original_slug = self.slug
+            counter = 1
+            while Article.objects.filter(slug=self.slug).exists():
+                self.slug = f"{original_slug}-{counter}"
+                counter += 1
+        super().save(*args, **kwargs)
+
+    def publish(self):
+        self.status = 'published'
+        if not self.published_at:
+            self.published_at = timezone.now()
+        self.save()
+
+    @property
+    def is_published(self):
+        return self.status == 'published' and self.published_at is not None
+
+    class Meta:
+        verbose_name = "مقاله"
+        verbose_name_plural = "مقالات"
+        ordering = ['-published_at', '-created_at']
+        db_table = 'blog_articles'
+        indexes = [
+            models.Index(fields=['status', 'published_at']),
+            models.Index(fields=['author', 'status']),
+        ]
+        constraints = [
+            models.UniqueConstraint(fields=['title', 'author'], name='unique_title_per_author')
+        ]
+
+
+# Signal: تنظیم تاریخ انتشار هنگام تغییر به published
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
+
+
+@receiver(pre_save, sender=Article)
+def set_published_at(sender, instance, **kwargs):
+    if instance.status == 'published' and not instance.published_at:
+        instance.published_at = timezone.now()
+```
+
+File: `blog/admin.py` پنل مدیریت
+
+```python
+# blog/admin.py
+from django.contrib import admin
+from .models import Article, Tag
+
+
+@admin.register(Article)
+class ArticleAdmin(admin.ModelAdmin):
+    list_display = ['title', 'author', 'status', 'published_at', 'views']
+    list_filter = ['status', 'author', 'tags']
+    search_fields = ['title', 'content']
+    prepopulated_fields = {'slug': ('title',)}
+    date_hierarchy = 'published_at'
+    readonly_fields = ['created_at', 'updated_at', 'uuid', 'views']
+    filter_horizontal = ['tags']  # برای ManyToManyField
+
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    list_display = ['name', 'slug']
+    prepopulated_fields = {'slug': ('name',)}
+```
+
+File: `blog/forms.py` فرم‌ها
+
+```python
+# blog/forms.py
+from django import forms
+from .models import Article
+
+
+class ArticleForm(forms.ModelForm):
+    class Meta:
+        model = Article
+        fields = ['title', 'content', 'status', 'is_featured', 'tags', 'cover_image']
+        widgets = {
+            'content': forms.Textarea(attrs={'rows': 10, 'class': 'form-control'}),
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'status': forms.Select(attrs={'class': 'form-control'}),
+            'tags': forms.SelectMultiple(attrs={'class': 'form-control'}),
+        }
+        help_texts = {
+            'title': 'حداکثر 200 کاراکتر',
+            'cover_image': 'اختیاری - فرمت‌های JPG/PNG مجاز هستند.',
+        }
+```
+
+File: `blog/views.py` ویوها
+
+```python
+# blog/views.py
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.views.generic import ListView, DetailView
+from django.utils import timezone
+from .models import Article, Tag
+from .forms import ArticleForm
+
+
+# ───────────────────────────────
+# ویوهای مبتنی بر کلاس (Class-Based Views)
+# ───────────────────────────────
+
+class ArticleListView(ListView):
+    model = Article
+    template_name = 'blog/article_list.html'
+    context_object_name = 'articles'
+    paginate_by = 10
+
+    def get_queryset(self):
+        # فقط مقالات منتشر شده
+        return Article.objects.filter(status='published').order_by('-published_at')
+
+
+class ArticleDetailView(DetailView):
+    model = Article
+    template_name = 'blog/article_detail.html'
+    context_object_name = 'article'
+    slug_field = 'slug'
+    slug_url_kwarg = 'slug'
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        # افزایش بازدید
+        obj.views += 1
+        obj.save(update_fields=['views'])
+        return obj
+
+
+# ───────────────────────────────
+# ویوهای مبتنی بر تابع (Function-Based Views)
+# ───────────────────────────────
+
+@login_required
+def article_create_view(request):
+    if request.method == 'POST':
+        form = ArticleForm(request.POST, request.FILES)
+        if form.is_valid():
+            article = form.save(commit=False)
+            article.author = request.user
+            article.save()
+            form.save_m2m()  # ذخیره ManyToMany (tags)
+            if article.status == 'published':
+                article.publish()
+            return redirect(article.get_absolute_url())
+    else:
+        form = ArticleForm()
+    return render(request, 'blog/article_form.html', {'form': form, 'title': 'ایجاد مقاله'})
+
+
+@login_required
+def article_update_view(request, slug):
+    article = get_object_or_404(Article, slug=slug, author=request.user)
+    if request.method == 'POST':
+        form = ArticleForm(request.POST, request.FILES, instance=article)
+        if form.is_valid():
+            article = form.save(commit=False)
+            article.save()
+            form.save_m2m()
+            if article.status == 'published' and not article.published_at:
+                article.publish()
+            return redirect(article.get_absolute_url())
+    else:
+        form = ArticleForm(instance=article)
+    return render(request, 'blog/article_form.html', {'form': form, 'title': 'ویرایش مقاله'})
+
+
+def tag_articles_view(request, slug):
+    tag = get_object_or_404(Tag, slug=slug)
+    articles = Article.objects.filter(tags=tag, status='published').order_by('-published_at')
+    return render(request, 'blog/article_list.html', {
+        'articles': articles,
+        'tag': tag,
+    })
+```
+
+File: `blog/urls.py`
+
+```python
+# blog/urls.py
+from django.urls import path
+from . import views
+
+app_name = 'blog'
+
+urlpatterns = [
+    path('', views.ArticleListView.as_view(), name='article_list'),
+    path('article/<slug:slug>/', views.ArticleDetailView.as_view(), name='article_detail'),
+    path('create/', views.article_create_view, name='article_create'),
+    path('edit/<slug:slug>/', views.article_update_view, name='article_update'),
+    path('tag/<slug:slug>/', views.tag_articles_view, name='tag_articles'),
 ]
 ```
 
+File: `myproject/urls.py` فایل مسیرهای اصلی پروژه
+
+```python
+# myproject/urls.py
+from django.contrib import admin
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('blog.urls', namespace='blog')),
+]
+
+# برای نمایش فایل‌های مدیا در حالت توسعه
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+```
+
+File: `blog/templates/blog/base.html`  قالب پایه
+
 ```html
+<!-- blog/templates/blog/base.html -->
 <!DOCTYPE html>
-<html>
+<html lang="fa" dir="rtl">
 <head>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/main.css' %}"> <!--If ussing "STATICFILES_DIRS"-->
-    <link rel="stylesheet" href="{% static 'myapp/css/style.css' %}">
-    <script src="{% static 'myapp/js/script.js' %}"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}وبلاگ من{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
 </head>
-<body>
-<img src="{% static 'myapp/images/logo.png' %}" alt="Logo">
+<body class="bg-light">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'blog:article_list' %}">وبلاگ من</a>
+        <div class="navbar-nav ms-auto">
+            {% if user.is_authenticated %}
+            <span class="navbar-text text-white me-3">سلام {{ user.username }}</span>
+            <a class="nav-link" href="{% url 'blog:article_create' %}">مقاله جدید</a>
+            <a class="nav-link" href="{% url 'admin:index' %}">پنل مدیریت</a>
+            <a class="nav-link" href="{% url 'admin:logout' %}">خروج</a>
+            {% else %}
+            <a class="nav-link" href="{% url 'admin:login' %}">ورود</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+
+<div class="container py-4">
+    {% block content %}{% endblock %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 ```
 
-**محیطProduction**
+File: `blog/templates/blog/article_list.html`
 
-در محیط توسعه (development)، جنگو به طور خودکار فایل‌های استاتیک را سرو می‌کند.اما در تولید (مثلاً روی سرور با Nginx یا Apache)، باید همه فایل‌های استاتیک را در یک مکان جمع کنید. این دستور تمام فایل‌های استاتیک از همه اپ‌ها و STATICFILES_DIRS را در STATIC_ROOT کپی می‌کند. پس از اجرای این دستور، سرور وب (مثل Nginx) باید مستقیماً از STATIC_ROOT فایل‌ها را سرو کند (نه از جنگو!).
+```html
+<!-- blog/templates/blog/article_list.html -->
+{% extends 'blog/base.html' %}
+
+{% block title %}لیست مقالات{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h2>مقالات منتشر شده</h2>
+        {% if tag %}
+        <div class="alert alert-info">نمایش مقالات برچسب‌خورده با: <strong>{{ tag.name }}</strong></div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row">
+    {% for article in articles %}
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card h-100">
+            {% if article.cover_image %}
+            <img src="{{ article.cover_image.url }}" class="card-img-top" alt="{{ article.title }}" style="height: 200px; object-fit: cover;">
+            {% endif %}
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title">{{ article.title }}</h5>
+                <p class="card-text flex-grow-1">{{ article.content|truncatewords:30 }}</p>
+                <div class="text-muted small">
+                    نویسنده: {{ article.author.username }}<br>
+                    انتشار: {{ article.published_at|date:"Y/m/d H:i" }}<br>
+                    بازدید: {{ article.views }}
+                </div>
+                <a href="{{ article.get_absolute_url }}" class="btn btn-primary mt-3">ادامه مطلب</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col">
+        <div class="alert alert-warning">مقاله‌ای یافت نشد.</div>
+    </div>
+    {% endfor %}
+</div>
+
+{% if page_obj.has_other_pages %}
+<nav aria-label="صفحه‌بندی">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page=1">اول</a></li>
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">قبلی</a></li>
+        {% endif %}
+
+        <li class="page-item active"><span class="page-link">{{ page_obj.number }}</span></li>
+
+        {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">بعدی</a></li>
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">آخر</a></li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}
+```
+
+File: `blog/templates/blog/article_detail.html`
+
+```html
+<!-- blog/templates/blog/article_detail.html -->
+{% extends 'blog/base.html' %}
+
+{% block title %}{{ article.title }}{% endblock %}
+
+{% block content %}
+<article>
+    <header class="mb-4">
+        <h1>{{ article.title }}</h1>
+        <div class="text-muted">
+            نویسنده: {{ article.author.username }} —
+            انتشار: {{ article.published_at|date:"Y/m/d H:i" }} —
+            بازدید: {{ article.views }}
+        </div>
+        {% if article.tags.exists %}
+        <div class="mt-2">
+            {% for tag in article.tags.all %}
+            <a href="{% url 'blog:tag_articles' tag.slug %}" class="badge bg-secondary text-decoration-none">{{ tag.name }}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </header>
+
+    {% if article.cover_image %}
+    <div class="mb-4">
+        <img src="{{ article.cover_image.url }}" class="img-fluid rounded" alt="{{ article.title }}">
+    </div>
+    {% endif %}
+
+    <div class="content mb-4">
+        {{ article.content|linebreaks }}
+    </div>
+
+    {% if user == article.author %}
+    <div class="d-flex gap-2">
+        <a href="{% url 'blog:article_update' article.slug %}" class="btn btn-warning">ویرایش</a>
+        <!-- می‌توانید دکمه حذف هم اضافه کنید -->
+    </div>
+    {% endif %}
+</article>
+{% endblock %}
+```
+
+File: `blog/templates/blog/article_form.html`
+
+```html
+<!-- blog/templates/blog/article_form.html -->
+{% extends 'blog/base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4>{{ title }}</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">عنوان</label>
+                        {{ form.title }}
+                        {% if form.title.errors %}
+                        <div class="text-danger small">{{ form.title.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">محتوا</label>
+                        {{ form.content }}
+                        {% if form.content.errors %}
+                        <div class="text-danger small">{{ form.content.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">وضعیت</label>
+                        {{ form.status }}
+                    </div>
+                    <div class="mb-3 form-check">
+                        {{ form.is_featured }}
+                        <label class="form-check-label" for="{{ form.is_featured.id_for_label }}">مقاله ویژه</label>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">تگ‌ها</label>
+                        {{ form.tags }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">تصویر شاخص</label>
+                        {{ form.cover_image }}
+                        {% if form.cover_image.help_text %}
+                        <div class="form-text">{{ form.cover_image.help_text }}</div>
+                        {% endif %}
+                    </div>
+                    <button type="submit" class="btn btn-primary">ذخیره</button>
+                    <a href="{% url 'blog:article_list' %}" class="btn btn-secondary">انصراف</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+```
+
+File: `myproject/settings.py`
+
+```python
+# settings.py
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'blog',  # ✅ اپ وبلاگ
+]
+
+# ...
+
+LANGUAGE_CODE = 'fa-ir'
+TIME_ZONE = 'Asia/Tehran'
+USE_I18N = True
+USE_TZ = True
+
+# مدیا
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# استاتیک
+STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# برای فارسی‌نویسی در ادمین
+from django.utils.translation import gettext_lazy as _
+
+LANGUAGES = [
+    ('fa', _('Persian')),
+    ('en', _('English')),
+]
+```
+
+دستورات اجرایی
 
 ```shell
-python manage.py collectstatic
-
-# ╔══════╗
-# ║ NGINX ║
-# ╚══════╝
-location /static/ {
-    alias /path/to/your/project/staticfiles;
-}
-```
-
-* اگر می‌خواهید فایل‌های استاتیک را روی Heroku، Railway، Render یا Docker راه‌اندازی کنید، همین ساختار کافی است. فقط حتماً collectstatic را در مرحله ساخت (build) اجرا کنید.
-
-**محیطDevelopment**
-
-* جنگو در تولید برای سرو فایل‌های استاتیک مناسب نیست
-* در محیط توسعه، جنگو به صورت خودکار فایل‌های استاتیک را سرو می‌کند اما فقط اگر`DEBUG = True`باشد و در `urls.py` پروژه خط زیر اضافه شده باشد
-
-```python
-from django.conf import settings
-from django.conf.urls.static import static
-from django.urls import path
-
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    # ... سایر مسیرها
-]
-
-# فقط در محیط توسعه! و هیچوقت این خطوط را در محیط تولید نگذارید!
-if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  # اگر media هم دارید
-```
-
-**FINAL:**
-
-جمع‌بند از فایل `settings.py`
-
-```python
-import os
-from pathlib import Path
-
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-STATIC_URL = 'static/'
-
-STATICFILES_DIRS = [
-    BASE_DIR / "static",  # فایل‌های عمومی پروژه
-]
-
-STATIC_ROOT = BASE_DIR / "staticfiles"
-
-# اگر از Media (آپلود فایل‌ها) هم استفاده می‌کنید:
-MEDIA_URL = 'media/'
-MEDIA_ROOT = BASE_DIR / "media"
+python manage.py makemigrations
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py runserver
 ```
 
 # 5. 🅰️ClassBaseView
@@ -1683,7 +2358,6 @@ File: `templates/article_detail.html`
 </html>
 ```
 
-
 ### 5.2.2. ✅️FormView
 
 برای مدیریت فرم‌هایی که مستقیماً توسط مدل ذخیره نمی‌شوند(همانند فرم تماس با ما)
@@ -2007,10 +2681,6 @@ File: `templates/article_confirm_delete.html`
 * تابع `get_object()` برای سفارشی‌سازی نحوه پیدا کردن شیء مورد استفاده قرار می‌گیرد
 * اگر `success_url` قرار داده نشود آنگاه با ارور `ImproperlyConfigured` مواجه خواهید شد
 * فراموش کردن `csrf_token` سبب وقوع 403 Forbidden خواهد شد
-
-
-
-
 
 # 6. 🅰️Mixin
 
@@ -2428,6 +3098,175 @@ File: `templates/403.html` صفحه خطا (اگر این فایل را نساز
 <a href="{% url 'article_list' %}">بازگشت به لیست مقالات</a>
 </body>
 </html>
+```
+
+# 7. 🅰️Files
+
+## 7.1. 📁️Setting.py
+
+* `INSTALL_APPS`
+    * `INSTALL_APPS=[... , 'rest_framework' ,...]`
+    * `INSTALL_APPS=[... , 'rest_framework.authtoken' ,...]`
+    * `INSTALL_APPS=[... , 'drf-spectacular' ,...]` # Swagget
+* `LANGUAGE_CODE = 'fa-ir'` تغییر زبان داشبورد از انگلیسی به فارسی
+* `TEMPLATES`
+    * `'APP_DIRS': True`  بصورت خودکار در هر اپلیکیشن اضافه‌شده دنبال پوشه تمپلیت بگرد و آن را بخوان
+* `MEDIA_ROOT = BASE_DIR / 'MyDir'` مدیاهای ارسالی کاربر بصورت پیش‌فرض کجا ذخیره گردد
+    * must be absolute name
+* `MEDIA_URL = 'MyDir'` باز کردن یک مسیر خاص در آدرس‌های داخلی جنگو
+    * بصورت پیش‌فرض همه مسیرهای جنگو بسته است مگر که مسیر خاصی را باز نمایید که باید در فایل یوآراِل نیز این گزینه را اضافه نمایید
+* `SESSION_COOKIE_AGE = 120` مقدار زمان عمر سشن را روی ۲دقیقه تنظیم می‌کند
+    * بصورت پیش‌فرض مقدار آن دو هفته است
+* `AUTH_USER_MODEL = 'account_module.user'` تعیین نام مدل[جدول دیتابیس] که باید بابت احراز هویت مورد استفاده قرار بگیرد
+    * نام مآژول و یک نقطه و نانم کلاس مدل یعنی نیاز به آوردن نام فایل نیست
+* `REST_FRAMEWORK = {...}` تنظیمات «دی‌آراِف» و رست را این قسمت قرار می‌دهیم
+    * `'DEFAULT_PAGINATION_CLASS'`
+        * `REST_FRAMEWORK = {...,'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',...}` # use «page=۱|۲|۳|......» for pagenumber
+        * `REST_FRAMEWORK = {...,'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',...}` # use «limit» for X record in one page and «offset» for begin at X record
+    * `'DEFAULT_AUTHENTICATION_CLASSES'`
+        * `REST_FRAMEWORK = {...,'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.BasicAuthentication'],...}` # send user and pass for all pages
+        * `REST_FRAMEWORK = {...,'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.TokenAuthentication'],...}` # Use Token for authenticate
+    * `'DEFAULT_PERMISSION_CLASSES'`
+        * `REST_FRAMEWORK = {...,'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated'],...}` # execute code when authenticate is valid(when user logedin)
+    * `'DEFAULT_SCHEMA_CLASS'` # Swagger
+        * `REST_FRAMEWORK = {...,'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',...}`
+* `SIMPLE_JWT = {...}` customize JWT authentication's behavior [URL](https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html)
+    * `'ACCESS_TOKEN_LIFETIME'` # عمر توکن اکسس
+        * `"SIMPLE_JWT = {...,ACCESS_TOKEN_LIFETIME": timedelta(minutes=5)}`
+    * `'REFRESH_TOKEN_LIFETIME'` عمر توکن رفرش
+        * `"SIMPLE_JWT = {...,REFRESH_TOKEN_LIFETIME": timedelta(days=1)}`
+    * `'AUTH_HEADER_TYPES'`
+        * `"SIMPLE_JWT = {...,AUTH_HEADER_TYPES": ("Bearer",)}` # نام ارسالی همراه توکن باید چه باشد
+* `SPECTACULAR_SETTINGS = {...}` # SWAGGER  [URL](https://drf-spectacular.readthedocs.io/en/latest/readme.html)
+    * `SPECTACULAR_SETTINGS = {...,'TITLE': 'Your Project API',...}`
+    * `SPECTACULAR_SETTINGS = {...,'DESCRIPTION': 'Your project description',...}`
+    * `SPECTACULAR_SETTINGS = {...,'VERSION': '1.0.0',...}`
+    * `SPECTACULAR_SETTINGS = {...,'SERVE_INCLUDE_SCHEMA': False,...}`
+* `ALLOWED_HOSTS = ['*']` # Need to run `python3 manage.py runserver 0.0.0.0:8000`
+    * `ALLOWED_HOSTS = ['192.168.1.100', 'example.com', '127.0.0.1']`
+
+## 7.2. 🅱️Static
+
+* جنگو از الگوی "اپ‌محور" استفاده می‌کند. بنابراین، بهترین روش این است که برای هر اپ، یک پوشه به نام static بسازید
+    * نکته مهم: حتماً یک زیرپوشه با نام اپ (مثل myapp/) داخل static/ بسازید. این از تداخل نام فایل‌ها در اپ‌های مختلف جلوگیری می‌کند
+* عبارت `{% load static %}` باید بالای هر فایل HTML که از فایل‌های استاتیک استفاده می‌کند درج گردد
+* `STATIC_URL`: نشان‌دهنده URL پیش‌فرض برای دسترسی به فایل‌های استاتیک در مرورگر است.
+* `STATICFILES_DIRS`:اگر فایل‌های استاتیک مشترکی دارید که در تمام اپ‌ها استفاده می‌شوند (مثلاً فایل‌های عمومی پروژه)، آنها را در یک پوشه خارج از اپ‌ها قرار دهید
+* `STATIC_ROOT`:وقتی دستور `collectstatic` را اجرا می‌کنید، تمام فایل‌های استاتیک از اپ‌ها و `STATICFILES_DIRS` را در این مسیر جمع‌آوری می‌کند
+    * این مسیر فقط در محیط تولید (production) استفاده می‌شود
+    * این پوشه نباید در git قرار گیرد (در `.gitignore` اضافه کنید)
+
+```
+myapp/
+    ├── static/
+    │   └── myapp/
+    │       ├── css/
+    │       │   └── style.css
+    │       ├── js/
+    │       │   └── script.js
+    │       └── images/
+    │           └── logo.png
+    ├── templates/
+    ├── models.py+
+    └── views.py
+```
+
+File: `setting.py`
+
+```python
+STATIC_URL = 'static/'  # Default url on clients browser
+STATIC_ROOT = BASE_DIR / "staticfiles"
+# ╔═══════════════════╗
+# ║ STATICFILES_DIRS ║
+# ╚═══════════════════╝
+# myproject/               ←  اگر ساختار شبیه ساختار ذیل بود
+#     ├── static/          ← فایل‌های استاتیک عمومی پروژه
+#     │   ├── css/
+#     │   └── js/
+#     ├── myapp/
+#     │   └── static/myapp/...
+#     └── settings.py
+import os
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",  # پوشه استاتیک اصلی پروژه (در کنار manage.py)
+]
+```
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/main.css' %}"> <!--If ussing "STATICFILES_DIRS"-->
+    <link rel="stylesheet" href="{% static 'myapp/css/style.css' %}">
+    <script src="{% static 'myapp/js/script.js' %}"></script>
+</head>
+<body>
+<img src="{% static 'myapp/images/logo.png' %}" alt="Logo">
+</body>
+</html>
+```
+
+**محیطProduction**
+
+در محیط توسعه (development)، جنگو به طور خودکار فایل‌های استاتیک را سرو می‌کند.اما در تولید (مثلاً روی سرور با Nginx یا Apache)، باید همه فایل‌های استاتیک را در یک مکان جمع کنید. این دستور تمام فایل‌های استاتیک از همه اپ‌ها و STATICFILES_DIRS را در STATIC_ROOT کپی می‌کند. پس از اجرای این دستور، سرور وب (مثل Nginx) باید مستقیماً از STATIC_ROOT فایل‌ها را سرو کند (نه از جنگو!).
+
+```shell
+python manage.py collectstatic
+
+# ╔══════╗
+# ║ NGINX ║
+# ╚══════╝
+location /static/ {
+    alias /path/to/your/project/staticfiles;
+}
+```
+
+* اگر می‌خواهید فایل‌های استاتیک را روی Heroku، Railway، Render یا Docker راه‌اندازی کنید، همین ساختار کافی است. فقط حتماً collectstatic را در مرحله ساخت (build) اجرا کنید.
+
+**محیطDevelopment**
+
+* جنگو در تولید برای سرو فایل‌های استاتیک مناسب نیست
+* در محیط توسعه، جنگو به صورت خودکار فایل‌های استاتیک را سرو می‌کند اما فقط اگر`DEBUG = True`باشد و در `urls.py` پروژه خط زیر اضافه شده باشد
+
+```python
+from django.conf import settings
+from django.conf.urls.static import static
+from django.urls import path
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    # ... سایر مسیرها
+]
+
+# فقط در محیط توسعه! و هیچوقت این خطوط را در محیط تولید نگذارید!
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  # اگر media هم دارید
+```
+
+**FINAL:**
+
+جمع‌بند از فایل `settings.py`
+
+```python
+import os
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+STATIC_URL = 'static/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",  # فایل‌های عمومی پروژه
+]
+
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# اگر از Media (آپلود فایل‌ها) هم استفاده می‌کنید:
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / "media"
 ```
 
 </div>
