@@ -1531,7 +1531,7 @@ File: `templates/about.html`
 </html>
 ```
 
-#### 5.2.1.2. ❇️ ListView
+#### 5.2.1.1. ❇️ ListView
 
 نمایش لیستی از اشیاء یک مدل(مثل لیست مقالات)
 
@@ -1617,7 +1617,7 @@ def get_queryset(self):
     return Article.objects.filter(title__icontains='django')
 ```
 
-#### 5.2.1.3. ❇️ DetailView
+#### 5.2.1.2. ❇️ DetailView
 
 نمایش جزئیات یک رکورد(همانند صفحه یک مقاله)
 
