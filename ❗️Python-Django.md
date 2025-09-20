@@ -1091,7 +1091,50 @@ python manage.py runserver
 
 # 4. 🅰️Files
 
-## 4.1. 🅱️Static
+## 4.1. 📁️Setting.py
+
+* `INSTALL_APPS`
+    * `INSTALL_APPS=[... , 'rest_framework' ,...]`
+    * `INSTALL_APPS=[... , 'rest_framework.authtoken' ,...]`
+    * `INSTALL_APPS=[... , 'drf-spectacular' ,...]` # Swagget
+* `LANGUAGE_CODE = 'fa-ir'` تغییر زبان داشبورد از انگلیسی به فارسی
+* `TEMPLATES`
+    * `'APP_DIRS': True`  بصورت خودکار در هر اپلیکیشن اضافه‌شده دنبال پوشه تمپلیت بگرد و آن را بخوان
+* `MEDIA_ROOT = BASE_DIR / 'MyDir'` مدیاهای ارسالی کاربر بصورت پیش‌فرض کجا ذخیره گردد
+    * must be absolute name
+* `MEDIA_URL = 'MyDir'` باز کردن یک مسیر خاص در آدرس‌های داخلی جنگو
+    * بصورت پیش‌فرض همه مسیرهای جنگو بسته است مگر که مسیر خاصی را باز نمایید که باید در فایل یوآراِل نیز این گزینه را اضافه نمایید
+* `SESSION_COOKIE_AGE = 120` مقدار زمان عمر سشن را روی ۲دقیقه تنظیم می‌کند
+    * بصورت پیش‌فرض مقدار آن دو هفته است
+* `AUTH_USER_MODEL = 'account_module.user'` تعیین نام مدل[جدول دیتابیس] که باید بابت احراز هویت مورد استفاده قرار بگیرد
+    * نام مآژول و یک نقطه و نانم کلاس مدل یعنی نیاز به آوردن نام فایل نیست
+* `REST_FRAMEWORK = {...}` تنظیمات «دی‌آراِف» و رست را این قسمت قرار می‌دهیم
+    * `'DEFAULT_PAGINATION_CLASS'`
+        * `REST_FRAMEWORK = {...,'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',...}` # use «page=۱|۲|۳|......» for pagenumber
+        * `REST_FRAMEWORK = {...,'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',...}` # use «limit» for X record in one page and «offset» for begin at X record
+    * `'DEFAULT_AUTHENTICATION_CLASSES'`
+        * `REST_FRAMEWORK = {...,'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.BasicAuthentication'],...}` # send user and pass for all pages
+        * `REST_FRAMEWORK = {...,'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.TokenAuthentication'],...}` # Use Token for authenticate
+    * `'DEFAULT_PERMISSION_CLASSES'`
+        * `REST_FRAMEWORK = {...,'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated'],...}` # execute code when authenticate is valid(when user logedin)
+    * `'DEFAULT_SCHEMA_CLASS'` # Swagger
+        * `REST_FRAMEWORK = {...,'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',...}`
+* `SIMPLE_JWT = {...}` customize JWT authentication's behavior [URL](https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html)
+    * `'ACCESS_TOKEN_LIFETIME'` # عمر توکن اکسس
+        * `"SIMPLE_JWT = {...,ACCESS_TOKEN_LIFETIME": timedelta(minutes=5)}`
+    * `'REFRESH_TOKEN_LIFETIME'` عمر توکن رفرش
+        * `"SIMPLE_JWT = {...,REFRESH_TOKEN_LIFETIME": timedelta(days=1)}`
+    * `'AUTH_HEADER_TYPES'`
+        * `"SIMPLE_JWT = {...,AUTH_HEADER_TYPES": ("Bearer",)}` # نام ارسالی همراه توکن باید چه باشد
+* `SPECTACULAR_SETTINGS = {...}` # SWAGGER  [URL](https://drf-spectacular.readthedocs.io/en/latest/readme.html)
+    * `SPECTACULAR_SETTINGS = {...,'TITLE': 'Your Project API',...}`
+    * `SPECTACULAR_SETTINGS = {...,'DESCRIPTION': 'Your project description',...}`
+    * `SPECTACULAR_SETTINGS = {...,'VERSION': '1.0.0',...}`
+    * `SPECTACULAR_SETTINGS = {...,'SERVE_INCLUDE_SCHEMA': False,...}`
+* `ALLOWED_HOSTS = ['*']` # Need to run `python3 manage.py runserver 0.0.0.0:8000`
+    * `ALLOWED_HOSTS = ['192.168.1.100', 'example.com', '127.0.0.1']`
+
+## 4.2. 🅱️Static
 
 * جنگو از الگوی "اپ‌محور" استفاده می‌کند. بنابراین، بهترین روش این است که برای هر اپ، یک پوشه به نام static بسازید
     * نکته مهم: حتماً یک زیرپوشه با نام اپ (مثل myapp/) داخل static/ بسازید. این از تداخل نام فایل‌ها در اپ‌های مختلف جلوگیری می‌کند
@@ -1231,6 +1274,10 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 * نکته: GenericViewها از ترکیب Mixinها + View ساخته شده‌اند
 * نکته:Mixinها خودشان View نیستند، اما اجزای سازنده Viewها هستند
+* هر CBV یک متد `dispatch()` دارد که` HttpMethod` را تشخیص می‌دهد و به get, post می‌فرستد
+* تمام متد‌های CBV از `self.request`, `self.kwargs`, `self.args` استفاده می‌کنند
+* متد `get_context_data()` متدی است که context را می‌سازد و قابلیت Override شدن دارد.
+* متد get_queryset() در ListView, DetailView قرار وجود دارد و اگر نوشته‌نشود model.objects.all() را می‌گیرد.
 
 ```
 🆑️ → Class or کلاس 
@@ -1373,6 +1420,7 @@ class MyView(View):
 * استفاده از Mixinها برای افزودن قابلیت (مثل LoginRequiredMixin)
 * همگی از `View` یا زیرکلاس‌های آن (مثل `TemplateResponseMixin`) ارث‌بری می‌کنند.
 
+
 | View           | بهترین شیوه                      | نکته حرفه‌ای                                        |
 |----------------|----------------------------------|-----------------------------------------------------|
 | `TemplateView` | برای صفحات استاتیک               | از `extra_context` برای داده ساده استفاده کنید      |
@@ -1384,6 +1432,15 @@ class MyView(View):
 | `DeleteView`   | حتماً `success_url`              | صفحه تأیید الزامی — از `POST` برای حذف استفاده کنید |
 
 ![python_Django_CBV.jpg](./_srcFiles/Images/python_Django_CBV.jpg "python_Django_CBV.jpg")
+
+:
+
+| ویژگی(تفاوت‌کلیدی‌باCBV) | CBV (پایه)                | Generic View             |
+|--------------------------|---------------------------|--------------------------|
+| **تعداد خطوط کد**        | ۱۰–۲۰ خط                  | ۳–۵ خط                   |
+| **کنترل**                | کامل                      | محدود (اما استاندارد)    |
+| **کاربرد**               | ساخت ویوهای شخصی‌سازی شده | ساخت سریع CRUD           |
+| **مثال**                 | `View`, `FormView`        | `ListView`, `CreateView` |
 
 ### 5.2.1. ✅️TemplateView
 
@@ -1398,7 +1455,7 @@ class MyView(View):
 * خطاهای رایج
     * فراموش کردن `as_view()` در `urls.py` که سبب وقوع ارور `TypeError: view must be a callable` می‌شود
     * نام تمپلیت اشتباه وارد شود که سبب وقوع ارور `TemplateDoesNotExist` می‌شود
-* TemplateView = View + render template
+* `TemplateView` = `View` + render template
 
 ```python
 from django.views.generic import TemplateView
@@ -1475,14 +1532,15 @@ File: `templates/about.html`
     * فرم را اعتبارسنجی میکند (در حالت POST)
     * اگر فرم معتبر بود، form_valid() را اجرا میکند
     * اگر نامعتبر بود، form_invalid() را اجرا میکند و فرم را با خطاها دوباره نمایش میدهد
-* مدیریت فرم‌های `forms.Form`
+* متدهای form_valid() و form_invalid()  در FormView سبب کنترل عملیات پس از اعتبارسنجی می‌گردد
 * بدون ارتباط با مدل
-* پردازش خودکار `GET` (نمایش فرم) و `POST` (اعتبارسنجی)
 * از `FormMixin` + `TemplateResponseMixin` + `View` ارث‌بری می‌کند.
 * `CreateView` = `FormView` + `create object in DB`
 * `UpdateView` = `FormView` + `update object in DB`
 * `DeleteView` = `FormView` + `delete object in DB `
-     
+* متد `get_form_class()` مدل(Model) یا `form_class` را می‌خواند 
+* متد `form_valid()` متد `save()` را به اجرا درمی‌آورد
+* متد `get_context_data()` مقادیر `{'form': form, 'view': self}` را می‌سازد 
 
 ```
 View
@@ -1495,7 +1553,6 @@ View
           ├── UpdateView   → ویرایش رکورد موجود
           └── DeleteView   → حذف رکورد
 ```
-
 
 File: `forms.py`
 
@@ -1573,6 +1630,7 @@ File: `templates/contact.html`
 * paginate_by برای صفحه‌بندی خودکار استفاده می‌شود. می‌توان از page_obj در تمپلیت استفاده کرد
 * نام تمپلیت اشتباه → پیش‌فرض: app_name/modelname_list.html
 * مرتب‌سازی را فراموش نکنید زیرا برای نمایش مهم است وگرنه درهم و نامرتب نمایش خواهد شد
+* متد get_queryset() در ListView, DetailView قرار وجود دارد و اگر نوشته‌نشود model.objects.all() را می‌گیرد.
 
 File: `models.py`
 
@@ -1660,6 +1718,7 @@ def get_queryset(self):
 * می‌توانید `query_pk_and_slug = True` کنید(برای امنیت SEO.)
 * اگر pk یا slug وجود نداشته باشد آنگاه با 404 مواجه خوهید شد
 * فراموش کردن `context_object_name` که بصورت پیش‌فرض object است سبب گمراه‌کنندگی خواهد شد
+* متد get_queryset() در ListView, DetailView قرار وجود دارد و اگر نوشته‌نشود model.objects.all() را می‌گیرد.
 
 File: `models.py`
 
@@ -2361,11 +2420,5 @@ File: `templates/403.html` صفحه خطا (اگر این فایل را نساز
 </body>
 </html>
 ```
-
-## 6.4. 🅱️
-
-## 6.5. 🅱️
-
-## 6.6. 🅱️
 
 </div>

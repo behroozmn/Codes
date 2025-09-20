@@ -2317,49 +2317,6 @@ class YazahraConfig(AppConfig):
     verbose_name = 'ماژول آزماشی که بهروز دارد کار میکند'
 ```
 
-## 📁️ Setting.py
-
-* `INSTALL_APPS`
-    * `INSTALL_APPS=[... , 'rest_framework' ,...]`
-    * `INSTALL_APPS=[... , 'rest_framework.authtoken' ,...]`
-    * `INSTALL_APPS=[... , 'drf-spectacular' ,...]` # Swagget
-* `LANGUAGE_CODE = 'fa-ir'` تغییر زبان داشبورد از انگلیسی به فارسی
-* `TEMPLATES`
-    * `'APP_DIRS': True`  بصورت خودکار در هر اپلیکیشن اضافه‌شده دنبال پوشه تمپلیت بگرد و آن را بخوان
-* `MEDIA_ROOT = BASE_DIR / 'MyDir'` مدیاهای ارسالی کاربر بصورت پیش‌فرض کجا ذخیره گردد
-    * must be absolute name
-* `MEDIA_URL = 'MyDir'` باز کردن یک مسیر خاص در آدرس‌های داخلی جنگو
-    * بصورت پیش‌فرض همه مسیرهای جنگو بسته است مگر که مسیر خاصی را باز نمایید که باید در فایل یوآراِل نیز این گزینه را اضافه نمایید
-* `SESSION_COOKIE_AGE = 120` مقدار زمان عمر سشن را روی ۲دقیقه تنظیم می‌کند
-    * بصورت پیش‌فرض مقدار آن دو هفته است
-* `AUTH_USER_MODEL = 'account_module.user'` تعیین نام مدل[جدول دیتابیس] که باید بابت احراز هویت مورد استفاده قرار بگیرد
-    * نام مآژول و یک نقطه و نانم کلاس مدل یعنی نیاز به آوردن نام فایل نیست
-* `REST_FRAMEWORK = {...}` تنظیمات «دی‌آراِف» و رست را این قسمت قرار می‌دهیم
-    * `'DEFAULT_PAGINATION_CLASS'`
-        * `REST_FRAMEWORK = {...,'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',...}` # use «page=۱|۲|۳|......» for pagenumber
-        * `REST_FRAMEWORK = {...,'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',...}` # use «limit» for X record in one page and «offset» for begin at X record
-    * `'DEFAULT_AUTHENTICATION_CLASSES'`
-        * `REST_FRAMEWORK = {...,'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.BasicAuthentication'],...}` # send user and pass for all pages
-        * `REST_FRAMEWORK = {...,'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.TokenAuthentication'],...}` # Use Token for authenticate
-    * `'DEFAULT_PERMISSION_CLASSES'`
-        * `REST_FRAMEWORK = {...,'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated'],...}` # execute code when authenticate is valid(when user logedin)
-    * `'DEFAULT_SCHEMA_CLASS'` # Swagger
-        * `REST_FRAMEWORK = {...,'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',...}`
-* `SIMPLE_JWT = {...}` customize JWT authentication's behavior [URL](https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html)
-    * `'ACCESS_TOKEN_LIFETIME'` # عمر توکن اکسس
-        * `"SIMPLE_JWT = {...,ACCESS_TOKEN_LIFETIME": timedelta(minutes=5)}`
-    * `'REFRESH_TOKEN_LIFETIME'` عمر توکن رفرش
-        * `"SIMPLE_JWT = {...,REFRESH_TOKEN_LIFETIME": timedelta(days=1)}`
-    * `'AUTH_HEADER_TYPES'`
-        * `"SIMPLE_JWT = {...,AUTH_HEADER_TYPES": ("Bearer",)}` # نام ارسالی همراه توکن باید چه باشد
-* `SPECTACULAR_SETTINGS = {...}` # SWAGGER  [URL](https://drf-spectacular.readthedocs.io/en/latest/readme.html)
-    * `SPECTACULAR_SETTINGS = {...,'TITLE': 'Your Project API',...}`
-    * `SPECTACULAR_SETTINGS = {...,'DESCRIPTION': 'Your project description',...}`
-    * `SPECTACULAR_SETTINGS = {...,'VERSION': '1.0.0',...}`
-    * `SPECTACULAR_SETTINGS = {...,'SERVE_INCLUDE_SCHEMA': False,...}`
-* `ALLOWED_HOSTS = ['*']` # Need to run `python3 manage.py runserver 0.0.0.0:8000`
-    * `ALLOWED_HOSTS = ['192.168.1.100', 'example.com', '127.0.0.1']`
-
 # 🅰️ DRF(Django Rest Framework)
 
 ## 🅱️ Install
