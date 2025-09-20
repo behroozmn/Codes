@@ -259,7 +259,14 @@ gsettings get org.gnome.desktop.background picture-uri
 
 ## 🅱️ Debian
 
-### ✅️ source.list
+### 📁️ apt.conf
+
+```shell
+# hide autoremove warning at apt command
+sudo echo 'APT::Get::HideAutoRemove "1";' | sudo tee /etc/apt/apt.conf.d/99-hide-autoremove
+```
+
+### 📁️ source.list
 
 ```shell
 part1 part2 part3 part4

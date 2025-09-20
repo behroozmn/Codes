@@ -206,6 +206,8 @@ def func(reqeust, day):
 
 جنگو از یک Template Engine مبتنی بر HTML + متغیرها + تگ‌ها + فیلترها استفاده می‌کند. این ماشین، فایل `.html` را پردازش می‌کند، متغیرها را جایگزین می‌کند، و دستورات تگ‌ها را اجرا می‌نماید(و نهایتاً HTML خالص تولید می‌کند).
 
+* نکته: در تمپلیت‌ها معمولاً از {% url 'name' %} استفاده می‌کنیم و نه از reverse اما اگر URL را در View محاسبه کردید و به تمپلیت فرستادید، می‌توانید از آن استفاده کنید
+
 ## 2.1. 🅱️Tag
 
 | دسته                 | تگ‌های ضروری                                        | کاربرد                                     |
@@ -749,9 +751,328 @@ input:"1-800-CALL-NOW" ▶️ "1-800-2255-669"
 input:"<p>Hello <script>bad()</script></p><style>...</style>" ▶️ "<p>Hello </p>"
 ```
 
-# 3. 🅰️Files
+# 3. 🅰️Reverse
 
-## 3.1. 🅱️Static
+️Reverse: در جنگو برای جلوگیری از هاردکد کردن «یو آر اِل»ها مثلاً `/accounts/login/` از نام «یو آر اِل» ها استفاده می‌کنیم. این کار باعث می‌شود اگر «یو آر اِل» تغییر کند (مثلاً از `/login/` به `/signin/`)، فقط در `urls.py` تغییر دهیم و کل پروژه به‌روز می‌شود.
+
+```python
+from django.urls import reverse
+
+redirect("/accounts/login/")  # ❌️ بد:
+redirect(reverse("login"))  # ✅️ خوب:
+url = reverse('profile', kwargs={'pk': 123})  # Output: "/profile/123/"
+```
+
+* نکته: در تمپلیت‌ها معمولاً از {% url 'name' %} استفاده می‌کنیم و نه از reverse اما اگر URL را در View محاسبه کردید و به تمپلیت فرستادید، می‌توانید از آن استفاده کنید
+
+**reverse_lazy**: اگر reverse را در سطح کلاس یا `settings.py` استفاده کنید، ممکن است `URLconf` هنوز بارگذاری نشده باشد که در آن صورت ارور `NoReverseMatch` وقوع می‌پیوندد. به همین خاطر reverse_lazy طراحی شده است.
+
+* گزینه Reverse فقط در جاهایی استفاده کنید که URLconf یا `URL.py` قبلاً بارگذاری شده(مثلاً داخل viewها، توابع و ...)
+* در جاهایی استفاده کنید که URLها ممکن است هنوز آماده‌سازی و بارگذاری نشده باشندمثل:`settings.py` و `ClassAttributes` و `Forms` و `AdminClass` و `AppConfig`
+
+```python
+from django.urls import reverse_lazy
+
+login_url = reverse_lazy('login')  # هنوز URLها بارگذاری نشده؟ مشکلی نیست!
+
+
+class MyView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('login')  # ✅ کار می‌کند!
+```
+
+## 3.1. 🅱️Example
+
+فرض کنید می‌خواهیم یک سایت ساده مدیریت کاربران داشته باشیم با این قابلیت‌ها:
+
+* صفحه لاگین (/login/)
+* صفحه پروفایل (/profile/<pk>/)
+* اگر کاربر لاگین نکرده، به صفحه لاگین ریدایرکت شود
+* بعد از لاگین، به پروفایل خودش برود
+* در صفحه لاگین، لینک "ثبت‌نام" وجود داشته باشد
+* در این مثال، هم reverse و هم reverse_lazy را استفاده می‌کنیم.
+
+```
+myproject/
+├── manage.py
+├── myproject/
+│   ├── __init__.py
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+└── users/
+    ├── __init__.py
+    ├── admin.py
+    ├── apps.py
+    ├── forms.py
+    ├── models.py
+    ├── urls.py
+    ├── views.py
+    └── templates/
+        └── users/
+            ├── login.html
+            └── profile.html
+```
+
+File: `myproject/settings.py`
+
+```python
+# ... سایر تنظیمات
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'users',  # ✅ اپلیکیشن ما
+]
+
+# ⚠️ اینجا از reverse_lazy استفاده می‌کنیم چون هنوز URLها بارگذاری نشده‌اند!
+from django.urls import reverse_lazy
+
+LOGIN_URL = reverse_lazy('users:login')  # ✅ reverse_lazy — امن
+LOGIN_REDIRECT_URL = reverse_lazy('users:profile', kwargs={'pk': 1})  # برای مثال pk=1
+
+# تنظیمات template
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+# برای سادگی — اجازه لاگین با کاربر admin
+AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
+```
+
+File: `myproject/settings.py`
+
+```python
+# ... سایر تنظیمات
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'users',  # ✅ اپلیکیشن ما
+]
+
+# ⚠️ اینجا از reverse_lazy استفاده می‌کنیم چون هنوز URLها بارگذاری نشده‌اند!
+from django.urls import reverse_lazy
+
+LOGIN_URL = reverse_lazy('users:login')  # ✅ reverse_lazy — امن
+LOGIN_REDIRECT_URL = reverse_lazy('users:profile', kwargs={'pk': 1})  # برای مثال pk=1
+
+# تنظیمات template
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+# برای سادگی — اجازه لاگین با کاربر admin
+AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
+```
+
+باتوجه به فایل `Setting.py` آدرس  `LOGIN_URL` و `LOGIN_REDIRECT_URL` در سطح ماژول هستند(پس حتماً باید از reverse_lazy استفاده کنیم.)
+
+File: `myproject/urls.py`
+
+```python
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('users.urls', namespace='users')),  # ✅ نیم‌اسپیس برای جلوگیری از تداخل
+]
+```
+
+File: `users/urls.py`
+
+```python
+from django.urls import path
+from . import views
+
+app_name = 'users'  # ✅ برای استفاده از namespace
+
+urlpatterns = [
+    path('login/', views.LoginView.as_view(), name='login'),
+    path('profile/<int:pk>/', views.ProfileView.as_view(), name='profile'),
+]
+```
+
+File: `users/views.py`
+
+```python
+from django.shortcuts import render, redirect
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import View
+from django.urls import reverse, reverse_lazy  # ✅ هر دو را import کردیم
+from .forms import LoginForm
+
+
+class LoginView(View):
+    template_name = 'users/login.html'
+    form_class = LoginForm
+
+    def get(self, request):
+        form = self.form_class()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(request, username=username, password=password)
+            if user:
+                login(request, user)
+                # ✅ از reverse استفاده می‌کنیم چون داخل متد هستیم و URLها قطعاً بارگذاری شده‌اند
+                return redirect(reverse('users:profile', kwargs={'pk': user.pk}))
+            else:
+                form.add_error(None, 'Invalid credentials')
+        return render(request, self.template_name, {'form': form})
+
+
+class ProfileView(LoginRequiredMixin, View):
+    # ✅ اینجا باید از reverse_lazy استفاده کنیم — چون login_url یک ویژگی کلاس است
+    login_url = reverse_lazy('users:login')  # اگر لاگین نکرده، به اینجا ریدایرکت شود
+
+    def get(self, request, pk):
+        # فقط برای نمایش — در عمل باید چک کنید pk متعلق به کاربر جاری است یا نه
+        context = {
+            'user_id': pk,
+            'username': request.user.username if request.user.is_authenticated else 'Anonymous'
+        }
+        return render(request, 'users/profile.html', context)
+```
+
+* در کلاس `ProfileView` متغیر `login_url` یک ویژگی کلاس است(پس از reverse_lazy استفاده می‌کنیم)
+* در کلاس `LoginView` چون در داخل متد `post` هستیم پس از reverse استفاده می‌کنیم.
+
+File: `users/forms.py`
+
+```python
+from django import forms
+
+
+class LoginForm(forms.Form):
+    username = forms.CharField(max_length=150, widget=forms.TextInput(attrs={'placeholder': 'Username'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password'}))
+```
+
+File: `users/templates/users/login.html`
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+</head>
+<body>
+<h2>Login</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Login</button>
+</form>
+
+<!-- ✅ مثال استفاده از reverse در Template — نیازی نیست! از {% url %} استفاده کنید -->
+<!-- اما اگر در view محاسبه شده، می‌توانید از context بدهید -->
+<p>Don't have an account? <a href="{% url 'users:profile' pk=999 %}">Sign up here</a> (example link)</p>
+</body>
+</html>
+```
+
+File: `users/templates/users/profile.html`
+
+```python
+< !DOCTYPE
+html >
+< html >
+< head >
+< title > Profile < / title >
+< / head >
+< body >
+< h2 > User
+Profile < / h2 >
+< p > User
+ID: {{user_id}} < / p >
+< p > Username: {{username}} < / p >
+< a
+href = "{% url 'users:login' %}" > Logout(dummy
+link) < / a >
+< / body >
+< / html >
+```
+
+File: `users/models.py`  نیازی به تغییر ندارد(از User پیش‌فرض استفاده می‌کنیم)
+
+```
+# هیچ چیزی نمی‌نویسیم — از User پیش‌فرض Django استفاده می‌کنیم
+```
+
+File: `users/admin.py`
+
+```python
+from django.contrib import admin
+from django.contrib.auth.models import User
+from django.urls import reverse_lazy
+
+
+@admin.register(User)
+class UserAdmin(admin.ModelAdmin):
+    list_display = ['username', 'email', 'is_staff']
+
+    # ✅ مثال پیشرفته: استفاده از reverse_lazy در Admin
+    def view_on_site(self, obj):
+        # این متد لینک "View on site" را در ادمین تعریف می‌کند
+        # چون در سطح کلاس اجرا می‌شود، باید از reverse_lazy استفاده کنیم
+        return reverse_lazy('users:profile', kwargs={'pk': obj.pk})
+```
+
+حتی در `view_on_site` که یک متد است، بهتر است از `reverse_lazy` استفاده کنیم چون ممکن است موقع بارگذاری ادمین، «یو آر اِل»ها آماده نباشند
+
+برای راه‌اندازی:
+
+```shell
+python manage.py makemigrations
+python manage.py migrate
+python manage.py createsuperuser # add new SuperUser
+python manage.py runserver
+# open : http://127.0.0.1:8000/login/  or http://127.0.0.1:8000/profile/1/
+```
+
+اگر لاگین نکنید و به `/profile/1/` بروید، به `/login/` ریدایرکت می‌شوید
+
+# 4. 🅰️Files
+
+## 4.1. 🅱️Static
 
 * جنگو از الگوی "اپ‌محور" استفاده می‌کند. بنابراین، بهترین روش این است که برای هر اپ، یک پوشه به نام static بسازید
     * نکته مهم: حتماً یک زیرپوشه با نام اپ (مثل myapp/) داخل static/ بسازید. این از تداخل نام فایل‌ها در اپ‌های مختلف جلوگیری می‌کند
@@ -773,7 +1094,7 @@ myapp/
     │       └── images/
     │           └── logo.png
     ├── templates/
-    ├── models.py
+    ├── models.py+
     └── views.py
 ```
 
@@ -875,7 +1196,7 @@ MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / "media"
 ```
 
-# 4. 🅰️ClassBaseView
+# 5. 🅰️ClassBaseView
 
 **FunctionBaseView**:در این حالت View ها به‌صورت تابع معمولی پایتون همانند ️BasicRenderingMethods که از django.http.HttpResponse استفاده می‌کند نوشته می‌شوند.
 
@@ -994,7 +1315,7 @@ Django Views
 | منطق کاملاً سفارشی یا API ساده      | `FBV` یا `View`              |
 | نیاز به کنترل کامل روی GET/POST     | `View` (CBV پایه)            |
 
-## 4.1. 🅱️View
+## 5.1. 🅱️View
 
 یک کلاس پایتون که از `django.views.View` ارث‌بری می‌کند و برای هر متد HTTP (`GET`, `POST`, ...) یک متد دارد.
 
@@ -1023,7 +1344,7 @@ class MyView(View):
     * کلاس `ListView` و `DetailView` از `MultipleObjectMixin` و `SingleObjectMixin` ارث‌بری کرده است
     * کلاس `CreateView` و `UpdateView` از `ModelFormMixin` ارث‌بری کرده است
 
-## 4.2. 🅱️Generic Views
+## 5.2. 🅱️Generic Views
 
 دسته‌ای از CBVها که منطق‌های رایج وب (مثل نمایش لیست، نمایش جزئیات، ایجاد/ویرایش/حذف) را از پیش پیاده‌سازی کرده‌اند
 
@@ -1044,7 +1365,7 @@ class MyView(View):
 
 ![python_Django_CBV.jpg](./_srcFiles/Images/python_Django_CBV.jpg "python_Django_CBV.jpg")
 
-### 4.2.1. ✅️TemplateView
+### 5.2.1. ✅️TemplateView
 
 * برای نمایش یک تمپلیت HTML بدون ارتباط با مدل یا فرم.
 * در دسته‌بندی `TemplateView` (که در عمل پس از View ساده‌ترین CBV است) را ذیل Generic نیز آوردند
@@ -1078,7 +1399,7 @@ class AboutView(TemplateView):
 path('about/', TemplateView.as_view(template_name='about.html', extra_context={'title': 'درباره ما'}))
 ```
 
-#### 4.2.1.1. ❇️Example1:withoutModel
+#### 5.2.1.1. ❇️Example1:withoutModel
 
 File: `View.py`
 
@@ -1122,7 +1443,7 @@ File: `templates/about.html`
 </html>
 ```
 
-### 4.2.2. ✅️FormView
+### 5.2.2. ✅️FormView
 
 برای مدیریت فرم‌هایی که مستقیماً توسط مدل ذخیره نمی‌شوند(همانند فرم تماس با ما)
 
@@ -1200,7 +1521,7 @@ File: `templates/contact.html`
 * اگر  `form_class` فراموش شود آنگاه ارور `ImproperlyConfigured` میدهد
 * اگر  `success_url` فراموش شود آنگاه ارور `No URL to redirect to` میدهد
 
-### 4.2.3. ✅️ListView
+### 5.2.3. ✅️ListView
 
 نمایش لیستی از اشیاء یک مدل(مثل لیست مقالات)
 
@@ -1285,7 +1606,7 @@ def get_queryset(self):
     return Article.objects.filter(title__icontains='django')
 ```
 
-### 4.2.4. ✅️DetailView
+### 5.2.4. ✅️DetailView
 
 نمایش جزئیات یک رکورد(همانند صفحه یک مقاله)
 
@@ -1356,7 +1677,7 @@ File: ``
 
 ```
 
-### 4.2.5. ✅️CreateView
+### 5.2.5. ✅️CreateView
 
 ایجاد رکورد جدید در مدل با استفاده از فرم.
 
@@ -1433,7 +1754,7 @@ def form_valid(self, form):
     return super().form_valid(form)
 ```
 
-### 4.2.6. ✅️UpdateView
+### 5.2.6. ✅️UpdateView
 
 ویرایش یک رکورد موجود(فرم با داده‌های فعلی پر می‌شود)
 
@@ -1511,7 +1832,7 @@ def form_valid(self, form):
     return super().form_valid(form)
 ```
 
-### 4.2.7. ✅️DeleteView
+### 5.2.7. ✅️DeleteView
 
 حذف یک رکورد(با صفحه تأیید)
 
@@ -1575,7 +1896,7 @@ File: `templates/article_confirm_delete.html`
 * اگر `success_url` قرار داده نشود آنگاه با ارور `ImproperlyConfigured` مواجه خواهید شد
 * فراموش کردن `csrf_token` سبب وقوع 403 Forbidden خواهد شد
 
-# 5. 🅰️Mixin
+# 6. 🅰️Mixin
 
 یک کلاس کمکی است که به تنهایی استفاده نمی‌شوند فقط برای افزودن یک قابلیت خاص به کلاس‌های دیگر طراحی شده‌اند و به کد افزوده می‌شوند(و نه برای استفاده مستقیم). این فکر که میکسین(Mixin) یک View مستقل است اشتباه است زیرا Mixin فقط یک «افزونه» می‌باشد
 
@@ -1586,25 +1907,23 @@ File: `templates/article_confirm_delete.html`
 # class ArticleListView(LoginRequiredMixin, ListView):  # ✅️ صحیح است
 ```
 
-نکات مهم
-
-* نکته‌مهم:میکسین(Mixin)ها با Override کردن متدهای View (مثل `dispatch`, `get_queryset` , `get`, `get_context_data`) رفتار جدیدی اضافه می‌کنند.
-* میکسین‌ها می‌توانند با هم ترکیب شوند(مثل `LoginRequiredMixin` + `PageTitleMixin` + `ListView`
-* در هنگام ترکیب میکسین‌ها ترتیب میکسین‌ها مهم است(میکسین‌هایی که متدها را Override می‌کنند باید اول بیایند)
-* متد `dispatch`:متد اولین متدی که در CBV فراخوانی می‌شود(بهترین جا برای چک‌های امنیتی)
-* متد `handle_no_permission`:یک متد داخلی جنگو برای هدایت کاربر است که قابلیت Override دارد
-* متد `super()` باید حتماً در آخر Mixinها فراخوانی شود وگرنه View اصلی اجرا نمی‌شود. مخصوصا در متدهای `get_context_data` و `dispatch`و`form_valid`و `get_queryset`
-* امنیت در اولویت باشد یعنی Mixinهای امنیتی (`LoginRequiredMixin`, `PermissionRequiredMixin`) را همیشه اول قرار دهید.
-* میکسین‌ها را ترکیب کنید و نه جایگزین زیرا هر میکسین یک ویژگی واحد را اضافه می‌کند
-
-نکات
-
-* میکسین(Mixin)ها معمولاً از `object` ارث‌بری می‌کنند(نه از View)
-* فراموش کردن `login_url` در `LoginRequiredMixin` سبب بروز خطا می‌شود.
-    * اگر پارامتر `LOGIN_URL` در فایل `settings.py` تنظیم شده باشد ارور نخواهد داد
-* اگر در هنگام دریافت Context استفاده از متد `super()` را فراموش کنید آنگاه context یا داده‌ها ناقص می‌شوند.
-* درصورت استفاده از متغیر تکراری در دو میکسین آنگاه آن میکسین که آخرین مقدار دهی را انجام داده لحاظ خواهد شد
-* اگر ترتیب نوشته شدن Mixinها اشتباه باشد آنگاه متد get_context_data به‌درستی Override نخواهد شد
+* Override
+    * نکته‌مهم:میکسین(Mixin)ها با Override کردن متدهای View (مثل `dispatch`, `get_queryset` , `get`, `get_context_data`) رفتار جدیدی اضافه می‌کنند.
+    * متد `dispatch`:متد اولین متدی که در CBV فراخوانی می‌شود(بهترین جا برای چک‌های امنیتی)
+    * متد `handle_no_permission`:یک متد داخلی جنگو برای هدایت کاربر است که قابلیت Override دارد
+    * متد `super()` باید حتماً در آخر Mixinها فراخوانی شود وگرنه View اصلی اجرا نمی‌شود. مخصوصا در متدهای `get_context_data` و `dispatch`و`form_valid`و `get_queryset`
+* Combine
+    * میکسین‌ها می‌توانند با هم ترکیب شوند(مثل `LoginRequiredMixin` + `PageTitleMixin` + `ListView`
+    * در هنگام ترکیب میکسین‌ها ترتیب میکسین‌ها مهم است(میکسین‌هایی که متدها را Override می‌کنند باید اول بیایند)
+    * امنیت در اولویت باشد یعنی Mixinهای امنیتی (`LoginRequiredMixin`, `PermissionRequiredMixin`) را همیشه اول قرار دهید.
+    * میکسین‌ها را ترکیب کنید و نه جایگزین زیرا هر میکسین یک ویژگی واحد را اضافه می‌کند
+    * درصورت استفاده از متغیر تکراری در دو میکسین آنگاه آن میکسین که آخرین مقدار دهی را انجام داده لحاظ خواهد شد
+    * اگر ترتیب نوشته شدن Mixinها اشتباه باشد آنگاه متد get_context_data به‌درستی Override نخواهد شد
+* نکات
+    * میکسین(Mixin)ها معمولاً از `object` ارث‌بری می‌کنند(نه از View)
+    * فراموش کردن `login_url` در `LoginRequiredMixin` سبب بروز خطا می‌شود.
+        * اگر پارامتر `LOGIN_URL` در فایل `settings.py` تنظیم شده باشد ارور نخواهد داد
+    * اگر در هنگام دریافت Context استفاده از متد `super()` را فراموش کنید آنگاه context یا داده‌ها ناقص می‌شوند.
 
 | Mixin                     | کاربرد                                                          | متدهای کلیدی                                                                                            |
 |---------------------------|-----------------------------------------------------------------|---------------------------------------------------------------------------------------------------------|
@@ -1621,7 +1940,7 @@ File: `templates/article_confirm_delete.html`
 | `DeletionMixin`           | افزودن قابلیت حذف شیء (پایه DeleteView)                         | 1.`delete` 2.`post` 3.`get_success_url`                                                                 |
 | `ProcessFormView`         | مدیریت درخواست‌های GET و POST برای فرم‌ها (پایه FormView و ...) | 1.`get` 2.`post` 3.`http_method_not_allowed`                                                            |
 
-## 5.1. 🅱️LoginRequiredMixin
+## 6.1. 🅱️LoginRequiredMixin
 
 مثال۱: فرض کنید می‌خواهید فقط کاربران لاگین‌کرده بتوانند لیست مقالات را ببینند. و اگر کاربر لاگین نکرده، او را به صفحه لاگین بفرستد
 
@@ -1712,7 +2031,7 @@ File: `templates/articles.html`
 </html>
 ```
 
-## 5.2. 🅱️PageTitleMixin
+## 6.2. 🅱️PageTitleMixin
 
 مثال۲: ساخت یک Mixin ساده و سفارشی شده بنام `PageTitleMixin` برای افزودن عنوان صفحه به همه Viewهایی که از این Mixin استفاده می‌کنند
 
@@ -1837,7 +2156,7 @@ File: `templates/about.html`
 {% endblock %}
 ```
 
-## 5.3. 🅱️UserPassesTestMixin
+## 6.3. 🅱️UserPassesTestMixin
 
 هدف: فقط کاربری که نویسنده مقاله است، بتواند آن را ویرایش کند.اگر کاربر دیگری (حتی اگر لاگین کرده باشد) بخواهد ویرایش کند خطای 403 Forbidden نمایش داده خواهد شد
 
@@ -1995,10 +2314,10 @@ File: `templates/403.html` صفحه خطا (اگر این فایل را نساز
 </html>
 ```
 
-## 5.4. 🅱️
+## 6.4. 🅱️
 
-## 5.5. 🅱️
+## 6.5. 🅱️
 
-## 5.6. 🅱️
+## 6.6. 🅱️
 
 </div>
