@@ -1933,6 +1933,10 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 
+* http://127.0.0.1:8000/ لیست مقالات
+* http://127.0.0.1:8000/create/ الیجاد مقاله و نیاز به لاگین دارد
+* http://127.0.0.1:8000/admin/ پنل مدیریت
+
 # 5. 🅰️ClassBaseView
 
 **FunctionBaseView**:در این حالت View ها به‌صورت تابع معمولی پایتون همانند ️BasicRenderingMethods که از django.http.HttpResponse استفاده می‌کند نوشته می‌شوند.
@@ -3099,6 +3103,143 @@ File: `templates/403.html` صفحه خطا (اگر این فایل را نساز
 </body>
 </html>
 ```
+
+# 7. 🅰️DRF-Serializer
+
+`Serializer = Change(ModelOrObjects ↔ JSON) + Validation`
+
+*     داده‌های پیچیده (مثل مدل‌های دیتابیس) را به داده‌های ساده و قابل سریال‌سازی (مثل JSON) تبدیل می‌کند.
+* داده‌های ورودی (مثل JSON از کلاینت) را اعتبارسنجی کرده و به شیء پایتونی/مدل دیتابیس تبدیل می‌کند.
+* **اعتبارسنجی**: قبل از ذخیره داده در دیتابیس، باید از صحت آن‌ها اطمینان حاصل کرد.
+* در DRF دو نوع اصلی Serializer وجود دارد
+    * GeneralSerializer: غیرمدلی و برای تبدیل داده‌های عمومی
+    * ModelSerializer: برای تبدیل مستقیم مدل‌های جنگو که در اکثر موارد از این نوع اسفتفاده می‌شود
+* برای نمایش داده از مسیرهای تو در تو `author_name = serializers.CharField(source='author.user.profile.full_name')`
+* اگر محاسبه‌ای پیچیده یا پرهزینه است، بهتر است در `View` یا مدل انجام شود و نتیجه به `Serializer` داده شود (از طریق `context` یا `annotate`)
+* نکته:Serializerها باید تست شوند(هم از نظر تبدیل صحیح داده‌ها، هم از نظر اعتبارسنجی)
+* 
+
+## 🅱️ModelSerializer
+
+* model: مشخص می‌کند این Serializer مربوط به کدام مدل است.
+* fields: تعیین می‌کند کدام فیلدهای مدل در خروجی/ورودی ظاهر شوند.
+    * '__all__': تمام فیلدها
+    * ['field1', 'field2']: فقط فیلدهای انتخابی
+    * exclude = ['field3']: تمام فیلدها به جز فیلدهای ذکر شده
+
+```python
+from rest_framework import serializers
+from .models import MyModel
+
+
+class MyModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MyModel
+        fields = '__all__'  # یا لیست فیلدهای مورد نظر
+```
+
+## 🅱️Object → JSON
+
+* هنگامی که می‌خواهیم داده را به کلاینت بفرستیم
+
+```python
+instance = MyModel.objects.get(id=1)
+serializer = MyModelSerializer(instance)
+json_data = serializer.data  # ← خروجی قابل ارسال
+```
+
+## 🅱️JSON → Object
+
+* هنگامی که داده از کلاینت دریافت می‌شود
+* نکته: `is_valid()` الزامی است. بدون آن، `save()` قابل اجرا نیست
+
+```python
+incoming_data = {"title": "عنوان جدید", "author": 5}
+serializer = MyModelSerializer(data=incoming_data)
+
+if serializer.is_valid():
+    instance = serializer.save()  # ← ذخیره در دیتابیس
+else:
+    errors = serializer.errors  # ← خطاهای اعتبارسنجی
+```
+
+## 🅱️Custom Field
+
+* گاهی نیاز است فیلدی در خروجی وجود داشته باشد که در مدل وجود ندارد. مثلاً
+    * نمایش نام کامل به جای id
+    * محاسبه سن از تاریخ تولد
+    * ترکیب دو فیلد
+* نکته: نام متد باید به‌صورت `get_<field_name>` باشد. 
+
+```python
+class AuthorSerializer(serializers.ModelSerializer):
+    full_info = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Author
+        fields = ['id', 'name', 'full_info']
+
+    def get_full_info(self, obj):
+        # obj = instance مدل
+        return f"{obj.name} (متولد {obj.birth_date})"
+```
+
+
+## 🅱️Nested Serializer
+
+* سریالایزر تو در تو
+* هنگامی که مدل شما رابطه `ForeignKey` یا `ManyToMany` دارد و می‌خواهید جزئیات مدل مرتبط را نیز نمایش دهید.
+*  اگر فقط قصد نمایش دارید، `read_only=True` را اضافه کنید. در غیر این صورت، برای ایجاد/آپدیت باید داده کامل مدل مرتبط را ارسال کنید
+
+```python
+class BookSerializer(serializers.ModelSerializer):
+    author = AuthorSerializer()  # ← Nested
+
+    class Meta:
+        model = Book
+        fields = ['id', 'title', 'author']
+```
+
+## 🅱️Validation
+
+الف) اعتبارسنجی فیلدی (validate_<fieldname>) 
+
+```python
+def validate_age(self, value):
+    if value < 0:
+        raise serializers.ValidationError("سن نمی‌تواند منفی باشد.")
+    return value
+```
+
+ب) اعتبارسنجی کلی (validate) 
+
+```python
+def validate(self, data):
+    if data['start_date'] > data['end_date']:
+        raise serializers.ValidationError("تاریخ شروع نمی‌تواند بعد از تاریخ پایان باشد.")
+    return data
+```
+
+## 🅱️Context
+
+* گاهی نیاز است اطلاعاتی مانند `request`, `view`, یا مقادیر سفارشی به `Serializer` منتقل شود.
+* این قابلیت برای ساخت Serializerهای هوشمند و شرطی بسیار مفید است. 
+
+```python
+# In View:
+serializer = MySerializer(instance, context={'request': request, 'user_id': 123})
+
+# In Serializer:
+user_id = self.context.get('user_id')
+```
+
+
+
+
+## 🅱️
+## 🅱️
+## 🅱️
+## 🅱️
 
 # 7. 🅰️Files
 
