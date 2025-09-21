@@ -1329,7 +1329,7 @@ def get_absolute_url(self):
     return reverse('article_detail', args=[self.slug])
 ```
 
-## 4.3. 🅱️Example
+## 4.4. 🅱️Example
 
 فرض کنید می‌خواهیم یک مدل پیشرفته برای مقاله (Article) بسازیم که:
 
@@ -3108,39 +3108,58 @@ File: `templates/403.html` صفحه خطا (اگر این فایل را نساز
 
 `Serializer = Change(ModelOrObjects ↔ JSON) + Validation`
 
-*     داده‌های پیچیده (مثل مدل‌های دیتابیس) را به داده‌های ساده و قابل سریال‌سازی (مثل JSON) تبدیل می‌کند.
-* داده‌های ورودی (مثل JSON از کلاینت) را اعتبارسنجی کرده و به شیء پایتونی/مدل دیتابیس تبدیل می‌کند.
+* **Serialize**: تبدیل ابجکت دیتابیس یا شیء به JSON (مثلا برای نمایش لیست کاربران)
+* **Deserialize**: تبدیل JSON دریافتی از کاربر به ابجکت دیتابیس (مثلا برای ثبت‌نام کاربر جدید)
 * **اعتبارسنجی**: قبل از ذخیره داده در دیتابیس، باید از صحت آن‌ها اطمینان حاصل کرد.
 * در DRF دو نوع اصلی Serializer وجود دارد
     * GeneralSerializer: غیرمدلی و برای تبدیل داده‌های عمومی
     * ModelSerializer: برای تبدیل مستقیم مدل‌های جنگو که در اکثر موارد از این نوع اسفتفاده می‌شود
-* برای نمایش داده از مسیرهای تو در تو `author_name = serializers.CharField(source='author.user.profile.full_name')`
-* اگر محاسبه‌ای پیچیده یا پرهزینه است، بهتر است در `View` یا مدل انجام شود و نتیجه به `Serializer` داده شود (از طریق `context` یا `annotate`)
+* اگر محاسبه‌ای پیچیده یا پرهزینه است، بهتر است محاسبه در `View` یا مدل انجام شود و نتیجه به `Serializer` داده شود (از طریق `context` یا `annotate`)
 * نکته:Serializerها باید تست شوند(هم از نظر تبدیل صحیح داده‌ها، هم از نظر اعتبارسنجی)
-* 
+* می‌توان معادل `ModelForm` برای APIها درنظر گرفت
+* برای نمایش داده از مسیرهای تو در تو مشابه زیر عمل کنید `author_name = serializers.CharField(source='author.user.profile.full_name')`
 
-## 🅱️ModelSerializer
-
-* model: مشخص می‌کند این Serializer مربوط به کدام مدل است.
-* fields: تعیین می‌کند کدام فیلدهای مدل در خروجی/ورودی ظاهر شوند.
-    * '__all__': تمام فیلدها
-    * ['field1', 'field2']: فقط فیلدهای انتخابی
-    * exclude = ['field3']: تمام فیلدها به جز فیلدهای ذکر شده
+فرض کنید یک مدل کاربر داریم:
 
 ```python
-from rest_framework import serializers
-from .models import MyModel
+# models.py
+from django.db import models
 
 
-class MyModelSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = MyModel
-        fields = '__all__'  # یا لیست فیلدهای مورد نظر
+class User(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    age = models.IntegerField()
 ```
 
-## 🅱️Object → JSON
+اگر بخواهیم برای این مدل یک `Serializer` بنویسیم به صورت زیر خواهد بود
+
+```python
+# serializers.py
+from rest_framework import serializers
+
+
+class UserSerializer(serializers.Serializer):
+    name = serializers.CharField(max_length=100)
+    email = serializers.EmailField()
+    age = serializers.IntegerField()
+```
+
+## 7.1. 🅱️Serialize(Object → JSON)
 
 * هنگامی که می‌خواهیم داده را به کلاینت بفرستیم
+* برای مثال بالا Serialize کردن آن به شیوه زیر است.
+* این `Serializer` ساده فقط داده‌ها رو اعتبارسنجی و تبدیل می‌ک(ذخیره در دیتابیس رو خودش انجام نمی‌ده. برای ذخیره باید دستی اقدام کنی)
+
+```python
+# Note: باتوجه به مثال بالا سریالایز کردن از کلاس سریالایزر به صورت زیر است
+user = User.objects.get(id=1)  # یه کاربر از دیتابیس
+serializer = UserSerializer(user)  # تبدیل به Serializer
+print(serializer.data)
+# خروجی: {'name': 'علی', 'email': 'ali@gmail.com', 'age': 25}
+```
+
+مثال دیگر
 
 ```python
 instance = MyModel.objects.get(id=1)
@@ -3148,10 +3167,25 @@ serializer = MyModelSerializer(instance)
 json_data = serializer.data  # ← خروجی قابل ارسال
 ```
 
-## 🅱️JSON → Object
+## 7.2. 🅱️Deserialize(JSON → Object)
 
 * هنگامی که داده از کلاینت دریافت می‌شود
 * نکته: `is_valid()` الزامی است. بدون آن، `save()` قابل اجرا نیست
+
+```python
+# Note: باتوجه به مثال بالا «دی‌سریالایز» کردن از کلاس «سریالایزر» به صورت زیر است
+data = {'name': 'رضا', 'email': 'reza@gmail.com', 'age': 30}
+serializer = UserSerializer(data=data)
+
+if serializer.is_valid():  # اعتبارسنجی داده‌ها
+    # حالا می‌تونیم ذخیره کنیم (اما این Serializer خودش ذخیره نمی‌کنه!)
+    print(serializer.validated_data)
+    # خروجی: OrderedDict([('name', 'رضا'), ('email', 'reza@gmail.com'), ('age', 30)])
+else:
+    print(serializer.errors)
+```
+
+مثال دیگر
 
 ```python
 incoming_data = {"title": "عنوان جدید", "author": 5}
@@ -3163,87 +3197,304 @@ else:
     errors = serializer.errors  # ← خطاهای اعتبارسنجی
 ```
 
-## 🅱️Custom Field
+## 7.3. 🅱️ModelSerializer
 
-* گاهی نیاز است فیلدی در خروجی وجود داشته باشد که در مدل وجود ندارد. مثلاً
-    * نمایش نام کامل به جای id
-    * محاسبه سن از تاریخ تولد
-    * ترکیب دو فیلد
-* نکته: نام متد باید به‌صورت `get_<field_name>` باشد. 
+هنگامی که یک مدل داریم نیاز نیست که فیلدهای آن را بنویسیم و مستقیم توسط `ModelSerializer` از پارامترهای مدل این فیلدها را استخراج کنیم
 
 ```python
-class AuthorSerializer(serializers.ModelSerializer):
-    full_info = serializers.SerializerMethodField()
-
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Author
-        fields = ['id', 'name', 'full_info']
-
-    def get_full_info(self, obj):
-        # obj = instance مدل
-        return f"{obj.name} (متولد {obj.birth_date})"
+        model = MyModel  # such as User
+        fields = ['id', 'name', 'email', 'age']  # or '__all__' or exclude = ['age']
 ```
 
-
-## 🅱️Nested Serializer
-
-* سریالایزر تو در تو
-* هنگامی که مدل شما رابطه `ForeignKey` یا `ManyToMany` دارد و می‌خواهید جزئیات مدل مرتبط را نیز نمایش دهید.
-*  اگر فقط قصد نمایش دارید، `read_only=True` را اضافه کنید. در غیر این صورت، برای ایجاد/آپدیت باید داده کامل مدل مرتبط را ارسال کنید
+* **model**: مشخص می‌کند این Serializer مربوط به کدام مدل است.
+* **fields**: تعیین می‌کند کدام فیلدهای مدل در `Serializer` مورد استفاده قرار گیرد.
+    * '__all__': تمام فیلدها
+    * ['field1', 'field2']: فقط فیلدهای انتخابی
+    * exclude = ['field3']: تمام فیلدها به جز فیلدهای ذکر شده
+*     این کلاس خودش وظیفه خواندن فیلدها را از مدل(دیتابیس) برعهده می‌گیرد
+* متد `create()` و `update()` را دارد یعنی امکان ذخیره مستقیم در دیتابیس وجود دارد
 
 ```python
-class BookSerializer(serializers.ModelSerializer):
-    author = AuthorSerializer()  # ← Nested
+data = {'name': 'سارا', 'email': 'sara@gmail.com', 'age': 22}
+serializer = UserSerializer(data=data)
 
-    class Meta:
-        model = Book
-        fields = ['id', 'title', 'author']
+if serializer.is_valid():
+    user = serializer.save()  # ✅ ذخیره می‌شه تو دیتابیس!
+    print(user.name)  # سارا
 ```
 
-## 🅱️Validation
+## 7.4. 🅱️Fields
 
-الف) اعتبارسنجی فیلدی (validate_<fieldname>) 
+نوع داده‌هایی نظیر `CharField` و`EmailField` و `IntegerField` و `BooleanField` و  `DateTimeField` و غیره نوع داده‌هایی هستن که `Serializer` ازشون استفاده می‌کنه تا بدونه چه نوع داده‌ای رو قبول کنه و چطور اعتبارسنجی کن
 
 ```python
-def validate_age(self, value):
-    if value < 0:
-        raise serializers.ValidationError("سن نمی‌تواند منفی باشد.")
+name = serializers.CharField(max_length=100, min_length=3)
+email = serializers.EmailField()
+# "ali@gmail.com" ✅️ قبول می‌کند
+# "ali.gmail.com" ❌️ قبول نمی‌کند
+```
+
+## 7.5. 🅱️Validation
+
+* گاهی می‌خوایم یک چک اضافه انجام بدیم. مثلا
+    * نام کاربری نباید کمتر از ۳ کاراکتر باشد
+    * ایمیل نباید دامنه‌ی خاصی داشته باشد
+* به دوصورت انجام میشود که گاهی توسط متد `validate` بصورت کلی اعتبارسنجی میکنیم و گاهی تنها یک فیلد را اعتبار سنجی می‌کنیم
+* می‌توان چند validator روی یک فیلد قرار داد یعنی لیست می‌پذیرد
+* همواره در اعتبارسنجی از نوع فلید `return value` درکد قرار داده شود وگرنه `None` ذخیره خواهد شد
+  همواره در اعبارسنجی کلی  `return data` در کد قرار داده شود
+  و امکان استفاده از چند اعبارسنجی برای یک فیلد وجود دارد
+  اگر از `ModelSerializer` استفاده و `password`  را override کردیم، آنگاه حتماً `write_only=True` قرار داده شود تا در خروجی ظاهر نشود
+  می‌توان از serializers.ValidationError`("پیام")` یا `serializers.ValidationError({"field": "پیام"})` استفاده کرد.
+
+مثال۱
+
+```python
+# validators.py
+from rest_framework import serializers
+
+
+def validate_starts_with_uppercase(value):
+    if not value[0].isupper():
+        raise serializers.ValidationError("نام باید با حرف بزرگ شروع شود!")
     return value
+
+
+# serializers.py
+from rest_framework import serializers
+from .validators import validate_starts_with_uppercase  # import custom validator from another file
+
+
+def validate_name(value):  # validate_<Field> --> name
+    if len(value) < 3:
+        raise serializers.ValidationError("نام باید حداقل ۳ کاراکتر باشد!")
+    return value
+
+
+def validate_email(value):  # validate_<Field> --> email
+    if "gmail.com" not in value:
+        raise serializers.ValidationError("فقط ایمیل جیمیل قابل قبول است!")
+    return value
+
+
+class UserSerializer(serializers.Serializer):
+    name = serializers.CharField(validators=[validate_name, validate_starts_with_uppercase])
+    email = serializers.EmailField(validators=[validate_email])
+    age = serializers.IntegerField()
+    is_adult = serializers.BooleanField()
+
+    def validate_age(self, value):  # validate_<Field> --> age
+        if value < 5 or value > 120:
+            raise serializers.ValidationError("سن باید بین ۵ تا ۱۲۰ باشد!")
+        return value
+
+    # global validation برای چک کردن رابطه بین فیلدها
+    def validate(self, data):
+        age = data.get('age')
+        is_adult = data.get('is_adult')
+
+        if age < 18 and is_adult:
+            raise serializers.ValidationError({
+                'is_adult': 'User under 18 years of age cannot be adult!',
+                'age': 'Age is less than 18'
+            })
+        return data
+
+
+# Ussing: نحوه تست
+data = {"name": "Sara", "email": "ali@gmail.com", "age": 16, "is_adult": True}
+serializer = UserSerializer(data=data)
+serializer.is_valid()  # ❌ False
+print(serializer.errors)
+# {
+#   ['is_adult': 'User under 18 years of age cannot be adult!'],
+#   ['age': 'Age is less than 18']
+# }
 ```
 
-ب) اعتبارسنجی کلی (validate) 
+مثال۲
 
 ```python
-def validate(self, data):
-    if data['start_date'] > data['end_date']:
-        raise serializers.ValidationError("تاریخ شروع نمی‌تواند بعد از تاریخ پایان باشد.")
-    return data
+# models.py
+from django.db import models
+
+
+class User(models.Model):
+    username = models.CharField(max_length=50)
+    email = models.EmailField()
+    age = models.IntegerField()
+    password = models.CharField(max_length=100)
+
+
+# serializers.py
+from rest_framework import serializers
+from .models import User
+
+
+# Validator خارجی — چک کردن قدرت رمز عبور
+def validate_password_strength(value):
+    if len(value) < 8:
+        raise serializers.ValidationError("رمز عبور باید حداقل ۸ کاراکتر باشد!")
+    if not any(char.isdigit() for char in value):
+        raise serializers.ValidationError("رمز عبور باید حداقل یک عدد داشته باشد!")
+    return value
+
+
+class UserSerializer(serializers.ModelSerializer):
+    # اضافه کردن validator به فیلد password
+    password = serializers.CharField(write_only=True, validators=[validate_password_strength])
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'age', 'password']
+
+    # Validator فیلدی — چک کردن ایمیل
+    def validate_email(self, value):
+        if not value.endswith('@gmail.com'):
+            raise serializers.ValidationError("فقط ایمیل‌های جیمیل قابل قبول هستند!")
+        return value
+
+    # Validator کلی — چک کردن سن و نام کاربری
+    def validate(self, data):
+        if data['age'] < 13 and len(data['username']) < 5:
+            raise serializers.ValidationError("کاربران زیر ۱۳ سال باید نام کاربری حداقل ۵ کاراکتری داشته باشند!")
+        return data
+
+    # ذخیره کردن — چون از ModelSerializer استفاده کردیم، اینجا override می‌کنیم
+    def create(self, validated_data):
+        user = User.objects.create(
+            username=validated_data['username'],
+            email=validated_data['email'],
+            age=validated_data['age'],
+        )
+        user.set_password(validated_data['password'])  # رمز رو هش کن
+        user.save()
+        return user
+
+
+# Test ۱: رمز ضعیف
+data = {
+    "username": "Ali",
+    "email": "ali@gmail.com",
+    "age": 20,
+    "password": "123"
+}
+serializer = UserSerializer(data=data)
+serializer.is_valid()  # ❌
+# خطا: "رمز عبور باید حداقل ۸ کاراکتر باشد!"
+
+# Test ۲: ایمیل غیر جیمیل
+data = {
+    "username": "Ali",
+    "email": "ali@yahoo.com",  # ❌
+    "age": 20,
+    "password": "StrongPass123"
+}
+serializer = UserSerializer(data=data)
+serializer.is_valid()  # ❌
+# خطا: "فقط ایمیل‌های جیمیل قابل قبول هستند!"
+
+# Test ۳: کاربر زیر ۱۳ سال با نام کوتاه
+data = {
+    "username": "Ali",  # فقط ۳ کاراکتر
+    "email": "ali@gmail.com",
+    "age": 12,  # زیر ۱۳
+    "password": "StrongPass123"
+}
+serializer = UserSerializer(data=data)
+serializer.is_valid()  # ❌
+# خطا: "کاربران زیر ۱۳ سال باید نام کاربری حداقل ۵ کاراکتری داشته باشند!"
 ```
 
-## 🅱️Context
+## 7.6. 🅱️to_representation
 
+وقتی بخواهیم خروجی JSON تغییر کند(یعنی خروجی نمایش درآمده به کاربر متفاوت باشد) متد  `to_representation` را override می‌کنیم
+
+```python
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
+
+    def to_representation(self, instance):  # instance:  ابجکت دیتابیس
+        # data: دیکشنری خروجی که می‌تونیم تغییرش بدیم
+        data = super().to_representation(instance)
+        data['name'] = data['name'].upper()  # اسم رو بزرگ کن
+        data['age_group'] = 'بزرگسال' if data['age'] >= 18 else 'کودک'
+        return data
+```
+
+```python
+# Before:
+{"name": "علی", "age": 16}
+
+# After:
+{"name": "علی", "age": 16, "age_group": "کودک"}
+```
+
+## 7.9. 🅱️Context
+
+* context یک دیکشنری است که اطلاعات اضافی را از ویو به داخل سریالایزر منتقل می‌کند
 * گاهی نیاز است اطلاعاتی مانند `request`, `view`, یا مقادیر سفارشی به `Serializer` منتقل شود.
-* این قابلیت برای ساخت Serializerهای هوشمند و شرطی بسیار مفید است. 
+* این قابلیت برای ساخت Serializerهای هوشمند و شرطی بسیار مفید است.
 
 ```python
-# In View:
-serializer = MySerializer(instance, context={'request': request, 'user_id': 123})
+# views.py ---> send Context to Serializer
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
-# In Serializer:
-user_id = self.context.get('user_id')
+
+class UserView(APIView):
+    def get(self, request):
+        user = request.user  # کاربر لاگین کرده
+        serializer = UserSerializer(user, context={'request': request, 'custom_message': 'سلام کاربر عزیز!'})  # 👈️ ارسال دیتا
+        return Response(serializer.data)
+
+
+# serializers.py
+from rest_framework import serializers
+
+
+class UserSerializer(serializers.ModelSerializer):
+    welcome_message = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ['id', 'name', 'welcome_message']
+
+    def get_welcome_message(self, obj):
+        # ✅ دسترسی به context
+        custom_msg = self.context.get('custom_message', 'پیامی وجود ندارد')  # 👈️  دریافت اطلاعات
+        return custom_msg
+
+# Output:
+# ---> {
+# --->   "id": 1,
+# --->   "name": "علی",
+# --->   "welcome_message": "سلام کاربر عزیز!"
+# ---> }
 ```
 
+اگر از Generic Views یا ViewSets استفاده کنیم، DRF خودش context را با 'request', 'view', 'format' پر می‌کند
 
+```python
+# اینجا context شامل request هست — نیازی به دستی اضافه کردنش نیست!
+class UserListView(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer  # context بهش خودکار داده می‌شه!
+```
 
+اما اگر از APIView یا Viewهای دستی استفاده می‌کنیم، باید خودمان context را ارجاع دهیم
 
-## 🅱️
-## 🅱️
-## 🅱️
-## 🅱️
+```python
+serializer = MySerializer(data, context={'request': request})
+```
 
-# 7. 🅰️Files
+# 8. 🅰️Files
 
-## 7.1. 📁️Setting.py
+## 8.1. 📁️Setting.py
 
 * `INSTALL_APPS`
     * `INSTALL_APPS=[... , 'rest_framework' ,...]`
@@ -3286,7 +3537,7 @@ user_id = self.context.get('user_id')
 * `ALLOWED_HOSTS = ['*']` # Need to run `python3 manage.py runserver 0.0.0.0:8000`
     * `ALLOWED_HOSTS = ['192.168.1.100', 'example.com', '127.0.0.1']`
 
-## 7.2. 🅱️Static
+## 8.2. 🅱️Static
 
 * جنگو از الگوی "اپ‌محور" استفاده می‌کند. بنابراین، بهترین روش این است که برای هر اپ، یک پوشه به نام static بسازید
     * نکته مهم: حتماً یک زیرپوشه با نام اپ (مثل myapp/) داخل static/ بسازید. این از تداخل نام فایل‌ها در اپ‌های مختلف جلوگیری می‌کند
