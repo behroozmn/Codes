@@ -3104,7 +3104,354 @@ File: `templates/403.html` صفحه خطا (اگر این فایل را نساز
 </html>
 ```
 
-# 7. 🅰️DRF-Serializer
+# 7. 🅰️DRF-View
+
+| ویژگی                 | APIView                         | ViewSet                                    | ModelViewSet                     |
+|-----------------------|---------------------------------|--------------------------------------------|----------------------------------|
+| نوع کلاس              | پایه‌ای برای ساخت API           | برای منابع (Resource) — نیاز به تعریف دستی | زیرمجموعه ViewSet — CRUD خودکار  |
+| کنترل                 | کامل — شما همه چیز را می‌نویسید | متوسط — actionها را تعریف می‌کنید          | کم — فقط مدل و سریالایزر می‌دهید |
+| URL Mapping           | دستی با `path()`                | با `Router`                                | با `Router`                      |
+| مناسب برای            | منطق سفارشی / APIهای غیر مدلی   | APIهای مبتنی بر منبع                       | CRUD کامل روی مدل‌های Django     |
+| متد‌های پیش‌فرض       | `get()`, `post()`, ...          | `list()`, `create()`, `retrieve()`...      | همان ViewSet + پیاده‌سازی خودکار |
+| نیاز به مدل/سریالایزر | خیر                             | خیر (اختیاری)                              | بله                              |
+
+| نیاز شما                                | کلاس مناسب                | دلیل                                |
+|-----------------------------------------|---------------------------|-------------------------------------|
+| API ساده بدون مدل (مثل Health Check)    | `APIView`                 | کنترل کامل، بدون پیچیدگی            |
+| API مبتنی بر منبع (Resource) بدون مدل   | `ViewSet`                 | استفاده از Router + تعریف دستی منطق |
+| CRUD کامل روی مدل Django                | `ModelViewSet`            | کدنویسی کم، استاندارد، سریع         |
+| نیاز به منطق پیچیده یا ترکیب HTML + API | `APIView`                 | انعطاف‌پذیری بالا                   |
+| ساخت API استاندارد و مستند              | `ModelViewSet` + `Router` | خروجی خودکار، قابلیت Swagger        |
+
+| جنبه                   | APIView                      | ViewSet                         | ModelViewSet                     |
+|------------------------|------------------------------|---------------------------------|----------------------------------|
+| **سطح انتزاع**         | پایین — نزدیک به Django View | متوسط — مبتنی بر Resource       | بالا — مبتنی بر Model + CRUD     |
+| **کنترل توسعه‌دهنده**  | کامل                         | متوسط (فقط actionها)            | کم (فقط تنظیمات اولیه)           |
+| **پیچیدگی پیاده‌سازی** | بالا — همه چیز دستی          | متوسط — actionها دستی           | پایین — تقریباً صفر کدنویسی      |
+| **انعطاف‌پذیری**       | بسیار بالا                   | بالا                            | متوسط (مگر با override یا mixin) |
+| **تولید URL**          | دستی (`path()`)              | خودکار (`Router`)               | خودکار (`Router`)                |
+| **وابستگی به مدل**     | خیر                          | خیر                             | بله                              |
+| **مناسب برای**         | APIهای سفارشی، منطق پیچیده   | منابع غیرمدلی با استاندارد REST | CRUD سریع و استاندارد روی مدل    |
+
+* شما می‌توانید هر سه را در یک پروژه ترکیب کنید
+* `ModelViewSet` برای مدیریت کاربران
+* `ViewSet` برای مدیریت لاگ‌های سیستمی (ذخیره در فایل)
+* `APIView` برای endpoint لاگین یا آپلود فایل
+
+## 7.1. 🅱️APIView
+
+* معادل View در DRF می‌باشد که کلاس پایه است
+* کلاسی است که مستقیماً از `View` های جنگو ارث‌بری می‌کند و آن را برای کار با API های RestFull آماده می‌کند.
+* کنترل کامل روی `request`, `response`, `authentication`, `permissions`, `serialization` و ... وجود دارد
+* وقتی بخواهیم API غیرمرتبط با مدل‌های دیتابیس بسازیم (مثلاً API برای محاسبه، لاگین، چک سلامت سیستم و ...)
+* وقتی منطق پردازش پیچیده یا غیراستاندارد است (مثلاً ترکیب چند مدل، فراخوانی سرویس خارجی، پردازش فایل و ...)
+* وقتی بخواهیم کاملاً دستی هر HttpMethod (`GET`, `POST`, `PUT`, ...) را پیاده‌سازی کنیم
+* هیچ فرضی درباره مدل، سریالایزر یا عملیات CRUD ندارد.
+* شما باید همه چیز را خودتان بنویسید: نحوه پاسخ، نحوه پردازش داده، نحوه اعتبارسنجی.
+* «یو آر اِل‌» به صورت دستی با `path()` یا `re_path()` تعریف می‌شوند.
+* مناسب برای Endpoint های سفارشی مثل `/api/login/`, `/api/report/`, `/api/upload/`
+
+مثال۱: API برای نمایش پیام سلام و پذیرش نام کاربر
+
+File: `models.py`
+
+```python
+# هیچ مدلی نداریم
+# چون API ما داده‌ای در دیتابیس ذخیره نمی‌کند
+# فقط یک پاسخ ساده JSON برمی‌گرداند
+```
+
+File: `serializers.py` نداریم (نیازی به سریالایزر نیست)
+
+File: `views.py`
+
+```python
+# products/views.py — مثال با APIView
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+
+
+class GreetingAPIView(APIView):
+    def get(self, request):  # Return "Hello" message 
+        return Response({"message": "سلام! به API ما خوش آمدید."}, status=status.HTTP_200_OK)
+
+    def post(self, request):  # Get usename and return custome message 
+        # get name from request body 
+        name = request.data.get('name', 'کاربر ناشناس')
+        return Response({"message": f"سلام {name}! خوشحالم که اینجایی."}, status=status.HTTP_200_OK)  # Customize Response 
+```
+
+File: `urls.py`
+
+```python
+# products/urls.py
+
+from django.urls import path
+from .views import GreetingAPIView
+
+urlpatterns = [
+    # manual url — non Router
+    path('greeting/', GreetingAPIView.as_view(), name='greeting-api'),
+]
+```
+
+تست و استفاده از برنامه
+
+```
+GET http://127.0.0.1:8000/greeting/ ---------------------------> Response:{ "message": "سلام! به API ما خوش آمدید." }
+POST http://127.0.0.1:8000/greeting/ ---> { "name": "علی" } ---> Response: { "message": "سلام علی! خوشحالم که اینجایی." }
+```
+
+## 7.2. 🅱️ViewSet
+
+* معادل GenericView در DRFاست
+* `ViewSet` مجموعه‌ای از عملیات مرتبط با یک Resource را در یک کلاس جمع می‌کند
+    * مثال:«کاربر» — شامل عملیات: لیست کردن و ایجاد و جزئیات و ویرایش و حذف
+    * مثال:«تسک‌ها» — شامل عملیات استانداردCRUD: ذخیره و بازیابی داده‌ها را خودمان مدیریت کنیم
+* هنگامی که بخواهیم منطق خودمان را بر یک Resource پیاده‌سازی کنیم(بدون مدل)
+* actionهای استاندارد(`list`, `create`, `retrieve`, `update`, `destroy`) را دارد اما شما باید بدنه آن‌ها را بنویسید و مانند `ModelViewSet` که پیاده‌سازی پیش‌فرضی داشته باشد نیست
+* هنگامی استفاده می‌شود که منطق شما مبتنی بر یک Resource است، اما داده‌ها از جای دیگری می‌آیند (مثلاً Redis, File, API خارجی).
+* نیازی به وجود مدل یا وجود سریالایزر ندارد(اما معمولاً از سریالایزر برای تبدیل داده‌ها استفاده می‌شود)
+* با Router کار می‌کند زیرا «یو آر اِل»ها به صورت خودکار ساخته می‌شوند.
+* هنگامی که به مدل اتصال نداشته باشد بصورت اجباری نیاز به `basename` دارد زیرا `Router` نمی‌داند چه نامی برای URL معکوس بسازد
+* `ViewSet` یک قرارداد است. قراردادی که می‌گوید: “اگر متد `list` را پیاده‌سازی کنی، `Router` آن را به `GET /resource/` متصل می‌کند.” — اما نحوه پیاده‌سازی با توست.
+  مثال۱: مدیریت "تسک‌های موقت" در حافظه (بدون دیتابیس) - پس در این مثال `models.py` نداریم (در حافظه کار می‌کنیم)
+* `ViewSet` و `ModelViewSet` در نهایت به `APIView` تبدیل می‌شوند(وقتی `Router` آن‌ها را به URL متصل می‌کند).
+
+File: `serializers.py`
+
+```python
+# products/serializers.py
+
+from rest_framework import serializers
+
+
+# یک سریالایزر ساده برای تسک — فقط برای نمایش/اعتبارسنجی
+class TaskSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)  # TODO: read_only=True در سریالایزر چیست
+    title = serializers.CharField(max_length=200)  # TODO: max_length=200 در سریالایزر چیست
+    done = serializers.BooleanField(default=False)  # TODO: default=False در سریالایزر چیست
+```
+
+File: `views.py`
+
+```python
+# products/views.py — مثال با ViewSet
+
+from rest_framework.viewsets import ViewSet
+from rest_framework.response import Response
+from rest_framework import status
+from .serializers import TaskSerializer
+
+TASKS = [  # Temporary Tasks list(inMemory)
+    {"id": 1, "title": "درس خواندن", "done": False},
+    {"id": 2, "title": "ورزش کردن", "done": True},
+]
+next_id = 3
+
+
+class TaskViewSet(ViewSet):  # simple ViewSet for management tasks(without model) and manually implemet actions: list, create, retrieve, update, destroy
+
+    def list(self, request):  # list all tasks
+        serializer = TaskSerializer(TASKS, many=True)  # TODO: many=True در سریالایزر چیست
+        return Response(serializer.data)
+
+    def create(self, request):  # create new task
+        global next_id
+        serializer = TaskSerializer(data=request.data)
+
+        if serializer.is_valid():  # Add new id
+            new_task = serializer.validated_data
+            new_task['id'] = next_id
+            TASKS.append(new_task)
+            next_id += 1
+            return Response(new_task, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def retrieve(self, request, pk=None):  # get task by id
+        task = next((t for t in TASKS if t['id'] == int(pk)), None)
+        if task:
+            serializer = TaskSerializer(task)
+            return Response(serializer.data)
+        return Response({"error": "Task not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    def update(self, request, pk=None):  # Full edit task
+        task_index = next((i for i, t in enumerate(TASKS) if t['id'] == int(pk)), None)
+        if task_index is not None:
+            serializer = TaskSerializer(TASKS[task_index], data=request.data)
+            if serializer.is_valid():
+                TASKS[task_index] = serializer.validated_data
+                TASKS[task_index]['id'] = int(pk)  # آی‌دی را حفظ می‌کنیم
+                return Response(TASKS[task_index])
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": "Task not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    def destroy(self, request, pk=None):  # Removwe Task
+        global TASKS
+        task_index = next((i for i, t in enumerate(TASKS) if t['id'] == int(pk)), None)
+        if task_index is not None:
+            TASKS.pop(task_index)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({"error": "Task not found"}, status=status.HTTP_404_NOT_FOUND)
+```
+
+File: `urls.py`
+
+```python
+# products/urls.py
+
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import TaskViewSet
+
+router = DefaultRouter()  # ایجاد روتر
+
+# [Register ViewSet] + [automatically create CRUD RouterURLs]
+router.register(r'tasks', TaskViewSet, basename='task')  # basename --> ضروری است چون ویوست به مدل متصل نیست
+
+urlpatterns = [
+    path('api/', include(router.urls)),
+]
+```
+
+استفاده و تست برنامه
+
+* `GET /api/tasks/` ---------> لیست تسک‌ها
+* `POST /api/tasks/` --------> ایجاد تسک جدید
+* `GET /api/tasks/1/` -------> جزییات تسک ۱
+* `PUT /api/tasks/1/` -------> ویرایش کامل
+* `DELETE /api/tasks/1/` ----> حذف
+
+## 7.3. 🅱️ModelViewSet
+
+* کلاس ModelViewSet زیرمجموعه ViewSet است که به طور خودکار تمام عملیات CRUD را برای یک مدل جنگو در دیتابیس پیاده‌سازی می‌کند.
+* فقط کافی است مدل و سریالایزر را مشخص کنید و بقیه کارها را DRF خودکار انجام می‌دهد
+* کاربرد اصلی:
+    * وقتی می‌خواهید سریع‌ترین و استانداردترین راه برای ساخت APIهای CRUD را داشته باشید.
+    * وقتی API شما مستقیماً با یک مدل Django کار می‌کند.
+    * وقتی می‌خواهید از قابلیت‌های پیشرفته DRF مثل فیلتر، صفحه‌بندی، جستجو، Permissionها و ... به صورت یکپارچه استفاده کنید.
+* ویژگی‌های کلیدی:
+    * نیاز به `queryset` و `serializer_class` دارد.
+    * تمام actionها (`list`, `create`, ...) را خودکار پیاده‌سازی می‌کند.
+    * با `Router` کار می‌کند و URLها بصورت خودکار ساخته خواهند شد
+    * نیازی به `basename` ندارد زیرا چون از مدل نام URL را استخراج می‌کند.
+    * قابلیت توسعه با `@action` هنگام اضافه کردن endpointهای سفارشی.
+    * قابلیت استفاده از Mixinها — می‌توانید فقط بخشی از عملیات را فعال کنید (مثلاً فقط ReadOnlyModelViewSet).
+* `ViewSet` و `ModelViewSet` در نهایت به `APIView` تبدیل می‌شوند(وقتی `Router` آن‌ها را به URL متصل می‌کند).
+* خلاصه و خودمانی: من یک مدل دارم — فقط به DRF بگم که یک API کامل CRUD برای آن بسازه و در ادامه من فقط نظاره‌گر باشم!
+
+مثال۱: مدیریت کامل کتاب‌ها با دیتابیس
+
+File: `models.py`
+
+```python
+# products/models.py
+
+from django.db import models
+
+
+class Book(models.Model):
+    """
+    مدل کتاب — شامل عنوان، نویسنده و تاریخ انتشار
+    """
+    title = models.CharField(max_length=200, verbose_name="عنوان")
+    author = models.CharField(max_length=100, verbose_name="نویسنده")
+    published_date = models.DateField(verbose_name="تاریخ انتشار")
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = "کتاب"
+        verbose_name_plural = "کتاب‌ها"
+        ordering = ['-published_date']
+```
+
+```shell
+python manage.py makemigrations
+python manage.py migrate
+```
+
+File: `serializers.py`
+
+```python
+# products/serializers.py
+
+from rest_framework import serializers
+from .models import Book
+
+
+class BookSerializer(serializers.ModelSerializer):
+    """
+    سریالایزر برای تبدیل مدل Book به JSON و برعکس
+    """
+
+    class Meta:
+        model = Book
+        fields = '__all__'  # شامل id, title, author, published_date
+```
+
+File: `views.py`
+
+```python
+# products/views.py — مثال با ModelViewSet
+
+from rest_framework.viewsets import ModelViewSet
+from .models import Book
+from .serializers import BookSerializer
+
+
+class BookViewSet(ModelViewSet):
+    """
+    ModelViewSet به صورت خودکار:
+    - list → GET /books/
+    - create → POST /books/
+    - retrieve → GET /books/1/
+    - update → PUT /books/1/
+    - partial_update → PATCH /books/1/
+    - destroy → DELETE /books/1/
+
+    فقط کافیست queryset و serializer_class را مشخص کنید!
+    """
+    queryset = Book.objects.all()  # داده‌هایی که API برمی‌گرداند
+    serializer_class = BookSerializer  # نحوه تبدیل داده‌ها به JSON
+```
+
+File: `urls.py`
+
+```python
+# products/urls.py
+
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import BookViewSet
+
+# ✅ ایجاد Router
+router = DefaultRouter()
+
+# ✅ ثبت ModelViewSet — نیازی به basename نیست (چون به مدل متصل است)
+router.register(r'books', BookViewSet)
+
+urlpatterns = [
+    path('api/', include(router.urls)),
+]
+```
+
+File: ``
+
+```python
+
+```
+
+File: ``
+
+```python
+
+```
+
+# 8. 🅰️DRF-Serializer
 
 `Serializer = Change(ModelOrObjects ↔ JSON) + Validation`
 
@@ -3145,7 +3492,7 @@ class UserSerializer(serializers.Serializer):
     age = serializers.IntegerField()
 ```
 
-## 7.1. 🅱️Serialize(Object → JSON)
+## 8.1. 🅱️Serialize(Object → JSON)
 
 * هنگامی که می‌خواهیم داده را به کلاینت بفرستیم
 * برای مثال بالا Serialize کردن آن به شیوه زیر است.
@@ -3167,7 +3514,7 @@ serializer = MyModelSerializer(instance)
 json_data = serializer.data  # ← خروجی قابل ارسال
 ```
 
-## 7.2. 🅱️Deserialize(JSON → Object)
+## 8.2. 🅱️Deserialize(JSON → Object)
 
 * هنگامی که داده از کلاینت دریافت می‌شود
 * نکته: `is_valid()` الزامی است. بدون آن، `save()` قابل اجرا نیست
@@ -3197,7 +3544,7 @@ else:
     errors = serializer.errors  # ← خطاهای اعتبارسنجی
 ```
 
-## 7.3. 🅱️ModelSerializer
+## 8.3. 🅱️ModelSerializer
 
 هنگامی که یک مدل داریم نیاز نیست که فیلدهای آن را بنویسیم و مستقیم توسط `ModelSerializer` از پارامترهای مدل این فیلدها را استخراج کنیم
 
@@ -3225,7 +3572,7 @@ if serializer.is_valid():
     print(user.name)  # سارا
 ```
 
-## 7.4. 🅱️Fields
+## 8.4. 🅱️Fields
 
 نوع داده‌هایی نظیر `CharField` و`EmailField` و `IntegerField` و `BooleanField` و  `DateTimeField` و غیره نوع داده‌هایی هستن که `Serializer` ازشون استفاده می‌کنه تا بدونه چه نوع داده‌ای رو قبول کنه و چطور اعتبارسنجی کن
 
@@ -3236,7 +3583,451 @@ email = serializers.EmailField()
 # "ali.gmail.com" ❌️ قبول نمی‌کند
 ```
 
-## 7.5. 🅱️Validation
+### 8.4.1. ✅️read_only=True
+
+* در Serialization جایگاه دارد
+* جلوگیری از تغییر داده‌های حساس توسط کاربر
+* در لایه `Deserialize` فیلدهای `read_only` در `validated_data` نادیده گرفته می‌شود(حتی اگر در `request.data` باشند)
+* معمولا برای فیلدهایی که کاربر نباید تغییر دهد و از سمت سرور ارسال می‌شود کابرد دارد نظیر `id`و `created_at` و `updated_at` و `author`
+* `read_only=True`: فیلد فقط در خروجی نمایش داده شود و در ورودی مثل put یا post حتی اگر کاربر آن را بفرستد، نادیده گرفته شود
+* این فیلد فقط در خروجی نمایش داده می‌شود.
+
+### 8.4.2. ✅️write_only=True
+
+* در DeSerialize جایگاه دارد
+* در لایه `Serializer`، فیلدهای `write_only` در متد `to_representation()` حذف می‌شوند حتی اگر مدل شامل آن فیلد باشد.
+* `write_only=True`: فیلد فقط در ورودی `POST` , `PUT` پردازش می‌شود و در خروجی (Response) نمایش داده نمی‌شود.
+* برای فیلدهایی مورد استفاده قرار می‌گیرد که نباید به کلاینت برگردانده شود،
+    * `password`: کاربر موقع ثبت‌نام می‌فرستد، ولی در خروجی JSON نمایش داده نمی‌شود.
+    * `token`
+    * `secret_key`
+* این فیلد فقط در ورودی استفاده می‌شود.
+* در serialization (خروجی → JSON) نمایش داده نمی‌شود
+
+### 8.4.3. ✅️max_length
+
+* در Serialization و DeSerialize جایگاه دارد
+* محدودیت تعداد کاراکتر برای فیلدهای متنی
+* اگر کاربر بیشتر از این تعداد بفرستد، خطای اعتبارسنجی می‌دهد
+* جلوگیری از ورود داده‌های طولانی (مثلاً عنوان بیش از 200 کاراکتر)
+* هماهنگی با مدل دیتابیس (اگر `CharField(max_length=200)` دارید، اینجا هم باید باشد)
+* این یک Validator است که در مرحله `is_valid()` اعمال می‌شود. می‌توانید validators سفارشی هم اضافه کنید. این اولین خط دفاعی در برابر داده‌های نامعتبر است — قبل از رسیدن به مدل.
+
+مثال ساده: ثبت‌نام کاربر که در آن read_only و write_only و max_length استفاده شده باشد
+
+* بخاطر `write_only=True` پسورد در خروجی نخواهد بود
+* بخاطر `read_only=True` مقادری `id` و `created_at` ارسالی کاربر نادیده گرفته شده است
+* بخاطر `max_length=50` مقدار `username` نباید بیش از ۵۰ کاراکتر باشد و گرنه سبب بروز خطا در خروجی خواهد شد
+
+```python
+# ╔═════════════════╗
+# ║ users/models.py ║
+# ╚═════════════════╝
+from django.db import models
+
+
+class User(models.Model):
+    username = models.CharField(max_length=50, unique=True)  # max_length=50
+    email = models.EmailField(unique=True)
+    password = models.CharField(max_length=128)  # در واقعیت هش می‌شود
+    created_at = models.DateTimeField(auto_now_add=True)  # read_only candidate
+
+    def __str__(self):
+        return self.username
+
+
+# ╔══════════════════════╗
+# ║ users/serializers.py ║
+# ╚══════════════════════╝
+from rest_framework import serializers
+from .models import User
+
+
+class UserSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)  # کاربر نمی‌تواند آن را تنظیم کند
+    username = serializers.CharField(max_length=50)  # محدودیت طول رشته
+    email = serializers.EmailField()  # بدون محدودیت خاص
+    created_at = serializers.DateTimeField(read_only=True)  # فقط سرور کنترل می‌کند
+    password = serializers.CharField(write_only=True, max_length=128)  # در خروجی نمایش داده نمی‌شود
+
+    # Override
+    def create(self, validated_data):
+        # validated_data: 1️⃣️read_only 2️⃣️does not contain id or created_at 
+        # validated_data: 1️⃣️write_only 2️⃣️contain password --> Hide in output
+        return User.objects.create(**validated_data)
+
+
+# ╔════════════════╗
+# ║ users/views.py ║
+# ╚════════════════╝
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from .models import User
+from .serializers import UserSerializer
+
+
+class UserRegisterView(APIView):
+    def post(self, request):
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()  # ذخیره در دیتابیس
+            # برگرداندن داده بدون پسورد (چون write_only)
+            output_serializer = UserSerializer(user)
+            return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# ╔═══════════════════╗
+# ║ myproject/urls.py ║ ← اصلی
+# ╚═══════════════════╝
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('api/', include('users.urls')),
+]
+
+# ╔═══════════════╗
+# ║ users/urls.py ║ ← اپلیکیشن
+# ╚═══════════════╝
+from django.urls import path
+from .views import UserRegisterView
+
+urlpatterns = [
+    path('register/', UserRegisterView.as_view(), name='user-register'),
+]
+```
+
+```shell
+# ╔══════╗
+# ║ TEST ║  ←  ❌️ Error: max_length
+# ╚══════╝
+# 
+curl -X POST http://127.0.0.1:8000/api/register/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "john_doe_very_long_name_exceeding_fifty_characters_1234567890",
+    "email": "john@example.com",
+    "password": "mypassword",
+    "id": 999,
+    "created_at": "2020-01-01T00:00:00Z"
+  }'
+# output: {  "username": ["Ensure this field has no more than 50 characters."] }
+
+
+# ╔══════╗
+# ║ TEST ║  ←  ✅️ Success
+# ╚══════╝
+curl -X POST http://127.0.0.1:8000/api/register/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "john_doe",
+    "email": "john@example.com",
+    "password": "mypassword"
+  }'
+# output: 
+# ---> {
+# --->   "id": 1,
+# --->   "username": "john_doe",
+# --->   "email": "john@example.com",
+# --->   "created_at": "2025-04-05T12:00:00Z"
+# ---> }
+```
+
+### 8.4.4. ✅️many
+
+* توضیحات اولیه: در DRF یک `Serializer` وظیفه `Serialize`  یا `DeSerialize` را برعهده دارد
+    * Serialize: Obj → Json
+    * DeSerialize: Json → Obj
+* پارامتر many تعیین می‌کند که آیا این عملیات روی یک آبجکت(many=False) یا لیستی از آبجکت‌ها (many=True) انجام شود
+* `many=False`
+    * به صورت پیش‌فرض `False` می‌باشد یعنی فرض می‌شود که عملیات تنها روی یک آبجکت انجام شود
+    * سریالایزر فرض می‌کند شما برای تبدیل به JSON و هم برای اعتبارسنجی داده ورودی فقط یک آبجکت دارید
+        * مثلاً یک کاربر، یک محصول، یک تسک
+* `many=True`
+    * سریالایزر فرض می‌کند شما لیستی از آبجکت‌ها دارید
+        * مثلاً لیست کاربران، لیست تسک‌ها، لیست محصولات.
+    * برای Serialize کردن QuerySet (مثلاً `Task.objects.all()`)
+    * برای Deserialize کردن لیستی از داده‌ها (مثلاً ایجاد دسته‌ای تسک)
+    * DRF به جای `Serializer` از `ListSerializer` استفاده می‌کند
+      * `ListSerializer`: یک Wrapper است برای حلقه‌زدن روی لیست و اعمال سریالایزر روی هر آیتم.
+    * نوع داده ورودی و خروجی باید با many همخوانی داشته باشد. در غیر این صورت خطای واضحی دریافت می‌کنید
+
+| ویژگی                   | `many=False` (پیش‌فرض)             | `many=True`                            |
+|-------------------------|------------------------------------|----------------------------------------|
+| نوع داده ورودی          | یک دیکشنری (Single Object)         | لیستی از دیکشنری‌ها (List of Objects)  |
+| نوع داده خروجی          | یک دیکشنری                         | لیستی از دیکشنری‌ها                    |
+| کاربرد متداول           | جزئیات یک آیتم، ایجاد یک آیتم      | لیست کردن، ایجاد دسته‌ای               |
+| مثال داده ورودی         | `{"title": "Task", "done": false}` | `[{"title": "..."}, {"title": "..."}]` |
+| مثال داده خروجی         | `{"id": 1, "title": "Task", ...}`  | `[{"id": 1, ...}, {"id": 2, ...}]`     |
+| خطای رایج               | `Expected a list... got dict`      | `'QuerySet' object is not a mapping`   |
+| استفاده با QuerySet     | ❌ خطا                              | ✅ صحیح                                 |
+| استفاده با Model Object | ✅ صحیح                             | ❌ خطا                                  |
+
+مثال1️⃣️:نمایش و ایجاد یک تسک که از حالت `many=False` استفاده میکنیم
+
+```python
+# ╔═════════════════╗
+# ║ tasks/models.py ║ ← با مثال قبلی یکسان است
+# ╚═════════════════╝
+from django.db import models
+
+
+class Task(models.Model):
+    title = models.CharField(max_length=200, verbose_name="عنوان")
+    done = models.BooleanField(default=False, verbose_name="انجام شده")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = "تسک"
+        verbose_name_plural = "تسک‌ها"
+
+
+# ╔══════════════════════╗
+# ║ tasks/serializers.py ║ 
+# ╚══════════════════════╝
+from rest_framework import serializers
+from .models import Task
+
+
+class TaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        fields = ['id', 'title', 'done', 'created_at']
+        # many=False is DEFAULT → Serializer expects a SINGLE object
+
+
+# ╔════════════════╗
+# ║ tasks/views.py ║
+# ╚════════════════╝
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Task
+from .serializers import TaskSerializer
+
+
+class TaskCreateView(APIView):
+    """
+    POST /api/tasks/create/ — Create a single task
+    """
+
+    def post(self, request):
+        # many=False → expects a SINGLE object (dict), NOT a list
+        serializer = TaskSerializer(data=request.data)  # many=False by default
+        if serializer.is_valid():
+            task = serializer.save()
+            return Response(TaskSerializer(task).data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class TaskDetailView(APIView):
+    """
+    GET /api/tasks/<id>/ — Retrieve a single task
+    """
+
+    def get(self, request, pk):
+        try:
+            task = Task.objects.get(pk=pk)
+        except Task.DoesNotExist:
+            return Response({"error": "Task not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        # many=False → serializes a SINGLE object
+        serializer = TaskSerializer(task)  # many=False by default
+        return Response(serializer.data)
+
+
+# ╔═══════════════════╗
+# ║ myproject/urls.py ║ ← اصلی
+# ╚═══════════════════╝
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('api/', include('tasks.urls')),
+]
+
+# ╔═══════════════╗
+# ║ tasks/urls.py ║ ← اپلیکیشن
+# ╚═══════════════╝
+from django.urls import path
+from .views import TaskCreateView, TaskDetailView
+
+urlpatterns = [
+    path('tasks/create/', TaskCreateView.as_view(), name='task-create'),
+    path('tasks/<int:pk>/', TaskDetailView.as_view(), name='task-detail'),
+]
+```
+
+```shell
+# ╔══════╗
+# ║ TEST ║  ←  ✅️ Success
+# ╚══════╝
+curl -X POST http://127.0.0.1:8000/api/tasks/create/ -H "Content-Type: application/json"  -d '{"title": "Learn Django", "done": false}'
+# Output:
+# ---> {
+# --->   "id": 1,
+# --->   "title": "Learn Django",
+# --->   "done": false,
+# --->   "created_at": "2025-04-05T12:00:00Z"
+# ---> }
+
+curl http://127.0.0.1:8000/api/tasks/1/
+# Output:
+# ---> {
+# --->   "id": 1,
+# --->   "title": "Learn Django",
+# --->   "done": false,
+# --->   "created_at": "2025-04-05T12:00:00Z"
+# ---> }
+```
+
+مثال2️⃣️: لیست تسک‌ها به همراه ایجاد دسته‌ای تسک
+
+```python
+# ╔═════════════════╗
+# ║ tasks/models.py ║
+# ╚═════════════════╝
+from django.db import models
+
+
+class Task(models.Model):
+    title = models.CharField(max_length=200, verbose_name="عنوان")
+    done = models.BooleanField(default=False, verbose_name="انجام شده")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = "تسک"
+        verbose_name_plural = "تسک‌ها"
+
+
+# ╔══════════════════════╗
+# ║ tasks/serializers.py ║ 
+# ╚══════════════════════╝
+from rest_framework import serializers
+from .models import Task
+
+
+class TaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        fields = ['id', 'title', 'done', 'created_at']
+        # many=False is DEFAULT → Serializer expects a SINGLE object
+
+
+# ╔════════════════╗
+# ║ tasks/views.py ║
+# ╚════════════════╝
+# tasks/views.py — ادامه فایل قبلی
+
+class TaskListView(APIView):
+    """
+    GET /api/tasks/ — List ALL tasks
+    """
+
+    def get(self, request):
+        tasks = Task.objects.all()  # Returns a QuerySet → LIST of objects
+        # many=True → tells serializer to expect a LIST
+        serializer = TaskSerializer(tasks, many=True)  # ✅ many=True for LIST
+        return Response(serializer.data)
+
+
+class TaskBulkCreateView(APIView):
+    """
+    POST /api/tasks/bulk/ — Create MULTIPLE tasks at once
+    """
+
+    def post(self, request):
+        # many=True → expects a LIST of objects
+        serializer = TaskSerializer(data=request.data, many=True)  # ✅ many=True
+        if serializer.is_valid():
+            tasks = serializer.save()  # Returns LIST of created objects
+            # Serialize output — again with many=True
+            output_serializer = TaskSerializer(tasks, many=True)
+            return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# ╔═══════════════════╗
+# ║ myproject/urls.py ║ ← اصلی
+# ╚═══════════════════╝
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('api/', include('tasks.urls')),
+]
+
+# ╔═══════════════╗
+# ║ tasks/urls.py ║ ← اپلیکیشن
+# ╚═══════════════╝
+from django.urls import path
+from .views import TaskCreateView, TaskDetailView, TaskListView, TaskBulkCreateView
+
+urlpatterns = [
+    path('tasks/create/', TaskCreateView.as_view(), name='task-create'),
+    path('tasks/<int:pk>/', TaskDetailView.as_view(), name='task-detail'),
+    path('tasks/', TaskListView.as_view(), name='task-list'),  # ✅ GET list
+    path('tasks/bulk/', TaskBulkCreateView.as_view(), name='task-bulk'),  # ✅ POST bulk
+]
+```
+
+```shell
+# ╔══════╗
+# ║ TEST ║  ←  ✅️ Success
+# ╚══════╝
+curl http://127.0.0.1:8000/api/tasks/  # ---> دریافت لیست تسک‌ها (GET)
+# Output:
+# ---> [
+# --->   {
+# --->     "id": 1,
+# --->     "title": "Learn Django",
+# --->     "done": false,
+# --->     "created_at": "2025-04-05T12:00:00Z"
+# --->   },
+# --->   {
+# --->     "id": 2,
+# --->     "title": "Build API",
+# --->     "done": true,
+# --->     "created_at": "2025-04-05T12:05:00Z"
+# --->   }
+# ---> ]
+
+curl -X POST http://127.0.0.1:8000/api/tasks/bulk/ \  # ---> ایجاد دسته‌ای تسک (POST)
+  -H "Content-Type: application/json" \
+  -d '[
+    {"title": "Read DRF Docs", "done": false},
+    {"title": "Write Tests", "done": false}
+  ]' 
+# Output:
+# ---> [
+# --->   {
+# --->     "id": 3,
+# --->     "title": "Read DRF Docs",
+# --->     "done": false,
+# --->     "created_at": "2025-04-05T12:10:00Z"
+# --->   },
+# --->   {
+# --->     "id": 4,
+# --->     "title": "Write Tests",
+# --->     "done": false,
+# --->     "created_at": "2025-04-05T12:10:00Z"
+# --->   }
+# ---> ]
+
+```
+
+## 8.5. 🅱️Validation
 
 * گاهی می‌خوایم یک چک اضافه انجام بدیم. مثلا
     * نام کاربری نباید کمتر از ۳ کاراکتر باشد
@@ -3408,7 +4199,7 @@ serializer.is_valid()  # ❌
 # خطا: "کاربران زیر ۱۳ سال باید نام کاربری حداقل ۵ کاراکتری داشته باشند!"
 ```
 
-## 7.6. 🅱️to_representation
+## 8.6. 🅱️to_representation
 
 وقتی بخواهیم خروجی JSON تغییر کند(یعنی خروجی نمایش درآمده به کاربر متفاوت باشد) متد  `to_representation` را override می‌کنیم
 
@@ -3434,7 +4225,7 @@ class UserSerializer(serializers.ModelSerializer):
 {"name": "علی", "age": 16, "age_group": "کودک"}
 ```
 
-## 7.9. 🅱️Context
+## 8.7. 🅱️Context
 
 * context یک دیکشنری است که اطلاعات اضافی را از ویو به داخل سریالایزر منتقل می‌کند
 * گاهی نیاز است اطلاعاتی مانند `request`, `view`, یا مقادیر سفارشی به `Serializer` منتقل شود.
@@ -3492,7 +4283,7 @@ class UserListView(generics.ListAPIView):
 serializer = MySerializer(data, context={'request': request})
 ```
 
-## 🅱️NestedSerializer
+## 8.8. 🅱️NestedSerializer
 
 Nested Serializer (سریالایزر تو در تو) به معنای استفاده از یک Serializer درون Serializer دیگر است. این مفهوم زمانی کاربرد دارد که مدل‌های شما با یکدیگر رابطه‌ی دارند. مانند
 
@@ -3559,9 +4350,9 @@ class BookSerializer(serializers.ModelSerializer):
 }
 ```
 
-# 8. 🅰️Files
+# 9. 🅰️Files
 
-## 8.1. 📁️Setting.py
+## 9.1. 📁️Setting.py
 
 * `INSTALL_APPS`
     * `INSTALL_APPS=[... , 'rest_framework' ,...]`
@@ -3604,7 +4395,15 @@ class BookSerializer(serializers.ModelSerializer):
 * `ALLOWED_HOSTS = ['*']` # Need to run `python3 manage.py runserver 0.0.0.0:8000`
     * `ALLOWED_HOSTS = ['192.168.1.100', 'example.com', '127.0.0.1']`
 
-## 8.2. 🅱️Static
+```python
+# تنظیمات زبان فارسی (اختیاری)
+LANGUAGE_CODE = 'fa-ir'
+TIME_ZONE = 'Asia/Tehran'
+USE_I18N = True
+USE_TZ = True
+```
+
+## 9.2. 🅱️Static
 
 * جنگو از الگوی "اپ‌محور" استفاده می‌کند. بنابراین، بهترین روش این است که برای هر اپ، یک پوشه به نام static بسازید
     * نکته مهم: حتماً یک زیرپوشه با نام اپ (مثل myapp/) داخل static/ بسازید. این از تداخل نام فایل‌ها در اپ‌های مختلف جلوگیری می‌کند

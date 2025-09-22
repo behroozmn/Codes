@@ -337,8 +337,16 @@ snmpd -V
     * `sudo arp -e`
 * [-n|--numeric]:don't resolve names
     * `sudo arp -n`
+## 9.2. 🅱️ arp-scan
 
-## 9.2. ✅️curl
+```shell
+arp-scan -I enp4s0 10.0.20.0/24
+arp-scan --interface enp4s0 10.0.20.0/24
+arp-scan --interface enp4s0 --localnet
+```
+
+
+## 9.3. ✅️curl
 
 دستورات یا مرورگر‌های مشابه متنی ترمینال: links و links2 و lynx(دستور www-browser)
 
@@ -347,32 +355,32 @@ curl -I itsee.ir #نمایش هدرهای یک سایت
 curl -u username:password -T file.tar.gz ftp://ftp_server
 ```
 
-## 9.3. 🅱️ ethtool
+## 9.4. 🅱️ ethtool
 
 ```shell
 dig <name>
 dig +short <Name>  #اطلاعات اضافه نشان نده و فقط آی‌پی را نمایش بده
 ```
 
-## 9.4. 🅱️ ethtool
+## 9.5. 🅱️ ethtool
 
 ```shell
 sudo ethtool enp5s0 # اطلاعات فوق‌العاده زیاد بابت کارت شبکه
 
 ```
 
-## 9.5. 🅱️ fping
+## 9.6. 🅱️ fping
 
 `fping -g 192.168.10.1 192.168.10.5 #alive hosts`
 
-## 9.6. 🅱️ host
+## 9.7. 🅱️ host
 
 ```shell
 host -la domain.local # نمایش تمام رکوردهای یک دامنه
 host <name[google.com]>
 ```
 
-## 9.7. 🅱️ hostname
+## 9.8. 🅱️ hostname
 
 * [-I] or [--all-ip-addresses] → All IP addresses for the host
 
@@ -380,7 +388,7 @@ host <name[google.com]>
 hostname -I # show all ip address
 ```
 
-## 9.8. 🅱️ iwlist|iwconfig
+## 9.9. 🅱️ iwlist|iwconfig
 
 wifi|wireless|وای‌فای
 
@@ -389,7 +397,7 @@ iwlist <nic> scan #بررسی وایرلس‌های اطراف سیستم که �
 iwconfig wlp4s0 essid "<Name>" key s:<Pass> #اتصال به یک وایرلس
 ```
 
-## 9.9. 🅱️ ip
+## 9.10. 🅱️ ip
 
 Usage: ip OPTIONS OBJECT COMMAND
 
@@ -463,7 +471,7 @@ Usage: ip OPTIONS OBJECT COMMAND
     * ip addr del x.x.x.x/Y dev <NIC> → del IP
     * ip link del <nic> down → up/down NIC
 
-### 9.9.1. ✅️ [Gateway|Routr] Commands
+### 9.10.1. ✅️ [Gateway|Routr] Commands
 
 * show
     * ip route
@@ -473,16 +481,16 @@ Usage: ip OPTIONS OBJECT COMMAND
 * remove
     * ip route del 192.168.0.150/24 #Removing a static route
 
-## 9.10. 🅱️ ifconfig
+## 9.11. 🅱️ ifconfig
 
 ```shell
 ifconfig eth0:0 xxx.xxx.xxx.xxx #set [Additional ip] or [VirtualIp]
 ifconfig eth0 hw ether AA:BB:CC:DD:EE:FF #MacSpoofing or تغییر مک آدرس
 ```
 
-## 9.11. 🅱️ lsof
+## 9.12. 🅱️ lsof
 
-### 9.11.1. ✅️ Concept
+### 9.12.1. ✅️ Concept
 
 * COMMAND: The command name
 * PID: Process ID (PID) of the process
@@ -519,7 +527,7 @@ ifconfig eth0 hw ether AA:BB:CC:DD:EE:FF #MacSpoofing or تغییر مک آدر�
 * NODE: Node description of the local file; this could be the number of the local file, TCP, UDP, or STR (stream)
 * NAME: The name of the mount point where the file resides
 
-### 9.11.2. ✅️ Switch
+### 9.12.2. ✅️ Switch
 
 * [-i] → List all network connecttion
     * tcp|udp:
@@ -563,21 +571,21 @@ ifconfig eth0 hw ether AA:BB:CC:DD:EE:FF #MacSpoofing or تغییر مک آدر�
     * lsof -d mem → All memory map files
     * lsof -d cwd
 
-### 9.11.3. ✅️ Appendix
+### 9.12.3. ✅️ Appendix
 
 * [+L1] → سوکت‌های فعلی سرور که به هیچ فایلی از هارد وصل نشده است - پردازه‌های موجود در رم که ممکن است ویروس باشند
     * lsof +L1
 * deletedFiles
     * sudo lsof [path] | grep deleted
 
-## 9.12. 🅱️ mtr
+## 9.13. 🅱️ mtr
 
 ```shell
 mtr google.com
 mtr -n --report IP
 ```
 
-## 9.13. 🅱️ netstat
+## 9.14. 🅱️ netstat
 
 * [خالی و بدون پارامتر ورودی] → By default, netstat displays a list of open sockets.
 * [-i] or [--interfaces,] → Display a table of all network interfaces
@@ -589,13 +597,13 @@ mtr -n --report IP
 * [-l] → display only listening sockets
 * [-n] → display the socket’s port number
 
-## 9.14. 🅱️ nmap
+## 9.15. 🅱️ nmap
 
 * تعریف NullScan: بسته هیچ پرچمی(TCP، UDP، Sync، Http، ICMP و غیره) به خود نمی‌گیرد.
     * اگر یک سرور هیچ پاسخی نداد شما می‌توانید نوع اسکن را در وضعیت Null Scan قرار دهید که در آن صورت حتما بسته عبور می‌کند و حداقل می‌توان فهمید که سرور alive هست یا پایین است
 * تعریف Zombi Attach: همزمان به چندین سیستم زامبی‌شده(قربانی‌های بستر اینترنت) می‌گوییم که به یک سرور وصل شوند و کاری انجام دهند و گزارش خروجی حمله را در اختیارمان قرار دهند و ما ناشناخته خواهیم ماند
 
-### 9.14.1. ✅️ Ping
+### 9.15.1. ✅️ Ping
 
 * nmap -Pn [target] #Dont ping
 * nmap -sP [target] #perform a Ping Only Scan
@@ -608,12 +616,12 @@ mtr -n --report IP
 * nmap -PM [target] #CMP Address Mask Ping
 * nmap -PO [target] #IP Protocol Ping
 
-### 9.14.2. ✅️ Trace
+### 9.15.2. ✅️ Trace
 
 * nmap –traceroute     [target] #Traceroute
 * nmap --packet-trace [target] #Trace package
 
-### 9.14.3. ✅️ DNS
+### 9.15.3. ✅️ DNS
 
 * nmap -R [target] #Force Reverse DNS Resolution
 * nmap -n [target] #Disable Reverse DNS Resolution
@@ -621,7 +629,7 @@ mtr -n --report IP
 * nmap –dns-servers [servers] [target] #Manually Specify DNS Server(s)
 * nmap -sL [targets] #Create a Host List
 
-### 9.14.4. ✅️ Advanced Scanning Options
+### 9.15.4. ✅️ Advanced Scanning Options
 
 * nmap -sS [target] #TCP SYN Scan
 * nmap -sT [target] #TCP Connect Scan
@@ -636,7 +644,7 @@ mtr -n --report IP
 * nmap –send-eth [target] #Send Raw Ethernet Packets
 * nmap –send-ip [target] #Send IP Packets
 
-### 9.14.5. ✅️ Port Scan
+### 9.15.5. ✅️ Port Scan
 
 * nmap -F [target] #Perform a Fast Scan
 * nmap -p [port(s)] [target] #Scan Specific Ports
@@ -649,7 +657,7 @@ mtr -n --report IP
 * nmap –top-ports [number] [target] #Scan Top Ports
 * nmap -r [target] #Perform a Sequential Port Scan
 
-### 9.14.6. ✅️ Version Detection
+### 9.15.6. ✅️ Version Detection
 
 * nmap -O [target] #Operating System Detection
 * nmap -O –osscan guess [target] #Attempt to Guess an Unknown OS
@@ -657,7 +665,7 @@ mtr -n --report IP
 * nmap -sV –version trace [target] #Troubleshooting Version Scans
 * nmap -sR [target] #Perform a RPC Scan
 
-### 9.14.7. ✅️ Firewall Evasion Techniques
+### 9.15.7. ✅️ Firewall Evasion Techniques
 
 * nmap -f [target] #augment Packets
 * nmap –mtu [MTU] [target] #pacify a Specific MTU
@@ -674,7 +682,7 @@ mtr -n --report IP
     * nmap –spoof-mac Cis 192.168.0.1
 * nmap –badsum [target] #Send Bad Checksums
 
-### 9.14.8. ✅️ Troubleshooting And Debugging
+### 9.15.8. ✅️ Troubleshooting And Debugging
 
 * nmap -h #Getting Help
 * nmap -V #Display nmap Version
@@ -687,7 +695,7 @@ mtr -n --report IP
 * nmap -e [interface] [target] #Specify a Network Interface
     * nmap -e eth0 192.168.0.1
 
-### 9.14.9. ✅️ nmap Scripting Engine
+### 9.15.9. ✅️ nmap Scripting Engine
 
 * nmap –script [script.nse] [target] #Execute Individual Scripts
 * nmap –script [expression] [target] #Execute Multiple Scripts
@@ -701,7 +709,7 @@ mtr -n --report IP
     * nmap –script banner.nse –script-trace 192.168.0.1
 * nmap –script-updatedb #Update the Script Database
 
-## 9.15. 🅱️ nmcli
+## 9.16. 🅱️ nmcli
 
 ```shell
 nmcli connection show
@@ -726,18 +734,18 @@ nmcli general logging domains ALL
 nmcli general logging level INFO domains ALL
 ```
 
-## 9.16. 🅱️ nslookup
+## 9.17. 🅱️ nslookup
 
 ```shell
 nslookup -querytype=mx domain.ir #پیدا کردن ایمیل‌سرور یک دامین
 nslookup <name>
 ```
 
-## 9.17. 🅱️ tcpdump
+## 9.18. 🅱️ tcpdump
 
 دستور لینوکس برای گوش کردن به شبکه- سوییچ‌ها
 
-### 9.17.1. ✅️ Switch
+### 9.18.1. ✅️ Switch
 
 * [-c] → Capture Only N Number of Packets
     * sudo tcpdump -c 5
@@ -785,7 +793,7 @@ nslookup <name>
 * [] →
 * [] →
 
-### 9.17.2. ✅️ Examples
+### 9.18.2. ✅️ Examples
 
 * tcpdump src NUMBER && dst port NUMBER
 * tcpdump dst ff:ff:ff:ff:ff:ff
@@ -800,13 +808,13 @@ nslookup <name>
 * tcpdump -i any -c5 -nn "port 80 and (src 192.168.122.98 or src 54.204.39.132)" → #filtering packets for HTTP service
   only (port 80) and source IP addresses 192.168.122.98 or 54.204.39.132
 
-## 9.18. 🅱️ traceroute
+## 9.19. 🅱️ traceroute
 
 ```shell
 traceroute google.com
 ```
 
-## 9.19. 🅱️ wget
+## 9.20. 🅱️ wget
 
 - [-b] → قرار دادن پروسه دانلود در بک‌گراند و عدم نمایش و این معمولا برای فایل‌های بزرگ کاربرد دارد
 - [-c] → اگر دانلود متوقف شد مجددا ادامه دانلود را از سر گیرد
@@ -842,7 +850,7 @@ traceroute google.com
 - `wget -r -np -R "index.html*" https://shop.hemat-elec.ir/wp-content/themes/irankala/assets/fonts` # Note: دانلود فایل های مشخص شده
     - wget -r -A.pdf
 
-## 9.20. 🅱️ Hosname
+## 9.21. 🅱️ Hosname
 
 ```shell
 #show
