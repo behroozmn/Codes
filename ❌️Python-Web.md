@@ -2777,11 +2777,10 @@ def second_page(myrequest):
 
 ### ✅️ Legacy Serialize[FunctionBaseView]
 
-#### ❇️ url.py
-
-File: `/home/url.py`
-
 ```python
+# ╔═════════════╗
+# ║ home/url.py ║ ← اصلی
+# ╚═════════════╝
 from django.urls import path
 from . import views
 
@@ -2789,15 +2788,11 @@ urlpatterns = [
     path('index_page', views.index_page)
     path('legacy', views.todos_json)
 ]
-```
 
-#### ❇️ models.py
-
-File: `/Todo/models.py`
-
-```python
+# ╔════════════════╗
+# ║ Todo/models.py ║
+# ╚════════════════╝
 from django.db import models
-
 
 class Todo(models.Model):
     title = models.CharField(max_length=300)
@@ -2810,13 +2805,10 @@ class Todo(models.Model):
 
     class Meta:
         db_table = 'todos'  # 'نام دلحواه برای اسم جدول دردیتابیس' # default: "AppName_ModelName"
-```
 
-#### ❇️ view.py
-
-file: `/home/view.py`
-
-```python
+# ╔══════════════╗
+# ║ home/view.py ║
+# ╚══════════════╝
 from django.shortcuts import render
 from todo.models import Todo
 from django.http import HttpRequest, JsonResponse, HttpResponse
@@ -2825,13 +2817,11 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
 
-
 def index_page(request):
     context = {
         'todos': Todo.objects.order_by('priority').all()
     }
     return render(request, 'home/index.html', context)
-
 
 @api_view(['GET'])
 def todos_json(request: Request):
@@ -2849,11 +2839,11 @@ def todos_json(request: Request):
 from rest_framework import serializers
 ```
 
-##### Ⓜ️ models.py
-
-File: `/todo/models.py`
 
 ```python
+# ╔════════════════╗
+# ║ todo/models.py ║
+# ╚════════════════╝
 from django.db import models
 
 
@@ -2868,13 +2858,10 @@ class Todo(models.Model):
 
     class Meta:
         db_table = 'todos'  # 'نام دلحواه برای اسم جدول دردیتابیس' # default: "AppName_ModelName"
-```
 
-##### Ⓜ️ serializer.py
-
-File: `/todo/serializers.py
-
-```python
+# ╔═════════════════════╗
+# ║ todo/serializers.py ║
+# ╚═════════════════════╝
 from rest_framework import serializers
 from .models import Todo
 
@@ -2884,13 +2871,10 @@ class TodoSerializer(serializers.ModelSerializer):
         model = Todo
         # fields = ['id', 'title', 'content']
         fields = '__all__'
-````
 
-##### Ⓜ️ view.py
-
-File: `/todo/views.py`
-
-```python
+# ╔═══════════════╗
+# ║ todo/views.py ║
+# ╚═══════════════╝
 from django.shortcuts import render
 from rest_framework.request import Request
 from rest_framework.response import Response

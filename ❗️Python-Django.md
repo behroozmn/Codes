@@ -73,9 +73,10 @@ File: `welcome.html`
 </html>
 ```
 
-File: `views.py`
-
 ```python
+# ╔══════════╗
+# ║ views.py ║
+# ╚══════════╝
 from django.http import HttpResponse
 from django.template import loader
 
@@ -89,11 +90,10 @@ def welcome_view(request):
     }
     html = template.render(context, request)  # ۳. پر کردن تمپلیت با داده‌ها (render کردن)
     return HttpResponse(html)  # ۴. ارسال به مرورگر
-```
 
-File: `url.py`
-
-```python
+# ╔═════════╗
+# ║ urls.py ║
+# ╚═════════╝
 from django.urls import path
 from .views import welcome_view
 
@@ -136,9 +136,11 @@ File: `welcome.html`
 </html>
 ```
 
-File: `views.py`
 
 ```python
+# ╔══════════╗
+# ║ views.py ║
+# ╚══════════╝
 from django.shortcuts import render
 
 
@@ -149,11 +151,10 @@ def welcome_view(request):
         'activities': ['دویدن', 'شنا', 'گیتار']
     }
     return render(request, 'welcome.html', context)
-```
 
-File: `url.py`
-
-```python
+# ╔═════════╗
+# ║ urls.py ║
+# ╚═════════╝
 from django.urls import path
 from .views import welcome_view
 
@@ -832,9 +833,10 @@ myproject/
             └── profile.html
 ```
 
-File: `myproject/settings.py`
-
 ```python
+# ╔═══════════════════════╗
+# ║ myproject/settings.py ║  ←  آدرس  `LOGIN_URL` و `LOGIN_REDIRECT_URL` در سطح ماژول هستند(پس حتماً باید از reverse_lazy استفاده کنیم.)
+# ╚═══════════════════════╝
 # ... سایر تنظیمات
 
 INSTALLED_APPS = [
@@ -872,55 +874,11 @@ TEMPLATES = [
 
 # برای سادگی — اجازه لاگین با کاربر admin
 AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
-```
 
-File: `myproject/settings.py`
+# ╔═══════════════════╗
+# ║ myproject/urls.py ║ ← اصلی
+# ╚═══════════════════╝
 
-```python
-# ... سایر تنظیمات
-
-INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'users',  # ✅ اپلیکیشن ما
-]
-
-# ⚠️ اینجا از reverse_lazy استفاده می‌کنیم چون هنوز URLها بارگذاری نشده‌اند!
-from django.urls import reverse_lazy
-
-LOGIN_URL = reverse_lazy('users:login')  # ✅ reverse_lazy — امن
-LOGIN_REDIRECT_URL = reverse_lazy('users:profile', kwargs={'pk': 1})  # برای مثال pk=1
-
-# تنظیمات template
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
-]
-
-# برای سادگی — اجازه لاگین با کاربر admin
-AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
-```
-
-باتوجه به فایل `Setting.py` آدرس  `LOGIN_URL` و `LOGIN_REDIRECT_URL` در سطح ماژول هستند(پس حتماً باید از reverse_lazy استفاده کنیم.)
-
-File: `myproject/urls.py`
-
-```python
 from django.contrib import admin
 from django.urls import path, include
 
@@ -928,11 +886,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('users.urls', namespace='users')),  # ✅ نیم‌اسپیس برای جلوگیری از تداخل
 ]
-```
 
-File: `users/urls.py`
-
-```python
+# ╔═══════════════╗
+# ║ users/urls.py ║ ← اپلیکیشن
+# ╚═══════════════╝
 from django.urls import path
 from . import views
 
@@ -942,11 +899,10 @@ urlpatterns = [
     path('login/', views.LoginView.as_view(), name='login'),
     path('profile/<int:pk>/', views.ProfileView.as_view(), name='profile'),
 ]
-```
 
-File: `users/views.py`
-
-```python
+# ╔════════════════╗
+# ║ users/views.py ║
+# ╚════════════════╝
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -3153,21 +3109,21 @@ File: `templates/403.html` صفحه خطا (اگر این فایل را نساز
 
 مثال۱: API برای نمایش پیام سلام و پذیرش نام کاربر
 
-File: `models.py`
 
 ```python
-# هیچ مدلی نداریم
+# ╔════════════════════╗
+# ║ products/models.py ║      ← هیچ مدلی نداریم
+# ╚════════════════════╝
 # چون API ما داده‌ای در دیتابیس ذخیره نمی‌کند
 # فقط یک پاسخ ساده JSON برمی‌گرداند
-```
 
-File: `serializers.py` نداریم (نیازی به سریالایزر نیست)
+# ╔═════════════════════════╗
+# ║ products/serializers.py ║     ← نداریم و نیاز نیست
+# ╚═════════════════════════╝
 
-File: `views.py`
-
-```python
-# products/views.py — مثال با APIView
-
+# ╔════════════════════╗
+# ║ products/views.pyy ║     ← example with APIView
+# ╚════════════════════╝
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -3181,13 +3137,10 @@ class GreetingAPIView(APIView):
         # get name from request body 
         name = request.data.get('name', 'کاربر ناشناس')
         return Response({"message": f"سلام {name}! خوشحالم که اینجایی."}, status=status.HTTP_200_OK)  # Customize Response 
-```
 
-File: `urls.py`
-
-```python
-# products/urls.py
-
+# ╔═══════════════╗
+# ║ products/urls.py ║ ← اپلیکیشن
+# ╚═══════════════╝
 from django.urls import path
 from .views import GreetingAPIView
 
@@ -3197,9 +3150,10 @@ urlpatterns = [
 ]
 ```
 
-تست و استفاده از برنامه
-
 ```
+# ╔══════╗
+# ║ TEST ║  ←  ✅️ Success
+# ╚══════╝
 GET http://127.0.0.1:8000/greeting/ ---------------------------> Response:{ "message": "سلام! به API ما خوش آمدید." }
 POST http://127.0.0.1:8000/greeting/ ---> { "name": "علی" } ---> Response: { "message": "سلام علی! خوشحالم که اینجایی." }
 ```
@@ -3220,26 +3174,22 @@ POST http://127.0.0.1:8000/greeting/ ---> { "name": "علی" } ---> Response: { 
   مثال۱: مدیریت "تسک‌های موقت" در حافظه (بدون دیتابیس) - پس در این مثال `models.py` نداریم (در حافظه کار می‌کنیم)
 * `ViewSet` و `ModelViewSet` در نهایت به `APIView` تبدیل می‌شوند(وقتی `Router` آن‌ها را به URL متصل می‌کند).
 
-File: `serializers.py`
+
 
 ```python
-# products/serializers.py
-
+# ╔═════════════════════════╗
+# ║ products/serializers.py ║
+# ╚═════════════════════════╝
 from rest_framework import serializers
 
+class TaskSerializer(serializers.Serializer): # only for show and validate
+    id = serializers.IntegerField(read_only=True)
+    title = serializers.CharField(max_length=200)
+    done = serializers.BooleanField(default=False)
 
-# یک سریالایزر ساده برای تسک — فقط برای نمایش/اعتبارسنجی
-class TaskSerializer(serializers.Serializer):
-    id = serializers.IntegerField(read_only=True)  # TODO: read_only=True در سریالایزر چیست
-    title = serializers.CharField(max_length=200)  # TODO: max_length=200 در سریالایزر چیست
-    done = serializers.BooleanField(default=False)  # TODO: default=False در سریالایزر چیست
-```
-
-File: `views.py`
-
-```python
-# products/views.py — مثال با ViewSet
-
+# ╔═══════════════════╗
+# ║ products/views.py ║      ← with ViewSet
+# ╚═══════════════════╝
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import status
@@ -3251,11 +3201,10 @@ TASKS = [  # Temporary Tasks list(inMemory)
 ]
 next_id = 3
 
-
 class TaskViewSet(ViewSet):  # simple ViewSet for management tasks(without model) and manually implemet actions: list, create, retrieve, update, destroy
 
     def list(self, request):  # list all tasks
-        serializer = TaskSerializer(TASKS, many=True)  # TODO: many=True در سریالایزر چیست
+        serializer = TaskSerializer(TASKS, many=True)
         return Response(serializer.data)
 
     def create(self, request):  # create new task
@@ -3295,13 +3244,10 @@ class TaskViewSet(ViewSet):  # simple ViewSet for management tasks(without model
             TASKS.pop(task_index)
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response({"error": "Task not found"}, status=status.HTTP_404_NOT_FOUND)
-```
 
-File: `urls.py`
-
-```python
-# products/urls.py
-
+# ╔══════════════════╗
+# ║ products/urls.py ║ ← اپلیکیشن
+# ╚══════════════════╝
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import TaskViewSet
@@ -3344,10 +3290,10 @@ urlpatterns = [
 
 مثال۱: مدیریت کامل کتاب‌ها با دیتابیس
 
-File: `models.py`
-
 ```python
-# products/models.py
+# ╔════════════════════╗
+# ║ products/models.py ║
+# ╚════════════════════╝
 
 from django.db import models
 
@@ -3367,21 +3313,19 @@ class Book(models.Model):
         verbose_name = "کتاب"
         verbose_name_plural = "کتاب‌ها"
         ordering = ['-published_date']
-```
 
-```shell
-python manage.py makemigrations
-python manage.py migrate
-```
+# ╔═══════╗
+# ║ SHELL ║
+# ╚═══════╝
+# python manage.py makemigrations
+# python manage.py migrate
 
-File: `serializers.py`
 
-```python
-# products/serializers.py
-
+# ╔═════════════════════════╗
+# ║ products/serializers.py ║
+# ╚═════════════════════════╝
 from rest_framework import serializers
 from .models import Book
-
 
 class BookSerializer(serializers.ModelSerializer):
     """
@@ -3391,13 +3335,11 @@ class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
         fields = '__all__'  # شامل id, title, author, published_date
-```
 
-File: `views.py`
 
-```python
-# products/views.py — مثال با ModelViewSet
-
+# ╔═══════════════════╗
+# ║ products/views.py ║       ← with ModelViewSet
+# ╚═══════════════════╝
 from rest_framework.viewsets import ModelViewSet
 from .models import Book
 from .serializers import BookSerializer
@@ -3417,21 +3359,17 @@ class BookViewSet(ModelViewSet):
     """
     queryset = Book.objects.all()  # داده‌هایی که API برمی‌گرداند
     serializer_class = BookSerializer  # نحوه تبدیل داده‌ها به JSON
-```
 
-File: `urls.py`
-
-```python
-# products/urls.py
-
+# ╔══════════════════╗
+# ║ products/urls.py ║ ← اپلیکیشن
+# ╚══════════════════╝
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import BookViewSet
 
-# ✅ ایجاد Router
-router = DefaultRouter()
+router = DefaultRouter() # ✅ ایجاد Router
 
-# ✅ ثبت ModelViewSet — نیازی به basename نیست (چون به مدل متصل است)
+# ثبت ModelViewSet — نیازی به basename نیست (چون به مدل متصل است)
 router.register(r'books', BookViewSet)
 
 urlpatterns = [
@@ -3439,17 +3377,6 @@ urlpatterns = [
 ]
 ```
 
-File: ``
-
-```python
-
-```
-
-File: ``
-
-```python
-
-```
 
 # 8. 🅰️DRF-Serializer
 
@@ -3752,7 +3679,7 @@ curl -X POST http://127.0.0.1:8000/api/register/ \
     * برای Serialize کردن QuerySet (مثلاً `Task.objects.all()`)
     * برای Deserialize کردن لیستی از داده‌ها (مثلاً ایجاد دسته‌ای تسک)
     * DRF به جای `Serializer` از `ListSerializer` استفاده می‌کند
-      * `ListSerializer`: یک Wrapper است برای حلقه‌زدن روی لیست و اعمال سریالایزر روی هر آیتم.
+        * `ListSerializer`: یک Wrapper است برای حلقه‌زدن روی لیست و اعمال سریالایزر روی هر آیتم.
     * نوع داده ورودی و خروجی باید با many همخوانی داشته باشد. در غیر این صورت خطای واضحی دریافت می‌کنید
 
 | ویژگی                   | `many=False` (پیش‌فرض)             | `many=True`                            |
@@ -4232,7 +4159,9 @@ class UserSerializer(serializers.ModelSerializer):
 * این قابلیت برای ساخت Serializerهای هوشمند و شرطی بسیار مفید است.
 
 ```python
-# views.py ---> send Context to Serializer
+# ╔══════════╗
+# ║ views.py ║      ← send Context to Serializer
+# ╚══════════╝
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -4244,9 +4173,10 @@ class UserView(APIView):
         return Response(serializer.data)
 
 
-# serializers.py
+# ╔════════════════╗
+# ║ serializers.py ║
+# ╚════════════════╝
 from rest_framework import serializers
-
 
 class UserSerializer(serializers.ModelSerializer):
     welcome_message = serializers.SerializerMethodField()
@@ -4260,7 +4190,9 @@ class UserSerializer(serializers.ModelSerializer):
         custom_msg = self.context.get('custom_message', 'پیامی وجود ندارد')  # 👈️  دریافت اطلاعات
         return custom_msg
 
-# Output:
+# ╔════════╗
+# ║ Output ║
+# ╚════════╝
 # ---> {
 # --->   "id": 1,
 # --->   "name": "علی",
@@ -4296,7 +4228,9 @@ Nested Serializer (سریالایزر تو در تو) به معنای استفا
 مثال مقدماتی: رابطه `ForeignKey` با هدف این که هنگام نمایش یک کتاب، اطلاعات نویسنده نیز در خروجی JSON نمایش داده شود و نه فقط نه فقط `author_id` که باید برای هر مدل یک serializer تعریف نماییم
 
 ```python
-# models.py
+# ╔═══════════╗
+# ║ models.py ║
+# ╚═══════════╝
 from django.db import models
 
 
@@ -4317,7 +4251,9 @@ class Book(models.Model):
         return self.title
 
 
-# serializers.py
+# ╔════════════════╗
+# ║ serializers.py ║
+# ╚════════════════╝
 from rest_framework import serializers
 from .models import Author, Book
 
@@ -4337,7 +4273,9 @@ class BookSerializer(serializers.ModelSerializer):
 ```
 
 ```
-# Output: به‌جای نمایش author: 3، کل اطلاعات نویسنده را درون یک شیء تو در تو نمایش می‌دهد
+# ╔════════╗
+# ║ Output ║ ← به‌جای نمایش author: 3، کل اطلاعات نویسنده را درون یک شیء تو در تو نمایش می‌دهد
+# ╚════════╝
 { 
   "id": 1,
   "title": "یادگیری عمیق",
@@ -4350,9 +4288,188 @@ class BookSerializer(serializers.ModelSerializer):
 }
 ```
 
-# 9. 🅰️Files
+# 9. 🅰️DRF-Router
 
-## 9.1. 📁️Setting.py
+ک ابزار هوشمند است که به جای نوشتن URLهای دستی برای `ViewSet` ها، به صورت خودکار «یو آر اِل»های RESTful را بر اساس Action های استاندارد (`list`, `create`, `retrieve`, `update`, `destroy`) تولید می‌کند.
+
+ساختار Router و نحوه کار آن
+
+```python
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+router.register(r'books', BookViewSet)  # خودکار URLهای CRUD را می‌سازد
+```
+
+| Action     | URL            | HTTP Method | نام URL (name=) |
+|------------|----------------|-------------|-----------------|
+| `list`     | `/books/`      | GET         | `book-list`     |
+| `create`   | `/books/`      | POST        | `book-list`     |
+| `retrieve` | `/books/{pk}/` | GET         | `book-detail`   |
+| `update`   | `/books/{pk}/` | PUT         | `book-detail`   |
+| `destroy`  | `/books/{pk}/` | DELETE      | `book-detail`   |
+
+* SimpleRouter
+    * پایه‌ای ترین روتر
+    * فقط «یو آر اِل»های اصلی را می‌سازد
+    * بدون صفحه `APIRoot`
+* DefaultRouter(رایج‌ترین)
+    * `SimpleRouter` + `APIRoot`
+    * صفحه اصلی API که لیست تمام Endpointها را نشان می‌دهد
+* Custom Router: وقتی می‌خواهید رفتار روتر را تغییر دهید
+
+نکات
+
+* نکته: اگر `queryset` در `ViewSet` در داخل فایل `view.py` تعریف نشده باشد آنگاه حتما باید `basename` در فایل `url.py` تعریف شود
+
+مثال 1️⃣️: مدیریت محصولات (Products)
+
+```
+myproject/
+├── manage.py
+├── myproject/
+│   ├── settings.py
+│   └── urls.py
+└── products/
+    ├── __init__.py
+    ├── models.py
+    ├── serializers.py
+    ├── views.py
+    └── urls.py
+```
+
+```python
+# ╔════════════════════╗
+# ║ products/models.py ║
+# ╚════════════════════╝
+from django.db import models
+
+
+class Product(models.Model):
+    name = models.CharField(max_length=200, verbose_name="نام محصول")
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="قیمت")
+    description = models.TextField(blank=True, verbose_name="توضیحات")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "محصول"
+        verbose_name_plural = "محصولات"
+
+
+# ╔═════════════════════════╗
+# ║ products/serializers.py ║
+# ╚═════════════════════════╝
+from rest_framework import serializers
+from .models import Product
+
+
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = '__all__'  # ['id', 'name', 'price', 'description', 'created_at']
+
+
+# ╔═══════════════════╗
+# ║ products/views.py ║
+# ╚═══════════════════╝
+from rest_framework.viewsets import ModelViewSet
+from .models import Product
+from .serializers import ProductSerializer
+
+
+class ProductViewSet(ModelViewSet):  # A simple ViewSet for viewing and editing products.
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+
+# ╔═══════════════════╗
+# ║ myproject/urls.py ║ ← اصلی
+# ╚═══════════════════╝
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('api/', include('products.urls')),
+]
+
+# ╔══════════════════╗
+# ║ products/urls.py ║ ← اپلیکیشن
+# ╚══════════════════╝
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter  # ✅ DefaultRouter for API Root
+from .views import ProductViewSet
+
+router = DefaultRouter()  # Create a router and register our viewset with it.
+
+# 'basename' is optional ---> if queryset is defined in ViewSet
+# 'basename' is mandatory --> if [queryset is NOT defined in ViewSet] or [set FullCustomize url]
+router.register(r'products', ProductViewSet, basename='product')
+
+urlpatterns = [  # The API URLs are now determined automatically by the router.
+    path('', include(router.urls)),  # Includes all CRUD URLs automatically
+]
+```
+
+```shell
+python manage.py makemigrations
+python manage.py migrate
+python manage.py createsuperuser # اختیاری — برای تست در Admin
+python manage.py runserver
+```
+
+* `GET /api/` -----------------> API Root page (فقط در DefaultRouter)
+* `GET /api/products/` --------> لیست محصولات
+* `POST /api/products/` -------> ایجاد محصول جدید
+* `GET /api/products/1/` ------> جزئیات محصول با id=1
+* `PUT /api/products/1/` ------> ویرایش کامل محصول
+* `PATCH /api/products/1/` ----> ویرایش جزئی
+* `DELETE /api/products/1/` ---> حذف محصول
+
+## 9.1. 🅱️Custom Actions
+
+اگر بخواهیم Action های دلخواه خودمان را به کد اضافه نماییم
+
+در ادامه مثال۱ اگر بخواهیم اکشن `expensive` و `discount` دلخواه خودمان را اضافه کنیم باید فایل `products/views.py` را به شکل زیر تغییر بدهیم. آنگاه دو آدرس جدید زیر را خواهیم داشت که Router به صورت خودکار این URLها را اضافه می‌کند!
+
+* `GET /api/products/expensive/` → لیست محصولات گران‌قیمت
+* `POST /api/products/1/discount/` → اعمال تخفیف روی محصول 1
+
+```shell
+# products/views.py — افزودن action سفارشی
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
+class ProductViewSet(ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+    @action(detail=False, methods=['get'])
+    def expensive(self, request):
+        """
+        Return products with price > 1000
+        """
+        expensive_products = self.queryset.filter(price__gt=1000)
+        serializer = self.get_serializer(expensive_products, many=True)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
+    def discount(self, request, pk=None):
+        """
+        Apply 10% discount to a product
+        """
+        product = self.get_object()
+        product.price = product.price * 0.9
+        product.save()
+        return Response({'status': 'discount applied', 'new_price': product.price})
+```
+
+# 10. 🅰️Files
+
+## 10.1. 📁️Setting.py
 
 * `INSTALL_APPS`
     * `INSTALL_APPS=[... , 'rest_framework' ,...]`
@@ -4403,7 +4520,7 @@ USE_I18N = True
 USE_TZ = True
 ```
 
-## 9.2. 🅱️Static
+## 10.2. 🅱️Static
 
 * جنگو از الگوی "اپ‌محور" استفاده می‌کند. بنابراین، بهترین روش این است که برای هر اپ، یک پوشه به نام static بسازید
     * نکته مهم: حتماً یک زیرپوشه با نام اپ (مثل myapp/) داخل static/ بسازید. این از تداخل نام فایل‌ها در اپ‌های مختلف جلوگیری می‌کند
