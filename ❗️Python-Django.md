@@ -3492,6 +3492,73 @@ class UserListView(generics.ListAPIView):
 serializer = MySerializer(data, context={'request': request})
 ```
 
+## 🅱️NestedSerializer
+
+Nested Serializer (سریالایزر تو در تو) به معنای استفاده از یک Serializer درون Serializer دیگر است. این مفهوم زمانی کاربرد دارد که مدل‌های شما با یکدیگر رابطه‌ی دارند. مانند
+
+* یک کاربر (User) چندین پست (Post) دارد(رابطه ForeignKey)
+* یک پست (Post) چندین تگ (Tag) دارد(رابطه ManyToMany)
+* یک پروفایل (Profile) دقیقاً به یک کاربر (User) متعلق است(رابطه OneToOne)
+
+در این مواقع، می‌توانید با استفاده از Nested Serializer، داده‌های مرتبط را به‌صورت تو در تو در خروجی JSON نمایش دهید یا در ورودی پذیرش کنید.
+
+مثال مقدماتی: رابطه `ForeignKey` با هدف این که هنگام نمایش یک کتاب، اطلاعات نویسنده نیز در خروجی JSON نمایش داده شود و نه فقط نه فقط `author_id` که باید برای هر مدل یک serializer تعریف نماییم
+
+```python
+# models.py
+from django.db import models
+
+
+class Author(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+
+    def __str__(self):
+        return self.name
+
+
+class Book(models.Model):
+    title = models.CharField(max_length=200)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='books')
+    published_year = models.IntegerField()
+
+    def __str__(self):
+        return self.title
+
+
+# serializers.py
+from rest_framework import serializers
+from .models import Author, Book
+
+
+class AuthorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Author
+        fields = ['id', 'name', 'email']
+
+
+class BookSerializer(serializers.ModelSerializer):
+    author = AuthorSerializer()  # ← Nested Serializer
+
+    class Meta:
+        model = Book
+        fields = ['id', 'title', 'author', 'published_year']
+```
+
+```
+# Output: به‌جای نمایش author: 3، کل اطلاعات نویسنده را درون یک شیء تو در تو نمایش می‌دهد
+{ 
+  "id": 1,
+  "title": "یادگیری عمیق",
+  "author": {
+    "id": 3,
+    "name": "سید مجتبی حسینی",
+    "email": "mj@example.com"
+  },
+  "published_year": 2023
+}
+```
+
 # 8. 🅰️Files
 
 ## 8.1. 📁️Setting.py
