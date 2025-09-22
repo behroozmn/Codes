@@ -53,9 +53,10 @@ myproject/
 └── settings.py
 ```
 
-File: `welcome.html`
-
 ```html
+<!-- ╔══════════════╗ -->
+<!-- ║ welcome.html ║ -->
+<!-- ╚══════════════╝ -->
 <!DOCTYPE html>
 <html>
 <head><title>خوش آمدید</title></head>
@@ -116,9 +117,10 @@ myproject/
 └── settings.py
 ```
 
-File: `welcome.html`
-
 ```html
+<!-- ╔══════════════╗ -->
+<!-- ║ welcome.html ║ -->
+<!-- ╚══════════════╝ -->
 <!DOCTYPE html>
 <html>
 <head><title>خوش آمدید</title></head>
@@ -239,9 +241,11 @@ def func(reqeust, day):
 * یک تمپلیت پایه (base) داشته باشید، و تمام صفحات دیگر از آن وراثت ببرند(فقط بخش‌های خاص خود را جایگزین کنند)
 * کاهش تکرار کد
 
-File: `templates/basePage.html`
 
 ```html
+<!-- ╔═════════════════════════╗ -->
+<!-- ║ templates/basePage.html ║ -->
+<!-- ╚═════════════════════════╝ -->
 <!DOCTYPE html>
 <html lang="fa">
 <head>
@@ -303,9 +307,10 @@ File: `templates/basePage.html`
 * هرآنچه در محتوی `block` قرارمیدهید جایگزین می‌شود
 * از `extends` فقط برای ساختار اصلی استفاده کنید,نه برای بخش‌های کوچک!
 
-File: `templates/products/product_detail.html`
-
 ```html
+<!-- ╔════════════════════════════════════════╗ -->
+<!-- ║ templates/products/product_detail.html ║ -->
+<!-- ╚════════════════════════════════════════╝ -->
 {% extends 'basePage.html' %} <!-- 👈️  -->
 
 {% block title %}جزئیات محصول — {{ product.name }}{% endblock %} <!-- 👈️  -->
@@ -341,9 +346,11 @@ File: `templates/products/product_detail.html`
 * `{% block extra_css %}`:اختیاری(فقط وقتی نیاز دارید، پر می‌شود)
 * `{% block extra_js %}`:اختیاری برای اسکریپت‌های صفحه‌محور(فقط وقتی نیاز دارید، پر می‌شود)
 
-File: `view.py`
 
 ```python
+# ╔══════════╗
+# ║ views.py ║
+# ╚══════════╝
 from django.shortcuts import render
 
 
@@ -355,9 +362,10 @@ def index(request):
 
 اگر از کلمه کلیدی  `block.super` استفاده نمایید محتوی والد حفظ خواهد شد و تنها محتوی به بلاک «صفحه‌لایه‌پایین‌تر» افزوده خواهد شد
 
-File: `templates/base.html`
-
 ```html
+<!-- ╔═════════════════════╗ -->
+<!-- ║ templates/base.html ║ -->
+<!-- ╚═════════════════════╝ -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -373,11 +381,10 @@ File: `templates/base.html`
 {% endblock %}
 </body>
 </html>
-```
 
-File: `templates/admin/base_admin.html`
-
-```html
+<!-- ╔═════════════════════════════════╗ -->
+<!-- ║ templates/admin/base_admin.html ║ -->
+<!-- ╚═════════════════════════════════╝ -->
 {% extends "base.html" %}
 
 {% block title %}پنل مدیریت — {% block admin_title %}{% endblock %}{% endblock %}
@@ -397,11 +404,10 @@ File: `templates/admin/base_admin.html`
 {{ block.super }}
 <script src="{% static 'js/admin.js' %}"></script>
 {% endblock %}
-```
 
-File: `templates/admin/dashboard.html`
-
-```html
+<!-- ╔════════════════════════════════╗ -->
+<!-- ║ templates/admin/dashboard.html ║ -->
+<!-- ╚════════════════════════════════╝ -->
 {% extends "admin/base_admin.html" %}
 
 {% block admin_title %}داشبورد{% endblock %}
@@ -423,10 +429,10 @@ File: `templates/admin/dashboard.html`
 * از `include` برای همه چیزهای تکراری استفاده کنید,فوتر، ناوبری، فرم‌ها، کارت‌ها، کامنت‌ها
 * Standard Name: `*_form.html` or `*_card.html` or `*_list.html` or `*_modal.html`
 
-File: `templates/includes/login_form.html`
-
 ```html
-
+<!-- ╔════════════════════════════════════╗ -->
+<!-- ║ templates/includes/login_form.html ║ -->
+<!-- ╚════════════════════════════════════╝ -->
 <form method="post" action="{% url 'login' %}">
     {% csrf_token %}
     <div>
@@ -442,22 +448,20 @@ File: `templates/includes/login_form.html`
     <p style="color: red;">نام کاربری یا رمز عبور اشتباه است.</p>
     {% endif %}
 </form>
-```
 
-File: `templates/registration/login.html` صفحه ورود
-
-```html
+<!-- ╔═══════════════════════════════════╗ -->
+<!-- ║ templates/registration/login.html ║ -->
+<!-- ╚═══════════════════════════════════╝ -->
 {% extends "basePage.html" %}
 
 {% block content %}
 <h1>ورود به سایت</h1>
 {% include "includes/login_form.html" %}
 {% endblock %}
-```
 
-File: `templates/home.html` صفحه اصلی(فرم ورود در فوتر)
-
-```html
+<!-- ╔═════════════════════╗ -->
+<!-- ║ templates/home.html ║ صفحه اصلی(فرم ورود در فوتر) -->
+<!-- ╚═════════════════════╝ -->
 {% extends "basePage.html" %}
 
 {% block content %}
@@ -478,9 +482,10 @@ File: `templates/home.html` صفحه اصلی(فرم ورود در فوتر)
 * قابلیت انتقال دیتا از طریق کلمه کلیدی `with` در سازوکار `include` وجود دارد
 * همیشه از `with` استفاده کنید(حتی اگر متغیر موجود است تا از عدم شفافیت جلوگیری کنید)
 
-File: `templates/products/list.html` (لیست محصولات)
-
 ```html
+<!-- ╔══════════════════════════════╗ -->
+<!-- ║ templates/products/list.html ║ -->
+<!-- ╚══════════════════════════════╝ -->
 {% extends "basePage.html" %}
 
 {% block content %}
@@ -491,12 +496,10 @@ File: `templates/products/list.html` (لیست محصولات)
     {% endfor %}
 </div>
 {% endblock %}
-```
 
-File: `templates/includes/product_card.html`
-
-```html
-
+<!-- ╔══════════════════════════════════════╗ -->
+<!-- ║ templates/includes/product_card.html ║ -->
+<!-- ╚══════════════════════════════════════╝ -->
 <div class="product-card">
     <img src="{{ product.image.url }}" alt="{{ product.name }}">
     <h3>{{ product.name }}</h3>
@@ -522,20 +525,20 @@ File: `templates/includes/product_card.html`
 * کاربرد پاکیزگی: مطمئن شوید که include فقط چیزی که لازم دارد را می‌بیند.
 * کاربرد تست‌پذیری: می‌توانید include را به صورت مستقل تست کنید.
 
-File: `templates/includes/comment_list.html`
 
 ```html
-
+<!-- ╔══════════════════════════════════════╗ -->
+<!-- ║ templates/includes/comment_list.html ║ -->
+<!-- ╚══════════════════════════════════════╝ -->
 <ul class="comment-list">
     {% for comment in comments %}
     <li>{{ comment.text }} — {{ comment.author }}</li>
     {% endfor %}
 </ul>
-```
 
-File: `templates/post/detail.html`
-
-```html
+<!-- ╔════════════════════════════╗ -->
+<!-- ║ templates/post/detail.html ║ -->
+<!-- ╚════════════════════════════╝ -->
 {% extends "basePage.html" %}
 
 {% block content %}
@@ -945,25 +948,49 @@ class ProfileView(LoginRequiredMixin, View):
             'username': request.user.username if request.user.is_authenticated else 'Anonymous'
         }
         return render(request, 'users/profile.html', context)
-```
 
-* در کلاس `ProfileView` متغیر `login_url` یک ویژگی کلاس است(پس از reverse_lazy استفاده می‌کنیم)
-* در کلاس `LoginView` چون در داخل متد `post` هستیم پس از reverse استفاده می‌کنیم.
+# ╔═════════════════╗
+# ║ users/models.py ║ ← هیچ چیزی نمی‌نویسیم از جدول یوزر پیش‌فرض جنگو استفاده می‌کنیم
+# ╚═════════════════╝
 
-File: `users/forms.py`
-
-```python
+# ╔════════════════╗
+# ║ users/forms.py ║
+# ╚════════════════╝
 from django import forms
 
 
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=150, widget=forms.TextInput(attrs={'placeholder': 'Username'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password'}))
+
+# ╔════════════════╗
+# ║ users/admin.py ║
+# ╚════════════════╝
+
+from django.contrib import admin
+from django.contrib.auth.models import User
+from django.urls import reverse_lazy
+
+
+@admin.register(User)
+class UserAdmin(admin.ModelAdmin):
+    list_display = ['username', 'email', 'is_staff']
+
+    # ✅ مثال پیشرفته: استفاده از reverse_lazy در Admin
+    def view_on_site(self, obj):
+        # این متد لینک "View on site" را در ادمین تعریف می‌کند
+        # چون در سطح کلاس اجرا می‌شود، باید از reverse_lazy استفاده کنیم
+        return reverse_lazy('users:profile', kwargs={'pk': obj.pk})
 ```
 
-File: `users/templates/users/login.html`
+* در کلاس `ProfileView` متغیر `login_url` یک ویژگی کلاس است(پس از reverse_lazy استفاده می‌کنیم)
+* در کلاس `LoginView` چون در داخل متد `post` هستیم پس از reverse استفاده می‌کنیم.
+* حتی در `view_on_site` که یک متد است، بهتر است از `reverse_lazy` استفاده کنیم چون ممکن است موقع بارگذاری ادمین، «یو آر اِل»ها آماده نباشند
 
 ```html
+<!-- ╔══════════════════════════════════╗ -->
+<!-- ║ users/templates/users/login.html ║ -->
+<!-- ╚══════════════════════════════════╝ -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -982,56 +1009,21 @@ File: `users/templates/users/login.html`
 <p>Don't have an account? <a href="{% url 'users:profile' pk=999 %}">Sign up here</a> (example link)</p>
 </body>
 </html>
+
+<!-- ╔════════════════════════════════════╗ -->
+<!-- ║ users/templates/users/profile.html ║ -->
+<!-- ╚════════════════════════════════════╝ -->
+<!DOCTYPE html>
+<html>
+<head>
+<title>Profile</title>
+</head>
+<body>
+<h2> User Profile </h2>
+<p> User ID: {{user_id}}</p>
+<p> Username: {{username}}</p>
+<a href = "{% url 'users:login' %}" > Logout(dummylink) </a></body></html>
 ```
-
-File: `users/templates/users/profile.html`
-
-```python
-< !DOCTYPE
-html >
-< html >
-< head >
-< title > Profile < / title >
-< / head >
-< body >
-< h2 > User
-Profile < / h2 >
-< p > User
-ID: {{user_id}} < / p >
-< p > Username: {{username}} < / p >
-< a
-href = "{% url 'users:login' %}" > Logout(dummy
-link) < / a >
-< / body >
-< / html >
-```
-
-File: `users/models.py`  نیازی به تغییر ندارد(از User پیش‌فرض استفاده می‌کنیم)
-
-```
-# هیچ چیزی نمی‌نویسیم — از User پیش‌فرض Django استفاده می‌کنیم
-```
-
-File: `users/admin.py`
-
-```python
-from django.contrib import admin
-from django.contrib.auth.models import User
-from django.urls import reverse_lazy
-
-
-@admin.register(User)
-class UserAdmin(admin.ModelAdmin):
-    list_display = ['username', 'email', 'is_staff']
-
-    # ✅ مثال پیشرفته: استفاده از reverse_lazy در Admin
-    def view_on_site(self, obj):
-        # این متد لینک "View on site" را در ادمین تعریف می‌کند
-        # چون در سطح کلاس اجرا می‌شود، باید از reverse_lazy استفاده کنیم
-        return reverse_lazy('users:profile', kwargs={'pk': obj.pk})
-```
-
-حتی در `view_on_site` که یک متد است، بهتر است از `reverse_lazy` استفاده کنیم چون ممکن است موقع بارگذاری ادمین، «یو آر اِل»ها آماده نباشند
 
 برای راه‌اندازی:
 
@@ -1318,16 +1310,11 @@ myproject/
             └── article_form.html
 ```
 
-File: `blog/models.py`
-
 ```python
+# ╔════════════════╗
+# ║ blog/models.py ║
+# ╚════════════════╝
 
-```
-
-File: `blog/admin.py` اختیاری و برای نمایش در ادمین
-
-```python
-# blog/models.py
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
@@ -1355,56 +1342,24 @@ class Tag(models.Model):
 
 
 class Article(models.Model):
-    title = models.CharField(
-        "عنوان",
-        max_length=200,
-        help_text="حداکثر 200 کاراکتر",
-        db_index=True,
-    )
-    slug = models.SlugField(
-        "اسلاگ",
-        max_length=220,
-        unique=True,
-        allow_unicode=True,
-        blank=True,
-    )
+    title = models.CharField("عنوان", max_length=200, help_text="حداکثر 200 کاراکتر", db_index=True, )
+    slug = models.SlugField("اسلاگ", max_length=220, unique=True, allow_unicode=True, blank=True, )
     content = models.TextField("محتوا")
-    author = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        verbose_name="نویسنده",
-        related_name="articles",
-    )
-    tags = models.ManyToManyField(
-        Tag,
-        verbose_name="تگ‌ها",
-        blank=True,
-        related_name="articles",
-    )
+    author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="نویسنده", related_name="articles", )
+    tags = models.ManyToManyField(Tag, verbose_name="تگ‌ها", blank=True, related_name="articles", )
     STATUS_CHOICES = [
         ('draft', 'پیش‌نویس'),
         ('published', 'منتشر شده'),
         ('archived', 'بایگانی شده'),
     ]
-    status = models.CharField(
-        "وضعیت",
-        max_length=10,
-        choices=STATUS_CHOICES,
-        default='draft',
-        db_index=True,
-    )
+    status = models.CharField("وضعیت", max_length=10, choices=STATUS_CHOICES, default='draft', db_index=True, )
     is_featured = models.BooleanField("ویژه", default=False)
     created_at = models.DateTimeField("ایجاد شده در", auto_now_add=True, editable=False)
     updated_at = models.DateTimeField("آخرین بروزرسانی", auto_now=True, editable=False)
     published_at = models.DateTimeField("تاریخ انتشار", null=True, blank=True)
     views = models.PositiveIntegerField("بازدیدها", default=0)
     uuid = models.UUIDField("شناسه یکتا", default=uuid.uuid4, editable=False, unique=True)
-    cover_image = models.ImageField(
-        "تصویر شاخص",
-        upload_to='articles/covers/%Y/%m/%d/',
-        blank=True,
-        null=True,
-    )
+    cover_image = models.ImageField("تصویر شاخص", upload_to='articles/covers/%Y/%m/%d/', blank=True, null=True, )
 
     def __str__(self):
         return f"{self.title} ({self.get_status_display()})"
@@ -1455,12 +1410,12 @@ from django.dispatch import receiver
 def set_published_at(sender, instance, **kwargs):
     if instance.status == 'published' and not instance.published_at:
         instance.published_at = timezone.now()
-```
 
-File: `blog/admin.py` پنل مدیریت
 
-```python
-# blog/admin.py
+# ╔═══════════════╗
+# ║ blog/admin.py ║  ←  اختیاری و برای نمایش در ادمین(پنل مدیریت)
+# ╚═══════════════╝
+# 
 from django.contrib import admin
 from .models import Article, Tag
 
@@ -1480,12 +1435,12 @@ class ArticleAdmin(admin.ModelAdmin):
 class TagAdmin(admin.ModelAdmin):
     list_display = ['name', 'slug']
     prepopulated_fields = {'slug': ('name',)}
-```
 
-File: `blog/forms.py` فرم‌ها
 
-```python
-# blog/forms.py
+# ╔═══════════════╗
+# ║ blog/forms.py ║
+# ╚═══════════════╝
+# 
 from django import forms
 from .models import Article
 
@@ -1504,12 +1459,12 @@ class ArticleForm(forms.ModelForm):
             'title': 'حداکثر 200 کاراکتر',
             'cover_image': 'اختیاری - فرمت‌های JPG/PNG مجاز هستند.',
         }
-```
 
-File: `blog/views.py` ویوها
 
-```python
-# blog/views.py
+# ╔═══════════════╗
+# ║ blog/views.py ║
+# ╚═══════════════╝
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView
@@ -1593,12 +1548,11 @@ def tag_articles_view(request, slug):
         'articles': articles,
         'tag': tag,
     })
-```
 
-File: `blog/urls.py`
 
-```python
-# blog/urls.py
+# ╔══════════════╗
+# ║ blog/urls.py ║ ← اپلیکیشن
+# ╚══════════════╝
 from django.urls import path
 from . import views
 
@@ -1611,12 +1565,10 @@ urlpatterns = [
     path('edit/<slug:slug>/', views.article_update_view, name='article_update'),
     path('tag/<slug:slug>/', views.tag_articles_view, name='tag_articles'),
 ]
-```
 
-File: `myproject/urls.py` فایل مسیرهای اصلی پروژه
-
-```python
-# myproject/urls.py
+# ╔═══════════════════╗
+# ║ myproject/urls.py ║ ← اصلی
+# ╚═══════════════════╝
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
@@ -1630,12 +1582,50 @@ urlpatterns = [
 # برای نمایش فایل‌های مدیا در حالت توسعه
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-```
 
-File: `blog/templates/blog/base.html`  قالب پایه
+# ╔════════════╗
+# ║ Setting.py ║
+# ╚════════════╝
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'blog',  # ✅ اپ وبلاگ
+]
+
+# ...
+
+LANGUAGE_CODE = 'fa-ir'
+TIME_ZONE = 'Asia/Tehran'
+USE_I18N = True
+USE_TZ = True
+
+# مدیا
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# استاتیک
+STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# برای فارسی‌نویسی در ادمین
+from django.utils.translation import gettext_lazy as _
+
+LANGUAGES = [
+    ('fa', _('Persian')),
+    ('en', _('English')),
+]
+```
+ 
 
 ```html
-<!-- blog/templates/blog/base.html -->
+<!-- ╔═══════════════════════════════╗ -->
+<!-- ║ blog/templates/blog/base.html ║ -->
+<!-- ╚═══════════════════════════════╝ -->
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -1668,12 +1658,11 @@ File: `blog/templates/blog/base.html`  قالب پایه
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-```
 
-File: `blog/templates/blog/article_list.html`
 
-```html
-<!-- blog/templates/blog/article_list.html -->
+<!-- ╔═══════════════════════════════════════╗ -->
+<!-- ║ blog/templates/blog/article_list.html ║ -->
+<!-- ╚═══════════════════════════════════════╝ -->
 {% extends 'blog/base.html' %}
 
 {% block title %}لیست مقالات{% endblock %}
@@ -1732,12 +1721,10 @@ File: `blog/templates/blog/article_list.html`
 </nav>
 {% endif %}
 {% endblock %}
-```
 
-File: `blog/templates/blog/article_detail.html`
-
-```html
-<!-- blog/templates/blog/article_detail.html -->
+<!-- ╔═════════════════════════════════════════╗ -->
+<!-- ║ blog/templates/blog/article_detail.html ║ -->
+<!-- ╚═════════════════════════════════════════╝ -->
 {% extends 'blog/base.html' %}
 
 {% block title %}{{ article.title }}{% endblock %}
@@ -1778,11 +1765,10 @@ File: `blog/templates/blog/article_detail.html`
     {% endif %}
 </article>
 {% endblock %}
-```
 
-File: `blog/templates/blog/article_form.html`
-
-```html
+<!-- ╔═══════════════════════════════════════╗ -->
+<!-- ║ blog/templates/blog/article_form.html ║ -->
+<!-- ╚═══════════════════════════════════════╝ -->
 <!-- blog/templates/blog/article_form.html -->
 {% extends 'blog/base.html' %}
 
@@ -1839,45 +1825,6 @@ File: `blog/templates/blog/article_form.html`
     </div>
 </div>
 {% endblock %}
-```
-
-File: `myproject/settings.py`
-
-```python
-# settings.py
-
-INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'blog',  # ✅ اپ وبلاگ
-]
-
-# ...
-
-LANGUAGE_CODE = 'fa-ir'
-TIME_ZONE = 'Asia/Tehran'
-USE_I18N = True
-USE_TZ = True
-
-# مدیا
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
-
-# استاتیک
-STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-
-# برای فارسی‌نویسی در ادمین
-from django.utils.translation import gettext_lazy as _
-
-LANGUAGES = [
-    ('fa', _('Persian')),
-    ('en', _('English')),
-]
 ```
 
 دستورات اجرایی
@@ -2124,9 +2071,10 @@ path('about/', TemplateView.as_view(template_name='about.html', extra_context={'
 
 مثال۱:دراین مثال از مدل استفاده نشده است
 
-File: `View.py`
-
 ```python
+# ╔══════════╗
+# ║ views.py ║
+# ╚══════════╝
 from django.views.generic import TemplateView
 
 
@@ -2138,11 +2086,10 @@ class AboutView(TemplateView):
         context['title'] = "درباره ما"
         context['team_size'] = 15
         return context
-```
 
-File: `urls.py`
-
-```python
+# ╔═════════╗
+# ║ urls.py ║
+# ╚═════════╝
 from django.urls import path
 from . import views
 
@@ -2151,9 +2098,11 @@ urlpatterns = [
 ]
 ```
 
-File: `templates/about.html`
 
 ```html
+<!-- ╔══════════════════════╗ -->
+<!-- ║ templates/about.html ║ -->
+<!-- ╚══════════════════════╝ -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -2175,9 +2124,10 @@ File: `templates/about.html`
 * مرتب‌سازی را فراموش نکنید زیرا برای نمایش مهم است وگرنه درهم و نامرتب نمایش خواهد شد
 * متد get_queryset() در ListView, DetailView قرار وجود دارد و اگر نوشته‌نشود model.objects.all() را می‌گیرد.
 
-File: `models.py`
-
 ```python
+# ╔═══════════╗
+# ║ models.py ║
+# ╚═══════════╝
 from django.db import models
 
 
@@ -2188,11 +2138,10 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title
-```
 
-File: `views.py`
-
-```python
+# ╔══════════╗
+# ║ views.py ║
+# ╚══════════╝
 from django.views.generic import ListView
 from .models import Article
 
@@ -2203,17 +2152,17 @@ class ArticleListView(ListView):
     context_object_name = 'articles'  # نام متغیر در تمپلیت
     paginate_by = 5  # صفحه‌بندی — 5 مورد در هر صفحه
     ordering = ['-created_at']  # مرتب‌سازی بر اساس تاریخ (جدیدترین اول)
-```
 
-File: `urls.py`
-
-```python
+# ╔═════════╗
+# ║ urls.py ║
+# ╚═════════╝
 path('articles/', views.ArticleListView.as_view(), name='article_list'),
 ```
 
-File: `templates/article_list.html`
-
 ```html
+<!-- ╔═════════════════════════════╗ -->
+<!-- ║ templates/article_list.html ║ -->
+<!-- ╚═════════════════════════════╝ -->
 <!DOCTYPE html>
 <html>
 <head><title>مقالات</title></head>
@@ -2263,9 +2212,10 @@ def get_queryset(self):
 * فراموش کردن `context_object_name` که بصورت پیش‌فرض object است سبب گمراه‌کنندگی خواهد شد
 * متد get_queryset() در ListView, DetailView قرار وجود دارد و اگر نوشته‌نشود model.objects.all() را می‌گیرد.
 
-File: `models.py`
-
 ```python
+# ╔═══════════╗
+# ║ models.py ║
+# ╚═══════════╝
 from django.db import models
 
 
@@ -2276,11 +2226,10 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title
-```
 
-File: `views.py`
-
-```python
+# ╔══════════╗
+# ║ views.py ║
+# ╚══════════╝
 from django.views.generic import DetailView
 from .models import Article
 
@@ -2292,19 +2241,20 @@ class ArticleDetailView(DetailView):
     # پیش‌فرض: جستجو با pk — اگر می‌خواهید با slug:
     # slug_field = 'slug'
     # slug_url_kwarg = 'slug'
-```
 
-File: `urls.py`
-
-```python
+# ╔═════════╗
+# ║ urls.py ║
+# ╚═════════╝
 path('article/<int:pk>/', views.ArticleDetailView.as_view(), name='article_detail'),
 # Or with slug:
 # path('article/<slug:slug>/', views.ArticleDetailView.as_view(), name='article_detail'),
 ```
 
-File: `templates/article_detail.html`
 
 ```html
+<!-- ╔═══════════════════════════════╗ -->
+<!-- ║ templates/article_detail.html ║ -->
+<!-- ╚═══════════════════════════════╝ -->
 <!DOCTYPE html>
 <html>
 <head><title>{{ article.title }}</title></head>
@@ -2351,9 +2301,11 @@ View
           └── DeleteView   → حذف رکورد
 ```
 
-File: `forms.py`
 
 ```python
+# ╔══════════╗
+# ║ forms.py ║
+# ╚══════════╝
 from django import forms
 
 
@@ -2361,11 +2313,10 @@ class ContactForm(forms.Form):
     name = forms.CharField(max_length=100, label="نام شما")
     email = forms.EmailField(label="ایمیل")
     message = forms.CharField(widget=forms.Textarea, label="پیام")
-```
 
-File: `views.py`
-
-```python
+# ╔══════════╗
+# ║ views.py ║
+# ╚══════════╝
 from django.views.generic import FormView
 from django.urls import reverse_lazy
 from django.contrib import messages
@@ -2384,17 +2335,17 @@ class ContactView(FormView):
         # می‌توانید ایمیل بفرستید یا لاگ کنید
         print(form.cleaned_data)
         return super().form_valid(form)
-```
 
-File: `urls.py`
-
-```python
+# ╔═════════╗
+# ║ urls.py ║
+# ╚═════════╝
 path('contact/', views.ContactView.as_view(), name='contact'),
 ```
 
-File: `templates/contact.html`
-
 ```html
+<!-- ╔════════════════════════╗ -->
+<!-- ║ templates/contact.html ║ -->
+<!-- ╚════════════════════════╝ -->
 <!DOCTYPE html>
 <html>
 <head><title>تماس با ما</title></head>
@@ -2430,9 +2381,10 @@ File: `templates/contact.html`
 * مقدار success_url را حتماً تعیین کنید در غیر این صورت با خطا مواجه خواهید شد
 * اگر fields یا form_class استفاده نشده باشد آنگاه خطای ImproperlyConfigured وقوع می‌پیوندد
 
-File: `models.py`
-
 ```python
+# ╔═══════════╗
+# ║ models.py ║
+# ╚═══════════╝
 from django.db import models
 
 
@@ -2443,11 +2395,10 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title
-```
 
-File: `views.py`
-
-```python
+# ╔══════════╗
+# ║ views.py ║
+# ╚══════════╝
 from django.views.generic import CreateView
 from django.urls import reverse_lazy
 from .models import Article
@@ -2464,17 +2415,17 @@ class ArticleCreateView(CreateView):
         context = super().get_context_data(**kwargs)
         context['title'] = "ایجاد مقاله جدید"
         return context
-```
 
-File: `urls.py`
-
-```python
+# ╔═════════╗
+# ║ urls.py ║
+# ╚═════════╝
 path('article/new/', views.ArticleCreateView.as_view(), name='article_create'),
 ```
 
-File: `templates/article_form.html`
-
 ```html
+<!-- ╔═════════════════════════════╗ -->
+<!-- ║ templates/article_form.html ║ -->
+<!-- ╚═════════════════════════════╝ -->
 <!DOCTYPE html>
 <html>
 <head><title>{{ title }}</title></head>
@@ -2503,9 +2454,11 @@ def form_valid(self, form):
 * UpdateView = FormView + عملیات دیتابیس
 * ویرایش یک رکورد موجود(فرم با داده‌های فعلی پر می‌شود)
 
-File: `models.py`
 
 ```python
+# ╔═══════════╗
+# ║ models.py ║
+# ╚═══════════╝
 from django.db import models
 
 
@@ -2516,11 +2469,10 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title
-```
 
-File: `views.py`
-
-```python
+# ╔══════════╗
+# ║ views.py ║
+# ╚══════════╝
 from django.views.generic import UpdateView
 from django.urls import reverse_lazy
 from .models import Article
@@ -2536,19 +2488,19 @@ class ArticleUpdateView(UpdateView):
         context = super().get_context_data(**kwargs)
         context['title'] = "ویرایش مقاله"
         return context
-```
 
-File: `urls.py`
+# ╔═════════╗
+# ║ urls.py ║
+# ╚═════════╝
 
-```python
-...
 path('article/<int:pk>/edit/', views.ArticleUpdateView.as_view(), name='article_update'),
-...
 ```
 
-File: `templates/article_form.html` همانند CreateView می‌باشد
 
 ```html
+<!-- ╔═════════════════════════════╗ -->
+<!-- ║ templates/article_form.html ║ ← same as CreateView-->
+<!-- ╚═════════════════════════════╝ -->
 <!DOCTYPE html>
 <html>
 <head><title>{{ title }}</title></head>
@@ -2584,9 +2536,11 @@ def form_valid(self, form):
 * DeleteView = FormView + عملیات دیتابیس
 * کلاس  `️DeleteView` حتما نیاز به `success_url` دارد
 
-File: `models.py`
 
 ```python
+# ╔═══════════╗
+# ║ models.py ║
+# ╚═══════════╝
 from django.db import models
 
 
@@ -2597,11 +2551,10 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title
-```
 
-File: `views.py`
-
-```python
+# ╔══════════╗
+# ║ views.py ║
+# ╚══════════╝
 from django.views.generic import DeleteView
 from django.urls import reverse_lazy
 from .models import Article
@@ -2611,17 +2564,17 @@ class ArticleDeleteView(DeleteView):
     model = Article
     template_name = 'article_confirm_delete.html'
     success_url = reverse_lazy('article_list')
-```
 
-File: `urls.py`
-
-```python
+# ╔═════════╗
+# ║ urls.py ║
+# ╚═════════╝
 path('article/<int:pk>/delete/', views.ArticleDeleteView.as_view(), name='article_delete'),
 ```
 
-File: `templates/article_confirm_delete.html`
-
 ```html
+<!-- ╔═══════════════════════════════════════╗ -->
+<!-- ║ templates/article_confirm_delete.html ║ -->
+<!-- ╚═══════════════════════════════════════╝ -->
 <!DOCTYPE html>
 <html>
 <head><title>تأیید حذف</title></head>
@@ -2690,9 +2643,10 @@ File: `templates/article_confirm_delete.html`
 
 مثال۱: فرض کنید می‌خواهید فقط کاربران لاگین‌کرده بتوانند لیست مقالات را ببینند. و اگر کاربر لاگین نکرده، او را به صفحه لاگین بفرستد
 
-File: `model.py`
-
 ```python
+# ╔══════════╗
+# ║ model.py ║
+# ╚══════════╝
 from django.db import models
 
 
@@ -2707,11 +2661,10 @@ class Article(models.Model):
     class Meta:
         verbose_name = "مقاله"
         verbose_name_plural = "مقالات"
-```
 
-File: `view.py`
-
-```python
+# ╔══════════╗
+# ║ views.py ║
+# ╚══════════╝
 from django.views.generic import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin  # ← این یک میکسین است!
 from .models import Article
@@ -2724,11 +2677,10 @@ class ArticleListView(LoginRequiredMixin, ListView):  # نکته‌بسیارم�
     paginate_by = 5
 
     login_url = '/admin/login/'  # or '/accounts/login/' اگر کاربر لاگین نکرده باشد، به کجا هدایت شود
-```
 
-File: `urls.py`
-
-```python
+# ╔═════════╗
+# ║ urls.py ║
+# ╚═════════╝
 from django.urls import path
 from . import views
 
@@ -2737,9 +2689,10 @@ urlpatterns = [
 ]
 ```
 
-File: `templates/articles.html`
-
 ```html
+<!-- ╔═════════════════════════╗ -->
+<!-- ║ templates/articles.html ║ -->
+<!-- ╚═════════════════════════╝ -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -2783,9 +2736,10 @@ File: `templates/articles.html`
 
 در این مثال LoginRequiredMixin متد dispatch را Override می‌کند و قبل از اجرای View، چک می‌کند که کاربر لاگین کرده یا نه.
 
-File: `model.py`
-
 ```python
+# ╔══════════╗
+# ║ model.py ║
+# ╚══════════╝
 from django.db import models
 
 
@@ -2800,11 +2754,10 @@ class Article(models.Model):
     class Meta:
         verbose_name = "مقاله"
         verbose_name_plural = "مقالات"
-```
 
-File: `view.py`
-
-```python
+# ╔══════════╗
+# ║ views.py ║
+# ╚══════════╝
 from django.views.generic import TemplateView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Article
@@ -2833,11 +2786,10 @@ class ArticleListView(LoginRequiredMixin, PageTitleMixin, ListView):  # 👈️
 class AboutView(PageTitleMixin, TemplateView):  # ✅ ussing in TemplateView
     template_name = 'about.html'
     page_title = "درباره ما 🏠"
-```
 
-File: `urls.py`
-
-```python
+# ╔═════════╗
+# ║ urls.py ║
+# ╚═════════╝
 from django.urls import path
 from . import views
 
@@ -2847,9 +2799,10 @@ urlpatterns = [
 ]
 ```
 
-File: `templates/base.html`
-
 ```html
+<!-- ╔═════════════════════╗ -->
+<!-- ║ templates/base.html ║ -->
+<!-- ╚═════════════════════╝ -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -2860,11 +2813,10 @@ File: `templates/base.html`
 {% block content %}{% endblock %}
 </body>
 </html>
-```
 
-File: `templates/articles.html`(بروزرسانی می‌کنیم)
-
-```html
+<!-- ╔═════════════════════════╗ -->
+<!-- ║ templates/articles.html ║ ← (بروزرسانی می‌کنیم) -->
+<!-- ╚═════════════════════════╝ -->
 {% extends 'base.html' %}
 
 {% block content %}
@@ -2890,11 +2842,10 @@ File: `templates/articles.html`(بروزرسانی می‌کنیم)
 <a href="?page={{ page_obj.paginator.num_pages }}">آخر</a>
 {% endif %}
 {% endblock %}
-```
 
-File: `templates/about.html`
-
-```html
+<!-- ╔══════════════════════╗ -->
+<!-- ║ templates/about.html ║ -->
+<!-- ╚══════════════════════╝ -->
 {% extends 'base.html' %}
 
 {% block content %}
@@ -2926,14 +2877,16 @@ File: `templates/about.html`
 8. اگر کاربرلاگین کرده و نویسنده مقاله متفاوت باشند آنگاه دسترسی رد می‌شود و ارور 403 Forbidden خواهد شد
 9. اگر کاربرلاگین کرده و نویسنده مقاله یکسان باشند فرم ویرایش نمایش داده می‌شود.
 
-File: `model.py` مدل مقاله + ارتباط با کاربر
 
 ```python
+# ╔══════════╗
+# ║ model.py ║  ←   مدل مقاله + ارتباط با کاربر
+# ╚══════════╝
 from django.db import models
 from django.contrib.auth.models import User  # ← کاربر پیش‌فرض جنگو
 
 
-class Article(models.Model):
+class Article(models.Model): # اضافه شدن فیلد author از نوع ForeignKey به User (یعنی هر مقاله یک نویسنده دارد)
     title = models.CharField(max_length=200, verbose_name="عنوان")
     content = models.TextField(verbose_name="محتوا")
     author = models.ForeignKey(
@@ -2949,13 +2902,10 @@ class Article(models.Model):
     class Meta:
         verbose_name = "مقاله"
         verbose_name_plural = "مقالات"
-```
 
-اضافه شدن فیلد author از نوع ForeignKey به User (یعنی هر مقاله یک نویسنده دارد)
-
-File: `view.py`
-
-```python
+# ╔══════════╗
+# ║ views.py ║
+# ╚══════════╝
 from django.views.generic import UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin  # ← میکسین‌های امنیتی
 from django.urls import reverse_lazy
@@ -2996,11 +2946,10 @@ class ArticleUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):  #
         # مثلاً می‌توانیم تاریخ ویرایش را آپدیت کنیم — اگر فیلد داشتیم:
         # form.instance.updated_at = timezone.now()
         return super().form_valid(form)
-```
 
-File: `urls.py`
-
-```python
+# ╔═════════╗
+# ║ urls.py ║
+# ╚═════════╝
 from django.urls import path
 from . import views
 
@@ -3010,9 +2959,10 @@ urlpatterns = [
 ]
 ```
 
-File: `templates/article_form.html` تمپلیت فرم ویرایش
-
 ```html
+<!-- ╔═════════════════════════════╗ -->
+<!-- ║ templates/article_form.html ║ ← تمپلیت فرم ویرایش-->
+<!-- ╚═════════════════════════════╝ -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -3041,11 +2991,10 @@ File: `templates/article_form.html` تمپلیت فرم ویرایش
 <p><a href="{% url 'article_list' %}">← بازگشت به لیست مقالات</a></p>
 </body>
 </html>
-```
 
-File: `templates/403.html` صفحه خطا (اگر این فایل را نسازید، جنگو یک صفحه 403 پیش‌فرض نشان می‌دهد)
-
-```html
+<!-- ╔════════════════════╗ -->
+<!-- ║ templates/403.html ║ ← صفحه خطا (اگر این فایل را نسازید، جنگو یک صفحه 403 پیش‌فرض نشان می‌دهد) -->
+<!-- ╚════════════════════╝ -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -4546,14 +4495,15 @@ myapp/
     └── views.py
 ```
 
-File: `setting.py`
-
 ```python
+# ╔════════════╗
+# ║ Setting.py ║
+# ╚════════════╝
 STATIC_URL = 'static/'  # Default url on clients browser
 STATIC_ROOT = BASE_DIR / "staticfiles"
-# ╔═══════════════════╗
+# ╔══════════════════╗
 # ║ STATICFILES_DIRS ║
-# ╚═══════════════════╝
+# ╚══════════════════╝
 # myproject/               ←  اگر ساختار شبیه ساختار ذیل بود
 #     ├── static/          ← فایل‌های استاتیک عمومی پروژه
 #     │   ├── css/
@@ -4590,9 +4540,9 @@ STATICFILES_DIRS = [
 ```shell
 python manage.py collectstatic
 
-# ╔══════╗
+# ╔═══════╗
 # ║ NGINX ║
-# ╚══════╝
+# ╚═══════╝
 location /static/ {
     alias /path/to/your/project/staticfiles;
 }
