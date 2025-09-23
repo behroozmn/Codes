@@ -92,6 +92,7 @@ def welcome_view(request):
     html = template.render(context, request)  # ۳. پر کردن تمپلیت با داده‌ها (render کردن)
     return HttpResponse(html)  # ۴. ارسال به مرورگر
 
+
 # ╔═════════╗
 # ║ urls.py ║
 # ╚═════════╝
@@ -138,7 +139,6 @@ myproject/
 </html>
 ```
 
-
 ```python
 # ╔══════════╗
 # ║ views.py ║
@@ -153,6 +153,7 @@ def welcome_view(request):
         'activities': ['دویدن', 'شنا', 'گیتار']
     }
     return render(request, 'welcome.html', context)
+
 
 # ╔═════════╗
 # ║ urls.py ║
@@ -240,7 +241,6 @@ def func(reqeust, day):
 * هرصفحه‌ای که ازاین صفحه ارث‌بری نماید، بااستفاده از نام بلاک‌های ذیل، می‌تواند دیتای سفارشی همان صفحه را در محتوی بلاک‌ها درج نمود
 * یک تمپلیت پایه (base) داشته باشید، و تمام صفحات دیگر از آن وراثت ببرند(فقط بخش‌های خاص خود را جایگزین کنند)
 * کاهش تکرار کد
-
 
 ```html
 <!-- ╔═════════════════════════╗ -->
@@ -345,7 +345,6 @@ def func(reqeust, day):
 * `{% block content %}`:حتماً باید پر شود(اگر نشود، خطا می‌دهد در جنگو ۴.۲+)
 * `{% block extra_css %}`:اختیاری(فقط وقتی نیاز دارید، پر می‌شود)
 * `{% block extra_js %}`:اختیاری برای اسکریپت‌های صفحه‌محور(فقط وقتی نیاز دارید، پر می‌شود)
-
 
 ```python
 # ╔══════════╗
@@ -524,7 +523,6 @@ def index(request):
 * کاربرد امنیت: نمی‌خواهید یه user یا request از صفحه والد به داخل include نفوذ کند.
 * کاربرد پاکیزگی: مطمئن شوید که include فقط چیزی که لازم دارد را می‌بیند.
 * کاربرد تست‌پذیری: می‌توانید include را به صورت مستقل تست کنید.
-
 
 ```html
 <!-- ╔══════════════════════════════════════╗ -->
@@ -949,6 +947,7 @@ class ProfileView(LoginRequiredMixin, View):
         }
         return render(request, 'users/profile.html', context)
 
+
 # ╔═════════════════╗
 # ║ users/models.py ║ ← هیچ چیزی نمی‌نویسیم از جدول یوزر پیش‌فرض جنگو استفاده می‌کنیم
 # ╚═════════════════╝
@@ -962,6 +961,7 @@ from django import forms
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=150, widget=forms.TextInput(attrs={'placeholder': 'Username'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password'}))
+
 
 # ╔════════════════╗
 # ║ users/admin.py ║
@@ -1016,13 +1016,14 @@ class UserAdmin(admin.ModelAdmin):
 <!DOCTYPE html>
 <html>
 <head>
-<title>Profile</title>
+    <title>Profile</title>
 </head>
 <body>
 <h2> User Profile </h2>
 <p> User ID: {{user_id}}</p>
 <p> Username: {{username}}</p>
-<a href = "{% url 'users:login' %}" > Logout(dummylink) </a></body></html>
+<a href="{% url 'users:login' %}"> Logout(dummylink) </a></body>
+</html>
 ```
 
 برای راه‌اندازی:
@@ -1620,7 +1621,6 @@ LANGUAGES = [
     ('en', _('English')),
 ]
 ```
- 
 
 ```html
 <!-- ╔═══════════════════════════════╗ -->
@@ -2087,6 +2087,7 @@ class AboutView(TemplateView):
         context['team_size'] = 15
         return context
 
+
 # ╔═════════╗
 # ║ urls.py ║
 # ╚═════════╝
@@ -2097,7 +2098,6 @@ urlpatterns = [
     path('about/', views.AboutView.as_view(), name='about'),
 ]
 ```
-
 
 ```html
 <!-- ╔══════════════════════╗ -->
@@ -2139,6 +2139,7 @@ class Article(models.Model):
     def __str__(self):
         return self.title
 
+
 # ╔══════════╗
 # ║ views.py ║
 # ╚══════════╝
@@ -2152,6 +2153,7 @@ class ArticleListView(ListView):
     context_object_name = 'articles'  # نام متغیر در تمپلیت
     paginate_by = 5  # صفحه‌بندی — 5 مورد در هر صفحه
     ordering = ['-created_at']  # مرتب‌سازی بر اساس تاریخ (جدیدترین اول)
+
 
 # ╔═════════╗
 # ║ urls.py ║
@@ -2227,6 +2229,7 @@ class Article(models.Model):
     def __str__(self):
         return self.title
 
+
 # ╔══════════╗
 # ║ views.py ║
 # ╚══════════╝
@@ -2242,6 +2245,7 @@ class ArticleDetailView(DetailView):
     # slug_field = 'slug'
     # slug_url_kwarg = 'slug'
 
+
 # ╔═════════╗
 # ║ urls.py ║
 # ╚═════════╝
@@ -2249,7 +2253,6 @@ path('article/<int:pk>/', views.ArticleDetailView.as_view(), name='article_detai
 # Or with slug:
 # path('article/<slug:slug>/', views.ArticleDetailView.as_view(), name='article_detail'),
 ```
-
 
 ```html
 <!-- ╔═══════════════════════════════╗ -->
@@ -2301,7 +2304,6 @@ View
           └── DeleteView   → حذف رکورد
 ```
 
-
 ```python
 # ╔══════════╗
 # ║ forms.py ║
@@ -2313,6 +2315,7 @@ class ContactForm(forms.Form):
     name = forms.CharField(max_length=100, label="نام شما")
     email = forms.EmailField(label="ایمیل")
     message = forms.CharField(widget=forms.Textarea, label="پیام")
+
 
 # ╔══════════╗
 # ║ views.py ║
@@ -2335,6 +2338,7 @@ class ContactView(FormView):
         # می‌توانید ایمیل بفرستید یا لاگ کنید
         print(form.cleaned_data)
         return super().form_valid(form)
+
 
 # ╔═════════╗
 # ║ urls.py ║
@@ -2396,6 +2400,7 @@ class Article(models.Model):
     def __str__(self):
         return self.title
 
+
 # ╔══════════╗
 # ║ views.py ║
 # ╚══════════╝
@@ -2415,6 +2420,7 @@ class ArticleCreateView(CreateView):
         context = super().get_context_data(**kwargs)
         context['title'] = "ایجاد مقاله جدید"
         return context
+
 
 # ╔═════════╗
 # ║ urls.py ║
@@ -2454,7 +2460,6 @@ def form_valid(self, form):
 * UpdateView = FormView + عملیات دیتابیس
 * ویرایش یک رکورد موجود(فرم با داده‌های فعلی پر می‌شود)
 
-
 ```python
 # ╔═══════════╗
 # ║ models.py ║
@@ -2469,6 +2474,7 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title
+
 
 # ╔══════════╗
 # ║ views.py ║
@@ -2489,13 +2495,13 @@ class ArticleUpdateView(UpdateView):
         context['title'] = "ویرایش مقاله"
         return context
 
+
 # ╔═════════╗
 # ║ urls.py ║
 # ╚═════════╝
 
 path('article/<int:pk>/edit/', views.ArticleUpdateView.as_view(), name='article_update'),
 ```
-
 
 ```html
 <!-- ╔═════════════════════════════╗ -->
@@ -2536,7 +2542,6 @@ def form_valid(self, form):
 * DeleteView = FormView + عملیات دیتابیس
 * کلاس  `️DeleteView` حتما نیاز به `success_url` دارد
 
-
 ```python
 # ╔═══════════╗
 # ║ models.py ║
@@ -2552,6 +2557,7 @@ class Article(models.Model):
     def __str__(self):
         return self.title
 
+
 # ╔══════════╗
 # ║ views.py ║
 # ╚══════════╝
@@ -2564,6 +2570,7 @@ class ArticleDeleteView(DeleteView):
     model = Article
     template_name = 'article_confirm_delete.html'
     success_url = reverse_lazy('article_list')
+
 
 # ╔═════════╗
 # ║ urls.py ║
@@ -2662,6 +2669,7 @@ class Article(models.Model):
         verbose_name = "مقاله"
         verbose_name_plural = "مقالات"
 
+
 # ╔══════════╗
 # ║ views.py ║
 # ╚══════════╝
@@ -2677,6 +2685,7 @@ class ArticleListView(LoginRequiredMixin, ListView):  # نکته‌بسیارم�
     paginate_by = 5
 
     login_url = '/admin/login/'  # or '/accounts/login/' اگر کاربر لاگین نکرده باشد، به کجا هدایت شود
+
 
 # ╔═════════╗
 # ║ urls.py ║
@@ -2755,6 +2764,7 @@ class Article(models.Model):
         verbose_name = "مقاله"
         verbose_name_plural = "مقالات"
 
+
 # ╔══════════╗
 # ║ views.py ║
 # ╚══════════╝
@@ -2786,6 +2796,7 @@ class ArticleListView(LoginRequiredMixin, PageTitleMixin, ListView):  # 👈️
 class AboutView(PageTitleMixin, TemplateView):  # ✅ ussing in TemplateView
     template_name = 'about.html'
     page_title = "درباره ما 🏠"
+
 
 # ╔═════════╗
 # ║ urls.py ║
@@ -2877,7 +2888,6 @@ urlpatterns = [
 8. اگر کاربرلاگین کرده و نویسنده مقاله متفاوت باشند آنگاه دسترسی رد می‌شود و ارور 403 Forbidden خواهد شد
 9. اگر کاربرلاگین کرده و نویسنده مقاله یکسان باشند فرم ویرایش نمایش داده می‌شود.
 
-
 ```python
 # ╔══════════╗
 # ║ model.py ║  ←   مدل مقاله + ارتباط با کاربر
@@ -2886,7 +2896,7 @@ from django.db import models
 from django.contrib.auth.models import User  # ← کاربر پیش‌فرض جنگو
 
 
-class Article(models.Model): # اضافه شدن فیلد author از نوع ForeignKey به User (یعنی هر مقاله یک نویسنده دارد)
+class Article(models.Model):  # اضافه شدن فیلد author از نوع ForeignKey به User (یعنی هر مقاله یک نویسنده دارد)
     title = models.CharField(max_length=200, verbose_name="عنوان")
     content = models.TextField(verbose_name="محتوا")
     author = models.ForeignKey(
@@ -2902,6 +2912,7 @@ class Article(models.Model): # اضافه شدن فیلد author از نوع For
     class Meta:
         verbose_name = "مقاله"
         verbose_name_plural = "مقالات"
+
 
 # ╔══════════╗
 # ║ views.py ║
@@ -2946,6 +2957,7 @@ class ArticleUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):  #
         # مثلاً می‌توانیم تاریخ ویرایش را آپدیت کنیم — اگر فیلد داشتیم:
         # form.instance.updated_at = timezone.now()
         return super().form_valid(form)
+
 
 # ╔═════════╗
 # ║ urls.py ║
@@ -3058,7 +3070,6 @@ urlpatterns = [
 
 مثال۱: API برای نمایش پیام سلام و پذیرش نام کاربر
 
-
 ```python
 # ╔════════════════════╗
 # ║ products/models.py ║      ← هیچ مدلی نداریم
@@ -3086,6 +3097,7 @@ class GreetingAPIView(APIView):
         # get name from request body 
         name = request.data.get('name', 'کاربر ناشناس')
         return Response({"message": f"سلام {name}! خوشحالم که اینجایی."}, status=status.HTTP_200_OK)  # Customize Response 
+
 
 # ╔═══════════════╗
 # ║ products/urls.py ║ ← اپلیکیشن
@@ -3123,18 +3135,18 @@ POST http://127.0.0.1:8000/greeting/ ---> { "name": "علی" } ---> Response: { 
   مثال۱: مدیریت "تسک‌های موقت" در حافظه (بدون دیتابیس) - پس در این مثال `models.py` نداریم (در حافظه کار می‌کنیم)
 * `ViewSet` و `ModelViewSet` در نهایت به `APIView` تبدیل می‌شوند(وقتی `Router` آن‌ها را به URL متصل می‌کند).
 
-
-
 ```python
 # ╔═════════════════════════╗
 # ║ products/serializers.py ║
 # ╚═════════════════════════╝
 from rest_framework import serializers
 
-class TaskSerializer(serializers.Serializer): # only for show and validate
+
+class TaskSerializer(serializers.Serializer):  # only for show and validate
     id = serializers.IntegerField(read_only=True)
     title = serializers.CharField(max_length=200)
     done = serializers.BooleanField(default=False)
+
 
 # ╔═══════════════════╗
 # ║ products/views.py ║      ← with ViewSet
@@ -3149,6 +3161,7 @@ TASKS = [  # Temporary Tasks list(inMemory)
     {"id": 2, "title": "ورزش کردن", "done": True},
 ]
 next_id = 3
+
 
 class TaskViewSet(ViewSet):  # simple ViewSet for management tasks(without model) and manually implemet actions: list, create, retrieve, update, destroy
 
@@ -3193,6 +3206,7 @@ class TaskViewSet(ViewSet):  # simple ViewSet for management tasks(without model
             TASKS.pop(task_index)
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response({"error": "Task not found"}, status=status.HTTP_404_NOT_FOUND)
+
 
 # ╔══════════════════╗
 # ║ products/urls.py ║ ← اپلیکیشن
@@ -3263,6 +3277,7 @@ class Book(models.Model):
         verbose_name_plural = "کتاب‌ها"
         ordering = ['-published_date']
 
+
 # ╔═══════╗
 # ║ SHELL ║
 # ╚═══════╝
@@ -3275,6 +3290,7 @@ class Book(models.Model):
 # ╚═════════════════════════╝
 from rest_framework import serializers
 from .models import Book
+
 
 class BookSerializer(serializers.ModelSerializer):
     """
@@ -3309,6 +3325,7 @@ class BookViewSet(ModelViewSet):
     queryset = Book.objects.all()  # داده‌هایی که API برمی‌گرداند
     serializer_class = BookSerializer  # نحوه تبدیل داده‌ها به JSON
 
+
 # ╔══════════════════╗
 # ║ products/urls.py ║ ← اپلیکیشن
 # ╚══════════════════╝
@@ -3316,7 +3333,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import BookViewSet
 
-router = DefaultRouter() # ✅ ایجاد Router
+router = DefaultRouter()  # ✅ ایجاد Router
 
 # ثبت ModelViewSet — نیازی به basename نیست (چون به مدل متصل است)
 router.register(r'books', BookViewSet)
@@ -3325,7 +3342,6 @@ urlpatterns = [
     path('api/', include(router.urls)),
 ]
 ```
-
 
 # 8. 🅰️DRF-Serializer
 
@@ -4127,6 +4143,7 @@ class UserView(APIView):
 # ╚════════════════╝
 from rest_framework import serializers
 
+
 class UserSerializer(serializers.ModelSerializer):
     welcome_message = serializers.SerializerMethodField()
 
@@ -4287,6 +4304,14 @@ myproject/
     └── urls.py
 ```
 
+* `GET /api/` -----------------> API Root page (فقط در DefaultRouter)
+* `GET /api/products/` --------> لیست محصولات
+* `POST /api/products/` -------> ایجاد محصول جدید
+* `GET /api/products/1/` ------> جزئیات محصول با id=1
+* `PUT /api/products/1/` ------> ویرایش کامل محصول
+* `PATCH /api/products/1/` ----> ویرایش جزئی
+* `DELETE /api/products/1/` ---> حذف محصول
+
 ```python
 # ╔════════════════════╗
 # ║ products/models.py ║
@@ -4370,17 +4395,9 @@ python manage.py createsuperuser # اختیاری — برای تست در Admin
 python manage.py runserver
 ```
 
-* `GET /api/` -----------------> API Root page (فقط در DefaultRouter)
-* `GET /api/products/` --------> لیست محصولات
-* `POST /api/products/` -------> ایجاد محصول جدید
-* `GET /api/products/1/` ------> جزئیات محصول با id=1
-* `PUT /api/products/1/` ------> ویرایش کامل محصول
-* `PATCH /api/products/1/` ----> ویرایش جزئی
-* `DELETE /api/products/1/` ---> حذف محصول
-
 ## 9.1. 🅱️Custom Actions
 
-اگر بخواهیم Action های دلخواه خودمان را به کد اضافه نماییم
+اگر بخواهیم Action های دلخواه خودمان را به کد اضافه نماییم می‌توانیم با کمک دکوریتور `@action` این کار را انجام دهیم
 
 در ادامه مثال۱ اگر بخواهیم اکشن `expensive` و `discount` دلخواه خودمان را اضافه کنیم باید فایل `products/views.py` را به شکل زیر تغییر بدهیم. آنگاه دو آدرس جدید زیر را خواهیم داشت که Router به صورت خودکار این URLها را اضافه می‌کند!
 
