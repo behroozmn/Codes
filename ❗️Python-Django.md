@@ -4477,6 +4477,7 @@ class ProductViewSet(ModelViewSet):
     * `SPECTACULAR_SETTINGS = {...,'SERVE_INCLUDE_SCHEMA': False,...}`
 * `ALLOWED_HOSTS = ['*']` # Need to run `python3 manage.py runserver 0.0.0.0:8000`
     * `ALLOWED_HOSTS = ['192.168.1.100', 'example.com', '127.0.0.1']`
+* `CORS_ALLOW_ALL_ORIGINS = True` این کار تمام آی پی های موجود درشبکه را برای اتصال به سامانه از نوع اتصال داخلی یا همان `CORS`  فراهم میکند
 
 ```python
 # تنظیمات زبان فارسی (اختیاری)
