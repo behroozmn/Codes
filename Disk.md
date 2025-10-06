@@ -43,34 +43,6 @@ vmstat -d #اطلاعات پیرامون ورودی و خروجی دیسک
 
 
 lshw -class disk -class storage
-lsblk -o name,rota #تشخیص «اِچ‌دی‌دی» بودن هارد یا «اِس‌دی‌دی» بودن هارد که در پارامتر «روتا» اگر صفر باشد یعنی اس اس دی می‌باشد #show type of Harddisk(HDD or SSD)
-
-# JSON خروجی میدهد
-sudo lsblk -J -o NAME,WWN,SERIAL,MODEL,TRAN,HCTL 
-sudo lsblk -J -o NAME,KNAME,PKNAME,MAJ:MIN,FSTYPE,MOUNTPOINT,SIZE,RO,RM,TYPE,OWNER,GROUP,MODE,ALIGNMENT,MIN-IO,OPT-IO,PHY-SEC,LOG-SEC,ROTA,SCHED,RQ-SIZE,RA,WSAME,WWN,MODEL,SERIAL,HCTL,VENDOR,REV,STATE,DISC-ALN,DISC-GRAN,DISC-MAX,DISC-ZERO,LABEL,PARTLABEL,PARTTYPENAME,PARTFLAGS,HOTPLUG,TRAN,VENDOR
-# ---> NAME: نام دستگاه (مانند sda, sda1)
-# ---> KNAME: نام داخلی کرنل
-# ---> PKNAME: نام والد (برای پارتیشن‌ها)
-# ---> MAJ:MIN: شماره‌های ماژور و ماینور
-# ---> FSTYPE: نوع فایل سیستم
-# ---> MOUNTPOINT: نقطه mount
-# ---> SIZE: سایز
-# ---> TYPE: نوع (disk, part, rom, etc.)
-# ---> ROTA: آیا دیسک چرخان است (1 برای HDD, 0 برای SSD)
-# ---> WWN: World Wide Name
-# ---> MODEL: مدل دیسک
-# ---> SERIAL: شماره سریال
-# ---> HCTL: Host:Channel:Target:Lun برای SCSI
-# ---> TRAN: نوع رابط (sata, usb, nvme, etc.)
-# ---> VENDOR: سازنده
-# ---> REV: revision firmware
-# ---> STATE: وضعیت دستگاه
-# ---> LABEL: label دیسک
-# ---> PARTLABEL: label پارتیشن
-# ---> HOTPLUG: آیا hot-plug 
-
-
-
 
 #with this you can get information
 iotop # چه برنامه ‌ای جقدر روی دیسک درحال نوشتن است
@@ -402,9 +374,9 @@ echo 1 | sudo tee /sys/class/block/sdX/device/rescan
 # 6. 🅰️ IO Connector
 
 * برای انتقال دیتا بین سرور و کلاینت از پروتکل‌های زیر استفاده می‌شود
-  * FC
-  * InfiniBand
-  * Iscsi
+    * FC
+    * InfiniBand
+    * Iscsi
 
 ## 6.1. 🅱️ Iscsi Protocol
 
@@ -561,5 +533,124 @@ lvmcreate -L 100m -s -n <Name> /dev/VG>/<LV>lvscan #اسنپ‌شات باید �
         * Mini SAS HD Internal که داخل jbod است(از بیرون معلوم نیست) و طرف دوم آن به backPlain میخورد
         * Mini SAS HD External که بیرون از JBOD است و طرف دوم آن به «Raid Card» یا «Expander Card» می‌خورد(کارت رید یا کارت اکسپندر قطعه‌ای است که فقط در سرور تعبیه می‌شود)
 
-</div>
+# 11. 🅰️ COMMANDS
 
+```shell
+lsblk -o name,rota #تشخیص «اِچ‌دی‌دی» بودن هارد یا «اِس‌دی‌دی» بودن هارد که در پارامتر «روتا» اگر صفر باشد یعنی اس اس دی می‌باشد #show type of Harddisk(HDD or SSD)
+
+# JSON خروجی میدهد
+sudo lsblk -J -O # همه موارد رو میده
+sudo lsblk -J -o NAME,KNAME,PKNAME,MAJ:MIN,FSTYPE,MOUNTPOINT,SIZE,RO,RM,TYPE,OWNER,GROUP,MODE,ALIGNMENT,MIN-IO,OPT-IO,PHY-SEC,LOG-SEC,ROTA,SCHED,RQ-SIZE,RA,WSAME,WWN,MODEL,SERIAL,HCTL,VENDOR,REV,STATE,DISC-ALN,DISC-GRAN,DISC-MAX,DISC-ZERO,LABEL,PARTLABEL,PARTTYPENAME,PARTFLAGS,HOTPLUG,TRAN,VENDOR
+
+```
+
+| فیلد           | توضیحات                  | مقادیر نمونه             |
+|----------------|--------------------------|--------------------------|
+| **NAME**       | نام دستگاه               | `sda`, `sda1`, `nvme0n1` |
+| **KNAME**      | نام داخلی کرنل           | `sda`, `dm-0`            |
+| **PKNAME**     | نام والد                 | for `sda1` Value `sda`   |
+| **MAJ:MIN**    | شماره‌های ماژور و ماینور | `8:0`, `259:0`           |
+| **FSTYPE**     | نوع فایل سیستم           | `ext4`, `ntfs`, `swap`   |
+| **MOUNTPOINT** | نقطه mount               | `/`, `/home`, `[SWAP]`   |
+| **SIZE**       | سایز                     | `500G`, `1T`, `250.6G`   |
+| **TYPE**       | نوع دستگاه               | `disk`, `part`, `rom`    |
+| **ROTA**       | آیا دیسک چرخان است       | (`1`=HDD),(`0`=SSD)      |
+| **WWN**        | World Wide Name          | `0x500a0751e1e8a000`     |
+| **MODEL**      | مدل دیسک                 | `Samsung SSD 860`        |
+| **SERIAL**     | شماره سریال              | `S4XBNX0N123456`         |
+| **HCTL**       | Host:Channel:Target:Lun  | `0:0:0:0`                |
+| **TRAN**       | نوع رابط                 | `sata`, `usb`, `nvme`    |
+| **VENDOR**     | سازنده                   | `ATA`, `Seagate`         |
+| **REV**        | revision firmware        | `1.0`, `2.5`             |
+| **STATE**      | وضعیت دستگاه             | `running`, `suspended`   |
+| **LABEL**      | label دیسک               | `DATA`, `BACKUP`         |
+| **PARTLABEL**  | label پارتیشن            | `root`, `home`           |
+| **HOTPLUG**    | آیا hot-plug است         | (yes=`1`),(NO=`0`)       |
+
+sفیلدهای اضافی و پیشرفته
+
+| فیلد             | توضیحات                 | مقادیر نمونه             |
+|------------------|-------------------------|--------------------------|
+| **MODE**         | دسترسی‌های دستگاه       | `brw-rw----`             |
+| **OWNER**        | مالک دستگاه             | `root`, `disk`           |
+| **GROUP**        | گروه دستگاه             | `disk`, `cdrom`          |
+| **ALIGNMENT**    | تراز alignment          | `0`                      |
+| **MIN-IO**       | حداقل اندازه I/O        | `512`                    |
+| **OPT-IO**       | اندازه بهینه I/O        | `0`                      |
+| **PHY-SEC**      | سکتور فیزیکی            | `512`, `4096`            |
+| **LOG-SEC**      | سکتور منطقی             | `512`                    |
+| **SCHED**        | scheduler I/O           | `mq-deadline`            |
+| **RQ-SIZE**      | اندازه صف درخواست       | `256`                    |
+| **RA**           | readahead               | `128`                    |
+| **WSAME**        | write same              | `0x0`                    |
+| **DISC-ALN**     | تراز discard            | `0`                      |
+| **DISC-GRAN**    | دانه‌بندی discard       | `0B`                     |
+| **DISC-MAX**     | حداکثر discard          | `0B`                     |
+| **DISC-ZERO**    | discard zeroes          | `0`                      |
+| **PARTTYPENAME** | نام نوع پارتیشن         | `Linux filesystem`       |
+| **PARTTYPE**     | نوع پارتیشن             | `0x83`                   |
+| **PARTFLAGS**    | فلگ‌های پارتیشن         | `0x80` (bootable)        |
+| **PARTUUID**     | UUID پارتیشن            | `123e4567-e89b...`       |
+| **PTTYPE**       | نوع پارتیشن‌بندی        | `gpt`, `dos`             |
+| **PATHS**        | مسیرهای دستگاه          | `/dev/sda`               |
+| **UUID**         | UUID فایل سیستم         | `123e4567-e89b...`       |
+| **PTUUID**       | UUID جدول پارتیشن       | `123e4567-e89b...`       |
+| **MOUNTED**      | آیا mount شده است       | (yes=`1`),(NO=`0`)       |
+| **READONLY**     | فقط خواندنی             | (yes=`1`),(NO=`0`)       |
+| **REMOVABLE**    | قابل جابجایی            | (yes=`1`),(NO=`0`)       |
+| **RO**           | فقط خواندنی             | (yes=`1`),(NO=`0`)       |
+| **RM**           | قابل حذف                | (yes=`1`),(NO=`0`)       |
+| **DAX**          | Direct Access           | (yes=`1`),(NO=`0`)       |
+| **ZONED**        | زون‌بندی شده            | `none`                   |
+| **ZONESZ**       | سایز زون                | `0B`                     |
+| **ZONEMODEL**    | مدل زون‌بندی            | `none`                   |
+| **SUBSYSTEMS**   | زیرسیستم‌ها             | `block:scsi:pci`         |
+| **REV**          | revision                | `2.5`                    |
+| **MQ**           | صف‌بندی چندگانه         | (`1`=فعال),(`0`=غیرفعال) |
+| **SCHED**        | زمان‌بند I/O            | `mq-deadline`, `none`    |
+| **IO-SCHED**     | زمان‌بند I/O            | `mq-deadline`            |
+| **WRITE-CACHE**  | کش نوشتن                | `write back`             |
+| **SIZE-BYTES**   | سایز به بایت            | `500107862016`           |
+| **DISC-ALN**     | تراز discard            | `0`                      |
+| **DISC-GRAN**    | دانه‌بندی discard       | `0B`                     |
+| **DISC-MAX**     | حداکثر discard          | `0B`                     |
+| **DISC-ZERO**    | discard zeroes          | `0`                      |
+| **FSUSE%**       | درصد استفاده فایل سیستم | `45%`                    |
+| **FSUSED**       | فضای استفاده شده        | `225G`                   |
+| **FSAVAIL**      | فضای قابل دسترس         | `275G`                   |
+| **FSROOTS**      | ریشه‌های فایل سیستم     | `/`                      |
+| **FSVER**        | نسخه فایل سیستم         | `1.0`                    |
+| **FSSIZE**       | سایز فایل سیستم         | `500G`                   |
+| **FSBLOCKS**     | تعداد بلاک‌ها           | `122101760`              |
+
+فیلدهای مربوط به پارتیشن‌بندی
+
+| فیلد           | توضیحات       | مقادیر نمونه  |
+|----------------|---------------|---------------|
+| **PARTN**      | شماره پارتیشن | `1`, `2`, `3` |
+| **START**      | شروع پارتیشن  | `2048`        |
+| **END**        | پایان پارتیشن | `1050623`     |
+| **SECTORS**    | تعداد سکتورها | `1048576`     |
+| **SIZE-BYTES** | سایز به بایت  | `536870912`   |
+
+فیلدهای مربوط به RAID و LVM
+
+| فیلد         | توضیحات                  | مقادیر نمونه  |
+|--------------|--------------------------|---------------|
+| **RA-LEVEL** | سطح RAID                 | `0`, `1`, `5` |
+| **RA-DISKS** | تعداد دیسک‌های RAID      | `2`           |
+| **VGNAME**   | نام Volume Group         | `vg0`         |
+| **LVNAME**   | نام Logical Volume       | `lv_root`     |
+| **LVSIZE**   | سایز Logical Volume      | `50G`         |
+| **LVATTR**   | ویژگی‌های Logical Volume | `-wi-ao----`  |
+| **VGSIZE**   | سایز Volume Group        | `500G`        |
+
+فیلدهای مربوط به رمزگذاری
+
+| فیلد           | توضیحات              | مقادیر نمونه |
+|----------------|----------------------|--------------|
+| **CRYPT-TYPE** | نوع رمزگذاری         | `LUKS`       |
+| **CRYPT-NAME** | نام دستگاه رمزگذاری  | `crypt-root` |
+| **CRYPT-SIZE** | سایز دستگاه رمزگذاری | `500G`       |
+
+</div>
