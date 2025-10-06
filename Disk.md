@@ -45,6 +45,10 @@ vmstat -d #اطلاعات پیرامون ورودی و خروجی دیسک
 lshw -class disk -class storage
 lsblk -o name,rota #تشخیص «اِچ‌دی‌دی» بودن هارد یا «اِس‌دی‌دی» بودن هارد که در پارامتر «روتا» اگر صفر باشد یعنی اس اس دی می‌باشد #show type of Harddisk(HDD or SSD)
 
+# JSON خروجی میدهد
+sudo lsblk -J -o NAME,WWN,SERIAL,MODEL,TRAN,HCTL 
+sudo lsblk -J -o NAME,KNAME,PKNAME,MAJ:MIN,FSTYPE,MOUNTPOINT,SIZE,RO,RM,TYPE,OWNER,GROUP,MODE,ALIGNMENT,MIN-IO,OPT-IO,PHY-SEC,LOG-SEC,ROTA,SCHED,RQ-SIZE,RA,WSAME,WWN,MODEL,SERIAL,HCTL,VENDOR,REV,STATE
+
 #with this you can get information
 iotop # چه برنامه ‌ای جقدر روی دیسک درحال نوشتن است
 iostat
