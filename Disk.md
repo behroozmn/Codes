@@ -47,7 +47,30 @@ lsblk -o name,rota #تشخیص «اِچ‌دی‌دی» بودن هارد یا �
 
 # JSON خروجی میدهد
 sudo lsblk -J -o NAME,WWN,SERIAL,MODEL,TRAN,HCTL 
-sudo lsblk -J -o NAME,KNAME,PKNAME,MAJ:MIN,FSTYPE,MOUNTPOINT,SIZE,RO,RM,TYPE,OWNER,GROUP,MODE,ALIGNMENT,MIN-IO,OPT-IO,PHY-SEC,LOG-SEC,ROTA,SCHED,RQ-SIZE,RA,WSAME,WWN,MODEL,SERIAL,HCTL,VENDOR,REV,STATE,DISC-ALN,DISC-GRAN,DISC-MAX,DISC-ZERO,LABEL,PARTLABEL,PARTTYPENAME,PARTFLAGS,HOTPLUG
+sudo lsblk -J -o NAME,KNAME,PKNAME,MAJ:MIN,FSTYPE,MOUNTPOINT,SIZE,RO,RM,TYPE,OWNER,GROUP,MODE,ALIGNMENT,MIN-IO,OPT-IO,PHY-SEC,LOG-SEC,ROTA,SCHED,RQ-SIZE,RA,WSAME,WWN,MODEL,SERIAL,HCTL,VENDOR,REV,STATE,DISC-ALN,DISC-GRAN,DISC-MAX,DISC-ZERO,LABEL,PARTLABEL,PARTTYPENAME,PARTFLAGS,HOTPLUG,TRAN,VENDOR
+# ---> NAME: نام دستگاه (مانند sda, sda1)
+# ---> KNAME: نام داخلی کرنل
+# ---> PKNAME: نام والد (برای پارتیشن‌ها)
+# ---> MAJ:MIN: شماره‌های ماژور و ماینور
+# ---> FSTYPE: نوع فایل سیستم
+# ---> MOUNTPOINT: نقطه mount
+# ---> SIZE: سایز
+# ---> TYPE: نوع (disk, part, rom, etc.)
+# ---> ROTA: آیا دیسک چرخان است (1 برای HDD, 0 برای SSD)
+# ---> WWN: World Wide Name
+# ---> MODEL: مدل دیسک
+# ---> SERIAL: شماره سریال
+# ---> HCTL: Host:Channel:Target:Lun برای SCSI
+# ---> TRAN: نوع رابط (sata, usb, nvme, etc.)
+# ---> VENDOR: سازنده
+# ---> REV: revision firmware
+# ---> STATE: وضعیت دستگاه
+# ---> LABEL: label دیسک
+# ---> PARTLABEL: label پارتیشن
+# ---> HOTPLUG: آیا hot-plug 
+
+
+
 
 #with this you can get information
 iotop # چه برنامه ‌ای جقدر روی دیسک درحال نوشتن است
