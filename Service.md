@@ -82,10 +82,15 @@
 
 ```shell
 sudo systemctl suspend #StandBy
-
 ```
 
 <div dir="rtl">
+
+### 1.2.1. ✅️ units
+
+* اگر در بخش بلاک`[Service]` یک یونیت مثلا با نام  `Salam.service` از دو کانفیگ `StandardOutput=journal` و `StandardError=journal` استفاده کنید آنگاه با دستور زیر می‌توان لاگ‌های آن سرویس را مشاهده نمایید
+  * `sudo journalctl -u Salam.service -f`
+
 
 ### 1.2.1. ✅️ sysctl
 
