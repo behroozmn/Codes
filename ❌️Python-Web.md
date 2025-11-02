@@ -3696,3 +3696,11 @@ if ___name___ == "___main___":
 ```
 
 </div>
+
+
+
+
+
+```python
+gunicorn -w 4 myproject.wsgi:application #ورکر بیشتر برای گانیکورن
+```
