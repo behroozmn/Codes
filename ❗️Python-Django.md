@@ -4698,33 +4698,8 @@ Authentication: Token <TOKEN>
 
 ## 11.3. 🅱️JWT(JsonWebToken)[عدم ذخیره توکن در دیتابیس]
 
-### 11.3.1. ✅️Intro
-
 ```shell
 pip install djangorestframework-simplejwt
-```
-
-* ابتدا به یک آدرس دلخواه نظیر «api/token» با مقادیر username و password در body ارسال می‌کنیم
-
-```
-POST: http://127.0.0.1:8000/api/token
-Request:{"username":"<username>","password":"<password>"} ==========> {"refresh": "<Token>","access" : "<Token>"}
-```
-
-* سپس دو token برای کاربر ساخته می‌شود و بعنوان response آنها را به کدنویس برمیگرداند تا کدنویس توکن access را نگهداری و در هر ارسال دیتا از آن استفاده نماید
-
-
-* AccessToken: باید در هدر هر درخواست ارسال گردد بصورت پیش‌فرض تا ۵ دقیقه معتبر است
-* RefreshToken: بصورت پیش‌فرض ۱ روز معتبر است. هرگاه توکن access منقضی شد آنگاه این توکن را به آدرس «api/token/refresh/» ارسال می‌کنیم تا توکن بروز رسانی شود و سپس آن را در هر انتقال دیتا در آدرس استفاده می‌کنیم
-* از آن پس هرگاه بخواهیم دیتا در آدرس‌های دیگر ارسال کنیم باید در header درخواست‌هایمان مقدار هش access را نیز وارد نمایید
-
-`Authentication: Bearer <AccessToken>`
-
-* هرگاه توکن در تایم پیش‌فرض تعیین شده منقضی شد آنگاه می‌توانیم توسط درج در Body درخواست به آدرس زیر، آن را مجدد فعال کنیم.
-
-```
-POST: http://127.0.0.1:8000/api/token/refresh
-Request:{"refresh":"<RefreshToken>"} ========> Response:{"access" : "<Token>"}
 ```
 
 ```python
@@ -4732,14 +4707,22 @@ Request:{"refresh":"<RefreshToken>"} ========> Response:{"access" : "<Token>"}
 # ║ setting.py ║
 # ╚═════════════╝
 
-INSTALL_APPS = [..., 'rest_framework.authtoken', 'rest_framework_simpleJWT', ...]
+INSTALLED_APPS = [
+    ...
+    'rest_framework',
+    'rest_framework_simplejwt',  # ✅ اضافه کن
+    ...
+]
+
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.JWTAuthentication'],
-    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated']
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
 }
 
 from datetime import timedelta
 
+# تنظیمات JWT (اختیاری ولی توصیه می‌شود)
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),  # اعتبار Access Token
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),  # اعتبار Refresh Token
@@ -4768,24 +4751,135 @@ SIMPLE_JWT = {
     'JTI_CLAIM': 'jti',
 }
 
+# ╔═══════════╗
+# ║ Main urls ║
+# ╚═══════════╝
+from django.urls import path, include
+
+urlpatterns = [
+    # ...
+    path("api/auth/", include(".urls_collection.url_auth")),
+    # ...
+]
+
 # ╔═════════════════╗
 # ║ /config/urls.py ║
 # ╚═════════════════╝
 
-from rest_framework.authtoken.views import obtain_auth_token
-from rest_framework_simplejwt.views import (TokenObtainPairView, TokenRefreshView, )
+from .views_collection.view_django_accounts import LogoutView
+from django.urls import path
+from rest_framework_simplejwt.views import (TokenObtainPairView, TokenRefreshView, TokenVerifyView)
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('home.urls')),
-    path('todos/', include('todo.urls')),
-    path('api-auth/', include('rest_framework.urls')),
-    path('auth-token/', obtain_auth_token, name='generate_auth_token'),
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # ✅️
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),  # ✅️
+    path('logout/', LogoutView.as_view()),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+]
+
+]
 ```
 
 [URL](https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html)
 
+هرگاه بخواهیم دیتا به آدرس‌های دیگر ارسال کنیم باید در header درخواست‌هایمان مقدار AccessToken را به همراه Bearer نیز وارد نمایید
+
+```
+Authorization: Bearer <access_token>
+```
+
+```shell
+curl -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.xxxxx" http://127.0.0.1:8000/api/some-protected-view/
+```
+
+### 11.3.1. ✅️Login(دریافت توکن)
+
+* ابتدا به یک آدرس دلخواه نظیر «api/token» با مقادیر username و password در body ارسال می‌کنیم.سپس دو token برای کاربر ساخته می‌شود و بعنوان response آنها را به کدنویس برمیگرداند تا کدنویس توکن access را نگهداری و در هر ارسال دیتا از آن استفاده نماید
+
+```
+POST: http://127.0.0.1:8000/api/token
+Request:{"username":"<username>","password":"<password>"} ==========> {"refresh": "<Token>","access" : "<Token>"}
+```
+
+* AccessToken: باید در هدر هر درخواست ارسال گردد
+    * بصورت پیش‌فرض تا ۵ دقیقه معتبر است
+
+### 11.3.2. ✅️Refresh(تمدید access token بدون لاگین مجدد)
+
+```
+POST: http://127.0.0.1:8000/api/auth/token/refresh
+Request:{"refresh":"<RefreshToken>"} ========> Response:{"access" : "<Token>"}
+```
+
+* RefreshToken: اگر بعد از ۵ دقیقه توکن اکسس منقضی شد آنگاه توسط این توکن آن را بروزسانی می‌کنیم
+    * به‌صورت پیش‌فرض ۱ روز معتبر است.
+    * هرگاه توکن access منقضی شد آنگاه این توکن را به آدرس `api/token/refresh/` ارسال می‌کنیم تا توکن بروز رسانی شود و سپس آن را در هر انتقال دیتا در آدرس استفاده می‌کنیم
+    * اگر `ROTATE_REFRESH_TOKENS=True` باشد، یک refresh جدید هم برمی‌گرداند.
+
+### 11.3.3. ✅️Logout (بی‌اثر کردن refresh token)
+
+برای لاگ‌اوت، کافی است refresh token را blacklist کنی تا دیگر قابل استفاده نباشد.
+
+#### ❇️Enable blacklist in `setting.py`
+
+مطمئن شوید که این دو گزینه در SIMPLE_JWT فعال باشند
+
+```python
+'ROTATE_REFRESH_TOKENS': True,
+'BLACKLIST_AFTER_ROTATION': True,
+```
+
+توسط دستور زیر جدول `token_blacklist_blacklistedtoken` و `token_blacklist_outstandingtoken` را ایجاد نمایید
+
+```shell
+python manage.py migrate
+```
+
+```python
+# views.py
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+
+
+class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        try:
+            refresh_token = request.data["refresh"]
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+
+            return Response(status=status.HTTP_205_RESET_CONTENT)
+        except Exception as e:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+```
+
+نحوه استفاده
+
+```
+POST: http://127.0.0.1:8000/api/logout/
+Request:{"refresh": "refresh_token_دریافت_شده_در_هنگام_لاگین"} ==========> {"refresh": "<Token>","access" : "<Token>"}
+```
+
+پس از دستور بالا
+
+* refresh token در لیست سیاه قرار می‌گیرد.
+* access token همچنان تا منقضی شدن معتبر است، اما نمی‌توان آن را تمدید کرد.
+* برای امنیت بیشتر، می‌توانی در فرانت‌اند access token را هم پاک کنی.
+
+### 11.3.3. ✅️Verification
+
+```shell
+curl -X POST http://192.168.100.196:8000/api/auth/token/verify/ \
+     -H "Content-Type: application/json" \
+     -d '{"token": "your.access.token.here"}' #بدنه
+```
+
+* اگر توکن معتبر باشد آنگاه کد وضعیت 200 یعنی OK برمیگرداند به همراه بدنه‌ی خالی (یا گاهی {})
+* اگر توکن نامعتبر/منقضی/دستکاری‌شده باشد آنگاه کد وضعیت 401 یعنی Unauthorized همراه با خطا برمی‌گرداند
 
 </div>
