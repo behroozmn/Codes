@@ -4612,4 +4612,180 @@ MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / "media"
 ```
 
+# 11. 🅰️Authentication
+
+## 11.1. 🅱️BasicAuthentications
+
+### 11.1.1. ✅️Global Setting File
+
+* با این کار شما درسراسر کد نیازبه احراز هویت خواهید داشت
+
+File: `settingd.py`
+
+```python
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.BasicAuthentication'],
+    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated']
+}
+```
+
+### 11.1.2. ✅️ConfigViews
+
+File: `/todo/views.py`
+
+```python
+from rest_framework.authentication import BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
+
+
+class TodosGenericApiView(generics.ListCreateAPIView):
+    queryset = Todo.objects.order_by('priority').all()
+    serializer_class = TodoSerializer
+    authentication_classes = [BasicAuthentication] ✅️
+    permission_classes = [IsAuthenticated] ✅️
+
+
+class TodosGenericDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Todo.objects.order_by('priority').all()
+    serializer_class = TodoSerializer
+```
+
+## 11.2. 🅱️TokenAuthentication[ذخیره توکن در دیتابیس]
+
+1. File: `setting.py`
+    ```python
+   INSTALL_APPS = [... ,'rest_framework.authtoken', ... ]
+   
+   REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.TokenAuthentication'],
+    'DEFAULT_PERMISSION_CLASSES':     ['rest_framework.permissions.IsAuthenticated']
+   }
+   ```
+2. migrations Command `python3 manage.py migrate`
+
+3. File: `/config/urls.py` # Main urls
+   ```python
+   from rest_framework.authtoken.views import obtain_auth_token # ✅️
+   
+   urlpatterns = [
+      path('admin/', admin.site.urls),
+      path('', include('home.urls')),
+      path('todos/', include('todo.urls')),
+      path('api-auth/', include('rest_framework.urls')),
+      path('auth-token/', obtain_auth_token, name='generate_auth_token'),# ✅️
+   ```
+4. ابتدا به یک آدرس دلخواه نظیر «auth-token» با مقادیر username و password در body بعنوان RawData ارسال می‌کنیم.[نکته:در پارامتر و در هدر ارسال نکنید]
+   ```json
+   "POST":"http://127.0.0.1:8000/auth-token",
+   {
+      "username":"USERNAME",
+      "password":"PASS"
+   }
+   ```
+5. سپس یک token برای کاربر ساخته می‌شود و در دیتابیس برای همان کاربر با نگهداری زمان ایجاد token ذخیره می‌شود و بعنوان response برمیگرداند تا کدنویس آن را نگهداری و استفاده نماید
+   ```json
+   {
+       "token": "<Token>" 
+   }
+   ```
+
+* از آن پس هرگاه بخواهیم دیتا در آدرس‌های دیگر ارسال کنیم باید در header درخواست‌هایمان مقدار زیر را نیز وارد نمایید
+
+```http request
+Authentication: Token <TOKEN>
+```
+
+## 11.3. 🅱️JWT(JsonWebToken)[عدم ذخیره توکن در دیتابیس]
+
+### 11.3.1. ✅️Intro
+
+```shell
+pip install djangorestframework-simplejwt
+```
+
+* ابتدا به یک آدرس دلخواه نظیر «api/token» با مقادیر username و password در body ارسال می‌کنیم
+
+```
+POST: http://127.0.0.1:8000/api/token
+Request:{"username":"<username>","password":"<password>"} ==========> {"refresh": "<Token>","access" : "<Token>"}
+```
+
+* سپس دو token برای کاربر ساخته می‌شود و بعنوان response آنها را به کدنویس برمیگرداند تا کدنویس توکن access را نگهداری و در هر ارسال دیتا از آن استفاده نماید
+
+
+* AccessToken: باید در هدر هر درخواست ارسال گردد بصورت پیش‌فرض تا ۵ دقیقه معتبر است
+* RefreshToken: بصورت پیش‌فرض ۱ روز معتبر است. هرگاه توکن access منقضی شد آنگاه این توکن را به آدرس «api/token/refresh/» ارسال می‌کنیم تا توکن بروز رسانی شود و سپس آن را در هر انتقال دیتا در آدرس استفاده می‌کنیم
+* از آن پس هرگاه بخواهیم دیتا در آدرس‌های دیگر ارسال کنیم باید در header درخواست‌هایمان مقدار هش access را نیز وارد نمایید
+
+`Authentication: Bearer <AccessToken>`
+
+* هرگاه توکن در تایم پیش‌فرض تعیین شده منقضی شد آنگاه می‌توانیم توسط درج در Body درخواست به آدرس زیر، آن را مجدد فعال کنیم.
+
+```
+POST: http://127.0.0.1:8000/api/token/refresh
+Request:{"refresh":"<RefreshToken>"} ========> Response:{"access" : "<Token>"}
+```
+
+```python
+# ╔═════════════╗
+# ║ setting.py ║
+# ╚═════════════╝
+
+INSTALL_APPS = [..., 'rest_framework.authtoken', 'rest_framework_simpleJWT', ...]
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.JWTAuthentication'],
+    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated']
+}
+
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),  # اعتبار Access Token
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),  # اعتبار Refresh Token
+    'ROTATE_REFRESH_TOKENS': True,  # بعد از استفاده، refresh token قدیمی منقضی شود
+    'BLACKLIST_AFTER_ROTATION': True,  # refresh token های قدیمی در لیست سیاه قرار بگیرند
+    'UPDATE_LAST_LOGIN': True,  # آخرین ورود کاربر به‌روزرسانی شود
+
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'VERIFYING_KEY': None,
+    'AUDIENCE': None,
+    'ISSUER': None,
+    'JWK_URL': None,
+    'LEEWAY': 0,
+
+    'AUTH_HEADER_TYPES': ('Bearer',),  # نام ارسالی همراه توکن باید چه باشد
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+    'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
+
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+    'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
+
+    'JTI_CLAIM': 'jti',
+}
+
+# ╔═════════════════╗
+# ║ /config/urls.py ║
+# ╚═════════════════╝
+
+from rest_framework.authtoken.views import obtain_auth_token
+from rest_framework_simplejwt.views import (TokenObtainPairView, TokenRefreshView, )
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('home.urls')),
+    path('todos/', include('todo.urls')),
+    path('api-auth/', include('rest_framework.urls')),
+    path('auth-token/', obtain_auth_token, name='generate_auth_token'),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # ✅️
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),  # ✅️
+```
+
+[URL](https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html)
+
+
 </div>
