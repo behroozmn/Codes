@@ -218,6 +218,10 @@ WHITE='\033[1;37m'
 
 
 
+# 🅰️ Global Shortcuts
+
+* Shift+F10:  راست کلیک
+
 # 🅰️ Terminal Shortcuts
 
 
