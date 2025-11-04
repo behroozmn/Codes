@@ -4878,7 +4878,7 @@ Request:{"refresh": "refresh_token_دریافت_شده_در_هنگام_لاگی�
 
 ```
 POST: http://127.0.0.1:8000/api/auth/token/verify/
-Request:{"tocken": "token"} ==========> Response:{"refresh": "<Token>","access" : "<Token>"}
+Request:{"tocken": "AccessToken"} ==========> Response:{}
 ```
 
 
