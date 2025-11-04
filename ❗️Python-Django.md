@@ -4810,7 +4810,7 @@ Request:{"username":"<username>","password":"<password>"} ==========> {"refresh"
 
 ```
 POST: http://127.0.0.1:8000/api/auth/token/refresh
-Request:{"refresh":"<RefreshToken>"} ========> Response:{"access" : "<Token>"}
+Request:{"refresh":"<RefreshToken>"} ========> Response:{"refresh": "<Token>","access" : "<Token>"}
 ```
 
 * RefreshToken: اگر بعد از ۵ دقیقه توکن اکسس منقضی شد آنگاه توسط این توکن آن را بروزسانی می‌کنیم
@@ -4864,7 +4864,7 @@ class LogoutView(APIView):
 
 ```
 POST: http://127.0.0.1:8000/api/logout/
-Request:{"refresh": "refresh_token_دریافت_شده_در_هنگام_لاگین"} ==========> {"refresh": "<Token>","access" : "<Token>"}
+Request:{"refresh": "refresh_token_دریافت_شده_در_هنگام_لاگین"} ==========> Response:{"refresh": "<Token>","access" : "<Token>"}
 ```
 
 پس از دستور بالا
@@ -4874,6 +4874,13 @@ Request:{"refresh": "refresh_token_دریافت_شده_در_هنگام_لاگی�
 * برای امنیت بیشتر، می‌توانی در فرانت‌اند access token را هم پاک کنی.
 
 ### 11.3.3. ✅️Verification
+
+
+```
+POST: http://127.0.0.1:8000/api/auth/token/verify/
+Request:{"tocken": "token"} ==========> Response:{"refresh": "<Token>","access" : "<Token>"}
+```
+
 
 ```shell
 curl -X POST http://192.168.100.196:8000/api/auth/token/verify/ \
