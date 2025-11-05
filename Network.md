@@ -1,6 +1,6 @@
 <div dir="rtl">
 
-# 1. 🅰️ Concepts
+# 1. 🅰️ ConceptsAndProtocol
 
 * شبکه تحویل محتوا یا CDN[ContentDeliveryNetwork]: بهینه‌سازی شبکه‌ جهت کاهش زمان تحویل محتوا به مصرف‌کننده علی رغم توزیع سرورها در نقاط جغرافیایی گوناگون
     * highly-distributed platform of servers that helps minimize delays in loading web page content by reducing the physical distance between the server and the user. This helps users around the world view the same high-quality content without slow loading times
@@ -18,22 +18,21 @@
 * مفهوم Scale-Out (Horizontal Scaling): افزودن سرورهای جدید به یک خوشه و افزایش ظرفیت Cluster از طریق شبکه
 * NOC مخفف Network Opration Center است
 
-
-# 2. 🅰️ IO Connector
+## 1.1. 🅱️ IO Connector
 
 * RG45
-  * در بعضی از مدل‌های ارتقاءیافته آن سرعت 10Gb هم ارائه می‌دهد
+    * در بعضی از مدل‌های ارتقاءیافته آن سرعت 10Gb هم ارائه می‌دهد
 
-## 2.1. 🅱️ Fiber Ethernet
+### 1.1.1. ✅️ Fiber Ethernet
 
 همان سازوکار RG45 که به فیبر تبدیل شده است و با IP کارمیکند
 
 * Fiber Ethernet Card
-  * دو عدد چراغ LED دارد
-  * ساپورت کننده پروتکل اترنت و نه «پروتکل اف‌سی»
-  * Speed: 10G or 40G or 100G or 200G
-  * Uniq Identify: IP
-  * ماژول‌های SFP به کارت متصل و کابل به این ماژول‌ها متصل خواهند شد
+    * دو عدد چراغ LED دارد
+    * ساپورت کننده پروتکل اترنت و نه «پروتکل اف‌سی»
+    * Speed: 10G or 40G or 100G or 200G
+    * Uniq Identify: IP
+    * ماژول‌های SFP به کارت متصل و کابل به این ماژول‌ها متصل خواهند شد
 
 ```shell
 iftop
@@ -49,174 +48,8 @@ tcpflow
 ![fundamentalip-ositcp1.jpg](./_srcFiles/Images/fundamentalip-ositcp1.jpg "fundamentalip-ositcp1.jpg")
 ![MTU2.jpg](./_srcFiles/Images/MTU2.jpg "MTU2.jpg")
 
-# 3. 🅰️ WEB
 
-![uri.png](_srcFiles/Images/uri.png "uri.png")
-
-## 3.1. 🅱️ HTTP(Hypertext Transfer Protocol)
-
-* Port:80
-* پروتکل http بهترین ابزار دسترسی فایل بدون داشتن دسترسی public برای عموم است
-* مرورگرها قابلیت اتصال به سرور تحت پروتکل http/https دارد
-* وب‌سایت: یک سایت نمایش است با ملاحظات خود
-* وب اپلیکیشن: یک برنامه سازمانی است که درقالب وب به نمایش درمی‌آید
-*
-
-### 3.1.1. ✅️ HTTP Methods
-
-* Get: همواره پارامترها را در یوآرآل می‌فرستد
-    * Selectation
-* Postاطلاعات را در بادی می‌فرستد
-    * مقداری از گِت با امنیت‌تر است
-    * ارسال مقدار زیاد را فقط با پست می‌توان ارسال کرد
-    * Insertation
-* Head(Like GET but only headers)
-* Put: معمولا جایی که در فضای بروزرسانی است
-* Patch(apply patial modifications to a resource)
-    * از سمت کلاینت مودیفیکیشن کوچک ارسال کنین
-* Delete
-    * برای حذف مقداری
-* Trace
-    * آیا سرور زنده است یا خیر
-* Option(http methods that the server supports)
-    * چه متدهایی را ساپورت می‌کند
-* Connect(Establishes a tunnel to a server)
-    * ارتباط تونل
-
-### 3.1.2. ✅️ Headers.Request
-
-* Get:
-* Host:
-    * itsee.ir
-* accept: کلاینت چه مواردی را انتظار دارد
-    * text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
-* user-agent: مرورگر چه چیزی است
-    * Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0
-* Accept-Encoding: برای تسهیل مشخص می‌شود که این مرورگر قابلیت فهم چه نوع فشرده‌سازی را دارد
-    * gzip, deflate
-* Accept-Language:
-    * en-US,en;q=0.5
-* Connection
-    * keep-alive
-* If-Modified-Since:
-    * Fri, 24 Mar 2023 10:47:57 GMT
-* If-None-Match
-    * "1d18-641d7fdd-43aeb9c7c101613e;gz"
-* Upgrade-Insecure-Requests
-    * 1
-
-### 3.1.3. ✅️ Headers.Response
-
-* ServerResponseCode(Status):
-    * 200:OK
-* Connection
-    * Keep-Alive
-* Date: اگر مرورگر کش کرده و تغییر نداشته همونو نشون بده
-    * Mon,03 Apr 2023 06:31:47 GMT
-* Etag
-    * "1d18-641d7fdd-43aeb9c7c101613e;gz"
-* Server
-    * LiteSpeed
-* Vary
-    * User-Agent
-
-![httpBasicSession.png](_srcFiles/Images/httpBasicSession.png "httpBasicSession.png")
-
-## 3.2. 🅱️ HTTPS(Secure Hypertext Transfer Protocol)
-
-* Port: 443
-* پروتکل http که با ssl امنیت آن افزایش یافته است
-
-![httpsBasicSession.png](./_srcFiles/Images/httpsBasicSession.png "httpsBasicSession.png")
-
-## 3.3. 🅱️ CGI(Common Gateway Interface)
-
-* CGI یا Common Gateway Interface: استانداردی برای تولید صفحات پویای وب توسط سرور که حاوی مشکلاتی بود:
-* تاخیر در تعداد کلاینت زیاد
-* هر درخواست یک پردازه جدید یعنی بار افزوده برای سرور بود
-* محدود برای برخی زبان‌ها(زبان‌های محدود به پلتفرم)
-* باید قابلیت CGI را در وب‌سرور فعال نمایید
-* قابلیت Get و Post وجود دارد
-* دارای برخی CGI Environment Variables
-
-```shell
-#!/usr/bin/python
-
-print "Content-type:text/html\r\n\r\n"
-print '<html>'
-print '<head>'
-print '<title>Hello World - First CGI Program</title>'
-print '</head>'
-print '<body>'
-print '<h2>Hello World! This is my first CGI program</h2>'
-print '</body>'
-print '</html>'
-# OUTPUT: 
-# Hello World! This is my first CGI program
-```
-
-[Link](http://www.test.com/cgi-bin/hello_get.py?first_name=ZARA&last_name=ALI)
-
-```shell
-
-#!/usr/bin/python
-
-# Import modules for CGI handling 
-import cgi, cgitb 
-
-# Create instance of FieldStorage 
-form = cgi.FieldStorage() 
-
-# Get data from fields
-first_name = form.getvalue('first_name')
-last_name  = form.getvalue('last_name')
-
-print "Content-type:text/html\r\n\r\n"
-print "<html>"
-print "<head>"
-print "<title>Hello - Second CGI Program</title>"
-print "</head>"
-print "<body>"
-print "<h2>Hello %s %s</h2>" % (first_name, last_name)
-print "</body>"
-print "</html>"
-OUTPUT:
-Hello ZARA ALI
-```
-
-[URL](http://localhost/cgi-bin/env.sh?namex=valuex&namey=valuey&namez=valuez)
-
-```shell
-#Shellscript CGI
-#!/bin/bash
-echo "Content-type: text/html"
-echo ""
-echo '&lt;html&gt;'
-echo '&lt;head&gt;'
-echo '&lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8"&gt;'
-echo '&lt;title&gt;Environment Variables&lt;/title&gt;'
-echo '&lt;/head&gt;'
-echo '&lt;body&gt;'
-echo 'Environment Variables:'
-echo '&lt;pre&gt;'
-/usr/bin/env
-echo '&lt;/pre&gt;'
-
-echo '&lt;/body&gt;'
-echo '&lt;/html&gt;'
-
-exit 0
-
-```
-
-> تصویر نمایی از حالت قدیمی را نمایش میدهد
-![cgi.jpg](./_srcFiles/Images/cgi.jpg "cgi.jpg")
-
-# 4. 🅰️ CISCO
-
-PacketTracer: نرم‌افزار سیسکو برای شبیه سازی محیط واقعی شبکه
-
-# 5. 🅰️ Switch
+## 1.3. 🅱️ Switch
 
 * سوییچ لایه۲هست(مفاهیم مک و جدولarp)
 * با گذر ایام، سوییچ در لایه۳ورود کرد(مفاهیم روتینگ) و آی‌پی
@@ -233,23 +66,23 @@ PacketTracer: نرم‌افزار سیسکو برای شبیه سازی محیط
 > StackableSwitch
 ![switch-stack.png](./_srcFiles/Images/switch-stack.png "switch-stack.png")
 
-# 6. 🅰️ Gateway|router
+## 1.4. 🅱️Router
 
 * **RoutingTable**: اگر یک لینوکس روتر شد و تعدا کارت‌شبکه زیاد باشد پس لینوکس باید در خاطر خودش نگهداری نماید که برای ارسال بسته به هاست از چه اینترفیسی استفاده کرده است. بنابراین نیاز به یک routing table دارد تا نشان دهد که از کدام اینترفیس برای ارسال بسته به هاست استفاده کرده است
 * **RIP(Router Information Protocol)**: لینوکس برای ساپورت کردن RoutingTable این پروتکل را ایجاد کرده است تا کارهای روت را انجام دهد. زمانی که یک بسته RIP رسید آنگاه لینوکس RoutingTable را بروزرسانی می‌کند. لینوکس از برنامه routed برای Listen کردن بسته‌های RIP و بروزرسانی جدول استفاده می‌کند
 
-## 6.1. 🅱️ LinuxRouter
+### 1.4.1. ✅️LinuxRouter
 
 * اگر پارامتر کرنلی System.Net.Route و net.ipv6.conf.all.forwarding برابر ۱ باشند و در iptables در chain بنام FORWARD قانون اضافه کردیم آنگاه لینوکس قابلیت روتر شدن پیدا خواهد کرد یعنی بسته‌ها را از یک اینترفیس به اینترفیس دیگر انتقال دهد
 *
 
-# 7. 🅰️ Proxy
+## 1.5. 🅱️Proxy
 
 * سایت‌های زیر برای تست پروکسی مفید است
     * ifconfig.me
     * ping.eu
 
-## 7.1. 🅱️ OpenVPN
+### 1.5.1. ✅️OpenVPN
 
 * یکی از روش‌های وی‌پی‌ان زدن است که باید اول بسته آن را نصب نماییم و پس از نصب دو فال در مسیر های etc/openvpn/server.conf و etc/openvpn/client.conf ایجاد می‌نماید که تنظیمات اصلی این فایل‌ها به شرح زیر است:[config]: استفاده از فایل برای نگهداری تنظیمات
     * [dev]: نام دیوایس مجازی که در دستور ifconfig نمایش داده خواهد شد
@@ -277,7 +110,7 @@ PacketTracer: نرم‌افزار سیسکو برای شبیه سازی محیط
 
 ![openvpn.png](./_srcFiles/Images/openvpn.png "openvpn.png")
 
-## 7.2. 🅱️ Tor
+### 1.5.2. ✅️Tor
 
 * از موارد مشابه تور می‌توان به proxychains4 و privoxy اشاره کرد که همانند torsocks در ابتدای دستورات قرار می‌دهیم.
 * پورت پیش‌فرض تور 9050 است
@@ -301,9 +134,7 @@ torsocks curl https://showip.net # Test Ip Adderess
 
 ```
 
-# 8. 🅰️ SNMP
-
-## 8.1. 🅱️ مفاهیم و نکات عمومی
+## 1.6. 🅱️ SNMP
 
 * برای تنظیم اطلاعات community باید فایل snmpd.conf اصلاح شود[فایل snmp.conf را دستکاری نکنید]
 *
@@ -325,9 +156,9 @@ snmpd -V
 
 * rocommunity public default -V systemonly #سبب محدود شدن تعداد رکوردهای مانیتور شده از حدود ۷هزارتا به ۳۰ عدد از موارد خیلی عمومی
 
-# 9. 🅰️ Commands
+# 2. 🅰️ Commands
 
-## 9.1. 🅱️ arp
+## 2.1. 🅱️ arp
 
 * پروتکل arp: چه مک‌آدرس به چه آی‌پی متصل است
 * بسته‌های پروتکل ARP از روتر عبور نمی‌کنند
@@ -337,7 +168,8 @@ snmpd -V
     * `sudo arp -e`
 * [-n|--numeric]:don't resolve names
     * `sudo arp -n`
-## 9.2. 🅱️ arp-scan
+
+## 2.2. 🅱️ arp-scan
 
 ```shell
 arp-scan -I enp4s0 10.0.20.0/24
@@ -345,8 +177,7 @@ arp-scan --interface enp4s0 10.0.20.0/24
 arp-scan --interface enp4s0 --localnet
 ```
 
-
-## 9.3. ✅️curl
+## 2.3. ✅️curl
 
 دستورات یا مرورگر‌های مشابه متنی ترمینال: links و links2 و lynx(دستور www-browser)
 
@@ -355,32 +186,32 @@ curl -I itsee.ir #نمایش هدرهای یک سایت
 curl -u username:password -T file.tar.gz ftp://ftp_server
 ```
 
-## 9.4. 🅱️ ethtool
+## 2.4. 🅱️ ethtool
 
 ```shell
 dig <name>
 dig +short <Name>  #اطلاعات اضافه نشان نده و فقط آی‌پی را نمایش بده
 ```
 
-## 9.5. 🅱️ ethtool
+## 2.5. 🅱️ ethtool
 
 ```shell
 sudo ethtool enp5s0 # اطلاعات فوق‌العاده زیاد بابت کارت شبکه
 
 ```
 
-## 9.6. 🅱️ fping
+## 2.6. 🅱️ fping
 
 `fping -g 192.168.10.1 192.168.10.5 #alive hosts`
 
-## 9.7. 🅱️ host
+## 2.7. 🅱️ host
 
 ```shell
 host -la domain.local # نمایش تمام رکوردهای یک دامنه
 host <name[google.com]>
 ```
 
-## 9.8. 🅱️ hostname
+## 2.8. 🅱️ hostname
 
 * [-I] or [--all-ip-addresses] → All IP addresses for the host
 
@@ -388,7 +219,7 @@ host <name[google.com]>
 hostname -I # show all ip address
 ```
 
-## 9.9. 🅱️ iwlist|iwconfig
+## 2.9. 🅱️ iwlist|iwconfig
 
 wifi|wireless|وای‌فای
 
@@ -397,7 +228,7 @@ iwlist <nic> scan #بررسی وایرلس‌های اطراف سیستم که �
 iwconfig wlp4s0 essid "<Name>" key s:<Pass> #اتصال به یک وایرلس
 ```
 
-## 9.10. 🅱️ ip
+## 2.10. 🅱️ ip
 
 Usage: ip OPTIONS OBJECT COMMAND
 
@@ -471,7 +302,7 @@ Usage: ip OPTIONS OBJECT COMMAND
     * ip addr del x.x.x.x/Y dev <NIC> → del IP
     * ip link del <nic> down → up/down NIC
 
-### 9.10.1. ✅️ [Gateway|Routr] Commands
+### 2.10.1. ✅️ [Gateway|Routr] Commands
 
 * show
     * ip route
@@ -481,16 +312,16 @@ Usage: ip OPTIONS OBJECT COMMAND
 * remove
     * ip route del 192.168.0.150/24 #Removing a static route
 
-## 9.11. 🅱️ ifconfig
+## 2.11. 🅱️ ifconfig
 
 ```shell
 ifconfig eth0:0 xxx.xxx.xxx.xxx #set [Additional ip] or [VirtualIp]
 ifconfig eth0 hw ether AA:BB:CC:DD:EE:FF #MacSpoofing or تغییر مک آدرس
 ```
 
-## 9.12. 🅱️ lsof
+## 2.12. 🅱️ lsof
 
-### 9.12.1. ✅️ Concept
+### 2.12.1. ✅️ Concept
 
 * COMMAND: The command name
 * PID: Process ID (PID) of the process
@@ -527,7 +358,7 @@ ifconfig eth0 hw ether AA:BB:CC:DD:EE:FF #MacSpoofing or تغییر مک آدر�
 * NODE: Node description of the local file; this could be the number of the local file, TCP, UDP, or STR (stream)
 * NAME: The name of the mount point where the file resides
 
-### 9.12.2. ✅️ Switch
+### 2.12.2. ✅️ Switch
 
 * [-i] → List all network connecttion
     * tcp|udp:
@@ -571,21 +402,21 @@ ifconfig eth0 hw ether AA:BB:CC:DD:EE:FF #MacSpoofing or تغییر مک آدر�
     * lsof -d mem → All memory map files
     * lsof -d cwd
 
-### 9.12.3. ✅️ Appendix
+### 2.12.3. ✅️ Appendix
 
 * [+L1] → سوکت‌های فعلی سرور که به هیچ فایلی از هارد وصل نشده است - پردازه‌های موجود در رم که ممکن است ویروس باشند
     * lsof +L1
 * deletedFiles
     * sudo lsof [path] | grep deleted
 
-## 9.13. 🅱️ mtr
+## 2.13. 🅱️ mtr
 
 ```shell
 mtr google.com
 mtr -n --report IP
 ```
 
-## 9.14. 🅱️ netstat
+## 2.14. 🅱️ netstat
 
 * [خالی و بدون پارامتر ورودی] → By default, netstat displays a list of open sockets.
 * [-i] or [--interfaces,] → Display a table of all network interfaces
@@ -597,13 +428,13 @@ mtr -n --report IP
 * [-l] → display only listening sockets
 * [-n] → display the socket’s port number
 
-## 9.15. 🅱️ nmap
+## 2.15. 🅱️ nmap
 
 * تعریف NullScan: بسته هیچ پرچمی(TCP، UDP، Sync، Http، ICMP و غیره) به خود نمی‌گیرد.
     * اگر یک سرور هیچ پاسخی نداد شما می‌توانید نوع اسکن را در وضعیت Null Scan قرار دهید که در آن صورت حتما بسته عبور می‌کند و حداقل می‌توان فهمید که سرور alive هست یا پایین است
 * تعریف Zombi Attach: همزمان به چندین سیستم زامبی‌شده(قربانی‌های بستر اینترنت) می‌گوییم که به یک سرور وصل شوند و کاری انجام دهند و گزارش خروجی حمله را در اختیارمان قرار دهند و ما ناشناخته خواهیم ماند
 
-### 9.15.1. ✅️ Ping
+### 2.15.1. ✅️ Ping
 
 * nmap -Pn [target] #Dont ping
 * nmap -sP [target] #perform a Ping Only Scan
@@ -616,12 +447,12 @@ mtr -n --report IP
 * nmap -PM [target] #CMP Address Mask Ping
 * nmap -PO [target] #IP Protocol Ping
 
-### 9.15.2. ✅️ Trace
+### 2.15.2. ✅️ Trace
 
 * nmap –traceroute     [target] #Traceroute
 * nmap --packet-trace [target] #Trace package
 
-### 9.15.3. ✅️ DNS
+### 2.15.3. ✅️ DNS
 
 * nmap -R [target] #Force Reverse DNS Resolution
 * nmap -n [target] #Disable Reverse DNS Resolution
@@ -629,7 +460,7 @@ mtr -n --report IP
 * nmap –dns-servers [servers] [target] #Manually Specify DNS Server(s)
 * nmap -sL [targets] #Create a Host List
 
-### 9.15.4. ✅️ Advanced Scanning Options
+### 2.15.4. ✅️ Advanced Scanning Options
 
 * nmap -sS [target] #TCP SYN Scan
 * nmap -sT [target] #TCP Connect Scan
@@ -644,7 +475,7 @@ mtr -n --report IP
 * nmap –send-eth [target] #Send Raw Ethernet Packets
 * nmap –send-ip [target] #Send IP Packets
 
-### 9.15.5. ✅️ Port Scan
+### 2.15.5. ✅️ Port Scan
 
 * nmap -F [target] #Perform a Fast Scan
 * nmap -p [port(s)] [target] #Scan Specific Ports
@@ -657,7 +488,7 @@ mtr -n --report IP
 * nmap –top-ports [number] [target] #Scan Top Ports
 * nmap -r [target] #Perform a Sequential Port Scan
 
-### 9.15.6. ✅️ Version Detection
+### 2.15.6. ✅️ Version Detection
 
 * nmap -O [target] #Operating System Detection
 * nmap -O –osscan guess [target] #Attempt to Guess an Unknown OS
@@ -665,7 +496,7 @@ mtr -n --report IP
 * nmap -sV –version trace [target] #Troubleshooting Version Scans
 * nmap -sR [target] #Perform a RPC Scan
 
-### 9.15.7. ✅️ Firewall Evasion Techniques
+### 2.15.7. ✅️ Firewall Evasion Techniques
 
 * nmap -f [target] #augment Packets
 * nmap –mtu [MTU] [target] #pacify a Specific MTU
@@ -682,7 +513,7 @@ mtr -n --report IP
     * nmap –spoof-mac Cis 192.168.0.1
 * nmap –badsum [target] #Send Bad Checksums
 
-### 9.15.8. ✅️ Troubleshooting And Debugging
+### 2.15.8. ✅️ Troubleshooting And Debugging
 
 * nmap -h #Getting Help
 * nmap -V #Display nmap Version
@@ -695,7 +526,7 @@ mtr -n --report IP
 * nmap -e [interface] [target] #Specify a Network Interface
     * nmap -e eth0 192.168.0.1
 
-### 9.15.9. ✅️ nmap Scripting Engine
+### 2.15.9. ✅️ nmap Scripting Engine
 
 * nmap –script [script.nse] [target] #Execute Individual Scripts
 * nmap –script [expression] [target] #Execute Multiple Scripts
@@ -709,7 +540,7 @@ mtr -n --report IP
     * nmap –script banner.nse –script-trace 192.168.0.1
 * nmap –script-updatedb #Update the Script Database
 
-## 9.16. 🅱️ nmcli
+## 2.16. 🅱️ nmcli
 
 ```shell
 nmcli connection show
@@ -734,18 +565,18 @@ nmcli general logging domains ALL
 nmcli general logging level INFO domains ALL
 ```
 
-## 9.17. 🅱️ nslookup
+## 2.17. 🅱️ nslookup
 
 ```shell
 nslookup -querytype=mx domain.ir #پیدا کردن ایمیل‌سرور یک دامین
 nslookup <name>
 ```
 
-## 9.18. 🅱️ tcpdump
+## 2.18. 🅱️ tcpdump
 
 دستور لینوکس برای گوش کردن به شبکه- سوییچ‌ها
 
-### 9.18.1. ✅️ Switch
+### 2.18.1. ✅️ Switch
 
 * [-c] → Capture Only N Number of Packets
     * sudo tcpdump -c 5
@@ -793,7 +624,7 @@ nslookup <name>
 * [] →
 * [] →
 
-### 9.18.2. ✅️ Examples
+### 2.18.2. ✅️ Examples
 
 * tcpdump src NUMBER && dst port NUMBER
 * tcpdump dst ff:ff:ff:ff:ff:ff
@@ -808,13 +639,13 @@ nslookup <name>
 * tcpdump -i any -c5 -nn "port 80 and (src 192.168.122.98 or src 54.204.39.132)" → #filtering packets for HTTP service
   only (port 80) and source IP addresses 192.168.122.98 or 54.204.39.132
 
-## 9.19. 🅱️ traceroute
+## 2.19. 🅱️ traceroute
 
 ```shell
 traceroute google.com
 ```
 
-## 9.20. 🅱️ wget
+## 2.20. 🅱️ wget
 
 - [-b] → قرار دادن پروسه دانلود در بک‌گراند و عدم نمایش و این معمولا برای فایل‌های بزرگ کاربرد دارد
 - [-c] → اگر دانلود متوقف شد مجددا ادامه دانلود را از سر گیرد
@@ -850,7 +681,7 @@ traceroute google.com
 - `wget -r -np -R "index.html*" https://shop.hemat-elec.ir/wp-content/themes/irankala/assets/fonts` # Note: دانلود فایل های مشخص شده
     - wget -r -A.pdf
 
-## 9.21. 🅱️ Hosname
+## 2.21. 🅱️ Hosname
 
 ```shell
 #show
@@ -872,9 +703,9 @@ hostname XXXXX
 /etc/init.d/hostname.sh start
 ```
 
-# 10. 🅰️ Connection
+# 3. 🅰️ Connection
 
-## 10.1. 🅱️ Bonding
+## 3.1. 🅱️ Bonding
 
 * این قابلیت امکان مجتمع شدن چند کارت شبکه و استفاده از آنها به صورت یک کارت شبکه را فراهم می کند. نام دیگر آن NIC Teaming و Link Aggregate است. این روش دارای مدهای مختلفی است که عبارتند از:
 * mode=0(balance-rr) – mode=1(active-backup) – mode=2(balance-xor) – mode=3(broadcast) – mode=4(802.3ad) – mode=5(balance-tlb) – mode=6(balance-alb)
@@ -885,7 +716,7 @@ hostname XXXXX
     * Generic Modes: در مد broadcast تمامی ترافیک از تمامی پورتهای عضو گروه خارج می شوند. در مد balance-tlb ترافیک خروجی load balance می شود اما ترافیک ورودی فقط از یک لینک می آید. در مد balance-alb نیز تمامی ترافیک ارسالی و دریافتی load balance می شود و از روش change MAC address استفاده می گردد.
 * سخن آخر اینکه اگر شما در محیطی کار می کنید که سوئیچ ها از ۸۰۲.۳ad یا همان LACP پشتیبانی می کنند، بهترین روش همین مد است. اما اگر ساپورت سوئیچی ندارید و هم می خواهید load balance داشته باشید و هم fault tolerance بهترین روش balance-alb است. در نهایت اگر می خواهید فقط بین دو سرور replication داشته باشید، مد balance-rr برای شما بهتر است.
 
-## 10.2. 🅱️ بررسی سرعت لینک شبکه
+## 3.2. 🅱️ بررسی سرعت لینک شبکه
 
 ```shell
 node1: iperf -s
@@ -895,5 +726,17 @@ node2: iperf -c <HOST>
 node1: iperf3 -s -i 1
 node2: iperf3 -u -c 10.10.12.10 -w 1M -i 10 -t 60       
 ```
+
+# 4. 🅰️Production
+
+## 4.1. 🅱️CISCO
+
+PacketTracer: نرم‌افزار سیسکو برای شبیه سازی محیط واقعی شبکه
+
+## 4.2. 🅱️Openwrt
+
+* ازلحاظ ساختاری همانند میکروتیک (MicroTik) می‌باشد
+* برپایه Debian است و بسته‌ها با پسوند deb می‌باشد
+* این محصول OpenSource است
 
 </div>
