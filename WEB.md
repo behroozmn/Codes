@@ -208,4 +208,204 @@ curl -u username:password -T file.tar.gz ftp://ftp_server
 - `wget -r -np -R "index.html*" https://shop.hemat-elec.ir/wp-content/themes/irankala/assets/fonts` # Note: دانلود فایل های مشخص شده
     - wget -r -A.pdf
 
+
+# 5. 🅰️ WebServer
+
+## 5.1. 🅱️ Apache
+
+* آبلود فایل با سایز بزرگ: در تنظیمات Apache داخل فایل php.ini مقادیر post_max_size و upload_max_filesize را افزایش دهید.(دقت شود که مقدار post_max_size بیشتر ازupload_max_filesize باشد)
+* این سرویس در دبیان بانام apache2 و در ردهت httpd (درنهایت همان آپاچی است)شناخته می‌شود
+* دستور apache2ctl کار کنترلی سرویس آپاچی را بر عهده دارد
+
+```shell
+apache2ctl status #نمایش اطلاعات سرور
+apache2ctl fullstatus #نمایش اطلاعات جامع از سرور
+apache2ctl graceful #Restarts the Apache server, but existing connections are not terminated #ریستارت و عدم قطع شدن کانکشن‌های موجود
+apache2ctl graceful-stop # Stops the Apache server, but existing connections are not terminated #پایین آوردن سرویس و عدم قطع شدن کانکشن‌های موجود
+apache2ctl configtest #بررسی اینکه کانفیگ صحیح است یا خیر
+sudo apachectl start       [Start Apache web server]
+sudo apachectl stop        [Stop Apache web server]
+sudo apachectl restart     [Restart Apache web server]
+sudo apachectl graceful    [Gracefully Restart Apache web server]
+sudo apachectl configtest  [Check Apache Configuration]
+sudo apachectl -V          [Check Apache Version]
+sudo apachectl status      [Check Apache Status]
+```
+
+### 5.1.1. ✅️ConfigFile
+
+```
+AllowOverride None #افزودن این پارامتر موجب سلب مجوز استفاده از فایل مخفی htaccess می‌شود.
+ServerAdmin behroozmn@chmail.ir #آدرس ایمیل ادمین
+AuthName MESSAGE # اگر برای ورود محدودیت نام کاربری و پسورد گذاشته باشم، توسط این پارامتر یک پیام به ایشان می‌دهیم
+
+```
+
+```
+<Directory /var/www/>
+Options Indexes FollowSymLinks  #ListFileInBrowser 
+AllowOverride None
+Require all granted
+</Directory> 
+
+```
+
+### 5.1.2. ✅️ AccessRestriction.mod_access(IPBase)
+
+* در این محدودیت برحسب آی‌پی کلاینت اعمال می‌شود و در آن از گزینه Allow و Deny استفاده می‌شود
+
+گزینه Order مشخص می‌کنداول ملاحظات خط Deny و سپس ملاحظات خط Allow اعمال گردد
+
+```
+<Directory /var/www/html>
+Order Deny,Allow
+Deny from All
+Allow from 192.168.1.0/255.255.255.0
+DocumentRoot /var/www/html
+</Directory>
+```
+
+### 5.1.3. ✅️ AccessRestriction.mod_auth(user Pass)
+
+- دسترسی به سایت نیاز به وارد کردن نام کاربری و پسورد باشد
+- نیازبه یک فایل پسورد با محتوی هش وجود دارد
+
+گام اول: توسط دستور زیر یک فایل برای نگهداری هش‌ها ایجاد می‌کنیم و همزمان یک کاربر و پسورد ایجاد می‌کنیم
+
+```shell
+htpasswd -c /var/www/html/passwords behrooz
+New password:
+Re-type new password:
+Adding password for user behrooz
+```
+
+گام دوم: بررسی در فایل کانفیگ
+
+```shell
+Require all granted #این خط نباید وجود داشته باشد زیرا در آن صورت به همه اجازه دسترسی خواهد داد
+```
+
+گام سوم: قرار دادن این دستورات در فایل کانفیگ
+
+```
+<Directory /var/www/html>
+Options Indexes FollowSymLinks
+AllowOverride None
+AuthName "Lotfan Password ra vared konid"
+AuthType Basic
+AuthUserFile /var/www/html/passwords
+Require valid-user
+</Directory>
+```
+
+گام چهارم: ریست آپاچی
+
+### 5.1.4. ✅️ htaccess
+
+* فایل مخفی «اِچ‌تی‌اکسس» سبب اعمال برخی تنظیمات در برخی مسیر‌ها و دایرکتوری‌ها می‌شود
+* خطوط زیر در فایل htaccess قرار داده شود
+
+```
+Options +Indexes #اجازه نمایش لیست دایرکتوری
+IndexIgnore * #اجازه نمایش لیست دایرکتوری
+Options -Indexes #جلوگیری از دسترسی دایرکتوری
+IndexOptions +FancyIndexing #نمایش جزییات
+IndexIgnore *.zip *.txt   #نادیده گرفتن پسوند خاص
+DirectoryIndex Home.html #تعیین نوع پرونده پیش‌فرض
+```
+
+### 5.1.5. ✅️ LimitForUpload
+
+افزایش مقادیر پارامتر post_max_size و upload_max_filesize در فایل php.ini (دقت شود که مقدار post_max_size بیشتر از upload_max_filesize باشد)
+
+```
+sudo vim /etc/php5/apache2/php.ini 
+post_max_size=
+upload_max_filesize=
+--> post_max_size > upload_max_filesize 
+sudo service apache2 restart 
+```
+
+### 5.1.6. ✅️ VirtualHost.IPBase
+
+- ارائه چندین وب‌سرور روی یک سرور از این طریق صورت می‌گیرد.هر نام در DNS به یک آی‌پی متفاوت خواهد رسید و هرگاه نام مربوطه به وب‌سرور داده شده تنظیمات مربوط به آن سایت را نمایش خواهد داد
+
+
+1. تنظیمات آورده شده بالا را در آپاچی قرار می‌دهیم
+   ```
+   Listen 192.168.1.77:80
+   Listen 192.168.1.78:80
+   <VirtualHost www.myhost1.com>
+   Servername www.myhost1.com
+   DocumentRoot /var/www/html/myhost1
+   </VirtualHost>
+   <VirtualHost www.myhost2.com>
+   Servername www.myhost2.com
+   DocumentRoot /var/www/html/myhost2
+   </VirtualHost>
+   ```
+2. باید مسیر تعریف شده در عبارت DocumentRoot موجود باشد
+3. دایرکتوری قید شده را به آپاچی می‌شناسانیم
+   ```
+   <Directory /var/www/html/myhost1>Options Indexes FollowSymLinksAllowOverride NoneRequire all granted
+   </Directory /var/www/html/myhost1>
+   ```
+4. توسط دستور apache2ctl configtestتنظیمات را چک می‌کنیم
+5. این نام باید در DNS یا فایل hosts موجود باشد
+
+### 5.1.7. ✅️VirtualHost.NameBase
+
+سبب می‌شود تا در یک آی‌پی چندین دامنه را به مسیرهای متفاوت(سایت‌های متفاوت) وصل کنیم
+
+1. تنظیمات زیر را در فایل لحاظ نمایید
+   ```
+   NameVirtualHost 192.168.1.77
+   <VirtualHost 192.168.1.77>
+   ServerName www.myhost1.com
+   DocumentRoot /var/www/html/host1
+   </VirtualHost>
+   
+   <VirtualHost 192.168.1.77>
+   ServerName www.myhost2.com
+   DocumentRoot /var/www/html/host2
+   </VirtualHost>
+   ```
+2. باید مسیر تعریف شده در عبارت DocumentRoot موجود باشد
+3. دایرکتوری قید شده را به آپاچی می‌شناسانیم
+   ```
+   <Directory /var/www/html/myhost1>
+   Options Indexes FollowSymLinks
+   AllowOverride None
+   Require all granted
+   </Directory /var/www/html/myhost1>
+   ```
+4. توسط دستور apache2ctl configtestتنظیمات را چک می‌کنیم
+5. -این نام باید در DNS یا فایل hosts موجود باشد
+
+## 5.2. 🅱️ NginX
+
+- معمولا بعنوان ReverseProxyServer استفاده می‌شود و LoadBalance ایجاد نماید
+- سرویس NginX یک ReverseProxy خیلی ساده است
+- ۱-توسط این قطعه یک دامنه را مدیریت می‌کنیم
+
+```
+server {
+listen 80;
+server_name example.com;
+location \ {
+proxy_pass http://lxer.com/;
+include /etc/nginx/proxy_params;
+}
+}
+```
+
+- ۲-توسط proxy_pass درخواست ها را به یک آدرس هدایت می‌کنیم
+- مسیر پیش‌فرض /usr/share/nginx/html است
+
+## 5.3. 🅱️ Squid
+
+یک وب سرور است که معمولا بعنوان پروکسی در مرورگرها تنظیم می‌شود و همه از طریق او به اینترنت وصل می‌شوند و میتواند صفحات را کش نماید.(از دردسرهای کش سرور رهایی یابیم)
+
+
+
 </div>
