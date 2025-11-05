@@ -11,65 +11,159 @@
 * وب اپلیکیشن: یک برنامه سازمانی است که درقالب وب به نمایش درمی‌آید
 *
 
-## 1.1. 🅱️HTTP Methods
+## 1.1. 🅱️ Methods
 
-* Get: همواره پارامترها را در یوآرآل می‌فرستد
-    * Selectation
-* Postاطلاعات را در بادی می‌فرستد
-    * مقداری از گِت با امنیت‌تر است
-    * ارسال مقدار زیاد را فقط با پست می‌توان ارسال کرد
-    * Insertation
-* Head(Like GET but only headers)
-* Put: معمولا جایی که در فضای بروزرسانی است
-* Patch(apply patial modifications to a resource)
-    * از سمت کلاینت مودیفیکیشن کوچک ارسال کنین
-* Delete
-    * برای حذف مقداری
-* Trace
-    * آیا سرور زنده است یا خیر
-* Option(http methods that the server supports)
-    * چه متدهایی را ساپورت می‌کند
-* Connect(Establishes a tunnel to a server)
-    * ارتباط تونل
+| متد HTTP   | نام رایج         | کاربرد اصلی                 | نحوه ارسال داده                       |
+|------------|------------------|-----------------------------|---------------------------------------|
+| **GET**    | خواندن           | دریافت منبع (resource)      | فقط در **URL** (query params یا path) |
+| **POST**   | ایجاد            | ایجاد منبع جدید             | در **body** (معمولاً JSON)            |
+| **PUT**    | جایگزینی کامل    | جایگزینی کامل یک منبع موجود | در **body** (تمام فیلدها)             |
+| **PATCH**  | به‌روزرسانی جزئی | به‌روزرسانی بخشی از منبع    | در **body** (فقط فیلدهای تغییریافته)  |
+| **DELETE** | حذف              | حذف یک منبع                 | معمولاً **بدون body** (شناسه در URL)  |
 
-## 1.2. 🅱️Headers.Request
+## 1.2. 🅱️Data Request/Response
 
-* Get:
-* Host:
-    * itsee.ir
+### 1.2.1. ✅️Request
+
+#### 1.2.1.1. ❇️Path Parameters
+
+- Such as:`GET /api/users/123`
+- Type: string
+- Syntax: `<int:user_id>` or `{id}`
+- کاربرد
+    - موارد استفاده: ثابت‌ها و داده‌های ضروری
+    - نباید برای فیلتر یا جستجو استفاده شود.
+
+#### 1.2.1.2. ❇️Query Parameters
+
+- position: after `?` in URL
+- مثال: `GET /api/users?role=admin&limit=10&sort=name`
+- کاربرد استاندارد:
+    - فیلتر کردن (?status=active)
+    - جستجو (?q=ali)
+    - صفحه‌بندی (?page=2&size=20)
+    - مرتب‌سازی (?sort=-created_at)
+    - انتخاب فیلدها (?fields=id,name,email)
+- محدودیت‌ها:
+    - طول URL محدود است (معمولاً ~2000 کاراکتر).
+    - داده‌های حساس (مثل رمز عبور) نباید اینجا بیایند (چون در لاگ‌ها ذخیره می‌شوند).
+    - Type: String(list as string)
+        - ?tags=python&tags=django
+        - ?["python", "django"]
+
+#### 1.2.1.3. ❇️Request Body
+
+- جایگاه: بعد از هدرها
+- کاربرد استاندارد:
+    - ارسال داده‌های پیچیده یا حجیم (مثل JSON، فرم، فایل).
+    - فقط در متدهای غیر Safe نظیر `POST`, `PUT`, `PATCH`, `DELETE`
+- البته `DELETE` معمولاً body ندارد
+- مزایا:
+    - بدون محدودیت طول (نسبت به URL).
+    - امن‌تر برای داده‌های حساس (با HTTPS).
+    - پشتیبانی از ساختارهای پیچیده (آبجکت، آرایه، تودرتو).
+
+فرمت‌های رایج
+
+| `Content-Type`                      | کاربرد                             |
+|-------------------------------------|------------------------------------|
+| `application/json`                  | APIهای مدرن (داده‌های ساختاریافته) |
+| `application/x-www-form-urlencoded` | فرم‌های HTML ساده                  |
+| `multipart/form-data`               | آپلود فایل + داده                  |
+| `text/plain`                        | متن ساده (نادر)                    |
+
+```json
+POST /api/users
+Content-Type: application/json
+
+{
+"name": "Ali",
+"email": "ali@example.com"
+}
+```
+
+#### 1.2.1.4. ❇️HTTP Request Headers
+
+بعنوان متادیتا لحاظ می‌شوند و نه دیتای اصلی کسب و کار. یعنی نباید دیتای اصلی را توسط آن ارسال کرد(مگر در موارد خاص مثل `X-Request-ID`)
+
 * accept: کلاینت چه مواردی را انتظار دارد
-    * text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+    * `accept: text/html`
+    * `accept: application/xhtml+xml`
+    * `accept: application/xml;q=0.9`
+    * `accept: image/avif`
+    * `accept: image/webp`
+    * `accept: */*;q=0.8`
 * user-agent: مرورگر چه چیزی است
-    * Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0
+    * `user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0`
 * Accept-Encoding: برای تسهیل مشخص می‌شود که این مرورگر قابلیت فهم چه نوع فشرده‌سازی را دارد
-    * gzip, deflate
-* Accept-Language:
-    * en-US,en;q=0.5
+    * `Accept-Encoding: gzip`
+    * `Accept-Encoding: deflate`
+* Accept-Language
+    * `Accept-Language: en-US`
+    * `Accept-Language: fa-IR`
 * Connection
-    * keep-alive
-* If-Modified-Since:
-    * Fri, 24 Mar 2023 10:47:57 GMT
-* If-None-Match
-    * "1d18-641d7fdd-43aeb9c7c101613e;gz"
-* Upgrade-Insecure-Requests
-    * 1
+    * `Connection: keep-alive`
+* Content-Type
+    * `Content-Type: application/json`
+* Authorization
+    * `Authorization: Bearer <token>` For JWT Authentication
+    * `Authorization: Token <token>` For TokenBase Authentication
 
-## 1.3. 🅱️Headers.Response
+#### 1.2.1.5. ❇️Cookies
 
-* ServerResponseCode(Status):
-    * 200:OK
-* Connection
-    * Keep-Alive
-* Date: اگر مرورگر کش کرده و تغییر نداشته همونو نشون بده
-    * Mon,03 Apr 2023 06:31:47 GMT
-* Etag
-    * "1d18-641d7fdd-43aeb9c7c101613e;gz"
-* Server
-    * LiteSpeed
-* Vary
-    * User-Agent
+- position: on header
+    - `Cookie: name=value; sessionid=abc123`
+- ذخیره تنظیمات کلاینت نظیر زبان کلاینت
+- با Flag های HttpOnly, Secure, SameSite محافظت شوند.
+- در APIهای مدرن (Token-based) کمتر استفاده می‌شوند.
+
+### 1.2.2. ✅️Response
+
+#### 1.2.2.1. ❇️Response Body
+
+- بازگرداندن داده‌های درخواستی (JSON, XML, HTML, فایل و ...)
+
+```json
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+"id": 123,
+"name": "Ali",
+"email": "ali@example.com"
+}
+```
+
+استاندارد پاسخ خطا
+
+````json
+{
+  "error": {
+    "code": "invalid_email",
+    "message": "آدرس ایمیل نامعتبر است.",
+    "field": "email"
+  }
+}
+````
+
+#### 1.2.2.2. ❇️Response Headers
+
+* Content-Type
+    * `Content-Type: application/json`
+* Location
+    * `Location: /api/users/123`
 
 ![httpBasicSession.png](_srcFiles/Images/httpBasicSession.png "httpBasicSession.png")
+
+#### 1.2.2.3. ❇️Status Code
+
+انتقال وضعیت عملیات بدون نیاز به بدنه
+
+- 2xx
+- 3xx
+- 4xx
+- 5xx
+-
 
 # 2. 🅰️HTTPS(Secure Hypertext Transfer Protocol)
 
@@ -207,7 +301,6 @@ curl -u username:password -T file.tar.gz ftp://ftp_server
 - `wget --mirror --convert-links --page-requisites --no-parent -P documents/websites/ URL` #می توان از دستور wget برای دانلود محتوای کل سایت استفاده کرد
 - `wget -r -np -R "index.html*" https://shop.hemat-elec.ir/wp-content/themes/irankala/assets/fonts` # Note: دانلود فایل های مشخص شده
     - wget -r -A.pdf
-
 
 # 5. 🅰️ WebServer
 
@@ -405,7 +498,5 @@ include /etc/nginx/proxy_params;
 ## 5.3. 🅱️ Squid
 
 یک وب سرور است که معمولا بعنوان پروکسی در مرورگرها تنظیم می‌شود و همه از طریق او به اینترنت وصل می‌شوند و میتواند صفحات را کش نماید.(از دردسرهای کش سرور رهایی یابیم)
-
-
 
 </div>
