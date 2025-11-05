@@ -216,13 +216,16 @@ WHITE='\033[1;37m'
 ```
 
 
-
-
 # 🅰️Shortcuts
 
 * Shift+F10:  راست کلیک
+* Alt+F8: Resize
+* Alt+space: RightClick(Outer)
+* super+f10: RightClick(Tray)
+* 
+* Alt+F7: Move
 
-# 🅰️ Terminal Shortcuts
+##  🅱️Terminal Shortcuts
 
 
 * [Ctrl+A]:jump to start of the line
@@ -246,3 +249,8 @@ WHITE='\033[1;37m'
 * [ALT+D]:delete a word starting from the current cursor position
 * [Alt+Backspace]: حذف متن از موقعیت مکان نما تا ابتدای کلمه اخیر. اگر مکان نما در اول یک کلمه باشد کلمه قبلی حذف خواهد شد
 * [Ctrl+Y]: برش متن از کلیپ‌بورد و درج در موقعیت مکان نما
+
+##  🅱️Gnome
+
+* Alt+Ctrl+Shift+R: ScreenShot
+* Shift+Super+<>: Workspace(Move Window Into Workspace2)
