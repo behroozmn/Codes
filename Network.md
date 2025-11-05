@@ -18,12 +18,46 @@
 * مفهوم Scale-Out (Horizontal Scaling): افزودن سرورهای جدید به یک خوشه و افزایش ظرفیت Cluster از طریق شبکه
 * NOC مخفف Network Opration Center است
 
-## 1.1. 🅱️ IO Connector
+# 2. 🅰️ARP
+
+## 2.1. 🅱️ Commands
+
+### 2.1.1. ✅️arp
+
+* پروتکل arp: چه مک‌آدرس به چه آی‌پی متصل است
+* بسته‌های پروتکل ARP از روتر عبور نمی‌کنند
+
+
+* [-e]: display (all) hosts in default (Linux) style
+    * `sudo arp -e`
+* [-n|--numeric]:don't resolve names
+    * `sudo arp -n`
+
+### 2.1.2. ✅️arp-scan
+
+```shell
+arp-scan -I enp4s0 10.0.20.0/24
+arp-scan --interface enp4s0 10.0.20.0/24
+arp-scan --interface enp4s0 --localnet
+```
+
+# 3. 🅰️IP
 
 * RG45
     * در بعضی از مدل‌های ارتقاءیافته آن سرعت 10Gb هم ارائه می‌دهد
 
-### 1.1.1. ✅️ Fiber Ethernet
+## 3.1. 🅱️Bonding
+
+* این قابلیت امکان مجتمع شدن چند کارت شبکه و استفاده از آنها به صورت یک کارت شبکه را فراهم می کند. نام دیگر آن NIC Teaming و Link Aggregate است. این روش دارای مدهای مختلفی است که عبارتند از:
+* mode=0(balance-rr) – mode=1(active-backup) – mode=2(balance-xor) – mode=3(broadcast) – mode=4(802.3ad) – mode=5(balance-tlb) – mode=6(balance-alb)
+* در مدهای ۰ و ۲ و ۳ و ۴ تمامی پورت ها یک گروه می بایست به یک logical switch متصل شوند اما در مدهای ۱ و ۵ و ۶ پورت های یک گروه می توانند به سوئیچ های مختلف متصل شوند. هر چند که می توان با aggregate کردن چند سوئیچ فیزیکال همه آنها را به یک logical switch تبدیل کرد.
+* تمامی مدهای بالا در سه دسته کلی قرار می گیرند:
+    * FailOver Only: تنها مد active-backup در این دسته قرار می گیرد. وقتی لینک اصلی fail شد لینک دوم جایگزین آن می شود.
+    * Require Switch Support: مدهای balance-rr و ۸۰۲.۳ad و balance-xor هستند که باید سوئیچ نیز از آنها پشتیبانی نماید.
+    * Generic Modes: در مد broadcast تمامی ترافیک از تمامی پورتهای عضو گروه خارج می شوند. در مد balance-tlb ترافیک خروجی load balance می شود اما ترافیک ورودی فقط از یک لینک می آید. در مد balance-alb نیز تمامی ترافیک ارسالی و دریافتی load balance می شود و از روش change MAC address استفاده می گردد.
+* سخن آخر اینکه اگر شما در محیطی کار می کنید که سوئیچ ها از ۸۰۲.۳ad یا همان LACP پشتیبانی می کنند، بهترین روش همین مد است. اما اگر ساپورت سوئیچی ندارید و هم می خواهید load balance داشته باشید و هم fault tolerance بهترین روش balance-alb است. در نهایت اگر می خواهید فقط بین دو سرور replication داشته باشید، مد balance-rr برای شما بهتر است.
+
+## 3.2. 🅱️Fiber Ethernet
 
 همان سازوکار RG45 که به فیبر تبدیل شده است و با IP کارمیکند
 
@@ -33,23 +67,72 @@
     * Speed: 10G or 40G or 100G or 200G
     * Uniq Identify: IP
     * ماژول‌های SFP به کارت متصل و کابل به این ماژول‌ها متصل خواهند شد
+    * کامندهایی که این مورد را پوشش می‌دهند
+        * iftop
+        * iptraf-ng
+        * nload
+        * tcpflow
+
+## 3.3. 🅱️Commands
+
+### 3.3.1. ✅️iperf
 
 ```shell
-iftop
-iptraf-ng
-nload
-tcpflow
+node1: iperf -s
+node2: iperf -c <HOST>
 
+#FromSobhanSadatNejad:
+node1: iperf3 -s -i 1
+node2: iperf3 -u -c 10.10.12.10 -w 1M -i 10 -t 60       
 ```
 
-![IP.png](./_srcFiles/Images/IP.png "IP.png")
-![fundamentalip-ipv4oct1.jpg](./_srcFiles/Images/fundamentalip-ipv4oct1.jpg "fundamentalip-ipv4oct1.jpg")
-![fundamentalip-ipv6oct1.jpg](./_srcFiles/Images/fundamentalip-ipv6oct1.jpg "fundamentalip-ipv6oct1.jpg")
-![fundamentalip-ositcp1.jpg](./_srcFiles/Images/fundamentalip-ositcp1.jpg "fundamentalip-ositcp1.jpg")
-![MTU2.jpg](./_srcFiles/Images/MTU2.jpg "MTU2.jpg")
+# 4. 🅰️ICMP
 
+## 4.1. 🅱️Commands
 
-## 1.3. 🅱️ Switch
+### 4.1.1. ✅️fping
+
+`fping -g 192.168.10.1 192.168.10.5 #alive hosts`
+
+# 5. 🅰️DNS
+
+## 5.1. 🅱️Command
+
+### 5.1.1. ✅️dig
+
+```shell
+dig <name>
+dig +short <Name>  #اطلاعات اضافه نشان نده و فقط آی‌پی را نمایش بده
+```
+
+### 5.1.2. ✅️nslookup
+
+```shell
+nslookup -querytype=mx domain.ir #پیدا کردن ایمیل‌سرور یک دامین
+nslookup <name>
+```
+
+## 5.2. 🅱️Bind
+
+Bind
+
+- Top Level Domain یا TLD : سطح com یا ir یا net یا org در DNS
+- First Level Domain یا FLD : نام itsee در دامنه itsee.ir
+- ICANN: سازمانی که نام‌های DNS یعنی TLD یا FLD را مدیریت می‌کند
+- DNSSec : پاسخ که از سرور میآید را sign میکند و من مطمئن میشوم که دقیقا از سرور مقصد آمده
+- دستور named-checkzone یا named-checkconf : بررسی صحت اطلاعات موجود در فایل تنظیمات
+- دیتا پس از resolve شدن کش می‌شود و نوبت بعدی خیلی سریع‌تر resolve پاسخ داده خواهد شد
+- DNS Master: سروری که ادعا میکند صاحب یک زون است(یعنی خودم جواب را بلدم) و همچنین مواردی که بلد نیست را از Forward می‌پرسد
+- در DNS در فایل zone مقدار TTL برحسب ثانیه است و میگوید این رکورد تا فلان ثانیه معتبر است
+- در DNS در فایل zone در هر زون باید حداقل یک SOA یعنی Start Of Authority داشته باشند که معرفی اطلاعات است
+- در DNS در فایل zone علامت @ به نام زون اشاره دارد که نمی‌خواهد هردفعه نام آن را تکرار کند- در DNS در فایل zone عبارت یعد از SOA نام دامنه و عبارت بعدی آدرس ایمیل به شکل بدون @ آورده می‌شود که یجای نقطه علامت @ می‌گذاریم
+- در DNS در فایل zone هر بار که این فایل را تغییر بدهیم باید عدد serial را یک عدد بالاتر ببریم تا DNS آن را لود نماید
+- در DNS در فایل zone کلمه cname یک alias است که موضوع www زدن یا نزدن را handle میکند
+
+![Bind9.png](_srcFiles/Images/Bind9.png "Bind9.png")
+![Bind9_Zone.png](_srcFiles/Images/Bind9_Zone.png "Bind9_Zone.png")
+
+# 6. 🅰️Switch
 
 * سوییچ لایه۲هست(مفاهیم مک و جدولarp)
 * با گذر ایام، سوییچ در لایه۳ورود کرد(مفاهیم روتینگ) و آی‌پی
@@ -66,23 +149,38 @@ tcpflow
 > StackableSwitch
 ![switch-stack.png](./_srcFiles/Images/switch-stack.png "switch-stack.png")
 
-## 1.4. 🅱️Router
+# 7. 🅰️Router
 
 * **RoutingTable**: اگر یک لینوکس روتر شد و تعدا کارت‌شبکه زیاد باشد پس لینوکس باید در خاطر خودش نگهداری نماید که برای ارسال بسته به هاست از چه اینترفیسی استفاده کرده است. بنابراین نیاز به یک routing table دارد تا نشان دهد که از کدام اینترفیس برای ارسال بسته به هاست استفاده کرده است
 * **RIP(Router Information Protocol)**: لینوکس برای ساپورت کردن RoutingTable این پروتکل را ایجاد کرده است تا کارهای روت را انجام دهد. زمانی که یک بسته RIP رسید آنگاه لینوکس RoutingTable را بروزرسانی می‌کند. لینوکس از برنامه routed برای Listen کردن بسته‌های RIP و بروزرسانی جدول استفاده می‌کند
 
-### 1.4.1. ✅️LinuxRouter
+## 7.1. 🅱️LinuxRouter
 
 * اگر پارامتر کرنلی System.Net.Route و net.ipv6.conf.all.forwarding برابر ۱ باشند و در iptables در chain بنام FORWARD قانون اضافه کردیم آنگاه لینوکس قابلیت روتر شدن پیدا خواهد کرد یعنی بسته‌ها را از یک اینترفیس به اینترفیس دیگر انتقال دهد
 *
 
-## 1.5. 🅱️Proxy
+## 7.2. 🅱️COMMANDS
+
+### 7.2.1. ✅️mtr
+
+```shell
+mtr google.com
+mtr -n --report IP
+```
+
+### 7.2.2. ✅️traceroute
+
+```shell
+traceroute google.com
+```
+
+# 8. 🅰️Proxy
 
 * سایت‌های زیر برای تست پروکسی مفید است
     * ifconfig.me
     * ping.eu
 
-### 1.5.1. ✅️OpenVPN
+## 8.1. 🅱️OpenVPN
 
 * یکی از روش‌های وی‌پی‌ان زدن است که باید اول بسته آن را نصب نماییم و پس از نصب دو فال در مسیر های etc/openvpn/server.conf و etc/openvpn/client.conf ایجاد می‌نماید که تنظیمات اصلی این فایل‌ها به شرح زیر است:[config]: استفاده از فایل برای نگهداری تنظیمات
     * [dev]: نام دیوایس مجازی که در دستور ifconfig نمایش داده خواهد شد
@@ -110,7 +208,7 @@ tcpflow
 
 ![openvpn.png](./_srcFiles/Images/openvpn.png "openvpn.png")
 
-### 1.5.2. ✅️Tor
+## 8.2. 🅱️Tor
 
 * از موارد مشابه تور می‌توان به proxychains4 و privoxy اشاره کرد که همانند torsocks در ابتدای دستورات قرار می‌دهیم.
 * پورت پیش‌فرض تور 9050 است
@@ -134,18 +232,197 @@ torsocks curl https://showip.net # Test Ip Adderess
 
 ```
 
-## 1.6. 🅱️ SNMP
+# 9. 🅰️DHCP
+
+* هنگامی که برنامه dhclient لیست سرورهای NTP را از DHCP می‌گیرد به‌صورت خودکار در فایل ntp.conf قرار میدهد. برای جلوگیری ازاین موضوع عبارت PEERNTP=no را در فایل /etc/sysconfig/network قرار دهید
+
+# 10. 🅰️SSH
+
+## 10.1. 🅱️concepts
+
+* نرم‌افزار termius نرم‌افزار ssh و scp و sftp و tunnel است که هم نسخه موبایلی و هم نسخه لینوکسی دارد و تخصصی در بحث ssh کار کرده است
+
+```shell
+ssh -t user@IP 'cd /usr/local/sbin; bash --login' # Login and execute command[such as cd]
+scp [Server1Username]@[Server1_ip]:[Server1_Path] [Server2Username]@[Server2_ip]:[Server2_Path]
+ssh -o StrictHostKeyChecking=no -l root ${peer}
+
+```
+
+## 10.2. 🅱️options
+
+* -D: forward all traffic of service
+* -f: fork
+* -N: Non login
+* -o: اعمال تنظیمات داخل فایل کانفیگ بعنوان آپشن در لحظه اتصال
+    * ssh -o StrictHostKeyChecking=no user@10.10.10.10
+
+## 10.3. 🅱️files
+
+* sshd_config: فایل تنظیماتی سرویس «اس‌اس‌اچ» سرور(یعنی سرویس «اس‌اس‌اچ» سرور چه تنظماتی داشته باشد)
+* ssh_config: فایل تنظیماتی کلاینتی «اس‌اس‌اچ»(یعنی در هنگام «اس‌اس‌اچ» به سرورهای متفاوت چه تنظیماتی داشته باشد)
+* ~/.ssh/known_hosts: Contains a list of host keys for all hosts the user has logged into that are not already in the systemwide list of known host keys(fingerprint).
+* ~/.ssh/authorized_keys: اگر کلید عمومی کسی رو در این فایل قرار بدهیم دیگر از او پسورد نمی‌گیرد و مستقیما لاگین می‌نماید
+    * هر سروری که کلید عمومی آن در فایل authorized_keys موجود باشد می‌تواند بدون وارد کردن پسورد در سرور لاگین نماید
+    * این فایل تنها باید توسط مالک خود قایلیت خواندن و نوشتن داشته باشد و نه دیگران
+* /home/user/.ssh/id_rsa : حاوی کلید خصوصی است
+* /home/user/.ssh/id_rsa.pub: حاوی کلید عمومی است
+
+### 10.3.1. ✅️configuration
+
+* PubkeyAuthentication: آیا احراز هویت با استفاده از کلید عمومی (Public Key Authentication) مجاز است یا خیر
+    * yes: احراز هویت با کلید عمومی مجاز و سرور به کلیدهای عمومی کلاینت‌ها توجه می‌کند
+    * no: احراز هویت با کلید عمومی غیرفعال می‌شود و کلاینت‌ها نمی‌توانند از روش احراز هویت با استفاده از کلید عمومی برای احراز هویت استفاده کنند
+* ClientAliveCountMax: تعیین حداکثر تعداد پیام‌های alive با قابلیت بدون پاسخ ماندن از کلاینت و در غیر اینصورت قطع اتصال
+* ClientAliveInterval(برحسب ثانیه):
+    * تعیین مقدار زمان ارسال پیامalive به کلاینت و اگر کلاینت به این پیام‌ها پاسخ ندهد و زمان تعریف شده (که باClientAliveCountMaxتعیین می‌شود) بگذرد، سرور اتصال را قطع می‌کند
+    * اگر ClientAliveIntervalبرابر60ثانیه وClientAliveCountMaxبرابر3باشد،سرور هر۶۰ثانیه یک بار پیام "alive" ارسال می‌کند و اگر کلاینت به 3 پیام متوالی پاسخ ندهد، سرور اتصال را قطع خواهد کرد
+* ListenAddress: اگر چند کارت شبکه داشته باشیم با این مولفه تعیین می‌کنیم که از کدام آی پی (تنظیم شده روی کارت شبکه) «اس‌اس‌اچ» پذیفته شود
+* PasswordAuthentication[sshd_config]:
+    * no : فقط کسانی که کلید دارند می‌توانند لاگین نمایند
+* AllowUsers: کاربران مجاز برای لاگین
+* DenyUsers: کاربران غیر مجاز برای لاگین
+* AllowGroups: گروه‌های مجاز لاگین
+* DenyGroups: گروه‌های غیر غیرمجاز برای لاگین
+* PermitRootLogin: آیا یوزر روت بتواند لاگین نماید یا خیر
+* X11Forwarding: آیا رابط کاربری بتواند فوروارد شود
+* AllowTcpForwarding: سرور بتواند پروتکل‌های تونل را بپذیرد
+* LoginGraceTime: تعیین مدت زمان برای لاگین و احراز هویت یک کاربر به سیستم
+    * defaults:2min
+    * recommended:30s or 1m
+
+## 10.4. 🅱️KEY
+
+<div dir="rtl">
+
+### 10.4.1. ✅️CreateKey(GolobalAndPrivate)
+
+```shell
+1-sudo apt-get install openssh-client
+2-ssh-keygen -t rsa # ایجاد کلید عمومی و خصوصی برای اتصال بین سرورهایهس
+  Enter file in which to save the key (/home/user/.ssh/id_rsa)
+  Enter passphrase (empty for no passphrase) # can donot use passphrass
+  Enter same passphrase again
+3-check :
+  Public Key: /home/user/.ssh/id_rsa.pub
+  Private Key: /home/user/.ssh/id_rsa    
+4-ssh-copy-id user@YourServerIPAddress
+```
+
+### 10.4.2. ✅️copy publicKey
+
+* دستور زیر سبب افزودن محتوی فایل rsa_key.pub سیستم خویش در انتهای فایل authorized_keys سرور مقصد می‌شود و نیاز به کپی دستی نخواهد بود
+* نکته مهم: اگر سوییچ StrictHostKeyChecking=no را همراه -o ‌قرار دهید اگر کلید میزبان ناشناخته باشد، SSH به طور خودکار آن را به فایل known_hosts اضافه می‌کند و اتصال برقرار می‌شود.
+
+```shell
+# روش اول
+ssh-copy-id user@10.0.20.2 # [OR] ssh-copy-id  -i ~/.ssh/id_rsa.pub user@10.0.20.2
+ssh -o StrictHostKeyChecking=no user@10.0.20.2 # [OR] ssh -o StrictHostKeyChecking=no -l user 10.0.20.2
+
+# روش دوم
+cat ~/.ssh/id_rsa.pub | ssh User@YourServerIPAddress "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
+# [OR] scp /home/user/.ssh/id_rsa.pub user@YourServerIPAddress:/home/user/.ssh
+```
+
+</div>
+
+## 10.5. 🅱️proxy
+
+```shell
+ssh -D <localPort> behrooz@<serverWithNet> #بَش مقصد نمایش داده میشود
+ssh -D -N <localPort> behrooz@<serverWithNet> # بش مبدا همواره باز میماند و نمیتوان دستوری وارد کرد
+ssh -f -D -N <localPort> behrooz@<serverWithNet> #بَش مبدا همچنان باقی است و دستورات درحالت فورک اجرا درآمده‌اند
+```
+
+### 10.5.1. ✅️[Trick1](https://serverfault.com/questions/456960/how-to-force-all-packets-go-through-ssh-tunnel)
+
+* client network: 10.0.50.0/24
+* remote network10.0.99.0/24
+* Check sshd_config configuration option PermitTunnel controls whether the server supports this
+* from 10.1.1.1 to 10.1.1.2, provided that the SSH server running on the gateway to the remote network, at 192.168.1.15, allows it.
+
+```shell
+#On the client:
+ssh -f -w 0:1 192.168.1.15 true
+ifconfig tun0 10.1.1.1 10.1.1.2 netmask 255.255.255.252
+route add 10.0.99.0/24 10.1.1.2
+#On the server:
+ifconfig tun1 10.1.1.2 10.1.1.1 netmask 255.255.255.252
+route add 10.0.50.0/24 10.1.1.1
+```
+
+### 10.5.2. ✅️Trick2-apt
+
+در سیستم دارای اینترنت دستور زیر را بزنید
+
+```shell
+echo 'Acquire::http::proxy "socks5h://127.0.0.1:XXXX"; ' >> /etc/apt/apt.conf.d/behrooz
+```
+
+در سیستم بدون اینترنت دستور زیر را بزنید
+
+```shell
+[ssh -f -N -D XXXX behrooz@systemWithInternet] # or [ssh -N -D XXXX behrooz@systemWithInternet]
+```
+
+#### 10.5.2.1. ❇️Alternative
+
+در سیستم بدون اینترنت دستور زیر را بزنید و در سیستم دارای اینترنت نیاز به زدن دستوری نیست
+
+```shell
+[ssh -f -N -D XXXX behrooz@systemWithInternet] # or [ssh -N -D XXXX behrooz@systemWithInternet]
+[apt --option Acquire::HTTP::Proxy="socks5h://127.0.0.1:XXXX" update
+```
+
+### 10.5.3. ✅️Trick3-yum
+
+در سیستم دارای اینترنت دستور زیر را بزنید
+
+```shell
+echo "proxy=socks5h://localhost:xxxx" >> /etc/yum.conf
+```
+
+در سیستم بدون اینترنت دستور زیر را بزنید
+
+```shell
+[ssh -f -N -D XXXX behrooz@systemWithInternet] # or [ssh -N -D XXXX behrooz@systemWithInternet]
+```
+
+## 10.6. 🅱️PortForward
+
+### 10.6.1. ✅️PortForwarding-tunnel(Local)
+
+* AllowTcpForwarding yes
+* Gatewayports yes
+
+![sshL.jpg](_srcFiles/Images/sshL.jpg "sshL.jpg")
+
+### 10.6.2. ✅️PortForwarding-tunnel(Remote)
+
+* AllowTcpForwarding yes
+* Gatewayports yes
+
+![sshR.jpg](_srcFiles/Images/sshR.jpg "sshR.jpg")
+
+
+
+---
+
+![ssh-portfwl1.jpg](_srcFiles/Images/ssh-portfwl1.jpg "ssh-portfwl1.jpg")
+![ssh-portfwlr1.jpg](_srcFiles/Images/ssh-portfwlr1.jpg "ssh-portfwlr1.jpg")
+
+# 11. 🅰️SNMP
 
 * برای تنظیم اطلاعات community باید فایل snmpd.conf اصلاح شود[فایل snmp.conf را دستکاری نکنید]
 *
 
 ```shell
-# on server 10.0.20.7 set this config:
+# 11. on server 10.0.20.7 set this config:
 apt install snmp snmpd
 sudo apt install snmp-mibs-downloader
 sudo download-mibs
 sudo vim /etc/snmp/snmpd.conf
-# add: agentaddress  10.0.20.7:161
+# 12. add: agentaddress  10.0.20.7:161
 systemctl restart snmpd
 ```
 
@@ -156,62 +433,147 @@ snmpd -V
 
 * rocommunity public default -V systemonly #سبب محدود شدن تعداد رکوردهای مانیتور شده از حدود ۷هزارتا به ۳۰ عدد از موارد خیلی عمومی
 
-# 2. 🅰️ Commands
+# 12. 🅰️NFS(NetworkFileSystem)
 
-## 2.1. 🅱️ arp
-
-* پروتکل arp: چه مک‌آدرس به چه آی‌پی متصل است
-* بسته‌های پروتکل ARP از روتر عبور نمی‌کنند
+* این نوع فایل سیستم مخصوص لینوکس هست
+* ورژن۴: پسورد را ساپورت می‌کند
 
 
-* [-e]: display (all) hosts in default (Linux) style
-    * `sudo arp -e`
-* [-n|--numeric]:don't resolve names
-    * `sudo arp -n`
+1. دایرکتوری‌های به اشتراک گذاری در این فایل نوشته می‌شود که فرمت آن به شکل زیر است
+   ```shell
+   cat /etc/export
+   export_directory client-designation (directives)
+   ```
+    * export_directory: مسیر به‌اشتراک‌گذاری
+    * client-designation: کاربران
+    * directives: تنظیمات مثلا write یا read
+2. همه daemonهای سرویس NFS یک نام alias دیگر دارند که قبل از نام هر قسمت rpc شروع می‌شود مثلا rpc.mountd که کارهای مونت را انجام می‌دهد
+3. اگر بخواهیم در etc/hosts.allow یک سرور را همواره valid کنیم
+   ```shell
+   vi /etc/hosts.allow
+   rpcbind: 192.168.56.101,192.168.56.106
+   ```
+4. برای استفاده از /etc/hosts.allow و etc/hosts.deny ابتدا باید ببینیم که سرویس rpcbindاز ماژول libwrap استفاده می‌کند یا خیر
+   ```shell
+   ldd /sbin/rpcbind | grep libwrap
+   libwrap.so.0 => /lib64/libwrap.so.
+   ```
 
-## 2.2. 🅱️ arp-scan
+* سمت سرور
+    1. `systemctl start nfs rpcbind`
+    2. `mkdir /srv/nfs_share_temp`
+    3. `echo "Hello World" >> /srv/nfs_share_temp/file.dat`
+    4. `exportfs 192.168.56.101:/srv/nfs_share_temp` #ایجاد یک اشتراک جدید
+    5. `showmount -e` نمایش لیست export شده
+       ```shell
+       Export list for localhost.localdomain:
+       /srv/nfs_share_temp 192.168.56.101
+       ```
+    6. -نمایش لیست export شده و منابع اشتراکی برای یک آی‌پی خاص
+       ```shell
+       showmount -e 127.0.0.1
+       Export list for 127.0.0.1:
+       /srv/nfs_share_temp 192.168.56.101
+       ```
+    7. نمایش لیست export شده با توضیحات اضافی
+       ```shell
+       exportfs -v
+       /srv/nfs_share_temp 192.168.56.101(ro,wdelay,root_squash,no_subtree_check,sec=sys,ro,secure,root_squash,no_all_squash)
+       ```
+    8. `cat /var/lib/nfs/etab`
+    9. کلاینت‌هایی که به صورت ریموت به سرور وصل شده‌اند
+        * `cat /var/lib/nfs/rmtab`
+    10. از اشتراک خارج کردن یک منبع به اشتراک گذاشته شده در سرور
+        * `exportfs -u 192.168.56.101:/srv/nfs_share_temp`
+* سمت کلاینت
+    1. `mkdir /home/christine/NFSTemp`
+    2. `showmount -e <ClientIP>`
+        * چه دایرکتوری‌هایی برای آی‌پی کلاینت دسترس است(exportList برای یک آی‌پی خاص)
+    3. `sudo mount.nfs -o vers=3 192.168.56.102:/srv/nfs_share_temp NFSTemp`
+        * اجبار برای استفاده از ورژن۳
+    4. `sudo umount.nfs NFSTemp`
+        * با زدن این دستور درکلاینت منبع به اشتراک گذاشته شده سرور از مونت(در سیستم کلاینت) خارج می‌شود
+
+## 12.1. 🅱️Debian8
 
 ```shell
-arp-scan -I enp4s0 10.0.20.0/24
-arp-scan --interface enp4s0 10.0.20.0/24
-arp-scan --interface enp4s0 --localnet
+1- sudo apt-get install nfs-kernel-server nfs-common (server & client)
+2- sudo vim /etc/exports (server)
+# 13. add :
+/mnt/share <ip client>(rw,sync,no_subtree_check,no_root_squash)
+
+3- sudo exportfs -ra (server)
+4- sudo /etc/init.d/nfs-kernel-server restart (server)
+5- sudo ufw allow from <ip client> to any port nfs (server)
+6- sudo ufw allow from <ip server> to any port nfs (client)
+7- sudo showmount -e <ip server> (client)
+8- sudo mkdir /mnt/share (client)
+9- sudo chown user:user /mnt/share (client)
+10- sudo vim /etc/fstab (client)
+
+# 14. add:
+<ip server>:/mnt/share   /mnt/share      nfs     defaults        0       0
+
+11- sudo /etc/init.d/nfs-common restart (client)
+12- sudo /etc/init.d/nfs-kernel-server restart (client)
+13- sudo mount -a
+14- df -h
 ```
 
-## 2.3. ✅️curl
+* برخی از تنظیمات بخش دوم دایرکتوری‌های فایل export موجود در etc تحت عناوین زیر می‌توانند باشند
+    * [Single Host]: یک آی‌پی یا FQDN یا Hostname
+    * [Netgroups]: نام یک گروه مثل group_name@
+    * [Multiple systems]: مدل های wildcard نظیر * یا ? مثلا هر کسی از itsee.ir بیاید بتواند itsee.ir*
+    * [IP networks]
+* دستوراتی که در سرویس NFS به کار می‌آیند
+    * [exportfs]: مدیریت و نمایش اطلاعات منابع اشتراک گذاشته شده و میتواند توسط دستور یک منبع جدید به فایل export اضافه نماید تا منبع اشتراک جدید ایجاد شود.[سوییچa: تمام کانفیگ‌های اشتراکی را به فایل etc/export قرار می‌دهد] و [سوییچi: نادیده گرفتن فایل و تنظیمات موجود در etc/export و استفاده از آپشن‌های commandLine برای منابع به اشتراک گذاشته شده] و [سوییچ: ] و [سوییچr: یعنی reExport کردن و مجدد ساختن کانفیگ‌ها فایل etc/export برحسب فایلetc/lib/nfs/xtab در زمانی که فایل export را خراب کاری کرده باشیم ]
+    * [mount.nfs]: زمان mount کردن می‌توانیم از این دستور بجای دستور mount خالی استفاده نماییم
+    * [umount.nfs]: زمان umount کردن می‌توانیم از این دستور بجای دستور umount خالی استفاده نماییم
+    * [mountstats]: از فایل /proc/self/mountstats به ارائه آمار کلی می‌پردازد
+    * [nfsiostat]: از فایل /proc/self/mountstats به ارائه آمار IO می‌پردازد
+    * [nfsstat]: توسط فایل‌های /proc/net/ و rpc/nfsd و /proc/net/rpc/nfs و /proc/mounts گزارشی از عملکرد سرور و کلاینت ‌های NFS ارائه می‌دهد
+    * [rpcinfo]: اطلاعات RemoteProcedureCall سرویس
+    * [showmount]: نمایش موارد مونت شده از nfs که می تواند بصورت ریموت استفاده شود
+* برحی از تنظیمات بخش سوم دایرکتوری‌های فایل export موجود در etc تحت عناوین زیر می‌توانند باشند
+    * [ro]: فقط خواندنی
+    * [rw]: هم خواندن و هم نوشتن
+    * [async]: بررسی نشود که آیا دیتای کش در دیسک نوشته شده است یا خیر
+    * [sync]: درهربار نوشتن اول بافر در دیسک نوشته شود و پس از نوشته شدن به سراغ نوشته شدن بعدی برویم
+    * [all_squash]: همه کلاینت‌ها با هر یوزری که به سرور nfs وصل شود، با دسترسی سطح anonymous یا nfsnobody وصل شوند .
+    * [no_root_squash]: اگر یک کلاینت با username روت به سرور nfs وصل شود دسترسی به nfs Export با سطح دسترسی superUser داشته باشد
+    * [root_squash]: یوزر روت هرکلاینتی اگر به سرور nfs وصل شود، با دسترسی سطح anonymous یا nfsnobody وصل شوند .
+    * [anongid]: اختصاص یک GID به همه گروه‌های کلاینت‌های anonymous و زمانی استفاده می‌شود که بخواهیم همه کلاینت‌ها تحت عنوان یک گروه شناسایی شود
+    * [anonuid]: اختصاص یک UID به همه کاربران anonymous و زمانی استفاده می‌شود که بخواهیم همه کلاینت‌ها تحت عنوان یک گروه شناسایی شود
 
-دستورات یا مرورگر‌های مشابه متنی ترمینال: links و links2 و lynx(دستور www-browser)
+# 13. 🅰️FTP
 
-```shell
-curl -I itsee.ir #نمایش هدرهای یک سایت
-curl -u username:password -T file.tar.gz ftp://ftp_server
-```
+* مخفف FileTransferProtocol است
+* توصیه می‌شود که همیشه ftp را خاموش کنید و وقتی می‌خواهید استفاده نمایید آن را روشن نمایید
+* روی پورت ۲۰ دستورات را گوش می‌دهد
+* روی پورت ۲۱ دیتا را انتقال میدهد
+* وقتی در شبکه nat استفاده شود نمی‌تواند از پورت ۲۰ به مقصد وصل شود بنابراین حالت active و passive بوجود آمد که وقتی از nat استفاده نماییم باید از وضعیت passive استفاده شود
+* دو اف‌تی‌پی سرور اصلی داریم با نام‌های vsftpd و Pure-FTPd که معمولا vsftpd نصب می‌شود
 
-## 2.4. 🅱️ ethtool
+![ftpactivemode.png](_srcFiles/Images/ftpactivemode.png "حالت اکتیو")
+![ftppassivemode.png](_srcFiles/Images/ftppassivemode.png "حالت پسیو")
 
-```shell
-dig <name>
-dig +short <Name>  #اطلاعات اضافه نشان نده و فقط آی‌پی را نمایش بده
-```
+# 14. 🅰️ Commands
 
-## 2.5. 🅱️ ethtool
+## 14.1. 🅱️ ethtool
 
 ```shell
 sudo ethtool enp5s0 # اطلاعات فوق‌العاده زیاد بابت کارت شبکه
 
 ```
 
-## 2.6. 🅱️ fping
-
-`fping -g 192.168.10.1 192.168.10.5 #alive hosts`
-
-## 2.7. 🅱️ host
+## 14.2. 🅱️ host
 
 ```shell
 host -la domain.local # نمایش تمام رکوردهای یک دامنه
 host <name[google.com]>
 ```
 
-## 2.8. 🅱️ hostname
+## 14.3. 🅱️ hostname
 
 * [-I] or [--all-ip-addresses] → All IP addresses for the host
 
@@ -219,7 +581,7 @@ host <name[google.com]>
 hostname -I # show all ip address
 ```
 
-## 2.9. 🅱️ iwlist|iwconfig
+## 14.4. 🅱️ iwlist|iwconfig
 
 wifi|wireless|وای‌فای
 
@@ -228,7 +590,7 @@ iwlist <nic> scan #بررسی وایرلس‌های اطراف سیستم که �
 iwconfig wlp4s0 essid "<Name>" key s:<Pass> #اتصال به یک وایرلس
 ```
 
-## 2.10. 🅱️ ip
+## 14.5. 🅱️ ip
 
 Usage: ip OPTIONS OBJECT COMMAND
 
@@ -302,7 +664,7 @@ Usage: ip OPTIONS OBJECT COMMAND
     * ip addr del x.x.x.x/Y dev <NIC> → del IP
     * ip link del <nic> down → up/down NIC
 
-### 2.10.1. ✅️ [Gateway|Routr] Commands
+### 14.5.1. ✅️ [Gateway|Routr] Commands
 
 * show
     * ip route
@@ -312,16 +674,16 @@ Usage: ip OPTIONS OBJECT COMMAND
 * remove
     * ip route del 192.168.0.150/24 #Removing a static route
 
-## 2.11. 🅱️ ifconfig
+## 14.6. 🅱️ ifconfig
 
 ```shell
 ifconfig eth0:0 xxx.xxx.xxx.xxx #set [Additional ip] or [VirtualIp]
 ifconfig eth0 hw ether AA:BB:CC:DD:EE:FF #MacSpoofing or تغییر مک آدرس
 ```
 
-## 2.12. 🅱️ lsof
+## 14.7. 🅱️ lsof
 
-### 2.12.1. ✅️ Concept
+### 14.7.1. ✅️ Concept
 
 * COMMAND: The command name
 * PID: Process ID (PID) of the process
@@ -358,7 +720,7 @@ ifconfig eth0 hw ether AA:BB:CC:DD:EE:FF #MacSpoofing or تغییر مک آدر�
 * NODE: Node description of the local file; this could be the number of the local file, TCP, UDP, or STR (stream)
 * NAME: The name of the mount point where the file resides
 
-### 2.12.2. ✅️ Switch
+### 14.7.2. ✅️ Switch
 
 * [-i] → List all network connecttion
     * tcp|udp:
@@ -402,21 +764,14 @@ ifconfig eth0 hw ether AA:BB:CC:DD:EE:FF #MacSpoofing or تغییر مک آدر�
     * lsof -d mem → All memory map files
     * lsof -d cwd
 
-### 2.12.3. ✅️ Appendix
+### 14.7.3. ✅️ Appendix
 
 * [+L1] → سوکت‌های فعلی سرور که به هیچ فایلی از هارد وصل نشده است - پردازه‌های موجود در رم که ممکن است ویروس باشند
     * lsof +L1
 * deletedFiles
     * sudo lsof [path] | grep deleted
 
-## 2.13. 🅱️ mtr
-
-```shell
-mtr google.com
-mtr -n --report IP
-```
-
-## 2.14. 🅱️ netstat
+## 14.8. 🅱️ netstat
 
 * [خالی و بدون پارامتر ورودی] → By default, netstat displays a list of open sockets.
 * [-i] or [--interfaces,] → Display a table of all network interfaces
@@ -428,13 +783,13 @@ mtr -n --report IP
 * [-l] → display only listening sockets
 * [-n] → display the socket’s port number
 
-## 2.15. 🅱️ nmap
+## 14.9. 🅱️ nmap
 
 * تعریف NullScan: بسته هیچ پرچمی(TCP، UDP، Sync، Http، ICMP و غیره) به خود نمی‌گیرد.
     * اگر یک سرور هیچ پاسخی نداد شما می‌توانید نوع اسکن را در وضعیت Null Scan قرار دهید که در آن صورت حتما بسته عبور می‌کند و حداقل می‌توان فهمید که سرور alive هست یا پایین است
 * تعریف Zombi Attach: همزمان به چندین سیستم زامبی‌شده(قربانی‌های بستر اینترنت) می‌گوییم که به یک سرور وصل شوند و کاری انجام دهند و گزارش خروجی حمله را در اختیارمان قرار دهند و ما ناشناخته خواهیم ماند
 
-### 2.15.1. ✅️ Ping
+### 14.9.1. ✅️ Ping
 
 * nmap -Pn [target] #Dont ping
 * nmap -sP [target] #perform a Ping Only Scan
@@ -447,12 +802,12 @@ mtr -n --report IP
 * nmap -PM [target] #CMP Address Mask Ping
 * nmap -PO [target] #IP Protocol Ping
 
-### 2.15.2. ✅️ Trace
+### 14.9.2. ✅️ Trace
 
 * nmap –traceroute     [target] #Traceroute
 * nmap --packet-trace [target] #Trace package
 
-### 2.15.3. ✅️ DNS
+### 14.9.3. ✅️ DNS
 
 * nmap -R [target] #Force Reverse DNS Resolution
 * nmap -n [target] #Disable Reverse DNS Resolution
@@ -460,7 +815,7 @@ mtr -n --report IP
 * nmap –dns-servers [servers] [target] #Manually Specify DNS Server(s)
 * nmap -sL [targets] #Create a Host List
 
-### 2.15.4. ✅️ Advanced Scanning Options
+### 14.9.4. ✅️ Advanced Scanning Options
 
 * nmap -sS [target] #TCP SYN Scan
 * nmap -sT [target] #TCP Connect Scan
@@ -475,7 +830,7 @@ mtr -n --report IP
 * nmap –send-eth [target] #Send Raw Ethernet Packets
 * nmap –send-ip [target] #Send IP Packets
 
-### 2.15.5. ✅️ Port Scan
+### 14.9.5. ✅️ Port Scan
 
 * nmap -F [target] #Perform a Fast Scan
 * nmap -p [port(s)] [target] #Scan Specific Ports
@@ -488,7 +843,7 @@ mtr -n --report IP
 * nmap –top-ports [number] [target] #Scan Top Ports
 * nmap -r [target] #Perform a Sequential Port Scan
 
-### 2.15.6. ✅️ Version Detection
+### 14.9.6. ✅️ Version Detection
 
 * nmap -O [target] #Operating System Detection
 * nmap -O –osscan guess [target] #Attempt to Guess an Unknown OS
@@ -496,7 +851,7 @@ mtr -n --report IP
 * nmap -sV –version trace [target] #Troubleshooting Version Scans
 * nmap -sR [target] #Perform a RPC Scan
 
-### 2.15.7. ✅️ Firewall Evasion Techniques
+### 14.9.7. ✅️ Firewall Evasion Techniques
 
 * nmap -f [target] #augment Packets
 * nmap –mtu [MTU] [target] #pacify a Specific MTU
@@ -513,7 +868,7 @@ mtr -n --report IP
     * nmap –spoof-mac Cis 192.168.0.1
 * nmap –badsum [target] #Send Bad Checksums
 
-### 2.15.8. ✅️ Troubleshooting And Debugging
+### 14.9.8. ✅️ Troubleshooting And Debugging
 
 * nmap -h #Getting Help
 * nmap -V #Display nmap Version
@@ -526,7 +881,7 @@ mtr -n --report IP
 * nmap -e [interface] [target] #Specify a Network Interface
     * nmap -e eth0 192.168.0.1
 
-### 2.15.9. ✅️ nmap Scripting Engine
+### 14.9.9. ✅️ nmap Scripting Engine
 
 * nmap –script [script.nse] [target] #Execute Individual Scripts
 * nmap –script [expression] [target] #Execute Multiple Scripts
@@ -540,7 +895,7 @@ mtr -n --report IP
     * nmap –script banner.nse –script-trace 192.168.0.1
 * nmap –script-updatedb #Update the Script Database
 
-## 2.16. 🅱️ nmcli
+## 14.10. 🅱️ nmcli
 
 ```shell
 nmcli connection show
@@ -565,18 +920,11 @@ nmcli general logging domains ALL
 nmcli general logging level INFO domains ALL
 ```
 
-## 2.17. 🅱️ nslookup
-
-```shell
-nslookup -querytype=mx domain.ir #پیدا کردن ایمیل‌سرور یک دامین
-nslookup <name>
-```
-
-## 2.18. 🅱️ tcpdump
+## 14.11. 🅱️ tcpdump
 
 دستور لینوکس برای گوش کردن به شبکه- سوییچ‌ها
 
-### 2.18.1. ✅️ Switch
+### 14.11.1. ✅️ Switch
 
 * [-c] → Capture Only N Number of Packets
     * sudo tcpdump -c 5
@@ -624,7 +972,7 @@ nslookup <name>
 * [] →
 * [] →
 
-### 2.18.2. ✅️ Examples
+### 14.11.2. ✅️ Examples
 
 * tcpdump src NUMBER && dst port NUMBER
 * tcpdump dst ff:ff:ff:ff:ff:ff
@@ -639,59 +987,17 @@ nslookup <name>
 * tcpdump -i any -c5 -nn "port 80 and (src 192.168.122.98 or src 54.204.39.132)" → #filtering packets for HTTP service
   only (port 80) and source IP addresses 192.168.122.98 or 54.204.39.132
 
-## 2.19. 🅱️ traceroute
+## 14.12. 🅱️ Hosname
 
 ```shell
-traceroute google.com
-```
-
-## 2.20. 🅱️ wget
-
-- [-b] → قرار دادن پروسه دانلود در بک‌گراند و عدم نمایش و این معمولا برای فایل‌های بزرگ کاربرد دارد
-- [-c] → اگر دانلود متوقف شد مجددا ادامه دانلود را از سر گیرد
-- [-f]: ایجاد یک فایل برای لاگ شدن وضعیت پیشرفت دانلود
-- [-i] → ذخیره چندین یو‌آر‌ال در فایل و سپس دانلود لینک‌ها از فایل
-    - wget -i ./FileName.txt
-- [-l]: سطح بازگشت را تعیین میکند
-    - اِل است و نه آی
-- [-np] or [--no-parent] عدم رجوع به مسیر بالاتر
-- [-O] Name → انتخاب نام جدید به فایل دانلود شده
-- [-o ./download.log] → ذخیره لاگ در یک فایل بجای نمایش در ترمینال
-- [-P]: قرار دادن در یک فولدر دیگر
-    - [-P /documents/websites]:تمام محتوا به فهرست مشخص شده ما می رود
-- [-Q5m] → پایان دانلود وقتی سایز دانلود شده از مقدار ۵مگابایت فراتر برود
-- [-r] or [--recursive] دانلود به صورت بازگشتی
-- [-R] or [--reject] → عدم دانلود یک نوع فایل معین ، در هنگام دانلود
-    - wget -P documents/archives/ https://wordpress.org/latest.zip
-- [--limit-rate=200k] → تعیین سرعت دانلود
-- [--user-agent] → برخی سایت‌ها با تشخیص اینکه شما از مرورگر برای دانلود استفاده نمی‌کنید،می‌تونن اجازه دانلود به شما ندهند و شما توسط این گزینه نقاب می‌زنید و تحت عنوان مثلا فایرفاکس متصل می‌شوید
-    - wget --user-agent="Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.3) Gecko/2008092416 Firefox/3.0.3" <URL>
-- [--tries] → تعداد پیش‌فرض تلاش مجدد برای دانلود عدد۲۰ است و می‌تونیم آنرا تغییر دهیم
-    - wget --tries=75 URL
-- [--spider]: قراردادن در وضعیت اسپایدر
-- [-mirror]: دانلود را بازگشتی می کند
-- [-convert-links]: همه لینک‌ها برای استفاده آفلاین مناسب تبدیل خواهند شد
-- [-page-requisites]: موارد زیر شامل تمام فایل‌های ضروری مانند «سی‌اِس‌اِس» و «جِی‌اِس» و تصاویر می شود
-- [-no-parent]:تضمین می‌کند که دایرکتوری‌های بالای سلسله مراتب دانلود نمی‌شوند
-
-
-- `wget --ftp-user=USERNAME --ftp-password=PASSWORD DOWNLOAD-URL`
-- `wget --spider --force-html -r -l5 htp://dl.folan.net/Movie/ 2>&1 | grep '^--' | awk '{ print $3 }' | grep -v '\.css\|js\|png\|gif\|jpg$' | grep -v '\/$'`
-- `wget --mirror --convert-links --page-requisites --no-parent -P documents/websites/ URL` #می توان از دستور wget برای دانلود محتوای کل سایت استفاده کرد
-- `wget -r -np -R "index.html*" https://shop.hemat-elec.ir/wp-content/themes/irankala/assets/fonts` # Note: دانلود فایل های مشخص شده
-    - wget -r -A.pdf
-
-## 2.21. 🅱️ Hosname
-
-```shell
-#show
+# 15. show
 hostnamectl #Show change config
 hostname
 hostname -s #displayed the computer short name
 hostname -f #displays the computer FQDN in the network
 cat /etc/hostname
 
-#Change
+# 16. Change
 روش اول:#
 hostnamectl set-hostname NAME
 
@@ -703,40 +1009,30 @@ hostname XXXXX
 /etc/init.d/hostname.sh start
 ```
 
-# 3. 🅰️ Connection
+# 15. 🅰️Production
 
-## 3.1. 🅱️ Bonding
-
-* این قابلیت امکان مجتمع شدن چند کارت شبکه و استفاده از آنها به صورت یک کارت شبکه را فراهم می کند. نام دیگر آن NIC Teaming و Link Aggregate است. این روش دارای مدهای مختلفی است که عبارتند از:
-* mode=0(balance-rr) – mode=1(active-backup) – mode=2(balance-xor) – mode=3(broadcast) – mode=4(802.3ad) – mode=5(balance-tlb) – mode=6(balance-alb)
-* در مدهای ۰ و ۲ و ۳ و ۴ تمامی پورت ها یک گروه می بایست به یک logical switch متصل شوند اما در مدهای ۱ و ۵ و ۶ پورت های یک گروه می توانند به سوئیچ های مختلف متصل شوند. هر چند که می توان با aggregate کردن چند سوئیچ فیزیکال همه آنها را به یک logical switch تبدیل کرد.
-* تمامی مدهای بالا در سه دسته کلی قرار می گیرند:
-    * FailOver Only: تنها مد active-backup در این دسته قرار می گیرد. وقتی لینک اصلی fail شد لینک دوم جایگزین آن می شود.
-    * Require Switch Support: مدهای balance-rr و ۸۰۲.۳ad و balance-xor هستند که باید سوئیچ نیز از آنها پشتیبانی نماید.
-    * Generic Modes: در مد broadcast تمامی ترافیک از تمامی پورتهای عضو گروه خارج می شوند. در مد balance-tlb ترافیک خروجی load balance می شود اما ترافیک ورودی فقط از یک لینک می آید. در مد balance-alb نیز تمامی ترافیک ارسالی و دریافتی load balance می شود و از روش change MAC address استفاده می گردد.
-* سخن آخر اینکه اگر شما در محیطی کار می کنید که سوئیچ ها از ۸۰۲.۳ad یا همان LACP پشتیبانی می کنند، بهترین روش همین مد است. اما اگر ساپورت سوئیچی ندارید و هم می خواهید load balance داشته باشید و هم fault tolerance بهترین روش balance-alb است. در نهایت اگر می خواهید فقط بین دو سرور replication داشته باشید، مد balance-rr برای شما بهتر است.
-
-## 3.2. 🅱️ بررسی سرعت لینک شبکه
-
-```shell
-node1: iperf -s
-node2: iperf -c <HOST>
-
-#FromSobhanSadatNejad:
-node1: iperf3 -s -i 1
-node2: iperf3 -u -c 10.10.12.10 -w 1M -i 10 -t 60       
-```
-
-# 4. 🅰️Production
-
-## 4.1. 🅱️CISCO
+## 15.1. 🅱️CISCO
 
 PacketTracer: نرم‌افزار سیسکو برای شبیه سازی محیط واقعی شبکه
 
-## 4.2. 🅱️Openwrt
+## 15.2. 🅱️Openwrt
 
 * ازلحاظ ساختاری همانند میکروتیک (MicroTik) می‌باشد
 * برپایه Debian است و بسته‌ها با پسوند deb می‌باشد
 * این محصول OpenSource است
 
+## 15.3. 🅱️Prometeos
+
+* مانیتورینگ شبیه به zabbix (زبیکس) است
+
 </div>
+
+
+
+
+
+![IP.png](./_srcFiles/Images/IP.png "IP.png")
+![fundamentalip-ipv4oct1.jpg](./_srcFiles/Images/fundamentalip-ipv4oct1.jpg "fundamentalip-ipv4oct1.jpg")
+![fundamentalip-ipv6oct1.jpg](./_srcFiles/Images/fundamentalip-ipv6oct1.jpg "fundamentalip-ipv6oct1.jpg")
+![fundamentalip-ositcp1.jpg](./_srcFiles/Images/fundamentalip-ositcp1.jpg "fundamentalip-ositcp1.jpg")
+![MTU2.jpg](./_srcFiles/Images/MTU2.jpg "MTU2.jpg")
