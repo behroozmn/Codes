@@ -1324,13 +1324,14 @@ ifconfig eth0 hw ether AA:BB:CC:DD:EE:FF #MacSpoofing or تغییر مک آدر�
 
 ### 14.9.5. ✅️ Port Scan
 
+* nmap -sV -n [target] سرویس‌های درحال اجرا
 * nmap -F [target] #Perform a Fast Scan
 * nmap -p [port(s)] [target] #Scan Specific Ports
-    * nmap -p 21-25,80,139,8080 192.168.1.1
+      * nmap -p 21-25,80,139,8080 192.168.1.1
 * nmap -p [portName(s)] [target] #Scan Ports by Name
-    * nmap -p ftp,http* 192.168.0.1
+      * nmap -p ftp,http* 192.168.0.1
 * nmap -sU -sT -p U: [ports],T:[ports] [target] #Scan Ports by Protocol
-    * nmap -sU -sT -p U:53,111,137,T:21- 25,80,139,8080 192.168.0.1
+      * nmap -sU -sT -p U:53,111,137,T:21- 25,80,139,8080 192.168.0.1
 * nmap -p ‘*’ [target] #Scan All Ports
 * nmap –top-ports [number] [target] #Scan Top Ports
 * nmap -r [target] #Perform a Sequential Port Scan
