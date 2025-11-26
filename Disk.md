@@ -197,13 +197,16 @@ btrfs subvolume snapshot <From> <Directory>
 
 ```shell
 sudo zpool create -f -d -m none -o ashift=12 -O atime=off -o feature@lz4_compress=enabled backup /dev/xvdf1
-[-f]:اجبار برای ایجاد یک استخر جدید
+[-f]:اجبار برای ایجاد یک پول جدید
 [-d]:دیسکاوری دیوایس اتوماتیک را غیر فعال می‌کند
 [-m none]:از «میرور» برای محافظت از استخر استفاده نمی‌کند زیرا من یک دیسک در اینجا دارم
 [-o ashift=12]: مقدار  alignment shift را روی 12 تنظیم می‌کند که عملکرد فایل‌های بزرگ را بهبود بدهد
 [-O atime=off]: ردیابی زمان دسترسی را غیرفعال میکند که عملکرد را بهبود بخشد
 [-o feature@lz4_compress=enabled]:فشرده‌سازی LZ4 را برای استخر فعال می‌کند تا در مصرف فضای دیسک صرفه‌جویی شود
 [/dev/xvdf1]:دستگاه ذخیره سازی بلوک برای استفاده برای استخر
+
+zpool create D1 D2 D3 D4 spair D5
+
 ```
 
 ```shell
@@ -215,7 +218,7 @@ zfs get refer # value: حجمی که هنگام ساخته شدن داده شد�
 zfs get volsize
 zfs get volsize -o property,value v1/v1
 zfs get name -t [volume | filesystem | snapshot | bookmark]
-zfs get all -t [volume | filesystem | snapshot | bookmark]
+zfs get all  -t [volume | filesystem | snapshot | bookmark]
 
 ```
 

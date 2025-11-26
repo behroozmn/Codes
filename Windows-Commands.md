@@ -90,7 +90,10 @@
     * net user <Name> /time:all; #همیشه بتواند لاگین نماید
     * net user <Name> /active:NO; #غیر فعال کردن یک کاربر
     * net user <Name> /expired:2025 09 09; #تعیین زمان غیرفعال کردن یک کاربر
-* Net group
+* net use
+    * net use *
+    * net use * /delete
+    * net use //10.0.20.20 /delete
     * net group <GroupName> /add
 * net localgroup <GroupName> /add
     * net localgroup <GroupName> <userForJoinToGroup>/add
