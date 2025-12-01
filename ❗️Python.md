@@ -1746,31 +1746,543 @@ print(obj1.age)
 print(obj1.fullName)
 ```
 
-### 5.6.11. ✅️ ClassMethod
+### 5.6.11. ✅️ ClassMethod ► `@classmethod`
 
-* تغییر عملکرد یک تابع بطوریکه به‌جای استفاده از منابع نمونه از منابع کلاس استفاده می‌کند
-* دسترسی مستقیم به دیتای کلاس بدون ساخت شیء نمونه
+* کاربرد1️⃣️:دسترسی به منابع کلاس (نه نمونه)
+    * متدهای `@classmethod` اولین پارامترشان `cls` است، که اشاره به کلاس خود دارد (نه نمونه). این اجازه می‌دهد تا از داخل متد به ویژگی‌ها و متدها کلاس(حتی برای تغییرات) دسترسی داشته باشیم.
+        * برخلاف متدهای معمولی که به نمونه‌ها دسترسی دارند(از طریق `self`)
+    * دسترسی مستقیم به دیتای کلاس بدون ساخت شیء نمونه
+    * متدهای `@classmethod` می‌توانند ویژگی‌های کلاسی را دستکاری کنند که توسط تمامی نمونه‌های کلاس مشترک هستند.
+        * برای مثال، اگر بخواهید تعداد کل نمونه‌های یک کلاس را بشمارید(افزایش یک واحد به `Counter`) یا ویژگی‌هایی که به همه نمونه‌ها وابسته‌اند را تغییر دهید، از متدهای `@classmethod` استفاده می‌کنید.
+* کاربرد2️⃣️: ساخت و مدیریت نمونه‌ها (Factory Methods)
+    * ایجاد غیرمستقیم و خارج از چهاچوب و منطق پیش‌فرض آن کلاس(سازنده `__init__`)
+* کاربرد3️⃣️: پشتیبانی از وراثت و `polymorphism`
+    * امکان ایجاد رفتار خاص برای کلاس‌های مختلف در سلسله‌مراتب وراثت
+    * دسترسی دقیق‌تر به متدهای استاتیک در هر کلاس از مراتب وراثت
+    * تقریبا همیشه در مقدار بازگشتی یک کلاس برمی‌گرداند
 
 ```python
-class User:
-    activeUsers = 0
+class Circle:
+
+    def __init__(self, radius):
+        self._radius = radius  # توجه: از `_` برای نشان دادن "private بودن منطقی" استفاده می‌کنیم
+
+    @classmethod  # به کلاس (نه نمونه) وابسته‌است
+    def from_diameter(cls, diameter):
+        """ایجاد دایره از روی قطر (روش جایگزین برای سازنده)"""
+        radius = diameter / 2
+        return cls(radius)  # cls همان Circle است → Circle(radius)
+
+
+# ✅️ Correct
+obj1 = (Circle.from_diameter(20))
+
+# ❌️ 
+# Note: اگر چه این دسترسی برای راحتی برقرار است اما به هیچ‌وجه توصیه نمیشود 
+obj2 = Circle(10)
+print(obj2.from_diameter(20))
+```
+
+مثال1️⃣️: ساخت شیء با فرمت جایگزین
+
+```python
+class Person:
+    def __init__(self, first_name, last_name):
+        self.first_name = first_name
+        self.last_name = last_name
 
     @classmethod
-    def func1(cls):
-        return cls.activeUsers
+    def from_full_name(cls, full_name):
+        first, last = full_name.split(" ", 1)
+        return cls(first, last)  # cls is Person
 
 
-# Method1️⃣️: بدون نیاز ساخت شیء از کلاس
-print(User.func1())
+p1 = Person("Ali", "Rezaei")
+p2 = Person.from_full_name("Sara Ahmadi")  # روش جایگزین ساخت شیء
 
-# Method2️⃣️: الزام بر ساختن شیء از کلاس"
+print(p2.first_name)  # Sara
+print(p2.last_name)  # Ahmadi
+```
 
-obj1 = User()
-print(obj1.func1())
+مثال2️⃣️: دسترسی به متغیر استاتیک
+
+```python
+class Student:
+    school_name = "PySchool"
+    total_students = 0
+
+    def __init__(self, name):
+        self.name = name
+        Student.total_students += 1
+
+    @classmethod
+    def get_school_info(cls):
+        return f"{cls.school_name} has {cls.total_students} students."
+
+
+s1 = Student("Ali")
+s2 = Student("Sara")
+
+print(Student.get_school_info())  # PySchool has 2 students.
+```
+
+مثال3️⃣️: در این مثال ۱-متغیراستاتیک ۲-متداستاتیک ۳-متدکلاسی استفاده شده است
+
+```python
+class Car:
+    brand = "Generic"  # Class Variable(Static)
+    total_cars = 0  # Class Variable(Static)
+
+    def __init__(self, model):
+        self.model = model  # Instance Variable
+        Car.total_cars += 1  # Instance Variable
+
+    @staticmethod
+    def is_valid_model(model):  # وابسته به چیزی نیست(فقط چک می‌کند)
+        return len(model) > 0
+
+    @classmethod
+    def get_brand_info(cls):
+        return f"Brand: {cls.brand}, Total Cars: {cls.total_cars}"
+
+    @classmethod
+    def create_default(cls):
+        return cls("DefaultModel")
+
+
+print(Car.brand)
+print(Car.is_valid_model("Tesla"))  # True
+
+# ✅ متد کلاسی:
+car1 = Car.create_default()  # ← توسط متد کلاسی شیء ساختیم
+print(Car.get_brand_info())  # Brand: Generic, Total Cars: 1
+```
+
+مثال4️⃣️:
+
+```python
+class BankAccount:
+    bank_name = "PyBank"  # Class Variable(Static)
+    accounts_count = 0  # Class Variable(Static)
+
+    def __init__(self, owner, balance=0):
+        if not BankAccount.is_valid_owner(owner):  # ← متد استاتیک
+            raise ValueError("Invalid owner name!")
+        self.owner = owner
+        self.balance = balance
+        BankAccount.accounts_count += 1
+
+    @staticmethod
+    def is_valid_owner(name):
+        return isinstance(name, str) and len(name.strip()) > 0
+
+    @classmethod
+    def get_bank_status(cls):  # ← متد کلاسی
+        return f"{cls.bank_name} has {cls.accounts_count} accounts."
+
+    @classmethod
+    def create_empty_account(cls, owner):
+        return cls(owner, 0)  # ← متد کلاسی برای ساخت سریع
+
+
+# --- استفاده ---
+acc1 = BankAccount.create_empty_account("Ali")
+print(BankAccount.get_bank_status())  # PyBank has 1 accounts.
+```
+
+مثال5️⃣️: ترکیب متغیر استاتیک + متد کلاسی + متد استاتیک
+
+```python
+class BankAccount:
+    bank_name = "PyBank"  # متغیر استاتیک
+    total_accounts = 0  # متغیر استاتیک برای شمارش
+
+    def __init__(self, owner, balance=0):
+        self.owner = owner
+        self.balance = balance
+        BankAccount.total_accounts += 1
+
+    @staticmethod
+    def is_valid_amount(amount):
+        return amount > 0
+
+    @classmethod
+    def get_bank_info(cls):
+        return f"{cls.bank_name} - Total Accounts: {cls.total_accounts}"
+
+
+# استفاده:
+acc1 = BankAccount("Ali", 1000)
+acc2 = BankAccount("Sara", 2000)
+
+print(BankAccount.is_valid_amount(50))  # True
+print(BankAccount.get_bank_info())  # PyBank - Total Accounts: 2
+```
+
+مثال6️⃣️:متغیر استاتیک با کنترل دسترسی و اعتبارسنجی
+
+در این مثال _`count` یک متغیر استاتیک کنترل‌شده است که فقط از طریق متدهای کلاسی قابل دستکاری است
+
+```python
+class Counter:
+    _count = 0  # متغیر استاتیک "private"
+
+    @classmethod
+    def increment(cls):
+        cls._count += 1
+
+    @classmethod
+    def get_count(cls):
+        return cls._count
+
+    @classmethod
+    def reset(cls):
+        cls._count = 0
+
+    # جلوگیری از تغییر مستقیم با setattr
+    def __setattr__(self, name, value):
+        if name == '_count':
+            raise AttributeError("Cannot modify private static variable directly")
+        super().__setattr__(name, value)
+
+
+c1 = Counter()
+c2 = Counter()
+
+Counter.increment()
+Counter.increment()
+print(Counter.get_count())  # 2
+
+# c1._count = 10  # ❌️ خطا: Cannot modify private static variable directly
+```
+
+مثال7️⃣️:متد استاتیک به عنوان Factory Method با اعتبارسنجی
+
+در این مثال from_config یک factory method است که از یک دیکشنری، instance می‌سازد — و validate_db_type یک متد استاتیک برای منطق اعتبارسنجی.
+
+```python
+from typing import Literal, Union
+
+
+class DatabaseConnection:
+    def __init__(self, host: str, port: int, db_type: str):
+        self.host = host
+        self.port = port
+        self.db_type = db_type
+
+    @staticmethod
+    def validate_db_type(db_type: str) -> bool:
+        return db_type in ("mysql", "postgresql", "sqlite")
+
+    @classmethod
+    def from_config(cls, config: dict):
+        db_type = config.get("type")
+        if not cls.validate_db_type(db_type):
+            raise ValueError(f"Unsupported database type: {db_type}")
+        return cls(config["host"], config["port"], db_type)
+
+
+# استفاده:
+config = {"host": "localhost", "port": 5432, "type": "postgresql"}
+conn = DatabaseConnection.from_config(config)
+print(conn.db_type)  # postgresql
+```
+
+مثال8️⃣️: کَش کردن نتیجه متد استاتیک (Static Method Caching)
+
+در این مثال `@lru_cache` روی متد استاتیک، نتیجه را کَش می‌کند — حتی اگر از instance ها یا کلاس فراخوانی شود، کش مشترک است.
+
+```python
+from functools import lru_cache
+import time
+
+
+class MathUtils:
+
+    @staticmethod
+    @lru_cache(maxsize=128)
+    def fibonacci(n: int) -> int:
+        if n < 2:
+            return n
+        return MathUtils.fibonacci(n - 1) + MathUtils.fibonacci(n - 2)
+
+    @staticmethod
+    def cached_fib_with_timer(n: int) -> int:
+        start = time.perf_counter()
+        result = MathUtils.fibonacci(n)
+        end = time.perf_counter()
+        print(f"Computed fib({n}) in {end - start:.6f} seconds")
+        return result
+
+
+# تست:
+print(MathUtils.cached_fib_with_timer(35))  # اولی کند
+print(MathUtils.cached_fib_with_timer(35))  # دومی فوری (کش شده)
+```
+
+مثال9️⃣️: متد استاتیک Async
+
+در این مثال متد استاتیک `fetch_data` مستقل از instance است و می‌تواند async باشد(حتی در کلاس‌های معمولی)
+
+```python
+import asyncio
+
+
+class APIClient:
+    BASE_URL = "https://api.example.com"
+
+    @staticmethod
+    async def fetch_data(endpoint: str) -> dict:
+        # شبیه‌سازی درخواست async
+        await asyncio.sleep(1)
+        return {"data": f"Response from {endpoint}"}
+
+    @classmethod
+    async def get_user(cls, user_id: int):
+        return await cls.fetch_data(f"/user/{user_id}")
+
+
+# استفاده:
+async def main():
+    client = APIClient()
+    result = await APIClient.get_user(123)
+    print(result)  # {'data': 'Response from /user/123'}
+
+
+asyncio.run(main())
+```
+
+مثال1️⃣️0️⃣️: استفاده از متدهای استاتیک در متاکلاس (MetaClass)
+
+در این مثال متد استاتیک `get_instance_key` در متاکلاس، منطق تولید کلید را جدا کرده — بدون نیاز به `cls` یا `self`
+
+```python
+class SingletonMeta(type):
+    _instances = {}
+
+    @staticmethod
+    def get_instance_key(cls):
+        return cls.__name__
+
+    def __call__(cls, *args, **kwargs):
+        key = SingletonMeta.get_instance_key(cls)
+        if key not in cls._instances:
+            cls._instances[key] = super().__call__(*args, **kwargs)
+        return cls._instances[key]
+
+
+class Database(metaclass=SingletonMeta):
+    def __init__(self):
+        self.connection = "Connected"
+
+
+# تست:
+db1 = Database()
+db2 = Database()
+print(db1 is db2)  # True — چون متاکلاس از متد استاتیک برای کلید استفاده کرده
+```
+
+مثال1️⃣️1️⃣️: متد استاتیک با Type Dispatch (شبیه Overload استاتیک)
+
+توجه: در `singledispatch`، ترکیب با `@staticmethod` در نسخه‌های پایین‌تر پایتون ممکن است با خطا مواجه شود. در `python 3.9+` پشتیبانی می‌شود. برای نسخه‌های قدیمی‌تر، بهتر است `@classmethod` یا تابع معمولی خارج از کلاس استفاده شود.
+
+```python
+from functools import singledispatch
+
+
+class DataProcessor:
+
+    @staticmethod
+    @singledispatch
+    def process(data):
+        raise NotImplementedError("Unsupported type")
+
+    @process.register
+    @staticmethod
+    def _(str):
+        return data.upper()
+
+    @process.register
+    @staticmethod
+    def _(int):
+        return data * 2
+
+    @process.register
+    @staticmethod
+    def _(list):
+        return [DataProcessor.process(item) for item in data]
+
+
+# استفاده:
+print(DataProcessor.process("hello"))  # HELLO
+print(DataProcessor.process(5))  # 10
+print(DataProcessor.process(["a", 2]))  # ['A', 4]
+```
+
+مثال1️⃣️2️⃣️:متغیر استاتیک با مدیریت Thread-Safe
+
+در این مثال متغیر استاتیک `_count` با قفل، در محیط چند(thread ایمن است).
+
+```python
+import threading
+
+
+class ThreadSafeCounter:
+    _count = 0
+    _lock = threading.Lock()
+
+    @classmethod
+    def increment(cls):
+        with cls._lock:
+            cls._count += 1
+
+    @classmethod
+    def get_count(cls):
+        with cls._lock:
+            return cls._count
+
+
+# تست چند-thread:
+def worker():
+    for _ in range(1000):
+        ThreadSafeCounter.increment()
+
+
+threads = [threading.Thread(target=worker) for _ in range(10)]
+for t in threads: t.start()
+for t in threads: t.join()
+
+print(ThreadSafeCounter.get_count())  # 10000 — دقیق و thread-safe
+```
+
+مثال1️⃣️3️⃣️:
+
+```python
 
 ```
 
-### 5.6.12. ✅️ Comprehensive Advance Examples
+### 5.6.12. ✅️ StaticMethod ► `@staticmethod`
+
+* یک متد فقط زمانی می‌تواند `@staticmethod` باشد که
+    * از `self`  و `cls` استفاده نکند
+    *       از هیچ ویژگی یا متد دیگری از کلاس استفاده نکند
+
+* متدی که هیچ ارتباطی با شیء یا کلاس ندارد و فقط منطقاً داخل کلاس گذاشته شده(عدم نیاز به دسترسی از کلاس یا نمونه)
+* متدی که نیازی به `self` یا `cls` ندارد و نباید از کلاس یا نمونه یا متدهای دیگر(داخل همان کلاس) و ویژگی‌های کلاسی استفاده کند
+* فقط برای پیاده‌سازی منطق کد نیاز هست در کلاس از آنها استفاده شود
+* همانند یک ابزار کمکی(Utility)
+* ✅️ بهتر است که در ماژول های سطح بالا تعریف کنیم و در کلاس از آن استفاده نماییم زیرا به کلاس وابستگی ندارد
+
+مثال1️⃣️:
+
+```python
+class Calculator:
+    @staticmethod
+    def add(a, b):
+        return a + b
+
+    @staticmethod
+    def is_even(number):
+        return number % 2 == 0
+
+
+# فراخوانی بدون ساخت شیء:
+print(Calculator.add(5, 3))  # 8
+print(Calculator.is_even(4))  # True
+```
+
+مثال2️⃣️ [اشتباه رایج❌️] این قطعه کد تولید خطا میکند زیرا متد استاتیک، self ندارد
+
+```python
+class Dog:
+    @staticmethod
+    def bark():
+        print(self.name + " is barking!")  # ❌️ خطا! self تعریف نشده
+```
+
+مثال 3️⃣️:فرض کنید می‌خواهید یک کلاس برای محاسبات ریاضی داشته باشید که نیازی به ساخت شیء ندارد
+
+چرا استاتیک؟ چون این توابع به داده‌های داخل شیء (self) یا کلاس (cls) وابسته نیستند — فقط منطق ریاضی هستند.
+
+```python
+class MathUtils:
+    @staticmethod
+    def add(a, b):
+        return a + b
+
+    @staticmethod
+    def multiply(a, b):
+        return a * b
+
+
+# فراخوانی بدون نیاز به ساخت instance:
+print(MathUtils.add(5, 3))  # 8
+print(MathUtils.multiply(4, 6))  # 24
+```
+
+مثال4️⃣️: متد استاتیک برای اعتبارسنجی (Validation)
+
+فرض کنید می‌خواهید قبل از ساخت شیء، ورودی‌ها را چک کنید
+
+```python
+class User:
+    def __init__(self, email):
+        if not User.is_valid_email(email):
+            raise ValueError("Invalid email!")
+        self.email = email
+
+    @staticmethod
+    def is_valid_email(email):
+        return "@" in email and "." in email
+
+
+# استفاده:
+user1 = User("ali@gmail.com")  # ✅ OK
+# user2 = User("invalid-email") # ❌ Error!
+```
+
+مثال5️⃣️: متد استاتیک برای تبدیل واحد (Unit Conversion)
+
+```python
+class Temperature:
+    @staticmethod
+    def celsius_to_fahrenheit(c):
+        return (c * 9 / 5) + 32
+
+    @staticmethod
+    def fahrenheit_to_celsius(f):
+        return (f - 32) * 5 / 9
+
+
+print(Temperature.celsius_to_fahrenheit(0))  # 32.0
+print(Temperature.fahrenheit_to_celsius(32))  # 0.0
+```
+
+مثال6️⃣️: متد استاتیک برای فرمت‌دهی متن (String Formatting)
+
+کاربرد: پیش‌پردازش متن در سیستم‌های چت، وب‌سایت‌ها، یا پایگاه داده
+
+```python
+class TextFormatter:
+    @staticmethod
+    def clean_spaces(text):
+        return " ".join(text.split())
+
+    @staticmethod
+    def to_title_case(text):
+        return text.title()
+
+
+# استفاده:
+dirty_text = "   hello    world   "
+clean = TextFormatter.clean_spaces(dirty_text)
+title = TextFormatter.to_title_case(clean)
+
+print(clean)  # "hello world"
+print(title)  # "Hello World"
+```
+
+### 5.6.14. ✅️ Comprehensive Advance Examples
 
 ```python
 def before_after(func):
@@ -4349,19 +4861,11 @@ print(p3)  # (4, 6)
 * مفهوم Static به صورت ذاتی در زبان پایتون تعریف نشده است.
 * اما توسط مفهوم شی‌گرایی و مفهوم Decorator می‌توان این مفهوم و رفتارهای «استاتیک» را شبیه‌سازی و پیاده‌سازی کرد.
 * اگر یک متغیر را در داخل کلاس و خارج توابع تعریف کنیم آنگاه آن را استاتیک درنظر می‌گیرد
+* یک متغیر استاتیک در بدنه کلاس تعریف می‌شوند و توسط `cls.variable` در دسترس خواهد بود و نه `self.variable` (مگر در موارد خاص)
 * برای درک بهتر از زمان استفاده ۱-متغیراستاتیک ۲-متداستاتیک ۳-متدکلاسی
     * **متد عادی**: آیا این متد نیاز دارد اطلاعات یک شیء خاص (مثل self.name) را ببیند؟
     * `@classmethod`: آیا نیاز دارد اطلاعات کلاس (مثل cls.total) را ببیند یا شیء جدیدی بسازد؟
     * `@staticmethod`:  آیا فقط یک تابع منطقی است که هیچ state ای نمی‌خواهد؟
-
-| مورد                | توصیه                                                                                                         |
-|---------------------|---------------------------------------------------------------------------------------------------------------|
-| 📌 `@staticmethod`  | فقط وقتی استفاده کنید که متد **هیچ ارتباطی با `self` یا `cls` ندارد** — مثلاً یک تابع کمکی منطقی.             |
-| 📌 `@classmethod`   | برای Factoryها، متدهای جایگزین سازنده، یا دستکاری کلاس.                                                       |
-| 📌 متغیرهای استاتیک | در بدنه کلاس تعریف می‌شوند — اما با `cls.variable` دسترسی داشته باشید، نه `self.variable` (مگر در موارد خاص). |
-| 📌 Private Static   | با `_` یا `__` پیشوند بزنید و در `__setattr__` کنترل کنید.                                                    |
-| 📌 Caching          | از `@lru_cache` یا `@cache` روی متدهای استاتیک برای بهینه‌سازی استفاده کنید.                                  |
-| 📌 Type Hints       | حتی در متدهای استاتیک، حتماً از تایپ‌هینت استفاده کنید — به خصوص در پروژه‌های بزرگ.                           |
 
 ### 7.5.1. ✅️ StaticVariable
 
@@ -4378,7 +4882,7 @@ class Dog:
     species = "Canis lupus"  # StaticVariable
 
     def __init__(self, name):
-        self.name = name  # این یک متغیر نمونه (instance variable) است
+        self.name = name  # instance variable
 
 
 dog1 = Dog("Rex")
@@ -4403,48 +4907,35 @@ class User:
 one = User()
 two = User()
 
-print("--------Initial value---------------")  # تابع آی‌دی شماره هر متغیر را که در حافظه دارد را نشان می‌دهد
-print(f"staticData in User[id: {id(User.staticData)}] ==========> {User.staticData}")
-print(f"staticData in one [id: {id(one.staticData)} ] ---> {one.staticData}")
-print(f"staticData in two [id: {id(two.staticData)} ] ---> {two.staticData}")
-
-print("--------change in class---------------")
+# Note: تابع آی‌دی شماره هر متغیر را که در حافظه دارد را نشان می‌دهد
+# ╔═══════════════╗
+# ║ Initial value ║ 
+# ╚═══════════════╝
+print(f"staticData in User[id: {id(User.staticData)}] ===> {User.staticData}")  # [id: 10864392] ===> 100
+print(f"staticData in one [id: {id(one.staticData)} ] ---> {one.staticData}")  # [id: 10864392 ] ---> 100
+print(f"staticData in two [id: {id(two.staticData)} ] ---> {two.staticData}")  # [id: 10864392 ] ---> 100
+# ╔═════════════════╗
+# ║ change in class ║ 
+# ╚═════════════════╝
 User.staticData = 0
-print(f"staticData in User[id: {id(User.staticData)}] ==========> {User.staticData}")
-print(f"staticData in one [id: {id(one.staticData)} ] ---> {one.staticData}")
-print(f"staticData in two [id: {id(two.staticData)} ] ---> {two.staticData}")
-
-print("--------Change objects---------------")
+print(f"staticData in User[id: {id(User.staticData)}] ===> {User.staticData}")  # [id: 10861192] ===> 0
+print(f"staticData in one [id: {id(one.staticData)} ] ---> {one.staticData}")  # [id: 10861192 ] ---> 0
+print(f"staticData in two [id: {id(two.staticData)} ] ---> {two.staticData}")  # [id: 10861192 ] ---> 0
+# ╔════════════════╗
+# ║ Change objects ║ 
+# ╚════════════════╝
 one.staticData = 1
 two.staticData = 2
-
-print(f"staticData in User[id: {id(User.staticData)}] ==========> {User.staticData}")
-print(f"staticData in one [id: {id(one.staticData)} ] ---> {one.staticData}")
-print(f"staticData in two [id: {id(two.staticData)} ] ---> {two.staticData}")
-
-print("--------change in class---------------")
+print(f"staticData in User[id: {id(User.staticData)}] ===> {User.staticData}")  # [id: 10861192] ===> 0
+print(f"staticData in one [id: {id(one.staticData)} ] ---> {one.staticData}")  # [id: 10861224 ] ---> 1
+print(f"staticData in two [id: {id(two.staticData)} ] ---> {two.staticData}")  # [id: 10861256 ] ---> 2
+# ╔═════════════════╗
+# ║ change in class ║ 
+# ╚═════════════════╝
 User.staticData = 3
-print(f"staticData in User[id: {id(User.staticData)}] ==========> {User.staticData}")
-print(f"staticData in one [id: {id(one.staticData)} ] ---> {one.staticData}")
-print(f"staticData in two [id: {id(two.staticData)} ] ---> {two.staticData}")
-
-# Output:
-## ---> --------Initial value---------------
-## ---> staticData in User[id: 10864392] ==========> 100
-## ---> staticData in one [id: 10864392 ] ---> 100
-## ---> staticData in two [id: 10864392 ] ---> 100
-## ---> --------change in class---------------
-## ---> staticData in User[id: 10861192] ==========> 0
-## ---> staticData in one [id: 10861192 ] ---> 0
-## ---> staticData in two [id: 10861192 ] ---> 0
-## ---> --------Change objects---------------
-## ---> staticData in User[id: 10861192] ==========> 0
-## ---> staticData in one [id: 10861224 ] ---> 1
-## ---> staticData in two [id: 10861256 ] ---> 2
-## ---> --------change in class---------------
-## ---> staticData in User[id: 10861288] ==========> 3
-## ---> staticData in one [id: 10861224 ] ---> 1
-## ---> staticData in two [id: 10861256 ] ---> 2
+print(f"staticData in User[id: {id(User.staticData)}] ===> {User.staticData}")  # [id: 10861288] ===> 3
+print(f"staticData in one [id: {id(one.staticData)} ] ---> {one.staticData}")  # [id: 10861224 ] ---> 1
+print(f"staticData in two [id: {id(two.staticData)} ] ---> {two.staticData}")  # [id: 10861256 ] ---> 2
 ```
 
 مثال3️⃣️: فرض کنید می‌خواهید تعداد کل سگ‌هایی که ساخته‌اید را بشمارید
@@ -4506,524 +4997,6 @@ print(MathConstants.PI)  # 3.1415926535
 
 # خطا در هنگام تلاش برای تغییر:
 # MathConstants.PI = 3.14 # ❌️ AttributeError: can't set attribute
-```
-
-### 7.5.2. ✅️ StaticMethod ► `@staticmethod`
-
-متدی که هیچ ارتباطی با شیء یا کلاس ندارد(فقط منطقاً داخل کلاس گذاشته شده) یعنی نه self بعنوان آرگومان ورودی می‌گیرد، نه cls. مثل یک تابع معمولی است که داخل کلاس قرار گرفته
-
-* متدی که نیازی به `self` یا `cls` ندارد و مستقل از نمونه یا کلاس اجرا می‌شود
-* دلایل قرارگرفتن این گونه توابع در داخل کلاس:
-    * توابع مرتبط با کلاس هستند وبرای پیاده‌سازی منطق کد نیاز هست در کلاس از آنها استفاده شود
-    * برای سازماندهی کد درون کلاس تعریف می‌شوند(مثلا تمام توابع ماشین حساب داخل کلاس ماشین‌حساب قرار داده شود)
-    * همانند یک ابزار کمکی(Utility)
-* چه زمانی از توابع از نوع StaticMethod استفاده نکنیم
-    * استفاده از متدعادی: هنگامی که متد نیاز به دسترسی به `self` یا ویژگی‌های `instance` دارد
-    * استفاده از `@classmethod`:اگر متد نیاز به `cls` یا تغییر در کلاس یا دسترسی به کلاس دارد
-    * اگر منطق کاملاً مستقل است و جای دیگر هم می‌تواند باشد
-        * شاید بهتر است در ماژول سطح بالا تعریف شود، نه درون کلاس
-
-مثال1️⃣️:
-
-```python
-class Calculator:
-    @staticmethod
-    def add(a, b):
-        return a + b
-
-    @staticmethod
-    def is_even(number):
-        return number % 2 == 0
-
-
-# فراخوانی بدون ساخت شیء:
-print(Calculator.add(5, 3))  # 8
-print(Calculator.is_even(4))  # True
-
-calc = Calculator()  # حتی اگر شیء بسازید کار میکند ولی نیاز نیست
-print(calc.add(10, 20))  # Output: 30
-```
-
-مثال2️⃣️ [اشتباه رایج❌️] این قطعه کد تولید خطا میکند زیرا متد استاتیک، self ندارد
-
-```python
-class Dog:
-    @staticmethod
-    def bark():
-        print(self.name + " is barking!")  # ❌️ خطا! self تعریف نشده
-```
-
-مثال 3️⃣️:فرض کنید می‌خواهید یک کلاس برای محاسبات ریاضی داشته باشید که نیازی به ساخت شیء ندارد
-
-چرا استاتیک؟ چون این توابع به داده‌های داخل شیء (self) یا کلاس (cls) وابسته نیستند — فقط منطق ریاضی هستند.
-
-```python
-class MathUtils:
-    @staticmethod
-    def add(a, b):
-        return a + b
-
-    @staticmethod
-    def multiply(a, b):
-        return a * b
-
-
-# فراخوانی بدون نیاز به ساخت instance:
-print(MathUtils.add(5, 3))  # 8
-print(MathUtils.multiply(4, 6))  # 24
-```
-
-مثال4️⃣️: متد استاتیک برای اعتبارسنجی (Validation)
-
-فرض کنید می‌خواهید قبل از ساخت شیء، ورودی‌ها را چک کنید
-
-```python
-class User:
-    def __init__(self, email):
-        if not User.is_valid_email(email):
-            raise ValueError("Invalid email!")
-        self.email = email
-
-    @staticmethod
-    def is_valid_email(email):
-        return "@" in email and "." in email
-
-
-# استفاده:
-user1 = User("ali@gmail.com")  # ✅ OK
-# user2 = User("invalid-email") # ❌ Error!
-```
-
-مثال5️⃣️: متد استاتیک برای تبدیل واحد (Unit Conversion)
-
-```python
-class Temperature:
-    @staticmethod
-    def celsius_to_fahrenheit(c):
-        return (c * 9 / 5) + 32
-
-    @staticmethod
-    def fahrenheit_to_celsius(f):
-        return (f - 32) * 5 / 9
-
-
-print(Temperature.celsius_to_fahrenheit(0))  # 32.0
-print(Temperature.fahrenheit_to_celsius(32))  # 0.0
-```
-
-مثال6️⃣️: متد استاتیک برای فرمت‌دهی متن (String Formatting)
-
-کاربرد: پیش‌پردازش متن در سیستم‌های چت، وب‌سایت‌ها، یا پایگاه داده
-
-```python
-class TextFormatter:
-    @staticmethod
-    def clean_spaces(text):
-        return " ".join(text.split())
-
-    @staticmethod
-    def to_title_case(text):
-        return text.title()
-
-
-# استفاده:
-dirty_text = "   hello    world   "
-clean = TextFormatter.clean_spaces(dirty_text)
-title = TextFormatter.to_title_case(clean)
-
-print(clean)  # "hello world"
-print(title)  # "Hello World"
-```
-
-### 7.5.3. ✅️ ClassMethod ► `@classmethod`
-
-متدی که به جای شیء، به کلاس دسترسی دارد
-
-* اِلِمان `cls` را به عنوان اولین ورودی می‌گیرد
-* برای ساخت شیءهای جایگزین، دستکاری کلاس، یا دسترسی به متغیرهای استاتیک استفاده می‌شود
-* یک متد فقط زمانی می‌تواند @staticmethod باشد که
-    * از self استفاده نکند
-    *       از هیچ ویژگی یا متد دیگری از کلاس استفاده نکند
-
-مثال1️⃣️: ساخت شیء با فرمت جایگزین
-
-```python
-class Person:
-    def __init__(self, first_name, last_name):
-        self.first_name = first_name
-        self.last_name = last_name
-
-    @classmethod
-    def from_full_name(cls, full_name):
-        first, last = full_name.split(" ", 1)
-        return cls(first, last)  # cls is Person
-
-
-p1 = Person("Ali", "Rezaei")
-p2 = Person.from_full_name("Sara Ahmadi")  # روش جایگزین ساخت شیء
-
-print(p2.first_name)  # Sara
-print(p2.last_name)  # Ahmadi
-```
-
-مثال2️⃣️: دسترسی به متغیر استاتیک
-
-```python
-class Student:
-    school_name = "PySchool"
-    total_students = 0
-
-    def __init__(self, name):
-        self.name = name
-        Student.total_students += 1
-
-    @classmethod
-    def get_school_info(cls):
-        return f"{cls.school_name} has {cls.total_students} students."
-
-
-s1 = Student("Ali")
-s2 = Student("Sara")
-
-print(Student.get_school_info())  # PySchool has 2 students.
-```
-
-مثال3️⃣️: در این مثال ۱-متغیراستاتیک ۲-متداستاتیک ۳-متدکلاسی استفاده شده است
-
-```python
-class Car:
-    brand = "Generic"  # متغیر استاتیک — متعلق به کلاس
-    total_cars = 0  # متغیر استاتیک — شمارنده
-
-    def __init__(self, model):
-        self.model = model  # متغیر نمونه — متعلق به هر شیء
-        Car.total_cars += 1  # یا self.__class__.total_cars += 1
-
-    @staticmethod
-    def is_valid_model(model):  # فقط چک می‌کند — وابسته به چیزی نیست
-        return len(model) > 0
-
-    @classmethod
-    def get_brand_info(cls):  # به کلاس دسترسی دارد — cls.brand
-        return f"Brand: {cls.brand}, Total Cars: {cls.total_cars}"
-
-    @classmethod
-    def create_default(cls):  # یک شیء پیش‌فرض می‌سازد
-        return cls("DefaultModel")
-
-
-# ✅ متغیر استاتیک:
-print(Car.brand)  # Generic
-
-# ✅ متد استاتیک:
-print(Car.is_valid_model("Tesla"))  # True
-
-# ✅ متد کلاسی:
-car1 = Car.create_default()  # ← با متد کلاسی شیء ساختیم
-print(Car.get_brand_info())  # Brand: Generic, Total Cars: 1
-```
-
-مثال4️⃣️:
-
-```python
-class BankAccount:
-    bank_name = "PyBank"  # متغیر استاتیک
-    accounts_count = 0  # متغیر استاتیک
-
-    def __init__(self, owner, balance=0):
-        if not BankAccount.is_valid_owner(owner):  # ← متد استاتیک
-            raise ValueError("Invalid owner name!")
-        self.owner = owner
-        self.balance = balance
-        BankAccount.accounts_count += 1
-
-    @staticmethod
-    def is_valid_owner(name):
-        return isinstance(name, str) and len(name.strip()) > 0
-
-    @classmethod
-    def get_bank_status(cls):  # ← متد کلاسی
-        return f"{cls.bank_name} has {cls.accounts_count} accounts."
-
-    @classmethod
-    def create_empty_account(cls, owner):
-        return cls(owner, 0)  # ← متد کلاسی برای ساخت سریع
-
-
-# --- استفاده ---
-acc1 = BankAccount.create_empty_account("Ali")
-print(BankAccount.get_bank_status())  # PyBank has 1 accounts.
-```
-
-مثال5️⃣️: ترکیب متغیر استاتیک + متد کلاسی + متد استاتیک
-
-```python
-class BankAccount:
-    bank_name = "PyBank"  # متغیر استاتیک
-    total_accounts = 0  # متغیر استاتیک برای شمارش
-
-    def __init__(self, owner, balance=0):
-        self.owner = owner
-        self.balance = balance
-        BankAccount.total_accounts += 1
-
-    @staticmethod
-    def is_valid_amount(amount):
-        return amount > 0
-
-    @classmethod
-    def get_bank_info(cls):
-        return f"{cls.bank_name} - Total Accounts: {cls.total_accounts}"
-
-
-# استفاده:
-acc1 = BankAccount("Ali", 1000)
-acc2 = BankAccount("Sara", 2000)
-
-print(BankAccount.is_valid_amount(50))  # True
-print(BankAccount.get_bank_info())  # PyBank - Total Accounts: 2
-```
-
-مثال6️⃣️:متغیر استاتیک با کنترل دسترسی و اعتبارسنجی
-
-در این مثال _`count` یک متغیر استاتیک کنترل‌شده است که فقط از طریق متدهای کلاسی قابل دستکاری است
-
-```python
-class Counter:
-    _count = 0  # متغیر استاتیک "private"
-
-    @classmethod
-    def increment(cls):
-        cls._count += 1
-
-    @classmethod
-    def get_count(cls):
-        return cls._count
-
-    @classmethod
-    def reset(cls):
-        cls._count = 0
-
-    # جلوگیری از تغییر مستقیم با setattr
-    def __setattr__(self, name, value):
-        if name == '_count':
-            raise AttributeError("Cannot modify private static variable directly")
-        super().__setattr__(name, value)
-
-
-c1 = Counter()
-c2 = Counter()
-
-Counter.increment()
-Counter.increment()
-print(Counter.get_count())  # 2
-
-# c1._count = 10  # ❌️ خطا: Cannot modify private static variable directly
-```
-
-مثال7️⃣️:متد استاتیک به عنوان Factory Method با اعتبارسنجی
-
-در این مثال from_config یک factory method است که از یک دیکشنری، instance می‌سازد — و validate_db_type یک متد استاتیک برای منطق اعتبارسنجی.
-
-```python
-from typing import Literal, Union
-
-
-class DatabaseConnection:
-    def __init__(self, host: str, port: int, db_type: str):
-        self.host = host
-        self.port = port
-        self.db_type = db_type
-
-    @staticmethod
-    def validate_db_type(db_type: str) -> bool:
-        return db_type in ("mysql", "postgresql", "sqlite")
-
-    @classmethod
-    def from_config(cls, config: dict):
-        db_type = config.get("type")
-        if not cls.validate_db_type(db_type):
-            raise ValueError(f"Unsupported database type: {db_type}")
-        return cls(config["host"], config["port"], db_type)
-
-
-# استفاده:
-config = {"host": "localhost", "port": 5432, "type": "postgresql"}
-conn = DatabaseConnection.from_config(config)
-print(conn.db_type)  # postgresql
-```
-
-مثال8️⃣️: کَش کردن نتیجه متد استاتیک (Static Method Caching)
-
-در این مثال `@lru_cache` روی متد استاتیک، نتیجه را کَش می‌کند — حتی اگر از instance ها یا کلاس فراخوانی شود، کش مشترک است.
-
-```python
-from functools import lru_cache
-import time
-
-
-class MathUtils:
-
-    @staticmethod
-    @lru_cache(maxsize=128)
-    def fibonacci(n: int) -> int:
-        if n < 2:
-            return n
-        return MathUtils.fibonacci(n - 1) + MathUtils.fibonacci(n - 2)
-
-    @staticmethod
-    def cached_fib_with_timer(n: int) -> int:
-        start = time.perf_counter()
-        result = MathUtils.fibonacci(n)
-        end = time.perf_counter()
-        print(f"Computed fib({n}) in {end - start:.6f} seconds")
-        return result
-
-
-# تست:
-print(MathUtils.cached_fib_with_timer(35))  # اولی کند
-print(MathUtils.cached_fib_with_timer(35))  # دومی فوری (کش شده)
-```
-
-مثال9️⃣️: متد استاتیک Async
-
-در این مثال متد استاتیک `fetch_data` مستقل از instance است و می‌تواند async باشد(حتی در کلاس‌های معمولی)
-
-```python
-import asyncio
-
-
-class APIClient:
-    BASE_URL = "https://api.example.com"
-
-    @staticmethod
-    async def fetch_data(endpoint: str) -> dict:
-        # شبیه‌سازی درخواست async
-        await asyncio.sleep(1)
-        return {"data": f"Response from {endpoint}"}
-
-    @classmethod
-    async def get_user(cls, user_id: int):
-        return await cls.fetch_data(f"/user/{user_id}")
-
-
-# استفاده:
-async def main():
-    client = APIClient()
-    result = await APIClient.get_user(123)
-    print(result)  # {'data': 'Response from /user/123'}
-
-
-asyncio.run(main())
-```
-
-مثال1️⃣️0️⃣️: استفاده از متدهای استاتیک در متاکلاس (MetaClass)
-
-در این مثال متد استاتیک `get_instance_key` در متاکلاس، منطق تولید کلید را جدا کرده — بدون نیاز به `cls` یا `self`
-
-```python
-class SingletonMeta(type):
-    _instances = {}
-
-    @staticmethod
-    def get_instance_key(cls):
-        return cls.__name__
-
-    def __call__(cls, *args, **kwargs):
-        key = SingletonMeta.get_instance_key(cls)
-        if key not in cls._instances:
-            cls._instances[key] = super().__call__(*args, **kwargs)
-        return cls._instances[key]
-
-
-class Database(metaclass=SingletonMeta):
-    def __init__(self):
-        self.connection = "Connected"
-
-
-# تست:
-db1 = Database()
-db2 = Database()
-print(db1 is db2)  # True — چون متاکلاس از متد استاتیک برای کلید استفاده کرده
-```
-
-مثال1️⃣️1️⃣️: متد استاتیک با Type Dispatch (شبیه Overload استاتیک)
-
-توجه: در `singledispatch`، ترکیب با `@staticmethod` در نسخه‌های پایین‌تر پایتون ممکن است با خطا مواجه شود. در `python 3.9+` پشتیبانی می‌شود. برای نسخه‌های قدیمی‌تر، بهتر است `@classmethod` یا تابع معمولی خارج از کلاس استفاده شود.
-
-```python
-from functools import singledispatch
-
-
-class DataProcessor:
-
-    @staticmethod
-    @singledispatch
-    def process(data):
-        raise NotImplementedError("Unsupported type")
-
-    @process.register
-    @staticmethod
-    def _(str):
-        return data.upper()
-
-    @process.register
-    @staticmethod
-    def _(int):
-        return data * 2
-
-    @process.register
-    @staticmethod
-    def _(list):
-        return [DataProcessor.process(item) for item in data]
-
-
-# استفاده:
-print(DataProcessor.process("hello"))  # HELLO
-print(DataProcessor.process(5))  # 10
-print(DataProcessor.process(["a", 2]))  # ['A', 4]
-```
-
-مثال1️⃣️2️⃣️:متغیر استاتیک با مدیریت Thread-Safe
-
-در این مثال متغیر استاتیک `_count` با قفل، در محیط چند(thread ایمن است).
-
-```python
-import threading
-
-
-class ThreadSafeCounter:
-    _count = 0
-    _lock = threading.Lock()
-
-    @classmethod
-    def increment(cls):
-        with cls._lock:
-            cls._count += 1
-
-    @classmethod
-    def get_count(cls):
-        with cls._lock:
-            return cls._count
-
-
-# تست چند-thread:
-def worker():
-    for _ in range(1000):
-        ThreadSafeCounter.increment()
-
-
-threads = [threading.Thread(target=worker) for _ in range(10)]
-for t in threads: t.start()
-for t in threads: t.join()
-
-print(ThreadSafeCounter.get_count())  # 10000 — دقیق و thread-safe
-```
-
-مثال1️⃣️3️⃣️:
-
-```python
-
 ```
 
 # 8. 🅰️ File
@@ -7574,7 +7547,7 @@ Waiter().start()
 print("Done")
 ```
 
-# 13. 🅰️ Documentation
+# 14. 🅰️ Documentation
 
 ```python
 def calculate_discount(price: float, discount_percent: float = 10.0, max_discount: float = 50.0) -> float:
