@@ -78,7 +78,7 @@
 
 * net user
     * net user /? # help
-    * net user <Name> /add
+    * net user <Name> /adds
     * net user <Name> <Password> /add
     * net user <Name> /delete
     * net user <Name> * /add #با زدن اینتر پسورد می‌خواهد

@@ -1,8 +1,8 @@
-# 🅰️ Application
+# 🅰️ Application and Shortcuts
 
 ## 🅱️ General
 
-* GeneralShortcut(AllApps)
+* ShortcutGeneral(AllApps)
     * [Shift+F10]: در هر برنامه‌ای همانند راست کلیک عمل خواهد کرد
     * [Alt+F10]: Toggle windows Size
     * [Alt+F] : نمایش منوها
@@ -255,6 +255,21 @@ gsettings get org.gnome.desktop.background picture-uri
 * در گیمپ درحین رنگ‌آمیزی اگر شیفت را بگیری رنگ بک‌گراند را درنظر می‌گیرد(که شرت‌کات آن می‌شود کنترل و نقطه) و فورگران
   می‌شود شرت‌کات کنترل و کاما
 
+## 🅱️ MPV
+
+* Shortcut
+  * [[]:Speed Decrease
+  * []]:Speed Increase
+  * [s]: ScreeanShot
+  * [/] or [9]: volume Decrease
+  * [*] or [0]: Volume Increase
+  * [p]: Pause
+  * [F]: fullscreen Toggle
+  * [Alt + 0]: Current-Screen: 0.5
+  * [Alt + 1]: Current-Screen: 1
+  * [Alt + 2]: Current-Screen: 2
+  * [.]: slow motion
+  * 
 # 🅰️ group:PackageManagements
 
 ## 🅱️ Debian
