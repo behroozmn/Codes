@@ -1667,8 +1667,49 @@ view_profile()
 * property: تبدیل تابع به ویزگی(property) یا صفت(attribute)
 * برای دسترسی به متد باید حتما پرانتز باز و بسته گذاشته بشود ولی برای حالت property نباید پرانتز گذاشت
 
+مثال1️⃣️: استفاده از property (مثل خواندن/نوشتن یک ویژگی معمولی)
+
 ```python
-# Example1️⃣️: 
+import math
+
+class Circle:
+    pi = math.pi  # یک ویژگی کلاسی (class variable)
+
+    def __init__(self, radius):
+        self._radius = radius  # توجه: از `_` برای نشان دادن "private بودن منطقی" استفاده می‌کنیم
+
+    # 🔹 property: برای دسترسی به ویژگی‌ها مانند یک متغیر، اما با کنترل
+    @property
+    def radius(self):
+        """گرفتن شعاع (مثل خواندن یک ویژگی ساده)"""
+        return self._radius
+
+    @radius.setter
+    def radius(self, value):
+        """تنظیم شعاع با اعتبارسنجی"""
+        if value < 0:
+            raise ValueError("شعاع نمی‌تواند منفی باشد!")
+        self._radius = value
+
+    @property
+    def area(self):
+        """مساحت دایره — بدون نیاز به پرانتز! مانند یک ویژگی محاسبه‌شده"""
+        return self.pi * self._radius ** 2
+
+# ╔════════╗
+# ║ Ussing ║
+# ╚════════╝
+c = Circle(5)
+print(c.radius)    # ✅ خروجی: 5 — بدون پرانتز!
+print(c.area)      # ✅ خروجی: 78.539... — محاسبه شده، ولی مثل ویژگی!
+
+c.radius = 10      # ✅ setter فراخوانی می‌شود
+# c.radius = -3    # ❌ ValueError: شعاع نمی‌تواند منفی باشد!
+```
+
+مثال2️⃣️:
+
+```python
 class Behrooz:
     def __init__(self, name, family):  # Constructor
         self.name = name
@@ -1685,9 +1726,10 @@ class Behrooz:
 obj1 = Behrooz("behrooz", "MohamadiNasab")
 print(obj1.show_fullname())  # --> Output: behrooz MohamadiNasab  
 print(obj1.fullname)  # ---------> Output: behrooz MohamadiNasab
+```
 
-
-# Example2️⃣️: 
+مثال3️⃣️:
+```python
 class Person:
     def __init__(self, name, birth_year):
         self.name = name
@@ -1784,6 +1826,8 @@ print(obj2.from_diameter(20))
 مثال1️⃣️: ساخت شیء با فرمت جایگزین
 
 ```python
+# //TODO: تمام مثال ها رو به هوش مصنوعی بدم و بگم که نکات مهم اینا و اشتراکات رانکهدار و تکراری را حذف کن و همه را در قالب یک مثال به من بده
+# //TODO: در کل این فایل جایی که مثال زیاد داره رو نگاه کن و مورد بالا رو در  اونا رعایت کن
 class Person:
     def __init__(self, first_name, last_name):
         self.first_name = first_name
@@ -1802,26 +1846,36 @@ print(p2.first_name)  # Sara
 print(p2.last_name)  # Ahmadi
 ```
 
-مثال2️⃣️: دسترسی به متغیر استاتیک
+مثال2️⃣️: استفاده از classmethod (معمولاً برای constructorهای جایگزین)
 
 ```python
-class Student:
-    school_name = "PySchool"
-    total_students = 0
+import math
 
-    def __init__(self, name):
-        self.name = name
-        Student.total_students += 1
 
+class Circle:
+    pi = math.pi  # یک ویژگی کلاسی (class variable)
+
+    def __init__(self, radius):
+        self._radius = radius  # توجه: از `_` برای نشان دادن "private بودن منطقی" استفاده می‌کنیم
+        
+    @property
+    def radius(self):
+        """گرفتن شعاع (مثل خواندن یک ویژگی ساده)"""
+        return self._radius
+    
+    # 🔹 classmethod: متدهایی که به کلاس (نه نمونه) وابسته‌اند و cls را دریافت می‌کنند
     @classmethod
-    def get_school_info(cls):
-        return f"{cls.school_name} has {cls.total_students} students."
+    def from_diameter(cls, diameter):
+        """ایجاد دایره از روی قطر (روش جایگزین برای سازنده)"""
+        radius = diameter / 2
+        return cls(radius)  # cls همان Circle است → Circle(radius)
 
 
-s1 = Student("Ali")
-s2 = Student("Sara")
-
-print(Student.get_school_info())  # PySchool has 2 students.
+# ╔════════╗
+# ║ Ussing ║
+# ╚════════╝
+c2 = Circle.from_diameter(20)  # قطر = 20 → شعاع = 10
+print(c2.radius)  # خروجی: 10.0
 ```
 
 مثال3️⃣️: در این مثال ۱-متغیراستاتیک ۲-متداستاتیک ۳-متدکلاسی استفاده شده است
@@ -2153,11 +2207,28 @@ for t in threads: t.join()
 print(ThreadSafeCounter.get_count())  # 10000 — دقیق و thread-safe
 ```
 
-مثال1️⃣️3️⃣️:
+مثال1️⃣️3️⃣️: دسترسی به متغیر استاتیک
 
 ```python
+class Student:
+    school_name = "PySchool"
+    total_students = 0
 
+    def __init__(self, name):
+        self.name = name
+        Student.total_students += 1
+
+    @classmethod
+    def get_school_info(cls):
+        return f"{cls.school_name} has {cls.total_students} students."
+
+
+s1 = Student("Ali")
+s2 = Student("Sara")
+
+print(Student.get_school_info())  # PySchool has 2 students.
 ```
+ 
 
 ### 5.6.12. ✅️ StaticMethod ► `@staticmethod`
 
@@ -2280,6 +2351,34 @@ print(clean)  # "hello world"
 print(title)  # "Hello World"
 ```
 
+
+مثال7️⃣️: استفاده از staticmethod (تابع عمومی، وابسته به دامنه کلاس)
+
+```python
+import math
+
+
+class Circle:
+  pi = math.pi  # یک ویژگی کلاسی (class variable)
+
+  def __init__(self, radius):
+    self._radius = radius  # توجه: از `_` برای نشان دادن "private بودن منطقی" استفاده می‌کنیم
+      
+  # 🔹 staticmethod: متدهایی که به کلاس یا نمونه وابسته نیستند — فقط منطقی در کلاس قرار گرفته‌اند
+  @staticmethod
+  def is_valid_radius(radius):
+    """چک کردن معتبر بودن شعاع — بدون نیاز به self یا cls"""
+    return isinstance(radius, (int, float)) and radius >= 0
+
+
+# ╔════════╗
+# ║ Ussing ║
+# ╚════════╝
+print(Circle.is_valid_radius(5))    # ✅ True
+print(Circle.is_valid_radius(-2))   # ❌ False
+print(Circle.is_valid_radius("hi")) # ❌ False
+
+```
 ### 5.6.14. ✅️ Comprehensive Advance Examples
 
 ```python
@@ -4864,6 +4963,77 @@ print(p3)  # (4, 6)
     * **متد عادی**: آیا این متد نیاز دارد اطلاعات یک شیء خاص (مثل self.name) را ببیند؟
     * `@classmethod`: آیا نیاز دارد اطلاعات کلاس (مثل cls.total) را ببیند یا شیء جدیدی بسازد؟
     * `@staticmethod`:  آیا فقط یک تابع منطقی است که هیچ state ای نمی‌خواهد؟
+
+مثال1️⃣️:مثال کامل برای حالات متفاوت
+
+```python
+import math
+
+
+class Circle:
+    pi = math.pi  # یک ویژگی کلاسی (class variable)
+
+    def __init__(self, radius):
+        self._radius = radius  # توجه: از `_` برای نشان دادن "private بودن منطقی" استفاده می‌کنیم
+
+    # 🔹 property: برای دسترسی به ویژگی‌ها مانند یک متغیر، اما با کنترل
+    @property
+    def radius(self):
+        """گرفتن شعاع (مثل خواندن یک ویژگی ساده)"""
+        return self._radius
+
+    @radius.setter
+    def radius(self, value):
+        """تنظیم شعاع با اعتبارسنجی"""
+        if value < 0:
+            raise ValueError("شعاع نمی‌تواند منفی باشد!")
+        self._radius = value
+
+    @property
+    def area(self):
+        """مساحت دایره — بدون نیاز به پرانتز! مانند یک ویژگی محاسبه‌شده"""
+        return self.pi * self._radius ** 2
+
+    # 🔹 classmethod: متدهایی که به کلاس (نه نمونه) وابسته‌اند و cls را دریافت می‌کنند
+    @classmethod
+    def from_diameter(cls, diameter):
+        """ایجاد دایره از روی قطر (روش جایگزین برای سازنده)"""
+        radius = diameter / 2
+        return cls(radius)  # cls همان Circle است → Circle(radius)
+
+    # 🔹 staticmethod: متدهایی که به کلاس یا نمونه وابسته نیستند — فقط منطقی در کلاس قرار گرفته‌اند
+    @staticmethod
+    def is_valid_radius(radius):
+        """چک کردن معتبر بودن شعاع — بدون نیاز به self یا cls"""
+        return isinstance(radius, (int, float)) and radius >= 0
+```
+
+1. استفاده از property (مثل خواندن/نوشتن یک ویژگی معمولی)
+
+```python
+c = Circle(5)
+print(c.radius)  # ✅ خروجی: 5 — بدون پرانتز!
+print(c.area)  # ✅ خروجی: 78.539... — محاسبه شده، ولی مثل ویژگی!
+
+c.radius = 10  # ✅ setter فراخوانی می‌شود
+# c.radius = -3    # ❌ ValueError: شعاع نمی‌تواند منفی باشد!
+```
+
+2. استفاده از classmethod (معمولاً برای constructorهای جایگزین)
+
+```python
+c2 = Circle.from_diameter(20)  # قطر = 20 → شعاع = 10
+print(c2.radius)  # خروجی: 10.0
+```
+
+3. استفاده از staticmethod (تابع عمومی، وابسته به دامنه کلاس)
+
+```python
+print(Circle.is_valid_radius(5))  # ✅ True
+print(Circle.is_valid_radius(-2))  # ❌ False
+print(Circle.is_valid_radius("hi"))  # ❌ False
+
+```
 
 ### 7.5.1. ✅️ StaticVariable
 
