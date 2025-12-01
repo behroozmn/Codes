@@ -399,8 +399,6 @@ print(obj)  # --------------> Output:  <__main__.Person object at 0x7f5f43c31e90
 print(obj - "behrooz")  # --> Output: Ali minus behrooz
 ```
 
-[//]: # (ُTODO: Type Hints رو بخونم ببینم چی هست)
-
 # 2. 🅰️ Tools
 
 ## 2.1. 🅱️ Commands
