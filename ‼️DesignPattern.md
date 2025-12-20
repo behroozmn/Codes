@@ -78,7 +78,7 @@ class Singleton:
             cls._instance = super().__new__(cls)
         return cls._instance
 # ╔════════════╗
-# ║ Complexity ║ # ❌️ Old_Version: super(Singleton, cls) -----> ✅️New_Version: super()
+# ║ Singleton1 ║ # ❌️ Old_Version: super(Singleton, cls) -----> ✅️New_Version: super()
 # ╚════════════╝
 class Singleton:
     _instance = None
@@ -86,9 +86,9 @@ class Singleton:
         if not Singleton._instance:
             Singleton._instance = super(Singleton, cls).__new__(cls)
         return Singleton._instance
-# ╔═════════════════╗
-# ║ Most Complexity ║
-# ╚═════════════════╝
+# ╔════════════╗
+# ║ Singleton2 ║
+# ╚════════════╝
 class Singleton:
     _instances = {}
     def __new__(cls, *args, **kwargs):
