@@ -84,7 +84,7 @@ class Singleton:
     _instance = None
     def __new__(cls, *args, **kwargs):
         if not Singleton._instance:
-            Singleton._instance = super(Singleton, cls).__new__(cls)
+            Singleton._instance = super(Singleton, cls).__new__(cls, *args, **kwargs)
         return Singleton._instance
 # ╔════════════╗
 # ║ Singleton2 ║
@@ -95,6 +95,57 @@ class Singleton:
         if cls not in cls._instances:
             cls._instances[cls] = super().__new__(cls)
         return cls._instances[cls]
+```
+
+مثال: ConnectionPool ساده برای اتصال به دیتابیس
+
+```python
+import sqlite3
+
+
+class DatabaseConnectionPool:
+    _instance = None
+
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            cls._instance = super(DatabaseConnectionPool, cls).__new__(cls, *args, **kwargs)
+            cls._instance._initialize_pool()
+
+        return cls._instance
+
+    def _initialize_pool(self):
+        self.connections = []
+
+        for _ in range(5):
+            conn = sqlite3.connect(':memory:')
+            self.connections.append(conn)
+
+    def get_connection(self):
+        if not self.connections:
+            raise Exception('There is no connection in the pool')
+
+        return self.connections.pop()
+
+    def release_connection(self, conn):
+        self.connections.append(conn)
+
+pool_1 = DatabaseConnectionPool()
+pool_2 = DatabaseConnectionPool()
+
+conn_1 = pool_1.get_connection()
+cursor_1 = conn_1.cursor()
+cursor_1.execute("CREATE TABLE products (id INTEGER PRIMARY KEY, name TEXT)")
+cursor_1.execute("INSERT INTO products (name) VALUES ('Iphone')")
+cursor_1.execute("INSERT INTO products (name) VALUES ('Samsung')")
+conn_1.commit()
+
+pool_1.release_connection(conn_1)
+
+conn_2 = pool_2.get_connection()
+cursor_2 = conn_2.cursor()
+cursor_2.execute("SELECT * FROM products")
+print(cursor_2.fetchall())
+pool_2.release_connection(conn_2)
 ```
 
 ## 1.3. 🅱️java
