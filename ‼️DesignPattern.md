@@ -103,7 +103,7 @@ class Singleton:
         return cls._instances[cls]
 ```
 
-مثال: ConnectionPool ساده برای اتصال به دیتابیس
+مثال1️⃣️: ConnectionPool ساده برای اتصال به دیتابیس
 
 ```python
 import sqlite3
