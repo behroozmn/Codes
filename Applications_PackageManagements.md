@@ -164,7 +164,7 @@ trans -e google -s ar -t fa -show-original n -show-original-phonetics n -show-tr
   * vscode dark modern
   * one dark
 * Plugins
-  * 
+  * Markdown-index
 
 
 رفع مشکل کپی و چسباندن در layout فارسی در پای چارم ۲۰۲۵.۳ و دبیان۱۲
