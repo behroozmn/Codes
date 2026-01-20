@@ -17,7 +17,7 @@ The Design Patterns are descriptions of communicating objects and class that are
         * **Singleton**: تنهای یک شیء از یک کلاس ساخته بشود و هربار شیء ساخته شده را مورد استفاده قرار دهد
         * **FactoryMethod**: پنهان‌سازی پیچیدگی‌های ساخت شیء برپایه وراثت(البته نیاز به نوشتن کد بیشتری دارد)
         * **AbstractFactory**: همانند FactoryMethod-pattern بگونه Factory والد و Factory فرزند(داینامیک‌سازی کلاس فرزند) پیچیدگی زیاد کلاس‌ها را هنگام ایجاد شیء تسهیل می‌دهد. مناسب FrameWork نویسی زیرا پیچیدگی‌ها مرتفع می‌گردد
-        * **BuilderPattern**: هنگام تولید آبجکت با تعداد پارامتر زیاد کاربرد دارد تا کارها و اقدام‌ها کاهش یابد
+        * **Builder**: هنگام تولید آبجکت با تعداد پارامتر زیاد کاربرد دارد تا کارها و اقدام‌ها کاهش یابد
         * **Prototype**: اشیاء جدید توسط کپی از شیء موجود[بجای ایجاد شیء جدید از طریق توابع سازنده (Constructor)]
     * Structural Patterns: الگوهای طراحی بر مبنای «تنظیم روابط آبجکت‌ها» از نوع **ترکیب‌سازی** آبجکت‌ها با یکدیگر
         * **Adapter**: تبدیل رابط یک کلاس به رابط دیگری که کلاینت انتظار دارد، تا کلاس‌های ناسازگار با هم بتوانند همکاری کنند.
@@ -440,33 +440,148 @@ public class ImageConverterFactory implements MediaConverterFactory {
 * هنگامی‌که ساخت آبجکت Cost زیاد دارد(مثل کوئری دیتابیس مثلا QuerySet در جنگو)
 * هنگامی‌که نمونه‌های قابل تولید از کلاس(باتوجه به مقادیر) می‌تواند رفتار متفاوت داشته باشند
 * **هدف‌ایجاد**: تسهیل مقداردهی پارامترهای زیاد هنگام ساخت کلاس به‌صورت یکجا
-* مثال
-    * مثال: هنگام ایجاد یک کلاس QueryBuilder برای SQL که نیازمند تعدا پارامترهای زیاد نظیر موارد زیر می‌باشد:
-        * تعداد اجزای Selection
-        * دریافت تک به تک عبارت‌های شرطی که بعنوان where استفاده خواهد شد یا همانWhere clause ها
-        * GroupBy ها
-        * OrderBy ها و …
+    * فراهم کردن یک رابط برای ساخت شیء پیچیده به‌صورت تدریجی و مرحله‌ای
+* اجزا
+    * **Product**:(محصول) شیء نهایی است که توسط Builder ساخته می‌شود.
+    * **Builder**: یک رابط یا کلاس انتزاعی که مسئول ایجاد و عملیات ساخت بخش‌های مختلف شیء است.
+    * **ConcreteBuilder**: پیاده‌سازی واقعی کلاس Builder است که جزئیات ساخت را انجام می‌دهد(کمک می‌کند تا فرآیند ساخت طبق دستورالعمل‌های مشخص پیش برود)
+    * **Director**: مسئول هدایت فرآیند ساخت است (گاهی اوقات اختیاری است).
+        * وقتی ترتیب توابع مهم باشد و الگوی خاصی مد نظر باشد از این ساختار استفاده می‌کنیم
+        * اگر فرآیند ساخت پیچیده باشد، می‌توانیم از Director استفاده کنیم تا فرآیند ساخت تحت کنترل باشد.
+        * اگر ساده باشد، می‌توانیم از Builder به‌طور مستقیم استفاده کنیم.
+    * **Client**: مسئول درخواست از Builder برای ساخت شیء است.
+* مثال: هنگام ایجاد یک کلاس QueryBuilder برای SQL که نیازمند تعداد پارامترهای زیاد نظیر موارد زیر می‌باشد:
+    * تعداد اجزای Selection
+    * دریافت تک به تک عبارت‌های شرطی که بعنوان where استفاده خواهد شد یا همانWhere clause ها
+    * GroupBy ها
+    * OrderBy ها و …
+* نکات
+    * استفاده از innerclassها دراین الگوی طراحی توصیه می‌شود
+        * پیشنهاد می‌شود کلاس اصلی را به‌صورت innerClass درون کلاس Builder تعریف نمود تا پیچیدگی کاهش یابد
+    * معمولاً اسم Builder را به انتهای کلاس می‌افزایند
+    * متدهایی تحت عناوین مثلاً build یا getResult ایجاد نماییم تا بعنوان ارائه دهنده خروجی نهایی یا آبجکت نهایی عمل نماید
 
-## 5.1. 🅱️ Python
+## 4.1. 🅱️ Python
+
+```python
+# ╔═════════╗
+# ║ Product ║
+# ╚═════════╝
+class Computer:
+    def __init__(self, processor, memory, storage, graphics):
+        self.processor = processor
+        self.memory = memory
+        self.storage = storage
+        self.graphics = graphics
+
+    def __str__(self):
+        return f"Computer with {self.processor} CPU, {self.memory}GB RAM, {self.storage}GB Storage, {self.graphics} Graphics."
 
 
-## 5.1. 🅱️ design manual
-
-* NOte: ❌️  انعطاف‌پذیری در مقابل constructor ها
-* NOte: ❌️  استفاده از innerclass ها
-* NOte: ❌️  متدهایی برای جایگزینی Setter ها
-* NOte: ❌️  ایجاد کلاس برای Build کردن
-* NOte: ❌️  متدهایی تحت عناوین مثلاً build یا getResult ایجاد نماییم تا بعنوان ارائه دهنده خروجی نهایی یا آبجکت نهایی عمل نماید
-* NOte: ❌️  معمولاً اسم Builder را به انتهای کلاس می‌افزایند
-* NOte: ❌️  پیشنهاد می‌شود کلاس اصلی را به‌صورت innerClass درون کلاس Builder تعریف نمود تا پیچیدگی کاهش یابد
+# ╔═════════╗
+# ║ Builder ║ # سازنده
+# ╚═════════╝
+from abc import ABC, abstractmethod
 
 
-## 5.2. 🅱️ Examples java
+class ComputerBuilder(ABC):  # یک رابط است که تمامی متدهایی را که برای ساخت یک کامپیوتر نیاز داریم (مثلاً تنظیم پردازنده، حافظه، ذخیره‌سازی و گرافیک) را تعریف می‌کند.
+
+    @abstractmethod
+    def set_processor(self, processor: str):
+        pass
+
+    @abstractmethod
+    def set_memory(self, memory: int):
+        pass
+
+    @abstractmethod
+    def set_storage(self, storage: int):
+        pass
+
+    @abstractmethod
+    def set_graphics(self, graphics: str):
+        pass
+
+    @abstractmethod
+    def build(self) -> Computer:
+        pass
+
+
+# ╔═════════════════╗
+# ║ ConcreteBuilder ║ # پیاده‌سازی واقعی سازنده
+# ╚═════════════════╝
+class GamingComputerBuilder(ComputerBuilder):
+
+    def __init__(self):
+        self.computer = Computer(None, None, None, None)
+
+    def set_processor(self, processor: str):
+        self.computer.processor = processor
+
+    def set_memory(self, memory: int):
+        self.computer.memory = memory
+
+    def set_storage(self, storage: int):
+        self.computer.storage = storage
+
+    def set_graphics(self, graphics: str):
+        self.computer.graphics = graphics
+
+    def build(self) -> Computer:
+        return self.computer
+
+
+# ╔══════════╗
+# ║ Director ║ # مسئول ساخت
+# ╚══════════╝
+class Director:  # فرآیند ساخت کامپیوترهای خاص را مدیریت می‌کند
+
+    def __init__(self, builder: ComputerBuilder):
+        self.builder = builder
+
+    def construct_gaming_computer(self):
+        self.builder.set_processor("Intel i9")
+        self.builder.set_memory(32)
+        self.builder.set_storage(1024)
+        self.builder.set_graphics("NVIDIA RTX 3080")
+
+    def construct_office_computer(self):
+        self.builder.set_processor("Intel i5")
+        self.builder.set_memory(16)
+        self.builder.set_storage(512)
+        self.builder.set_graphics("Integrated")
+
+
+# ╔════════╗
+# ║ Client ║
+# ╚════════╝
+if __name__ == "__main__":  # استفاده از Director
+
+    gaming_computer_builder = GamingComputerBuilder()
+    director = Director(gaming_computer_builder)
+    director.construct_gaming_computer()
+
+    gaming_computer = gaming_computer_builder.build()
+    print(gaming_computer)
+
+    # استفاده از Director برای ساخت یک کامپیوتر اداری
+    office_computer_builder = GamingComputerBuilder()  # می‌توان از همان کلاس برای ساخت نوع دیگری از کامپیوتر استفاده کرد
+    director = Director(office_computer_builder)
+    director.construct_office_computer()
+
+    office_computer = office_computer_builder.build()
+    print(office_computer)
+
+###### output:
+# Computer with Intel i9 CPU, 32GB RAM, 1024GB Storage, NVIDIA RTX 3080 Graphics.
+# Computer with Intel i5 CPU, 16GB RAM, 512GB Storage, Integrated Graphics.
+```
+
+## 4.2. 🅱️ Java
 
 * در جاوا کلاس‌هایی از جمله DocumentBuilder وStringBuilder و Locale.Builder یا JsonBuilder وجود دارد که در آن از این شیوه استفاده شده است
 
-
-### 5.2.1. ✅️ StringBuilder
+### 4.2.1. ✅️ StringBuilder
 
 کلاس StringBuilder (موجود در Java.lang) قابلیت افزودن دیتا به یک رشته را به گونه‌ای دارد که بعنوان رشته اصلی عمل کرده و هر بار دیتای جدید مستقیماً با آن اضافه می‌شود و نیازبه ساخت شیء string جدید بعنوان subString نیست تا آن شیء را به رشته اصلی(شیء اصلی) append نماییم
 
@@ -475,9 +590,9 @@ StringBuilder builder = new StringBuilder();
 string result = builder.append("Hello, I am").append(33).append("years old").toString();
 ```
 
-### 5.2.2. ✅️ H264PropertiesBuilder
+### 4.2.2. ✅️ H264PropertiesBuilder
 
-#### 5.2.2.1. ❇️ without Builder
+#### 4.2.2.1. ❇️ without Builder
 
 فرض کنید کلاس decoder فرمت H262 را بخواهیم پیاده‌سازی نماییم آنگاه بدلیل وجود پارامترهای زیاد، در حالت بدون Builder به شکل زیر می‌باشد(۱-کلاس سازنده با پارامتر زیاد ۲-getter برای هرکدام ۳-setter برای هرکدام)
 
@@ -535,7 +650,7 @@ public class Main {
 }
 ```
 
-#### 5.2.2.2. ❇️ with Builder
+#### 4.2.2.2. ❇️ with Builder
 
 باید کلاسH264Properties بدون Builder را همانند بخش قبل داشته باشیم و همراه آن کلاس در وضعیت Builder نیز به شکل زیر تولید شود
 
@@ -595,7 +710,7 @@ public class Main {
     * در کلاس Builder توابع getter همانند وضعیت بدون Builder خواهند بود
     * در کلاس Builder تابع build را ایجاد نماییم که قرار است خروجی نهایی رو برگرداند
 
-# 6. 🅰️ Prototype
+# 5. 🅰️ Prototype
 
 در برنامه‌نویسی و طراحی نرم‌افزار، الگوی Prototype (پروتوتایپ) یکی از الگوهای طراحی (Design Patterns) است که به شما اجازه می‌دهد تا اشیاء را با کپی کردن از یک شیء موجود به جای ایجاد یک شیء جدید از طریق سازنده (Constructor) ایجاد کنید. این الگو به ویژه در مواقعی مفید است که ایجاد یک شیء جدید از طریق سازنده هزینه‌بر یا پیچیده باشد.
 
@@ -610,9 +725,9 @@ public class Main {
 * تضمین اشیاء یک شکل
 * نمونه‌ها: تابع clone که در java.lang.Object موجود است
 
-## 6.1. 🅱️ انواع کپی کردن شیء
+## 5.1. 🅱️ انواع کپی کردن شیء
 
-### 6.1.1. ✅️ Shallow Copy (کم عمق)
+### 5.1.1. ✅️ Shallow Copy (کم عمق)
 
 * فقط خود شیء کپی می‌شود، اما مراجع به اشیاء داخلی (اگر وجود داشته باشند) به همان مراجع قبلی اشاره می‌کنند.
 * اگر شیء کپی شده دارای مراجع به اشیاء دیگر باشد، این مراجع در کپی جدید به همان اشیاء اشاره خواهند کرد.
@@ -640,7 +755,7 @@ Person original = new Person("Alice", new Address("New York"));
 Person shallowCopy = original;
 ```
 
-### 6.1.2. ✅️ Deep copy
+### 5.1.2. ✅️ Deep copy
 
 * کپی کردن شیء به گونه‌ای که نه تنها خود شیء کپی می‌شود، بلکه تمام اشیاء داخلی آن نیز به طور مستقل کپی می‌شوند.
 * به این ترتیب، تغییرات در کپی جدید بر روی اشیاء داخلی تأثیری بر روی شیء اصلی نخواهد داشت.
@@ -665,13 +780,13 @@ Person original = new Person("Alice", new Address("New York"));
 Person deepCopy = original.deepCopy(); // این یک دیپ کپی است
 ```
 
-### 6.1.3. ✅️ استفاده از روش serialize کردن Object ها
+### 5.1.3. ✅️ استفاده از روش serialize کردن Object ها
 
 * کلاس‌هایی که serializable باشند قابلیت تبدیل به بایت شدن دارند. که این بایت‌ها قابلیت نگهداری در داخل پایگاه داده یا فایل دارند
 * برای این کلاس‌ها object writer تعریف می‌شود
 * به این ترتیب که شیء را serialize می‌کنند در داخل مموری می‌ریزند و همان آرایه رو مجددا به شیء تبدیل می‌کنند. که این روش مقداری Cost زیاد دارد
 
-## 6.2. 🅱️ Examples
+## 5.2. 🅱️ Examples
 
 مثال 1️⃣️:
 
@@ -747,9 +862,9 @@ public class Registry {
 }
 ```
 
-## 6.3. 🅱️
+## 5.3. 🅱️
 
-## 6.4. 🅱️
+## 5.4. 🅱️
 
 </div>
 
