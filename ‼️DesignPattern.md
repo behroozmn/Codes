@@ -712,159 +712,67 @@ public class Main {
 
 # 5. 🅰️Creational.Prototype
 
-در برنامه‌نویسی و طراحی نرم‌افزار، الگوی Prototype (پروتوتایپ) یکی از الگوهای طراحی (Design Patterns) است که به شما اجازه می‌دهد تا اشیاء را با کپی کردن از یک شیء موجود به جای ایجاد یک شیء جدید از طریق سازنده (Constructor) ایجاد کنید. این الگو به ویژه در مواقعی مفید است که ایجاد یک شیء جدید از طریق سازنده هزینه‌بر یا پیچیده باشد.
+این امکان را می‌دهد که یک شیء جدید را از طریق کپی کردن شیء موجود و اعمال تغییرات بر روی نسخه‌های جدید، ایجاد کنید
 
-هنگامی‌که ساخت شیء با Cost زیاد همراه باشد(متدهای زیادیcall می‌شوند و دیتای زیادی در کلاس موجود است که باید تک به تک آن‌ها در حافظه بارگزاری و مقداردهی شوند) آنگاه، به‌جای ساخت شیء جدید، نمونه شیء قبل از کلاس را Clone کنیم. یعنی بخشی از حافظه را duplicate نماییم تا نیاز به بارگزاری تک به تک اجزا در حافظه نباشد
+* اغلب در موقعیت‌هایی استفاده می‌شود که نیاز به ایجاد نسخه‌های مشابه از یک شیء با تنظیمات خاص نیاز باشد
+* **هدف**: جلوگیری از ساختن مکرر اشیاء مشابه است
+    * زمانی که ایجاد اشیاء پیچیده هزینه‌بر است
+    * زمانی که نیاز به ایجاد نسخه‌های مشابه با تفاوت‌های جزئی داریم
+    * زمانی که تغییرات زیادی روی شیء انجام نمی‌دهید
+    * زمانی که می‌خواهید تاریخچه از اشیاء ایجاد شده داشته باشید
+* **Shallow Copy(کپی سطحی)**: یک کپی سطحی از شیء اصلی ایجاد می‌شود.
+    * به این معنی که شیء جدید به شیء اصلی اشاره می‌کند (درواقع، به آن ارجاع داده می‌شود) در حالی که مقادیر اولیه (مثل لیست‌ها) به صورت مشترک بین شیء اصلی و کپی استفاده می‌شوند.
+* **Deep Copy**: در این حالت، یک کپی کامل از شیء اصلی و تمام مقادیر داخلی آن ایجاد می‌شود. در این حالت، حتی شیء‌های داخلی (مثل لیست‌ها) نیز به طور کامل کپی می‌شوند و از شیء اصلی جدا می‌شوند.
 
-* توسط متد clone می‌توان یک آبجکت را کاملاً کپی کرد
-* جلوگیری از تولید اشیاء پر هزینه توسط new[عدم استفاه از کلیدواژه new]
-* توابع سازنده با «Constructor» ها فراخوانی نمی‌شوند، پس ممکن است در صورت وابستگی به توابع سازنده آنگاه منطق برنامه گاهی دچار اختلال شود(مواردی که تابع سازنده با منابعی مستقل و بیرون از کلاس کارداشته باشند تا هر زمان وضعیت جدیدی ممکن است وقوع پیوندد)
-* هر نمونه ایجاد شده یک instance مستقل و منحصر بفرد است
-* گاهی اوقات از یک interface استفاده می‌کند که مثلاً اسم آن را cloneble قرار بدهند
-* معمولا همراه با «الگوی طراحی» Registry استفاده می‌شود
-* تضمین اشیاء یک شکل
-* نمونه‌ها: تابع clone که در java.lang.Object موجود است
+## 6.1. 🅱️Python
 
-## 5.1. 🅱️ انواع کپی کردن شیء
+```python
+import copy
 
-### 5.1.1. ✅️ Shallow Copy (کم عمق)
 
-* فقط خود شیء کپی می‌شود، اما مراجع به اشیاء داخلی (اگر وجود داشته باشند) به همان مراجع قبلی اشاره می‌کنند.
-* اگر شیء کپی شده دارای مراجع به اشیاء دیگر باشد، این مراجع در کپی جدید به همان اشیاء اشاره خواهند کرد.
-* فقط خود شیء کپی می‌شود و مراجع به اشیاء داخلی به همان اشیاء اشاره می‌کنند.
-* متد clone موجود در کلاس object از این نوع است.
+class Prototype:
+    def __init__(self, name, data):
+        self.name = name
+        self.data = data  # یک لیست به عنوان داده
 
-مثال برای shallow copy:
+    def __str__(self):
+        return f"Prototype(Name: {self.name}, Data: {self.data})"
 
-```java
-class Person {
-    String name;
-    Address address; // Address یک شیء دیگر است
-    Person(String name, Address address) {
-        this.name = name;
-        this.address = address;
-    }
-}
-class Address {
-    String city;
-    Address(String city) {
-        this.city = city;
-    }
-}
-Person original = new Person("Alice", new Address("New York"));
-Person shallowCopy = original;
+    def clone_shallow(self):  # کپی سطحی (Shallow Copy)
+        return copy.copy(self)  
+
+    def clone_deep(self):  # کپی عمیق (Deep Copy)
+        return copy.deepcopy(self) 
+
+
+original_prototype = Prototype("Original", [1, 2, 3])
+shallow_copy = original_prototype.clone_shallow() 
+deep_copy = original_prototype.clone_deep() 
+
+
+shallow_copy.data[0] = 100  # تغییر اولین عنصر در لیست کپی سطحی
+deep_copy.data[1] = 200  # تغییر دومین عنصر در لیست کپی عمیق
+
+# نمایش نتایج
+print("Original Prototype:", original_prototype)
+print("Shallow Copy:", shallow_copy)
+print("Deep Copy:", deep_copy)
+
+# بررسی حافظه
+print("\nMemory Address of original prototype data:", id(original_prototype.data))
+print("Memory Address of shallow copy data:", id(shallow_copy.data))
+print("Memory Address of deep copy data:", id(deep_copy.data))
+
+# output:
+## -----> Original Prototype: Prototype(Name: Original, Data: [100, 2, 3])
+## -----> Shallow Copy: Prototype(Name: Original, Data: [100, 2, 3])
+## -----> Deep Copy: Prototype(Name: Original, Data: [1, 200, 3])
+## -----> 
+## -----> Memory Address of original prototype data: 140324630499072
+## -----> Memory Address of shallow  copy      data: 140324630499072
+## -----> Memory Address of deep     copy      data: 140324630507968
+
 ```
-
-### 5.1.2. ✅️ Deep copy
-
-* کپی کردن شیء به گونه‌ای که نه تنها خود شیء کپی می‌شود، بلکه تمام اشیاء داخلی آن نیز به طور مستقل کپی می‌شوند.
-* به این ترتیب، تغییرات در کپی جدید بر روی اشیاء داخلی تأثیری بر روی شیء اصلی نخواهد داشت.
-* خود شیء و تمام اشیاء داخلی به طور مستقل کپی می‌شوند.
-
-مثال برای deep copy:
-
-```java
-class Person {
-    String name;
-    Address address;
-    Person(String name, Address address) {
-        this.name = name;
-        this.address = address;
-    }
-    // متد برای دیپ کپی
-    Person deepCopy() {
-        return new Person(this.name, new Address(this.address.city));
-    }
-}
-Person original = new Person("Alice", new Address("New York"));
-Person deepCopy = original.deepCopy(); // این یک دیپ کپی است
-```
-
-### 5.1.3. ✅️ استفاده از روش serialize کردن Object ها
-
-* کلاس‌هایی که serializable باشند قابلیت تبدیل به بایت شدن دارند. که این بایت‌ها قابلیت نگهداری در داخل پایگاه داده یا فایل دارند
-* برای این کلاس‌ها object writer تعریف می‌شود
-* به این ترتیب که شیء را serialize می‌کنند در داخل مموری می‌ریزند و همان آرایه رو مجددا به شیء تبدیل می‌کنند. که این روش مقداری Cost زیاد دارد
-
-## 5.2. 🅱️ Examples
-
-مثال 1️⃣️:
-
-```java
-interface Prototype {
-    Prototype clone();
-}
-
-class ConcretePrototype implements Prototype {
-    private String name;
-
-    public ConcretePrototype(String name) {//سازنده
-        this.name = name;
-    }
-
-    @Override
-    public Prototype clone() { // پیاده‌سازی متد کلون
-        return new ConcretePrototype(this.name);
-    }
-
-    @Override
-    public String toString() {
-        return "ConcretePrototype{name='" + name + "'}";
-    }
-}
-
-public class PrototypePatternExample { // کلاس اصلی
-    public static void main(String[] args) {
-        ConcretePrototype original = new ConcretePrototype("Original"); // ایجاد یک شیء اصلی
-        ConcretePrototype cloned = (ConcretePrototype) original.clone();// کپی کردن شیء اصلی
-
-        // نمایش اشیاء
-        System.out.println(original);
-        System.out.println(cloned);
-    }
-}
-```
-
-مثال 2️⃣️:
-
-```java
-Statement statement = new Statement()
-statement.setRecord(new Record());
-statement.setProjection(“select firesName , lastName”);
-statement.setForm(“from Employee”);
-statement.setWhere(“where id = 12”);
-
-System.out.println(statement.hashCode());//326573597
-System.out.println(statement.getRecord().hashCode());//1735600054
-
-Statement clone = statement.clone();
-System.out.println(clone.hashCode());//21685669
-System.out.println(clone.getRecord().hashCode());//1735600054
-```
-
-یک نمونه
-
-```java
-public class Registry {
-    private static Map<String, Item> cacheData =new HashMap<>();
-    static {
-        cacheData.put(“1” , “First  Item” , “IT1” , “http://ad.com/IT1”));
-        cacheData.put(“2” , “Second Item” , “IT2” , “http://ad.com/IT2”));
-    }
-    public static Item getItem(String code) {
-        if (cacheFata.containKey(code)) {
-            Item item = cacheData.get(code);
-            return item.clone();
-        } else {
-            return null;
-        }
-    }
-}
-```
-
-## 5.3. 🅱️
-
-## 5.4. 🅱️
 
 </div>
 
