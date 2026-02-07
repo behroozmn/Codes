@@ -1217,6 +1217,17 @@ df.columns
 | **تولید**      | کنترل کیفیت با نمودارهای کنترل           | `rolling().mean()`, `std()`, `quantile()`   |
 | **بازاریابی**  | تحلیل بازده کمپین‌های تبلیغاتی           | `groupby().agg()`, `corr()`, `pct_change()` |
 
+
+
+
+## 3.4. 🅱️Matplotlib
+
+```python
+import matplotlib.pyplot as plt
+
+```
+
+
 # 4. 🅰️ Environment
 
 ## 4.1. 🅱️ termcolor
