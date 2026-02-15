@@ -276,10 +276,10 @@ class MyClass:
     def __init__(self):
         print("This will NOT be printed!")
 
+
 obj = MyClass()
 print(obj)  # 42
 ```
-
 
 ### 1.4.3. ✅️ `__len__`
 
@@ -5194,6 +5194,257 @@ print(MathConstants.PI)  # 3.1415926535
 
 # خطا در هنگام تلاش برای تغییر:
 # MathConstants.PI = 3.14 # ❌️ AttributeError: can't set attribute
+```
+
+## 7.6. 🅱️ Dataclass(کلاسهایی برای ذخیره داده‌ها)
+
+* معرفی‌شده در نسخه ۳.۷
+* مخصوص کلاس‌های ذخیره‌کننده داده
+* حذف کدهای تکراری
+    * ساخت و مقداردهی خودکار توابع زیر
+        * `__init__` برای مقداردهی اولیه
+        * `__repr__` برای نمایش زیبا
+        * `__eq__` برای مقایسه
+* الزاما باید همیشه از Type Hints استفاده کنید
+* در صورت نیاز به عدم تغییرپذیری، `frozen=True` را فعال کنید
+* در برنامه‌های حساس به حافظه، `slots=True` را استفاده کنید (پایتون `3.10+`)
+* بعد از `@dataclass` حتماً کلاس رو تعریف کنید
+* استفاده از این دیتاکلاس در زمان های زیر
+* زمانی استفاده می‌شود که کلاس شما بیشتر ذخیره داده هست تا منطق پیچیده
+* زمانی استفاده می‌شود که کلاس شما نیاز به `__init__` و  `__repr__` و `__eq__` داشته باشد
+* هنگام نیاز به کنترل کامل روی `__init__` از این روش استفاده نشود
+* پشتیبانی از وراثت
+* مقدار حافظه زیادتری نسبت به حالت عادی میگیرد مگر اینکه `slots=True` را قرار دهید 
+* در حالت عادی Mutable یعنی قابل تغییر است مگر اینکه توسط  `frozen=True` به Immutable تبدیل نمایید 
+
+مثال اول:
+
+```python
+from dataclasses import dataclass
+
+
+@dataclass
+class Person:
+    name: str  # فقط اسم و نوعش رو می‌نویسیم
+    age: int
+    city: str = "Tehran"  # مقدار پیش‌فرض می‌گذاریم'
+
+
+# ╔════╗
+# ║ 1️⃣️ ║ 
+# ╚════╝
+person1 = Person("Sara", 25)
+person2 = Person("Ali", 30, "Shiraz")
+
+print(person1)  # Output: Person(name='سارا', age=25, city='Tehran')
+print(person2.city)  # Output: Shiraz
+
+# ╔════╗
+# ║ 2️⃣️ ║ 
+# ╚════╝
+p1 = Person("Sara", 25)
+p2 = Person("Sara", 25)
+print(p1 == p2)  # Output: True (خودش فهمید دو تا یکی هستن!)
+```
+
+مثال دوم:
+
+```python
+from dataclasses import dataclass
+
+
+@dataclass
+class Product:
+    name: str  # نام کالا
+    price: float  # قیمت
+    quantity: int  # تعداد موجود
+    category: str = "عمومی"  # ( Default)
+
+
+pen = Product("pen", 15000, 50)
+notebook = Product("Notebook", 45000, 30, "writable")
+
+print(pen)  # Output: Product(name='pen', price=15000.0, quantity=50, category='عمومی')
+print(notebook.category)  # Output: writable
+```
+
+مثال سوم: جامع و کاربردی
+
+```python
+from dataclasses import dataclass, field
+from datetime import datetime
+from typing import List  # برای تعریف لیست‌ها
+
+
+@dataclass
+class Transaction:
+    """یک تراکنش بانکی"""
+    amount: float
+    description: str
+    timestamp: datetime = field(default_factory=datetime.now)
+
+
+@dataclass
+class BankAccount:
+    """حساب بانکی یک مشتری"""
+    account_number: str
+    owner_name: str
+    balance: float = 0.0
+    transactions: List[Transaction] = field(default_factory=list)
+
+    def deposit(self, amount: float, description: str = "واریز"):
+        """پول ریختن به حساب"""
+        if amount <= 0:
+            raise ValueError("مبلغ باید مثبت باشه!")
+        self.balance += amount
+        self.transactions.append(Transaction(amount, description))
+
+    def withdraw(self, amount: float, description: str = "برداشت"):
+        """برداشت از حساب"""
+        if amount <= 0:
+            raise ValueError("مبلغ باید مثبت باشه!")
+        if amount > self.balance:
+            raise ValueError("موجودی کافی نیست!")
+        self.balance -= amount
+        self.transactions.append(Transaction(-amount, description))
+
+
+# استفاده از کلاس‌ها
+account = BankAccount("123456789", "سارا احمدی")
+
+account.deposit(1000000, "حقوق ماهانه")
+account.withdraw(250000, "خرید لوازم خانگی")
+account.deposit(500000, "هدیه")
+
+print(f"صاحب حساب: {account.owner_name}")
+print(f"شماره حساب: {account.account_number}")
+print(f"موجودی فعلی: {account.balance:,.0f} تومان")
+print(f"تعداد تراکنش‌ها: {len(account.transactions)}")
+
+# نمایش آخرین تراکنش
+last = account.transactions[-1]
+print(f"آخرین تراکنش: {last.description} - {last.amount:,.0f} تومان")
+
+# ╔════════╗
+# ║ Output ║ 
+# ╚════════╝
+
+# صاحب حساب: سارا احمدی
+# شماره حساب: 123456789
+# موجودی فعلی: 1,250,000 تومان
+# تعداد تراکنش‌ها: 3
+# آخرین تراکنش: هدیه - 500,000 تومان
+```
+
+## 7.7. 🅱️ field
+
+* هشدار مهم: اگر برای یک فیلد دیکشنری یا لیست تعیین شود آنگاه برای همه یکسان خواهد بود و این سبب بروز مشکل میشود پس از کلمه کلیدی feild استفاده می‌شود تا برای اشیاء متفاوت فرق کند
+
+```python
+from dataclasses import dataclass
+
+
+# 
+# ╔══════════╗
+# ║ ❌️ Wrong ║ 
+# ╚══════════╝
+@dataclass
+class Student:
+    name: str
+    grades: list = []  # ⚠️ خطرناک! همه دانش‌آموزا یه لیست مشترک دارن!
+
+
+# ╔═════════╗
+# ║ ✅️ true ║ 
+# ╚═════════╝
+from dataclasses import dataclass, field  # field رو هم ایمپورت می‌کنیم
+
+
+@dataclass
+class Student:
+    name: str
+    grades: list = field(default_factory=list)  # ✅️ درست!
+
+
+# حالا هر دانش‌آموز لیست جداگانه داره
+s1 = Student("Reza")
+s2 = Student("Maryam")
+
+s1.grades.append(18)
+print(s2.grades)  # Output: [] (خالیه چون جدا هستن!)
+```
+
+## 7.8. 🅱️ advance
+
+* غیرقابل تغییر نمودن برای محتوی داده ها
+* امنیت بیشتر (کسی نمی‌تونه داده‌ها رو عوض کنه)
+* می‌تونیم از این شی توی دیکشنری به عنوان کلید استفاده کنیم
+
+```python
+from dataclasses import dataclass
+
+
+@dataclass(
+    init=True,  # auto create __init__ (Default: True)
+    repr=True,  # auto create  __repr__ (Default: True) ---> برای نمایش 
+    eq=True,  # auto create  __eq__ (Default: True) ---> برای مقایسه
+    order=False,  # Create __lt__, __gt__  (Default: False) ---> برای مرتب‌سازی
+    frozen=False,  # Immutable (Default: False) ---> تعیین غیرقابل تغییر بودن
+    slots=False,  # صرفه‌جویی در حافظه (Default: False)
+    kw_only=False,  # اجبار استفاده از keyword arguments در __init__
+    unsafe_hash=False  # کنترل تولید __hash__
+)
+class MyClass:
+    ...
+```
+
+### 7.8.1. ✅️ frozen
+
+```python
+from dataclasses import dataclass
+
+
+@dataclass(frozen=True)  # frozen یعنی "یخ‌زده" = تغییرناپذیر
+class NationalID:
+    id_number: str
+    name: str
+    birth_date: str
+
+
+person = NationalID("1234567890", "سارا", "1400/01/01")
+
+# این خط خطا می‌ده چون frozen=True هست
+# person.name = "نگین"  ❌ خطایی می‌ده: can't set attribute
+```
+
+### 7.8.2. ✅️ order
+
+```python
+from dataclasses import dataclass
+
+
+@dataclass(order=True)
+class Student:
+    grade: int
+    name: str
+
+
+s1 = Student(15, "رضا")
+s2 = Student(18, "سارا")
+
+print(s1 < s2)  # خروجی: True (چون 15 کمتر از 18 هست)
+```
+
+### 7.8.3. ✅️ slot
+
+* بهینه سازی در حافظه
+* مصرف حافظه را تا ۴۰-۵۰٪ کاهش می‌دهد و دسترسی به فیلدها را سریع‌تر می‌کند
+
+```python
+@dataclass(slots=True)  # پایتون 3.10+
+class EfficientPoint:
+    x: int
+    y: int
 ```
 
 # 8. 🅰️ File
