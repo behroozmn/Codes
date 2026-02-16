@@ -256,20 +256,471 @@ public class DBConnection {
 
 توضیحات: اگر یک thread داخل محدوده بلوک Synchronized قرار داشته باشد آنگاه اگر thread دوم به این بلاک برسد، صبر می‌کند تا thread اول از این بلاک عبور کند و سپس Thread دوم وارد این بلاک می‌شود.(پردازه برای دومی قفل می‌شود و با خروج اولی قفل آن باز می‌شود)
 
-# 2. 🅰️Creational.Factory
+# 2. 🅰️Creational.FactoryMethod
+
+در این الگوی طراحی مسئولیت انتخاب نوع شیء و چگونگی پیاده‌سازی را به زیرکلاس‌ها واگذار می‌کند، در حالی که کلاس پایه الگوریتم کلی کار را حفظ می‌کند. به عبارتی در کلاس پایه(والد) می‌دانیم که چه کاری قرار است انجام شود ولی چگونگی انجام کار و پیاده‌سازی و اعمال پیچیدگی‌ها در زیرکلاس انجام خواهد شد
 
 * **هدف‌ایجاد**:پنهان‌سازی پیچیدگی‌های ساخت شیء(برنامه‌نویس درگیر پیچیدگی‌های آبجکت‌ها نشود و به سهولت نمونه بسازد)
-* این الگوی طراحی برپایه اصل وراثت بنا نهاده شده(Inheritance)
-* یک از کاربردهای این الگوی طراحی برای زمانی است که از سیستم cache استفاده می‌شود.خصوصا زمانی که تولید نمونه‌ها پرهزینه خواهد بود(ارتباط با دیتابیس، پرینتر، اسکنر،دیوایس‌های External وغیره). در این هنگام می‌توان نمونه‌ها را در فضای استاتیک نگهداری کرد و در هربار فراخوانی فقط از آن استفاده نمود.
-* الگوی طراحی Factory method نقطه مقابل Singleton می‌باشدپیچیدگی ساخت زیرکلاس‌ها را رفع می‌کند
-* پیاده‌سازی آن منوط به نوشتن کد بیشتری است(پیچیدگی همراه می‌آورد ولی در نگاه کلی سبب سهولت است)
+* این الگوی طراحی برپایه اصل وراثت بنا نهاده شده(Inheritance).نوع دقیق شیء توسط زیرکلاس‌ها مشخص می‌شود
+* موارد کاربرد
+    * زمانی که از سیستم cache استفاده می‌شود
+    * .خصوصا زمانی که تولید نمونه‌ها پرهزینه خواهد بود(ارتباط با دیتابیس، پرینتر، اسکنر،دیوایس‌های External وغیره)
+        * یک راه دیگر این است که می‌توان نمونه‌ها را در فضای استاتیک نگهداری کرد و در ه‍ربار فراخوانی فقط از آن استفاده نمود
+* مثال
+    * کلاسی برای تبدیل فرمت عکس به فرمت‌های گوناگون(JPG, PNG, GIF, SVG, غیره) که در آن «ساختارکلاس» و پارامترهای هر فرمت نسبت به دیگری منحصربه‌فرد خواهد بود
+    * Number Format: نوع اعداد فارسی یا عربی یا فرمت انگلیسی باشد
+    * Resource Bundle: ایجاد نمونه متفاوت برحسب تنظیمات
+    * Calendar: نوع تقویم جلالی یا میلادی یا هجری‌قمری یا عبری یا پهلوی یا غیره باشد(قطعه‌کد زیر که برحسب منطقه خاص می‌تواند Locale بپذیرد)
+* این الگوی طراحی به کد قابلیت گسترش می‌دهد(در مثال تغییر فرمت تصاویر به یکدیگر می‌توانیم به سهولت یک فرمت جدید بیافزاییم)
+* برای کدنویسی در این الگوی طراحی از تایپ هینت‌های پیشرفته(نظیر استفاده از TypeVar و Generic) برای حفظ دقت نوع در سلسله مراتب کلاس استفاده نمایید
+* ❌ استفاده از if-else درون FactoryMethod نشان دهنده این است که طراحی ضعیف است. هر شرط باید به یک زیرکلاس تبدیل شود.
 
-مثال
+## 2.1. 🅱️ PythonExample
 
-* تبدیل فرمت عکس به فرمت‌های گوناگون(JPG, PNG, GIF, SVG, غیره) که در اینصورت هر فرمت صاحب کلاس مستقل به‌همراه پارامترهای منحصر به خود است که ممکن است در فرمت دیگری به چنین پارامتری نیاز نباشد. یعنی کلاس‌های متفاوت برای هر نوع فرمت تصویر با ورودی‌های متفاوت به همراه پیچیدگی‌های آن‌ها
-* Number Format: نوع اعداد فارسی یا عربی یا فرمت انگلیسی باشد
-* Resource Bundle: ایجاد نمونه متفاوت برحسب تنظیمات
-* Calendar: نوع تقویم جلالی یا میلادی یا هجری‌قمری یا عبری یا پهلوی یا غیره باشد(قطعه‌کد زیر که برحسب منطقه خاص می‌تواند Locale بپذیرد)
+```python
+from abc import ABC, abstractmethod
+
+
+# ╔════════════╗
+# ║ Example1️⃣️: ║ 
+# ╚════════════╝
+class Animal(ABC):
+    @abstractmethod
+    def speak(self):
+        pass
+
+
+class Dog(Animal):
+    def speak(self):
+        return "Woof!"
+
+
+class Cat(Animal):
+    def speak(self):
+        return "Meow!"
+
+
+class AnimalFactory(ABC):
+    @abstractmethod
+    def create_animal(self):
+        pass
+
+
+class DogFactory(AnimalFactory):
+    def create_animal(self):
+        return Dog()
+
+
+class CatFactory(AnimalFactory):
+    def create_animal(self):
+        return Cat()
+
+
+️
+######✅️ ====> Alternative for Animal,AnimalFactory
+######✅️ class Animal:
+######✅️     def speak(self):
+######✅️         raise NotImplementedError
+######✅️ class AnimalFactory:
+######✅️     def create_animal(self):
+######✅️         raise NotImplementedError
+
+# Ussing
+print(DogFactory().create_animal().speak())  # Woof!
+print(CatFactory().create_animal().speak())  # Meow!
+
+
+# ╔════════════╗
+# ║ Example2️⃣️: ║ 
+# ╚════════════╝
+from abc import ABC, abstractmethod
+
+
+# region Vehicle Abstract class
+
+class Vehicle(ABC):
+    @abstractmethod
+    def move(self):
+        raise NotImplementedError
+
+
+# endregion
+
+# region Vehicles
+
+class Car(Vehicle):
+    def move(self):
+        print('car is moving...')
+
+
+class Truck(Vehicle):
+    def move(self):
+        print('truck is moving...')
+
+
+class Motorcycle(Vehicle):
+    def move(self):
+        print('motorcycle is moving...')
+
+
+# endregion
+
+# region Vehicle Abstract Class
+
+class VehicleFactory(ABC):
+    @abstractmethod
+    def create_vehicle(self) -> 'Vehicle':
+        raise NotImplementedError
+
+
+# endregion
+
+# region Vehicle Factories
+
+class CarFactory(VehicleFactory):
+    def create_vehicle(self) -> 'Vehicle':
+        return Car()
+
+
+class TruckFactory(VehicleFactory):
+    def create_vehicle(self) -> 'Vehicle':
+        return Truck()
+
+
+class MotorcycleFactory(VehicleFactory):
+    def create_vehicle(self) -> 'Vehicle':
+        return Motorcycle()
+
+
+# endregion
+
+# region Get Vehicle Factory
+
+def get_vehicles_factory(vehicle_type: str) -> 'VehicleFactory':
+    factories = {
+        'car': CarFactory,
+        'truck': TruckFactory,
+        'motorcycle': MotorcycleFactory
+    }
+
+    if vehicle_type in factories:
+        return factories[vehicle_type]()
+
+    raise ValueError('Your desired vehicle factory not found')
+
+
+# endregion
+
+# region Client Code
+
+if __name__ == '__main__':
+    vehicle_factory = get_vehicles_factory('car')
+    vehicle = vehicle_factory.create_vehicle()
+    print(vehicle)
+    vehicle.move()
+
+# endregion
+
+# ╔════════════╗
+# ║ Example3️⃣️: ║ 
+# ╚════════════╝
+from abc import ABC, abstractmethod
+
+
+# ======================
+# 1. محصول انتزاعی (قرارداد رفتاری)
+# ======================
+class PaymentProcessor(ABC):
+    """
+    رابط انتزاعی برای تمام درگاه‌های پرداخت.
+    تضمین می‌کند همه درگاه‌ها حداقل این دو رفتار را پیاده‌سازی کنند.
+    """
+
+    @abstractmethod
+    def pay(self, amount: float) -> str:
+        """دریافت مبلغ و بازگرداندن پیام تراکنش"""
+        pass
+
+    @abstractmethod
+    def get_gateway_name(self) -> str:
+        """بازگرداندن نام درگاه پرداخت"""
+        pass
+
+
+# ======================
+# 2. محصولات ملموس (پیاده‌سازی‌های واقعی)
+# ======================
+class ZarinpalProcessor(PaymentProcessor):
+    """درگاه پرداخت زرین‌پال"""
+
+    def pay(self, amount: float) -> str:
+        return f"✅ پرداخت {amount:,} تومان از طریق زرین‌پال موفقیت‌آمیز بود."
+
+    def get_gateway_name(self) -> str:
+        return "زرین‌پال"
+
+
+class PayPingProcessor(PaymentProcessor):
+    """درگاه پرداخت پی‌پینگ"""
+
+    def pay(self, amount: float) -> str:
+        return f"✅ پرداخت {amount:,} تومان از طریق پی‌پینگ تأیید شد."
+
+    def get_gateway_name(self) -> str:
+        return "پی‌پینگ"
+
+
+# ======================
+# 3. سازنده انتزاعی (منطق کلی کسب‌وکار)
+# ======================
+class PaymentService(ABC):
+    """
+    کلاس پایه‌ای که:
+    - منطق اصلی پرداخت را پیاده‌سازی می‌کند (process_payment)
+    - ساخت شیء را به زیرکلاس‌ها واگذار می‌کند (_create_processor)
+    - به جزئیات پیاده‌سازی درگاه وابسته نیست
+    """
+
+    @abstractmethod
+    def _create_processor(self) -> PaymentProcessor:
+        """
+        Factory Method اصلی:
+        - هر زیرکلاس نوع درگاه را مشخص می‌کند
+        - نام با _ نشان‌دهنده داخلی بودن و عدم استفاده مستقیم توسط کلاینت
+        """
+        pass
+
+    def process_payment(self, amount: float) -> None:
+        """
+        منطق کسب‌وکار اصلی (یکسان برای همه درگاه‌ها):
+        1. ساخت درگاه از طریق Factory Method
+        2. اجرای پرداخت
+        3. لاگ‌گیری یکدست
+        """
+        processor = self._create_processor()  # تمرکز الگو: ساخت به زیرکلاس واگذار شد
+        result = processor.pay(amount)
+        print(f"\n[سیستم] تراکنش از طریق {processor.get_gateway_name()}:")
+        print(result)
+
+
+# ======================
+# 4. سازنده‌های ملموس (انتخاب نوع درگاه)
+# ======================
+class ZarinpalService(PaymentService):
+    """سرویس پرداخت با درگاه زرین‌پال"""
+
+    def _create_processor(self) -> PaymentProcessor:
+        return ZarinpalProcessor()
+
+
+class PayPingService(PaymentService):
+    """سرویس پرداخت با درگاه پی‌پینگ"""
+
+    def _create_processor(self) -> PaymentProcessor:
+        return PayPingProcessor()
+
+
+# ======================
+# 5. استفاده در دنیای واقعی (کلاینت)
+# ======================
+def main():
+    print("=" * 50)
+    print("سیستم پرداخت فروشگاه آنلاین")
+    print("=" * 50)
+
+    # لیست سرویس‌های پرداخت (بدون نیاز به if-else برای انتخاب درگاه!)
+    services = [
+        ZarinpalService(),
+        PayPingService()
+    ]
+
+    # پردازش پرداخت برای هر درگاه
+    for service in services:
+        service.process_payment(150000)  # مبلغ ثابت برای تست
+
+    # ✨ نکته طلایی گسترش:
+    # برای افزودن درگاه جدید (مثلاً آیدی‌پی):
+    # 1. کلاس IdPayProcessor از PaymentProcessor بسازید
+    # 2. کلاس IdPayService از PaymentService ارث ببرد و _create_processor را پیاده‌سازی کند
+    # 3. در لیست services اضافه کنید
+    # → هیچ خط از کد موجود تغییر نمی‌کند! (اصل Open/Closed)
+
+
+if __name__ == "__main__":
+    main()
+
+    
+    
+# ╔════════════╗
+# ║ Example4️⃣️: ║ 
+# ╚════════════╝
+    
+from abc import ABC, abstractmethod
+from typing import Final
+
+
+# =============================================================================
+# 📌 توضیح ساختار پیاده‌سازی:
+# - این پیاده‌سازی **فقط** از الگوی "فکتوری متد" استفاده می‌کند.
+# - **هیچ "فکتوری کلاس" (Simple Factory) در این کد وجود ندارد**.
+#   (فکتوری کلاس = کلاسی با منطق شرطی داخلی مثل if/else برای انتخاب نوع شیء)
+# - تمام تصمیم‌گیری‌ها از طریق ارث‌بری و پیاده‌سازی متد توسط زیرکلاس‌ها انجام می‌شود.
+# =============================================================================
+
+
+# ======================
+# 1. محصول انتزاعی: قرارداد رفتاری برای همه درگاه‌های ارسال پیامک
+# ======================
+class SMSProvider(ABC):
+    """رابط انتزاعی برای تمام درگاه‌های ارسال پیامک"""
+
+    @abstractmethod
+    def send(self, phone: str, message: str) -> bool:
+        """ارسال پیامک به شماره مشخص با متن داده‌شده"""
+        pass
+
+    @abstractmethod
+    def get_provider_name(self) -> str:
+        """بازگرداندن نام درگاه ارائه‌دهنده سرویس"""
+        pass
+
+
+# ======================
+# 2. محصولات ملموس: پیاده‌سازی‌های واقعی درگاه‌ها
+# ======================
+class KaveNegarProvider(SMSProvider):
+    """درگاه پیامک کاوه نگار"""
+
+    def send(self, phone: str, message: str) -> bool:
+        # در پیاده‌سازی واقعی، اینجا ارتباط با API کاوه نگار برقرار می‌شود
+        print(f"📡 در حال ارسال از طریق کاوه نگار به {phone}...")
+        return True  # فرض موفقیت‌آمیز بودن برای مثال
+
+    def get_provider_name(self) -> str:
+        return "کاوه نگار"
+
+
+class SignalProvider(SMSProvider):
+    """درگاه پیامک سیگنال"""
+
+    def send(self, phone: str, message: str) -> bool:
+        # در پیاده‌سازی واقعی، اینجا ارتباط با API سیگنال برقرار می‌شود
+        print(f"📡 در حال ارسال از طریق سیگنال به {phone}...")
+        return True  # فرض موفقیت‌آمیز بودن برای مثال
+
+    def get_provider_name(self) -> str:
+        return "سیگنال"
+
+
+# ======================
+# 3. سازنده انتزاعی: تعریف چارچوب کلی ارسال پیامک
+# ======================
+class SMSProviderService(ABC):
+    """
+    کلاس پایه‌ای که:
+    - منطق اصلی ارسال پیامک را پیاده‌سازی می‌کند (send_message)
+    - ساخت شیء درگاه را به زیرکلاس‌ها واگذار می‌کند
+    - به جزئیات پیاده‌سازی درگاه وابسته نیست
+    """
+
+    # =========================================================================
+    # 🔑 این متد، همان "فکتوری متد" است!
+    # - متد انتزاعی که توسط زیرکلاس‌ها پیاده‌سازی می‌شود
+    # - تصمیم "کدام درگاه ساخته شود" را به زیرکلاس واگذار می‌کند
+    # - هسته اصلی الگوی فکتوری متد
+    # =========================================================================
+    @abstractmethod
+    def _create_sms_provider(self) -> SMSProvider:
+        """فکتوری متد: مسئول ساخت نمونه‌ی درگاه پیامک"""
+        pass
+
+    def send_message(self, phone: str, message: str) -> None:
+        """
+        منطق کسب‌وکار اصلی (یکسان برای همه درگاه‌ها):
+        1. ساخت درگاه از طریق فکتوری متد
+        2. ارسال پیامک
+        3. گزارش نتیجه
+        """
+        # مرحله 1: دریافت درگاه از طریق فکتوری متد (بدون دانستن نوع دقیق)
+        provider: SMSProvider = self._create_sms_provider()
+
+        # مرحله 2: ارسال پیامک با استفاده از رابط انتزاعی
+        success = provider.send(phone, message)
+
+        # مرحله 3: گزارش نتیجه
+        status = "✅ موفق" if success else "❌ ناموفق"
+        print(f"[سیستم] ارسال از طریق {provider.get_provider_name()} به {phone}: {status}")
+
+
+# ======================
+# 4. سازنده‌های ملموس: پیاده‌سازی فکتوری متد برای هر درگاه
+# ======================
+class KaveNegarService(SMSProviderService):
+    """سرویس ارسال پیامک با درگاه کاوه نگار"""
+
+    # =========================================================================
+    # 🔑 این پیاده‌سازی، همان "فکتوری متد" برای درگاه کاوه نگار است!
+    # - هر زیرکلاس نوع خاص خود را مشخص می‌کند
+    # - بدون نیاز به تغییر کد کلاس پایه
+    # =========================================================================
+    def _create_sms_provider(self) -> SMSProvider:
+        return KaveNegarProvider()
+
+
+class SignalService(SMSProviderService):
+    """سرویس ارسال پیامک با درگاه سیگنال"""
+
+    # =========================================================================
+    # 🔑 این پیاده‌سازی، همان "فکتوری متد" برای درگاه سیگنال است!
+    # =========================================================================
+    def _create_sms_provider(self) -> SMSProvider:
+        return SignalProvider()
+
+
+# ======================
+# 5. استفاده در دنیای واقعی (کلاینت)
+# ======================
+def main() -> None:
+    """اجرای نمونه‌ی سیستم ارسال پیامک"""
+    print("=" * 60)
+    print("سیستم ارسال پیامک - پیاده‌سازی استاندارد فکتوری متد")
+    print("=" * 60)
+
+    # لیست سرویس‌های پیامک (بدون هیچ شرط‌بندی برای انتخاب درگاه!)
+    services: list[SMSProviderService] = [
+        KaveNegarService(),
+        SignalService()
+    ]
+
+    # ارسال پیامک از هر درگاه
+    phone_number: Final[str] = "09123456789"
+    message: Final[str] = "سلام! کد تأیید شما: 123456"
+
+    for idx, service in enumerate(services, 1):
+        print(f"\n{'─' * 58}")
+        print(f"ارسال شماره {idx} با {service.__class__.__name__}")
+        print(f"{'─' * 58}")
+        service.send_message(phone_number, message)
+
+    # ✨ نکته طلایی گسترش:
+    # برای افزودن درگاه جدید (مثلاً فارس‌پی):
+    # 1. کلاس FarapayamProvider از SMSProvider بسازید
+    # 2. کلاس FarapayamService از SMSProviderService ارث ببرد
+    # 3. متد _create_sms_provider را در FarapayamService پیاده‌سازی کنید
+    # 4. نمونه‌ی FarapayamService را به لیست services اضافه کنید
+    # → هیچ خط از کد موجود تغییر نمی‌کند! (اصل باز بودن برای گسترش، بسته بودن برای تغییر)
+
+    # 📌 یادآوری مهم:
+    # - "فکتوری متد" = متد انتزاعی _create_sms_provider و پیاده‌سازی‌های آن در زیرکلاس‌ها
+    # - "فکتوری کلاس" (Simple Factory) در این پیاده‌سازی وجود ندارد.
+    #   (اگر وجود داشت، یک کلاس واحد با متدی شامل if/else برای انتخاب درگاه می‌بود)
+
+
+if __name__ == "__main__":
+    main()
+```
+
+## 3.2. 🅱️ Example-Java
 
 ```java
 import java.util.Calendar;
@@ -277,26 +728,6 @@ Calendar x = Calendar.getInstance(Locale.English); #getInstance is Factory
 System.out.println(x);
 System.out.println(x.get(Calendar.SECOND));
 ```
-
-این الگوی طراحی به کد قابلیت گسترش می‌دهد(در مثال تغییر فرمت تصاویر به یکدیگر می‌توانیم به سهولت یک فرمت جدید بیافزاییم)
-
-![DesignPatternFactory.png](./_srcFiles/Images/DesignPatternFactory.png "DesignPatternFactory.png")
-
-## 2.1. 🅱️ Design manual
-
-* اصل‌اول: «مخفی‌سازی منطق ساخت اشیاء»
-    * عدم ارتباط کاربر با Subclass ها
-    * ایجاد یک کلاس جدید بنام «Factory» و پیاده‌سازی تمام تعاملات کاربر در این کلاس[معمولا انتهای آن کلمه Factory قرار می‌دهند. ممکن است به دلخواه برنامه‌نویس این کلمه آورده نشود]
-* اصل‌دوم: ساماندهی و بهینه‌سازی ارتباطات «FactoryClass» با «کلاس‌های فرزند»
-    * پایه‌گذاری پیچیدگی‌های برنامه در قالب کلاس‌های متفاوت
-    * مبنای ارتباطات، برپایه شیوه «ارث‌بری»
-    * تمرکز پیچیدگی‌های «کلاس‌های فرزند» در کلاس «FactoryClass»
-* اصل‌سوم: «share Interface» برای استاندارد سازی ارتباطات
-    * استفاده از یک اینترفیس مشترک برای مدیریت «کلاس‌های فرزند» با «FactoryClass»
-    * متدهای مهم در «اینترفیس‌مشترک»پایه‌گذاری می‌شود و تمامی «کلاس‌های فرزند» موظف به پیاده‌سازی آن متدها خواهند بود
-    * مثال: در مسئله تبدیل فرمت‌تصاویر یک اینترفیس بنام «ImageConvertor» خواهیم داشت که همه «کلاس‌های فرزند» با این اینترفیس تعامل برقرار خواهند کرد و این اینترفیس یک متد بنام Convert خواهد داشت که اطلاعات را میگیرد و خروجی را برمی‌گرداند
-
-## 2.2. 🅱️ Example
 
 * مثال: در مسئله تبدیل فرمت‌تصاویر یک اینترفیس بنام «ImageConvertor» خواهیم داشت که همه «کلاس‌های فرزند» با این اینترفیس تعامل برقرار خواهند کرد و این اینترفیس یک متد بنام Convert خواهد داشت که اطلاعات را میگیرد و خروجی را برمی‌گرداند
 
@@ -360,14 +791,14 @@ public class CalculationFactory {
 }
 ```
 
-# 3. 🅰️Creational.AbstractFactory
+# 4. 🅰️Creational.AbstractFactory
 
 * کارخانه‌ای که خودش کارخانه تولید می‌کند. یعنی Factory والد و Factory فرزند که این به خودی خود دارای پیچیدگی خواهد شد.
 * کاربرد در سیستم‌های بزرگ و آبجکت‌های سنگین که بخواهند ساخت کلاس فرزند را dynamic کنند.
 * وجود interfaceهای مشترک از 2 گروه الف: به ازای هر Factory ب:به ازای هر کلاس‌هایی که داخل Factory است
 * مثال کلاس Document Builder: برای Parse کردن فایلXML که یک آبجکت Node به‌صورت درختی برمی‌گرداند که می‌توان به تمامی المنت‌هایxml مورد نظر دسترسی پیدا کرد
 
-## 3.1. 🅱️ Design manual
+## 4.1. 🅱️ Design manual
 
 * گروهی از factory ها دارای interface مشترک خواهند بودو با هم استفاده می‌شوند
 * abstract Factory ‌ها گروهی از Factory ها هستند که همواره برای ساخته شدن آن‌ها باید ابتدا از یک Factory شروع کرد و سپس به abstractFactory رسید.
@@ -375,7 +806,7 @@ public class CalculationFactory {
 * نیاز به abstraction های زیاد
 * الگویی مناسب برای framework ها محسوب می‌شود.(Framework نویس‌ها)
 
-## 3.2. 🅱️ Examples
+## 4.2. 🅱️ Examples
 
 مثال اول DocumentBuilderFactory:
 
@@ -432,7 +863,7 @@ public class ImageConverterFactory implements MediaConverterFactory {
 
 که کار آن این است که در حالت‌های موسیقی و ویدئو و عکس بتواند فرمت‌های متفاوت را تبدیل نماید.
 
-# 4. 🅰️Creational.Builder
+# 5. 🅰️Creational.Builder
 
 هنگامی که شرایط زیر برقرار باشد می‌توان از این «الگوی‌طراحی» استفاده نمود
 
@@ -461,7 +892,7 @@ public class ImageConverterFactory implements MediaConverterFactory {
     * معمولاً اسم Builder را به انتهای کلاس می‌افزایند
     * متدهایی تحت عناوین مثلاً build یا getResult ایجاد نماییم تا بعنوان ارائه دهنده خروجی نهایی یا آبجکت نهایی عمل نماید
 
-## 4.1. 🅱️ Python
+## 5.1. 🅱️ Python
 
 ```python
 # ╔═════════╗
@@ -577,11 +1008,11 @@ if __name__ == "__main__":  # استفاده از Director
 # Computer with Intel i5 CPU, 16GB RAM, 512GB Storage, Integrated Graphics.
 ```
 
-## 4.2. 🅱️ Java
+## 5.2. 🅱️ Java
 
 * در جاوا کلاس‌هایی از جمله DocumentBuilder وStringBuilder و Locale.Builder یا JsonBuilder وجود دارد که در آن از این شیوه استفاده شده است
 
-### 4.2.1. ✅️ StringBuilder
+### 5.2.1. ✅️ StringBuilder
 
 کلاس StringBuilder (موجود در Java.lang) قابلیت افزودن دیتا به یک رشته را به گونه‌ای دارد که بعنوان رشته اصلی عمل کرده و هر بار دیتای جدید مستقیماً با آن اضافه می‌شود و نیازبه ساخت شیء string جدید بعنوان subString نیست تا آن شیء را به رشته اصلی(شیء اصلی) append نماییم
 
@@ -590,9 +1021,9 @@ StringBuilder builder = new StringBuilder();
 string result = builder.append("Hello, I am").append(33).append("years old").toString();
 ```
 
-### 4.2.2. ✅️ H264PropertiesBuilder
+### 5.2.2. ✅️ H264PropertiesBuilder
 
-#### 4.2.2.1. ❇️ without Builder
+#### 5.2.2.1. ❇️ without Builder
 
 فرض کنید کلاس decoder فرمت H262 را بخواهیم پیاده‌سازی نماییم آنگاه بدلیل وجود پارامترهای زیاد، در حالت بدون Builder به شکل زیر می‌باشد(۱-کلاس سازنده با پارامتر زیاد ۲-getter برای هرکدام ۳-setter برای هرکدام)
 
@@ -650,7 +1081,7 @@ public class Main {
 }
 ```
 
-#### 4.2.2.2. ❇️ with Builder
+#### 5.2.2.2. ❇️ with Builder
 
 باید کلاسH264Properties بدون Builder را همانند بخش قبل داشته باشیم و همراه آن کلاس در وضعیت Builder نیز به شکل زیر تولید شود
 
@@ -710,7 +1141,7 @@ public class Main {
     * در کلاس Builder توابع getter همانند وضعیت بدون Builder خواهند بود
     * در کلاس Builder تابع build را ایجاد نماییم که قرار است خروجی نهایی رو برگرداند
 
-# 5. 🅰️Creational.Prototype
+# 6. 🅰️Creational.Prototype
 
 این امکان را می‌دهد که یک شیء جدید را از طریق کپی کردن شیء موجود و اعمال تغییرات بر روی نسخه‌های جدید، ایجاد کنید
 
@@ -739,16 +1170,15 @@ class Prototype:
         return f"Prototype(Name: {self.name}, Data: {self.data})"
 
     def clone_shallow(self):  # کپی سطحی (Shallow Copy)
-        return copy.copy(self)  
+        return copy.copy(self)
 
     def clone_deep(self):  # کپی عمیق (Deep Copy)
-        return copy.deepcopy(self) 
+        return copy.deepcopy(self)
 
 
 original_prototype = Prototype("Original", [1, 2, 3])
-shallow_copy = original_prototype.clone_shallow() 
-deep_copy = original_prototype.clone_deep() 
-
+shallow_copy = original_prototype.clone_shallow()
+deep_copy = original_prototype.clone_deep()
 
 shallow_copy.data[0] = 100  # تغییر اولین عنصر در لیست کپی سطحی
 deep_copy.data[1] = 200  # تغییر دومین عنصر در لیست کپی عمیق
