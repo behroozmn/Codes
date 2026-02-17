@@ -1513,3 +1513,502 @@ public class ImageConverterFactory implements MediaConverterFactory {
 
 که کار آن این است که در حالت‌های موسیقی و ویدئو و عکس بتواند فرمت‌های متفاوت را تبدیل نماید.
 
+# 6. 🅰️ Behavioral.Command
+
+الگویی است که یک «دستور یا درخواست یا عملیات» را به‌جای اینکه مستقیم و فوری اجرا کند ابتدا آن را بعنوان یک آبجکت مستقل درنظر می‌گیرد. آبجکتی که تمام اطلاعات لازم برای انجام دستور نظیر گیرندهٔ عملیات، پارامترها، و … را در خودش نگه می‌دارد نتیجه این است که فرستندهٔ درخواست(Invoker) از اجراکنندهٔ واقعی(Receiver) جدا می‌شود و در این خلال می‌توان علمیات متفاوت نظیر صف‌کردن، ذخیره‌کردن، لاگ‌گرفتن، اجرای با تأخیر، و Undo یا Redo را نیز داشته باشیم و هندل نماییم
+
+به زبان ساده: به‌جای اینکه “کلیک روی دکمه” مستقیم برود و “کد روشن‌کردن چراغ” را صدا بزند، یک آبجکت Command می‌سازید که می‌گوید «روشن‌کردن چراغ با این پارامترها»، بعد دکمه فقط execute() را صدا می‌زند.
+
+* معمولا در موارد زیر استفاده می‌شود
+    * **کاهش وابستگی(Decoupling)**: فراخوانی کننده(Invoker) نداند دقیقاً چه کسی یا چگونه کار را انجام می‌دهد. فقط بداند «یک کامند قابل اجرا» دارد.
+    * **تغییرپذیری‌رفتار درزمان‌اجرا**: بتوانید به یک دکمه یا منو یا روش روتین، فرمان‌های مختلف وصل کنید.
+    * **صف‌واجرای باتأخیر**: فرمان‌ها را در Queue نگه دارید و بعداً یا در یک Worker اجرا کنید
+    * ثبت‌وبازپخش (Macro یا History یا Auditing): فرمان‌ها را ذخیره کنید و دوباره اجرا کنید(مثل macro recording)
+    * Undo یا Redo: با نگه‌داشتن تاریخچهٔ فرمان‌های اجراشده و پیاده‌سازی `undo()` بتوانید بازگشت انجام دهید
+    * تراکنش و Rollback: چند عملیات را پشت سر هم اجرا کنید و اگر یکی شکست خورد، قبلی‌ها را برگردانید(مفهوم rollback شبیه‌تراکنش)
+* اجزای اصلی این الگوی‌طراحی
+    * جزء **Command**: «اینترفیس» یا «پروتکلِ‌فرمان»(مثلاً `execute()` و گاهی `undo()`).
+    * جزء **ConcreteCommand**: پیاده‌سازی مشخص یک فرمان (مثل TurnOnLightCommand).
+    * جزء **Receiver**: کسی که کار واقعی را انجام می‌دهد (مثل Light که متد `on()` دارد).
+    * جزء **Invoker**: کسی که فرمان را اجرا می‌کند (مثل RemoteButton یا منو). معمولاً فقط `command.execute()` را صدا می‌زند.
+    * جزء **Client**: کسی که همه چیز را سرِ هم می‌کند: Receiver را می‌سازد، ConcreteCommand می‌سازد و به Invoker می‌دهد
+* جریان اجرا به صورت عادی:
+    * Client → (Create Receiver + Command) → Connect Command to Invoker → Invoker: execute() → Do Command on Receiver
+* صف یا Queue(محل نگهداری تسک‌ها یا جاب‌ها که خودش کاری نمی‌کند و فقط داده را نگه‌می‌دارد) و پروسس یا worker(پردازه که تسک را از صف برمیدارد و آن را اجرا میکند) متفاوت هستند
+* به صف، Broker هم می‌گویند
+* جزء کامند باید چه چیزی را در خود نگه دارد
+    * حداقل باید مرجع Receiver به همراه پارامترهای لازم را نگهداری کند
+    * برای Undo باید وضعیت قبل را هم ذخیره کند، یا بتواند «عمل معکوس» را انجام دهد
+* برای اعمال Undo/Redo استاندارد
+    * رویکرد اول **InverseOperation**: هر فرمان `undo()` دارد که اثر همان فرمان را برمی‌گرداند (مثلاً Reserve → Release).
+    * رویکرد دوم **Snapshot/Memento**: قبل از `execute()` یک snapshot از حالت لازم ذخیره می‌کنید و در `undo()` آن را برمی‌گردانید (مخصوصاً وقتی برگشت‌پذیری با عملیات معکوس سخت است).
+    * استفاده از History
+        * `undo_stack`: بعد از اجرای موفق، فرمان را push می‌کنید.
+        * `redo_stack`: وقتی undo می‌کنید، فرمان به redo می‌رود؛ وقتی redo می‌کنید دوباره برمی‌گردد
+* دستورات مرکب(Composite): یک فرمان می‌توند خودش شامل چند فرمان باشد
+    * `execute()` همه را به ترتیب اجرا کند
+    * `undo()` همه را برعکس برگرداند
+* تفاوت‌ها با دیگر الگوهای طراحی مشابه
+    * Strategy: الگوی طراحی استراتژی معمولاً «الگوریتم یا سیاست» را برای یک کار انتخاب می‌کند؛ کامند بیشتر «یک درخواست/اکشن» را آبجکت می‌کند تا «زمان اجرا» یا «صف» یا «تاریخچه» یا «آندو» داشته باشد.
+    * Observer/Event: الگوی طراحی آبزرو برای «خبر کردن چند شنونده» است؛ کامند برای «نمایندگی یک عمل».
+    * ChainOfResponsibility: درخواست در یک زنجیره پاس می‌شود تا یکی هندل کند؛ در کامند، درخواست از قبل به شکل آبجکت فرمان ساخته شده و فراخوانی کننده آن را اجرا می‌کند.
+
+## 🅱️ Examples
+
+مثال 1️⃣️:
+
+```python
+from abc import ABC, abstractmethod
+
+
+# -------------------- device interface --------------------
+class Device(ABC):
+    @abstractmethod
+    def turn_on(self, *args, **kwargs):
+        raise NotImplementedError
+
+    @abstractmethod
+    def turn_off(self, *args, **kwargs):
+        raise NotImplementedError
+
+# -------------------- devices --------------------
+class TV(Device):
+    def turn_on(self, *args, **kwargs):
+        print('TV is on')
+
+    def turn_off(self, *args, **kwargs):
+        print('TV is off')
+
+class DVDPlayer(Device):
+    def turn_on(self, *args, **kwargs):
+        print('DVD Player is on')
+
+    def turn_off(self, *args, **kwargs):
+        print('DVD Player is off')
+
+# -------------------- Command Interface --------------------
+class RemoteControlCommand(ABC):
+    @abstractmethod
+    def execute(self):
+        raise NotImplementedError
+
+
+# -------------------- commands --------------------
+class TurnOnCommand(RemoteControlCommand):
+    def __init__(self, device: Device):
+        self.device = device
+
+    def execute(self):
+        self.device.turn_on()
+
+class TurnOffCommand(RemoteControlCommand):
+    def __init__(self, device: Device):
+        self.device = device
+
+    def execute(self):
+        self.device.turn_off()
+
+# -------------------- Invoker --------------------
+class RemoteControl:
+    def __init__(self):
+        self.commands = {}
+
+    def add_command(self, command_name: str, command: RemoteControlCommand):
+        self.commands[command_name] = command
+
+    def execute_command(self, command_name: str):
+        if command_name in self.commands:
+            self.commands[command_name].execute()
+        else:
+            raise KeyError(f'Command {command_name} does not exist')
+
+# -------------------- client --------------------
+if __name__ == '__main__':
+    remote_control = RemoteControl()
+    tv = TV()
+    dvd_player = DVDPlayer()
+    remote_control.add_command('turn_on_tv', TurnOnCommand(tv))
+    remote_control.add_command('turn_off_tv', TurnOffCommand(tv))
+    remote_control.add_command('turn_on_dvd', TurnOnCommand(dvd_player))
+    remote_control.add_command('turn_off_dvd', TurnOffCommand(dvd_player))
+    for key, value in remote_control.commands.items():
+        print(f'command name is : {key}')
+
+    remote_control.execute_command(input('enter your command: '))
+```
+
+مثال 2️⃣️: کنترل از راه دور به همراه Undo در پیاده‌سازی
+
+* Receiver: `Light`
+* Commands: روشن یا خاموش
+* Invoker:  RemoteControl که یک “دکمه” دارد و آخرین فرمان را برای undo نگه می‌دارد
+* Remote(Invoker) هیچ‌وقت `light.on()` را مستقیم صدا نمی‌زند؛ فقط `command.execute()` را می‌شناسد.
+* کامندها «درخواست» را آبجکت کرده‌اند و بنابراین undo هم طبیعی می‌شود
+
+```python
+from __future__ import annotations
+
+from dataclasses import dataclass
+from typing import Protocol, Optional
+
+
+# -------- Command Interface --------
+class Command(Protocol):
+    """قرارداد فرمان: حداقل execute و (برای این مثال) undo."""
+
+    def execute(self) -> None: ...
+
+    def undo(self) -> None: ...
+
+
+# -------- Receiver --------
+@dataclass
+class Light:
+    """Receiver: کار واقعی اینجاست."""
+    is_on: bool = False
+
+    def on(self) -> None:
+        self.is_on = True
+        print("💡 Light: ON")
+
+    def off(self) -> None:
+        self.is_on = False
+        print("💡 Light: OFF")
+
+
+# -------- Concrete Commands --------
+@dataclass(frozen=True)
+class LightOnCommand:
+    """فرمان روشن کردن چراغ."""
+    light: Light
+
+    def execute(self) -> None:
+        self.light.on()
+
+    def undo(self) -> None:
+        # معکوسِ روشن‌کردن: خاموش‌کردن
+        self.light.off()
+
+
+@dataclass(frozen=True)
+class LightOffCommand:
+    """فرمان خاموش کردن چراغ."""
+    light: Light
+
+    def execute(self) -> None:
+        self.light.off()
+
+    def undo(self) -> None:
+        # معکوسِ خاموش‌کردن: روشن‌کردن
+        self.light.on()
+
+
+# -------- Invoker --------
+class RemoteControl:
+    """
+    Invoker: فقط می‌داند یک Command دارد و execute() را صدا می‌زند.
+    از Light و جزئیاتش خبر ندارد.
+    """
+
+    def __init__(self) -> None:
+        self._slot: Optional[Command] = None
+        self._last: Optional[Command] = None  # برای Undo
+
+    def set_command(self, command: Command) -> None:
+        self._slot = command
+
+    def press_button(self) -> None:
+        if self._slot is None:
+            print("Remote: no command set")
+            return
+        self._slot.execute()
+        self._last = self._slot
+
+    def press_undo(self) -> None:
+        if self._last is None:
+            print("Remote: nothing to undo")
+            return
+        self._last.undo()
+        self._last = None
+
+
+if __name__ == "__main__":
+    light = Light()
+    remote = RemoteControl()
+
+    remote.set_command(LightOnCommand(light))
+    remote.press_button()  # ON
+    remote.press_undo()  # undo -> OFF
+
+    remote.set_command(LightOffCommand(light))
+    remote.press_button()  # OFF
+    remote.press_undo()  # undo -> ON
+
+```
+
+مثال 3️⃣️: اجرای تراکنش سفارش به همراه Rollback به همراه History در داخل مثال
+
+* سناریو: برای ثبت سفارش، چند عملیات پشت سر هم انجام می‌شود:
+    1. رزرو موجود
+    2. شارژ پرداخت
+    3. ساخت ارسال یا حمل‌ونقل(یا همان Shipment)
+    4. ارسال ایمیل تأیید(اختیاری/جبرانی)
+* اگر هرمرحله شکست خورد، مراحل قبلی باید rollback شوند(باundo). این دقیقاً یکی از جاهایی است که Command خیلی ارزشمند می‌شود
+
+```python
+from __future__ import annotations
+
+from dataclasses import dataclass
+from typing import Protocol, List, Optional
+import uuid
+
+
+# -------------------- Command Protocols --------------------
+class UndoableCommand(Protocol):
+    """
+    فرمان‌های قابل بازگشت (برای rollback و undo/redo).
+    نکته: در سیستم‌های واقعی ممکن است undo "کاملاً برگشت" نباشد
+    و به شکل عملیات جبرانی (compensating action) انجام شود.
+    """
+
+    def execute(self) -> None: ...
+
+    def undo(self) -> None: ...
+
+    def describe(self) -> str: ...
+
+
+# -------------------- Receivers (Business Services) --------------------
+@dataclass
+class InventoryService:
+    stock: dict[str, int]
+    reserved: dict[str, int]
+
+    def reserve(self, sku: str, qty: int) -> None:
+        available = self.stock.get(sku, 0)
+        if qty <= 0:
+            raise ValueError("qty must be positive")
+        if available < qty:
+            raise RuntimeError(f"Not enough stock for {sku}. available={available}, need={qty}")
+
+        self.stock[sku] = available - qty
+        self.reserved[sku] = self.reserved.get(sku, 0) + qty
+
+    def release(self, sku: str, qty: int) -> None:
+        if qty <= 0:
+            raise ValueError("qty must be positive")
+        reserved_qty = self.reserved.get(sku, 0)
+        if reserved_qty < qty:
+            raise RuntimeError(f"Release exceeds reserved for {sku}. reserved={reserved_qty}, release={qty}")
+
+        self.reserved[sku] = reserved_qty - qty
+        self.stock[sku] = self.stock.get(sku, 0) + qty
+
+
+@dataclass
+class PaymentService:
+    """
+    مدل ساده‌شده پرداخت.
+    در دنیای واقعی باید idempotency-key، وضعیت تراکنش، و خطاهای شبکه را مدیریت کنید.
+    """
+    charges: dict[str, int]  # charge_id -> amount_cents
+    refunds: dict[str, int]  # refund_id -> amount_cents
+
+    def charge(self, amount_cents: int) -> str:
+        if amount_cents <= 0:
+            raise ValueError("amount must be positive")
+        charge_id = f"ch_{uuid.uuid4().hex[:10]}"
+        self.charges[charge_id] = amount_cents
+        return charge_id
+
+    def refund(self, charge_id: str) -> str:
+        if charge_id not in self.charges:
+            raise RuntimeError("Cannot refund: unknown charge_id")
+        refund_id = f"rf_{uuid.uuid4().hex[:10]}"
+        self.refunds[refund_id] = self.charges[charge_id]
+        return refund_id
+
+
+@dataclass
+class ShippingService:
+    shipments: dict[str, str]  # shipment_id -> order_id
+    canceled: set[str]
+
+    def create_shipment(self, order_id: str) -> str:
+        shipment_id = f"sh_{uuid.uuid4().hex[:10]}"
+        self.shipments[shipment_id] = order_id
+        return shipment_id
+
+    def cancel_shipment(self, shipment_id: str) -> None:
+        if shipment_id not in self.shipments:
+            raise RuntimeError("Unknown shipment_id")
+        self.canceled.add(shipment_id)
+
+
+@dataclass
+class EmailService:
+    sent: List[str]
+
+    def send(self, to: str, subject: str, body: str) -> None:
+        # نمونه ساده: فقط ذخیره در لیست
+        self.sent.append(f"to={to} subject={subject} body={body}")
+
+
+# -------------------- Concrete Commands --------------------
+@dataclass
+class ReserveStockCommand:
+    inventory: InventoryService
+    sku: str
+    qty: int
+    _executed: bool = False  # برای جلوگیری از undo قبل از execute
+
+    def execute(self) -> None:
+        self.inventory.reserve(self.sku, self.qty)
+        self._executed = True
+
+    def undo(self) -> None:
+        if self._executed:
+            self.inventory.release(self.sku, self.qty)
+
+    def describe(self) -> str:
+        return f"ReserveStock(sku={self.sku}, qty={self.qty})"
+
+
+@dataclass
+class ChargePaymentCommand:
+    payments: PaymentService
+    amount_cents: int
+    charge_id: Optional[str] = None
+
+    def execute(self) -> None:
+        self.charge_id = self.payments.charge(self.amount_cents)
+
+    def undo(self) -> None:
+        # عملیات جبرانی: refund
+        if self.charge_id is not None:
+            self.payments.refund(self.charge_id)
+
+    def describe(self) -> str:
+        return f"ChargePayment(amount_cents={self.amount_cents})"
+
+
+@dataclass
+class CreateShipmentCommand:
+    shipping: ShippingService
+    order_id: str
+    shipment_id: Optional[str] = None
+
+    def execute(self) -> None:
+        self.shipment_id = self.shipping.create_shipment(self.order_id)
+
+    def undo(self) -> None:
+        if self.shipment_id is not None:
+            self.shipping.cancel_shipment(self.shipment_id)
+
+    def describe(self) -> str:
+        return f"CreateShipment(order_id={self.order_id})"
+
+
+@dataclass
+class SendEmailCommand:
+    email: EmailService
+    to: str
+    subject: str
+    body: str
+    _sent: bool = False
+
+    def execute(self) -> None:
+        self.email.send(self.to, self.subject, self.body)
+        self._sent = True
+
+    def undo(self) -> None:
+        # ایمیل معمولاً قابل undo واقعی نیست.
+        # در سیستم واقعی ممکن است "ایمیل اصلاحی/لغو" بفرستید یا هیچ کاری نکنید.
+        pass
+
+    def describe(self) -> str:
+        return f"SendEmail(to={self.to}, subject={self.subject})"
+
+
+# -------------------- Transaction Runner (Invoker-like) --------------------
+class TransactionRunner:
+    """
+    این کلاس یک لیست از Commandها را اجرا می‌کند.
+    اگر یکی شکست بخورد، فرمان‌های اجراشده را برعکس undo می‌کند (rollback).
+    این دقیقاً همان کاربرد transactional/rollback در Command است. :contentReference[oaicite:13]{index=13}
+    """
+
+    def __init__(self) -> None:
+        self.audit_log: List[str] = []
+
+    def run(self, commands: List[UndoableCommand]) -> None:
+        executed: List[UndoableCommand] = []
+        try:
+            for cmd in commands:
+                self.audit_log.append(f"EXEC: {cmd.describe()}")
+                cmd.execute()
+                executed.append(cmd)
+            self.audit_log.append("DONE: transaction committed")
+        except Exception as exc:
+            self.audit_log.append(f"ERROR: {type(exc).__name__}: {exc} -> rollback")
+            # rollback در جهت معکوس
+            for cmd in reversed(executed):
+                try:
+                    self.audit_log.append(f"UNDO: {cmd.describe()}")
+                    cmd.undo()
+                except Exception as undo_exc:
+                    # در سیستم واقعی: اینجا باید alert/compensation اضافی داشته باشید
+                    self.audit_log.append(f"UNDO-FAILED: {cmd.describe()} err={undo_exc}")
+            raise
+
+
+# -------------------- Demo --------------------
+if __name__ == "__main__":
+    inventory = InventoryService(stock={"SKU-1": 2}, reserved={})
+    payments = PaymentService(charges={}, refunds={})
+    shipping = ShippingService(shipments={}, canceled=set())
+    email = EmailService(sent=[])
+
+    order_id = "ORDER-1001"
+
+    # یک سناریوی موفق
+    tx1 = TransactionRunner()
+    commands_ok: List[UndoableCommand] = [
+        ReserveStockCommand(inventory, "SKU-1", 1),
+        ChargePaymentCommand(payments, 5000),
+        CreateShipmentCommand(shipping, order_id),
+        SendEmailCommand(email, "user@example.com", "Order confirmed", f"Your order {order_id} is confirmed."),
+    ]
+    tx1.run(commands_ok)
+
+    print("=== Audit (OK) ===")
+    print("\n".join(tx1.audit_log))
+    print("stock:", inventory.stock, "reserved:", inventory.reserved)
+    print("charges:", payments.charges, "refunds:", payments.refunds)
+    print("shipments:", shipping.shipments, "canceled:", shipping.canceled)
+    print("emails:", email.sent)
+
+    # یک سناریوی شکست (کمبود موجودی) که باید rollback کند
+    tx2 = TransactionRunner()
+    commands_fail: List[UndoableCommand] = [
+        ReserveStockCommand(inventory, "SKU-1", 5),  # اینجا خطا می‌دهد
+        ChargePaymentCommand(payments, 7000),
+        CreateShipmentCommand(shipping, "ORDER-FAIL"),
+    ]
+    try:
+        tx2.run(commands_fail)
+    except Exception:
+        pass
+
+    print("\n=== Audit (FAIL + rollback) ===")
+    print("\n".join(tx2.audit_log))
+    print("stock:", inventory.stock, "reserved:", inventory.reserved)
+
+```
+
+* نکته‌های کلیدی این مثال
+    * هر قدم کسب‌وکار یک Command جداست؛ بنابراین اضافه/حذف/تعویض قدم‌ها آسان می‌شود.
+    * rollback با undo در جهت معکوس انجام می‌شود (خیلی مهم برای حفظ سازگاری).
+    * بعضی عملیات‌ها undo واقعی ندارند (مثل ایمیل). اینجا مفهوم عملیات جبرانی مطرح می‌شود.
+    * این سبک طراحی پایهٔ خیلی از سیستم‌های workflow، orchestration و حتی sagas (در مقیاس بزرگ‌تر) است.
+
