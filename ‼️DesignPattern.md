@@ -256,7 +256,352 @@ public class DBConnection {
 
 توضیحات: اگر یک thread داخل محدوده بلوک Synchronized قرار داشته باشد آنگاه اگر thread دوم به این بلاک برسد، صبر می‌کند تا thread اول از این بلاک عبور کند و سپس Thread دوم وارد این بلاک می‌شود.(پردازه برای دومی قفل می‌شود و با خروج اولی قفل آن باز می‌شود)
 
-# 2. 🅰️Creational.FactoryMethod
+# 2. 🅰️Creational.Builder
+
+هنگامی که شرایط زیر برقرار باشد می‌توان از این «الگوی‌طراحی» استفاده نمود
+
+* هنگام  **تولید آبجکت با تعداد پارامتر زیاد**
+* هنگامی‌که ساخت آبجکت Cost زیاد دارد(مثل کوئری دیتابیس مثلا QuerySet در جنگو)
+* هنگامی‌که نمونه‌های قابل تولید از کلاس(باتوجه به مقادیر) می‌تواند رفتار متفاوت داشته باشند
+* **هدف‌ایجاد**: تسهیل مقداردهی پارامترهای زیاد هنگام ساخت کلاس به‌صورت یکجا
+    * فراهم کردن یک رابط برای ساخت شیء پیچیده به‌صورت تدریجی و مرحله‌ای
+* اجزا
+    * **Product**:(محصول) شیء نهایی است که توسط Builder ساخته می‌شود.
+    * **Builder**: یک رابط یا کلاس انتزاعی که مسئول ایجاد و عملیات ساخت بخش‌های مختلف شیء است.
+    * **ConcreteBuilder**: پیاده‌سازی واقعی کلاس Builder است که جزئیات ساخت را انجام می‌دهد(کمک می‌کند تا فرآیند ساخت طبق دستورالعمل‌های مشخص پیش برود)
+    * **Director**: مسئول هدایت فرآیند ساخت است (گاهی اوقات اختیاری است).
+        * وقتی ترتیب توابع مهم باشد و الگوی خاصی مد نظر باشد از این ساختار استفاده می‌کنیم
+        * اگر فرآیند ساخت پیچیده باشد، می‌توانیم از Director استفاده کنیم تا فرآیند ساخت تحت کنترل باشد.
+        * اگر ساده باشد، می‌توانیم از Builder به‌طور مستقیم استفاده کنیم.
+    * **Client**: مسئول درخواست از Builder برای ساخت شیء است.
+* مثال: هنگام ایجاد یک کلاس QueryBuilder برای SQL که نیازمند تعداد پارامترهای زیاد نظیر موارد زیر می‌باشد:
+    * تعداد اجزای Selection
+    * دریافت تک به تک عبارت‌های شرطی که بعنوان where استفاده خواهد شد یا همانWhere clause ها
+    * GroupBy ها
+    * OrderBy ها و …
+* نکات
+    * استفاده از innerclassها دراین الگوی طراحی توصیه می‌شود
+        * پیشنهاد می‌شود کلاس اصلی را به‌صورت innerClass درون کلاس Builder تعریف نمود تا پیچیدگی کاهش یابد
+    * معمولاً اسم Builder را به انتهای کلاس می‌افزایند
+    * متدهایی تحت عناوین مثلاً build یا getResult ایجاد نماییم تا بعنوان ارائه دهنده خروجی نهایی یا آبجکت نهایی عمل نماید
+
+## 2.1. 🅱️ Python
+
+```python
+# ╔═════════╗
+# ║ Product ║
+# ╚═════════╝
+class Computer:
+    def __init__(self, processor, memory, storage, graphics):
+        self.processor = processor
+        self.memory = memory
+        self.storage = storage
+        self.graphics = graphics
+
+    def __str__(self):
+        return f"Computer with {self.processor} CPU, {self.memory}GB RAM, {self.storage}GB Storage, {self.graphics} Graphics."
+
+
+# ╔═════════╗
+# ║ Builder ║ # سازنده
+# ╚═════════╝
+from abc import ABC, abstractmethod
+
+
+class ComputerBuilder(ABC):  # یک رابط است که تمامی متدهایی را که برای ساخت یک کامپیوتر نیاز داریم (مثلاً تنظیم پردازنده، حافظه، ذخیره‌سازی و گرافیک) را تعریف می‌کند.
+
+    @abstractmethod
+    def set_processor(self, processor: str):
+        pass
+
+    @abstractmethod
+    def set_memory(self, memory: int):
+        pass
+
+    @abstractmethod
+    def set_storage(self, storage: int):
+        pass
+
+    @abstractmethod
+    def set_graphics(self, graphics: str):
+        pass
+
+    @abstractmethod
+    def build(self) -> Computer:
+        pass
+
+
+# ╔═════════════════╗
+# ║ ConcreteBuilder ║ # پیاده‌سازی واقعی سازنده
+# ╚═════════════════╝
+class GamingComputerBuilder(ComputerBuilder):
+
+    def __init__(self):
+        self.computer = Computer(None, None, None, None)
+
+    def set_processor(self, processor: str):
+        self.computer.processor = processor
+
+    def set_memory(self, memory: int):
+        self.computer.memory = memory
+
+    def set_storage(self, storage: int):
+        self.computer.storage = storage
+
+    def set_graphics(self, graphics: str):
+        self.computer.graphics = graphics
+
+    def build(self) -> Computer:
+        return self.computer
+
+
+# ╔══════════╗
+# ║ Director ║ # مسئول ساخت
+# ╚══════════╝
+class Director:  # فرآیند ساخت کامپیوترهای خاص را مدیریت می‌کند
+
+    def __init__(self, builder: ComputerBuilder):
+        self.builder = builder
+
+    def construct_gaming_computer(self):
+        self.builder.set_processor("Intel i9")
+        self.builder.set_memory(32)
+        self.builder.set_storage(1024)
+        self.builder.set_graphics("NVIDIA RTX 3080")
+
+    def construct_office_computer(self):
+        self.builder.set_processor("Intel i5")
+        self.builder.set_memory(16)
+        self.builder.set_storage(512)
+        self.builder.set_graphics("Integrated")
+
+
+# ╔════════╗
+# ║ Client ║
+# ╚════════╝
+if __name__ == "__main__":  # استفاده از Director
+
+    gaming_computer_builder = GamingComputerBuilder()
+    director = Director(gaming_computer_builder)
+    director.construct_gaming_computer()
+
+    gaming_computer = gaming_computer_builder.build()
+    print(gaming_computer)
+
+    # استفاده از Director برای ساخت یک کامپیوتر اداری
+    office_computer_builder = GamingComputerBuilder()  # می‌توان از همان کلاس برای ساخت نوع دیگری از کامپیوتر استفاده کرد
+    director = Director(office_computer_builder)
+    director.construct_office_computer()
+
+    office_computer = office_computer_builder.build()
+    print(office_computer)
+
+###### output:
+# Computer with Intel i9 CPU, 32GB RAM, 1024GB Storage, NVIDIA RTX 3080 Graphics.
+# Computer with Intel i5 CPU, 16GB RAM, 512GB Storage, Integrated Graphics.
+```
+
+## 2.2. 🅱️ Java
+
+* در جاوا کلاس‌هایی از جمله DocumentBuilder وStringBuilder و Locale.Builder یا JsonBuilder وجود دارد که در آن از این شیوه استفاده شده است
+
+### 2.2.1. ✅️ StringBuilder
+
+کلاس StringBuilder (موجود در Java.lang) قابلیت افزودن دیتا به یک رشته را به گونه‌ای دارد که بعنوان رشته اصلی عمل کرده و هر بار دیتای جدید مستقیماً با آن اضافه می‌شود و نیازبه ساخت شیء string جدید بعنوان subString نیست تا آن شیء را به رشته اصلی(شیء اصلی) append نماییم
+
+```java
+StringBuilder builder = new StringBuilder();
+string result = builder.append("Hello, I am").append(33).append("years old").toString();
+```
+
+### 2.2.2. ✅️ H264PropertiesBuilder
+
+#### 2.2.2.1. ❇️ without Builder
+
+فرض کنید کلاس decoder فرمت H262 را بخواهیم پیاده‌سازی نماییم آنگاه بدلیل وجود پارامترهای زیاد، در حالت بدون Builder به شکل زیر می‌باشد(۱-کلاس سازنده با پارامتر زیاد ۲-getter برای هرکدام ۳-setter برای هرکدام)
+
+```java
+public class H263Properties{
+    int keyInt;
+    int minKeyInt;
+    int sceneCut;
+    int bFrames
+    int bAdabt
+    int qp
+    int bitrate
+    boolean bFrameBias
+    int crf
+    int qpstep
+    int pbRatio
+    int chromaOffset
+    float rateTol
+    byte pass
+    boolean state
+    int direct
+    int meRange
+    boolean weightB
+    boolean noFastPSkip
+
+    #تابع سازنده
+    public  H263Properties(int keyInt, int minKeyInt, int sceneCut,int bFrames,int bAdabt, int qp, int bitrate, boolean bFrameBias, int crf, int qpstep, int pbRatio, int chromaOffset, float rateTol, byte pass, boolean state, int direct, int meRange, boolean weightB, boolean noFastPSkip){}
+
+    #ایجاد کلاس سِتِر برای همه پارامترهای این کلاس
+    public void setMinKeyInt(int minKeyInt){
+        this.minKeyInt = minKeyInt;
+        return this.minKeyInt = minKeyInt;
+    }
+
+    #ایجاد کلاس گِتِر برای همه پارامترهای این کلاس
+    public int getMinKeyInt(){
+        return minKeyInt;
+    }
+    
+}
+```
+
+کلاس main شیوه بدون Builder به شکل زیر خواهد شد
+
+```java
+public class Main {
+    public static void main(String[] args){
+        H263Properties  decoder – new  H263Properties();
+        decoder.setbAdapt(12) ;
+        decoder.setbweghtB(yes) ;
+        decoder.setrateTol (1.5) ;
+        …
+        تعداد بسیار زیاد باید تنظیم نماید
+    }
+}
+```
+
+#### 2.2.2.2. ❇️ with Builder
+
+باید کلاسH264Properties بدون Builder را همانند بخش قبل داشته باشیم و همراه آن کلاس در وضعیت Builder نیز به شکل زیر تولید شود
+
+```java
+public class H263Properties‌Builder{
+    int keyInt;
+    int minKeyInt;
+    int sceneCut;
+    int bFrames
+    int bAdabt
+    int qp
+    int bitrate
+    boolean bFrameBias
+    int crf
+    int qpstep
+    int pbRatio
+    int chromaOffset
+    float rateTol
+    byte pass
+    boolean state
+    int direct
+    int meRange
+    boolean weightB
+    boolean noFastPSkip
+
+    #نوشت تابع مشابه سِتِر اما بدون کلمه سِتِر برای همه پارامترهای این کلاس به شکل زیر
+    public  H263PropertiesBuilder MinKeyInt(int minKeyInt){ #نکته: کلمه سِت از نام تابع حذف شده است
+        this.minKeyInt = minKeyInt;
+        return this;
+    }
+    
+    public H263Properties build() {
+        H263Properties decoder = new  H263Properties();
+        decoder.setbAdapt(badapt) ;
+        decoder.setbweghtB(weightB) ;
+        decoder.setrateTol (rateTol) ;
+        ...
+        //یک بار برای تک تک پارامترها مقدارها را قرار می‌دهیم
+    }
+}
+```
+
+کلاس main شیوه Builder به شکل زیر خواهد شد
+
+```java
+public class Main {
+    public static void main(String[] args){
+        H263Properties decoderBuilder = new  H263PropertiesBuilder();
+        H263Properties decoder = builderDecoder.frame(12).KeyInt(17).rateTol(1.5).minKeyInt(2).sceneCut(9)……….build() ;
+    }
+}
+```
+
+* **نکته‌ها**
+    * در کلاس Builder مقدار بازگشتی تابع Setter هرکدام از پارامترها باید به‌جای نوع(مثلا int یا string یا …) به نام کلاس تغییر پیدا کند
+    * در کلاس Builder کلمه set از نام تابع بازگشتی حذف می‌شود
+    * در کلاس Builder توابع getter همانند وضعیت بدون Builder خواهند بود
+    * در کلاس Builder تابع build را ایجاد نماییم که قرار است خروجی نهایی رو برگرداند
+
+# 3. 🅰️Creational.Prototype
+
+این امکان را می‌دهد که یک شیء جدید را از طریق کپی کردن شیء موجود و اعمال تغییرات بر روی نسخه‌های جدید، ایجاد کنید
+
+* اغلب در موقعیت‌هایی استفاده می‌شود که نیاز به ایجاد نسخه‌های مشابه از یک شیء با تنظیمات خاص نیاز باشد
+* **هدف**: جلوگیری از ساختن مکرر اشیاء مشابه است
+    * زمانی که ایجاد اشیاء پیچیده هزینه‌بر است
+    * زمانی که نیاز به ایجاد نسخه‌های مشابه با تفاوت‌های جزئی داریم
+    * زمانی که تغییرات زیادی روی شیء انجام نمی‌دهید
+    * زمانی که می‌خواهید تاریخچه از اشیاء ایجاد شده داشته باشید
+* **Shallow Copy(کپی سطحی)**: یک کپی سطحی از شیء اصلی ایجاد می‌شود.
+    * به این معنی که شیء جدید به شیء اصلی اشاره می‌کند (درواقع، به آن ارجاع داده می‌شود) در حالی که مقادیر اولیه (مثل لیست‌ها) به صورت مشترک بین شیء اصلی و کپی استفاده می‌شوند.
+* **Deep Copy**: در این حالت، یک کپی کامل از شیء اصلی و تمام مقادیر داخلی آن ایجاد می‌شود. در این حالت، حتی شیء‌های داخلی (مثل لیست‌ها) نیز به طور کامل کپی می‌شوند و از شیء اصلی جدا می‌شوند.
+
+## 3.1. 🅱️Python
+
+```python
+import copy
+
+
+class Prototype:
+    def __init__(self, name, data):
+        self.name = name
+        self.data = data  # یک لیست به عنوان داده
+
+    def __str__(self):
+        return f"Prototype(Name: {self.name}, Data: {self.data})"
+
+    def clone_shallow(self):  # کپی سطحی (Shallow Copy)
+        return copy.copy(self)
+
+    def clone_deep(self):  # کپی عمیق (Deep Copy)
+        return copy.deepcopy(self)
+
+
+original_prototype = Prototype("Original", [1, 2, 3])
+shallow_copy = original_prototype.clone_shallow()
+deep_copy = original_prototype.clone_deep()
+
+shallow_copy.data[0] = 100  # تغییر اولین عنصر در لیست کپی سطحی
+deep_copy.data[1] = 200  # تغییر دومین عنصر در لیست کپی عمیق
+
+# نمایش نتایج
+print("Original Prototype:", original_prototype)
+print("Shallow Copy:", shallow_copy)
+print("Deep Copy:", deep_copy)
+
+# بررسی حافظه
+print("\nMemory Address of original prototype data:", id(original_prototype.data))
+print("Memory Address of shallow copy data:", id(shallow_copy.data))
+print("Memory Address of deep copy data:", id(deep_copy.data))
+
+# output:
+## -----> Original Prototype: Prototype(Name: Original, Data: [100, 2, 3])
+## -----> Shallow Copy: Prototype(Name: Original, Data: [100, 2, 3])
+## -----> Deep Copy: Prototype(Name: Original, Data: [1, 200, 3])
+## -----> 
+## -----> Memory Address of original prototype data: 140324630499072
+## -----> Memory Address of shallow  copy      data: 140324630499072
+## -----> Memory Address of deep     copy      data: 140324630507968
+
+```
+
+</div>
+
+* DAO(DataAccessObject):  یک Design Pattern است. می‌گوید متدهای ادیت در دیتابیس را از یک کلاس اصلی جدا کرده و یک کلاس همنام با افزونه DAO بسازید و وظیفه واکشی و ثبت اطلاعات پیرامون کلاس اصلی را به آن بسپارید
+
+# 4. 🅰️Creational.FactoryMethod
 
 در این الگوی طراحی مسئولیت انتخاب نوع شیء و چگونگی پیاده‌سازی را به زیرکلاس‌ها واگذار می‌کند، در حالی که کلاس پایه الگوریتم کلی کار را حفظ می‌کند. به عبارتی در کلاس پایه(والد) می‌دانیم که چه کاری قرار است انجام شود ولی چگونگی انجام کار و پیاده‌سازی و اعمال پیچیدگی‌ها در زیرکلاس انجام خواهد شد
 
@@ -273,9 +618,12 @@ public class DBConnection {
     * Calendar: نوع تقویم جلالی یا میلادی یا هجری‌قمری یا عبری یا پهلوی یا غیره باشد(قطعه‌کد زیر که برحسب منطقه خاص می‌تواند Locale بپذیرد)
 * این الگوی طراحی به کد قابلیت گسترش می‌دهد(در مثال تغییر فرمت تصاویر به یکدیگر می‌توانیم به سهولت یک فرمت جدید بیافزاییم)
 * برای کدنویسی در این الگوی طراحی از تایپ هینت‌های پیشرفته(نظیر استفاده از TypeVar و Generic) برای حفظ دقت نوع در سلسله مراتب کلاس استفاده نمایید
-* ❌ استفاده از if-else درون FactoryMethod نشان دهنده این است که طراحی ضعیف است. هر شرط باید به یک زیرکلاس تبدیل شود.
+* استفاده از if-else درون FactoryMethod نشان دهنده این است که طراحی ضعیف است. هر شرط باید به یک زیرکلاس تبدیل شود.
+* ساده‌ترین قانون
+    * اگر نیاز دارید همیشه چند شیء خاص با هم کار کنند، از الگوی طراحی Abstract Factory استفاده کنید.
+    * اگر فقط یک شیء با واریانت‌های مختلف دارید، از الگوی طراحی Factory Method استفاده کنید
 
-## 2.1. 🅱️ PythonExample
+## 4.1. 🅱️ PythonExample
 
 ```python
 from abc import ABC, abstractmethod
@@ -328,7 +676,6 @@ class CatFactory(AnimalFactory):
 # Ussing
 print(DogFactory().create_animal().speak())  # Woof!
 print(CatFactory().create_animal().speak())  # Meow!
-
 
 # ╔════════════╗
 # ║ Example2️⃣️: ║ 
@@ -549,12 +896,10 @@ def main():
 if __name__ == "__main__":
     main()
 
-    
-    
 # ╔════════════╗
 # ║ Example4️⃣️: ║ 
 # ╚════════════╝
-    
+
 from abc import ABC, abstractmethod
 from typing import Final
 
@@ -720,7 +1065,7 @@ if __name__ == "__main__":
     main()
 ```
 
-## 3.2. 🅱️ Example-Java
+## 4.2. 🅱️ Example-Java
 
 ```java
 import java.util.Calendar;
@@ -791,22 +1136,327 @@ public class CalculationFactory {
 }
 ```
 
-# 4. 🅰️Creational.AbstractFactory
+# 5. 🅰️Creational.AbstractFactory
 
-* کارخانه‌ای که خودش کارخانه تولید می‌کند. یعنی Factory والد و Factory فرزند که این به خودی خود دارای پیچیدگی خواهد شد.
+الگوی Abstract Factory یک الگوی طراحی از نوع Creational (سازنده) است که برای ساخت خانواده‌ای از اشیای مرتبط یا وابسته به هم، بدون مشخص کردن کلاس دقیق آن‌ها استفاده می‌شود.به زبان ساده:به‌جای اینکه مستقیماً از کلاس‌ها نمونه بسازیم (new)، یک کارخانه می‌سازیم که خودش اشیای مرتبط را برای ما تولید می‌کند.
+
+* کارخانه‌ای که خودش کارخانه تولید می‌کند. یعنی Factory والد و Factory فرزند
 * کاربرد در سیستم‌های بزرگ و آبجکت‌های سنگین که بخواهند ساخت کلاس فرزند را dynamic کنند.
 * وجود interfaceهای مشترک از 2 گروه الف: به ازای هر Factory ب:به ازای هر کلاس‌هایی که داخل Factory است
 * مثال کلاس Document Builder: برای Parse کردن فایلXML که یک آبجکت Node به‌صورت درختی برمی‌گرداند که می‌توان به تمامی المنت‌هایxml مورد نظر دسترسی پیدا کرد
+* نکات
+    * گروهی از factory ها دارای interface مشترک خواهند بودو با هم استفاده می‌شوند
+    * abstract Factory ‌ها گروهی از Factory ها هستند که همواره برای ساخته شدن آن‌ها باید ابتدا از یک Factory شروع کرد و سپس به abstractFactory رسید.
+    * پیچیدگی در پیاده‌سازی
+    * نیاز به abstraction های زیاد
+    * الگویی مناسب برای framework ها محسوب می‌شود.(Framework نویس‌ها)
 
-## 4.1. 🅱️ Design manual
+## 5.1. 🅱️ PythonExamples
 
-* گروهی از factory ها دارای interface مشترک خواهند بودو با هم استفاده می‌شوند
-* abstract Factory ‌ها گروهی از Factory ها هستند که همواره برای ساخته شدن آن‌ها باید ابتدا از یک Factory شروع کرد و سپس به abstractFactory رسید.
-* پیچیدگی در پیاده‌سازی
-* نیاز به abstraction های زیاد
-* الگویی مناسب برای framework ها محسوب می‌شود.(Framework نویس‌ها)
+مثال اول:
 
-## 4.2. 🅱️ Examples
+```python
+from abc import ABC, abstractmethod
+
+
+# === محصولات انتزاعی (قرارداد خانواده) ===
+class Button(ABC):
+    @abstractmethod
+    def click(self): pass
+
+
+class Checkbox(ABC):
+    @abstractmethod
+    def check(self): pass
+
+
+# === کارخانه انتزاعی (قرارداد ساخت خانواده) ===
+class GUIFactory(ABC):  # همزمان دکمه و چک‌باکس می‌سازد و تضمین می‌کند هر دو از یک خانواده (ویندوز یا مک) باشند
+    @abstractmethod
+    def create_button(self) -> Button: pass
+
+    @abstractmethod
+    def create_checkbox(self) -> Checkbox: pass  # ← تفاوت با Factory Method: چند محصول!
+
+
+# === خانواده ویندوز ===
+class WindowsButton(Button):
+    def click(self): return "کلیک دکمه ویندوزی"
+
+
+class WindowsCheckbox(Checkbox):
+    def check(self): return "تیک چک‌باکس ویندوزی"
+
+
+class WindowsFactory(GUIFactory):
+    def create_button(self): return WindowsButton()
+
+    def create_checkbox(self): return WindowsCheckbox()  # ← همه محصولات یک خانواده
+
+
+# === خانواده مک ===
+class MacFactory(GUIFactory):
+    def create_button(self): return MacButton()  # فرض وجود
+
+    def create_checkbox(self): return MacCheckbox()
+```
+
+مثال دوم: سناریو: دو تم UI داریم (Light/Dark) و هر تم باید Button و Checkbox هم‌ساز خودش را تولید کند
+
+```python
+from __future__ import annotations
+
+from dataclasses import dataclass
+from typing import Protocol
+
+
+# ---------- Abstract Products (Interfaces) ----------
+class Button(Protocol):
+    def render(self) -> str:
+        ...
+
+
+class Checkbox(Protocol):
+    def render(self) -> str:
+        ...
+
+
+# ---------- Concrete Products ----------
+@dataclass(frozen=True)
+class LightButton:
+    def render(self) -> str:
+        return "LightButton"
+
+
+@dataclass(frozen=True)
+class DarkButton:
+    def render(self) -> str:
+        return "DarkButton"
+
+
+@dataclass(frozen=True)
+class LightCheckbox:
+    def render(self) -> str:
+        return "LightCheckbox"
+
+
+@dataclass(frozen=True)
+class DarkCheckbox:
+    def render(self) -> str:
+        return "DarkCheckbox"
+
+
+# ---------- Abstract Factory ----------
+class UIAbstractFactory(Protocol):
+    # یک خانواده محصولات مرتبط را تولید می‌کند
+    def create_button(self) -> Button:
+        ...
+
+    def create_checkbox(self) -> Checkbox:
+        ...
+
+
+# ---------- Concrete Factories ----------
+class LightThemeFactory:
+    def create_button(self) -> Button:
+        return LightButton()
+
+    def create_checkbox(self) -> Checkbox:
+        return LightCheckbox()
+
+
+class DarkThemeFactory:
+    def create_button(self) -> Button:
+        return DarkButton()
+
+    def create_checkbox(self) -> Checkbox:
+        return DarkCheckbox()
+
+
+# ---------- Client ----------
+def build_screen(factory: UIAbstractFactory) -> str:
+    """
+    کلاینت فقط factory انتزاعی را می‌گیرد و محصولات را می‌سازد؛
+    هیچ وابستگی به کلاس‌های concrete ندارد.
+    """
+    btn = factory.create_button()
+    cb = factory.create_checkbox()
+    return f"Screen[{btn.render()} + {cb.render()}]"
+
+
+if __name__ == "__main__":
+    print(build_screen(LightThemeFactory()))
+    print(build_screen(DarkThemeFactory()))
+```
+
+مثال سوم[کاربردی و پیشرفته‌تر]: سیستم نوتیفیکیشن چندکاناله
+
+```python
+from abc import ABC, abstractmethod
+from typing import Final
+
+
+# =============================================================================
+# 📌 بخش ۱: محصولات انتزاعی (قرارداد برای هر کانال)
+# =============================================================================
+class Notifier(ABC):
+    """قرارداد ارسال نوتیفیکیشن"""
+
+    @abstractmethod
+    def send(self, message: str) -> bool:
+        pass
+
+
+class Logger(ABC):
+    """قرارداد لاگ‌گیری رویدادها"""
+
+    @abstractmethod
+    def log(self, event: str) -> None:
+        pass
+
+
+# =============================================================================
+# 📌 بخش ۲: محصولات ملموس — خانواده SMS
+# =============================================================================
+class SMSNotifier(Notifier):
+    def send(self, message: str) -> bool:
+        print(f"📱 ارسال پیامک: {message}")
+        return True  # در عمل: ارتباط با API
+
+
+class SMSLogger(Logger):
+    def log(self, event: str) -> None:
+        print(f"📝 [پیامک] لاگ: {event}")
+
+
+# =============================================================================
+# 📌 بخش ۳: محصولات ملموس — خانواده ایمیل
+# =============================================================================
+class EmailNotifier(Notifier):
+    def send(self, message: str) -> bool:
+        print(f"✉️ ارسال ایمیل: {message}")
+        return True
+
+
+class EmailLogger(Logger):
+    def log(self, event: str) -> None:
+        print(f"📝 [ایمیل] لاگ: {event}")
+
+
+# =============================================================================
+# 📌 بخش ۴: کارخانه انتزاعی (هسته الگو)
+# =============================================================================
+class NotificationFactory(ABC):
+    """
+    کارخانه انتزاعی برای ساخت خانواده کامل نوتیفیکیشن.
+    تضمین می‌کند که Notifier و Logger همیشه از یک خانواده باشند.
+    """
+
+    @abstractmethod
+    def create_notifier(self) -> Notifier:
+        """ساخت کامپوننت ارسال پیام"""
+        pass
+
+    @abstractmethod
+    def create_logger(self) -> Logger:
+        """ساخت کامپوننت لاگ‌گیری"""
+        pass
+
+
+# =============================================================================
+# 📌 بخش ۵: کارخانه‌های ملموس (پیاده‌سازی خانواده‌ها)
+# =============================================================================
+class SMSNotificationFactory(NotificationFactory):
+    """کارخانه خانواده پیامک"""
+
+    def create_notifier(self) -> Notifier:
+        return SMSNotifier()
+
+    def create_logger(self) -> Logger:
+        return SMSLogger()  # ← همیشه با هم استفاده می‌شوند
+
+
+class EmailNotificationFactory(NotificationFactory):
+    """کارخانه خانواده ایمیل"""
+
+    def create_notifier(self) -> Notifier:
+        return EmailNotifier()
+
+    def create_logger(self) -> Logger:
+        return EmailLogger()  # ← همیشه با هم استفاده می‌شوند
+
+
+# =============================================================================
+# 📌 بخش ۶: کلاینت — استفاده صحیح از خانواده‌ها
+# =============================================================================
+def send_notification(factory: NotificationFactory, message: str) -> None:
+    """
+    تابع کلاینت که:
+    - به جزئیات پیاده‌سازی وابسته نیست
+    - از کارخانه برای دریافت کل خانواده استفاده می‌کند
+    - تضمین می‌کند کامپوننت‌ها با هم سازگار باشند
+    """
+    # دریافت کل خانواده از یک کارخانه
+    notifier = factory.create_notifier()
+    logger = factory.create_logger()
+
+    # استفاده هماهنگ از کامپوننت‌های خانواده
+    if notifier.send(message):
+        logger.log(f"پیام '{message}' ارسال شد")
+    else:
+        logger.log(f"خطا در ارسال پیام '{message}'")
+
+
+# =============================================================================
+# 📌 اجرای نمونه
+# =============================================================================
+def main():
+    print("🚀 سیستم نوتیفیکیشن چندکاناله\n")
+
+    # ارسال از طریق خانواده پیامک
+    print("─" * 50)
+    print("ارسال با کانال پیامک:")
+    print("─" * 50)
+    sms_factory = SMSNotificationFactory()
+    send_notification(sms_factory, "کد تأیید: 789012")
+
+    # ارسال از طریق خانواده ایمیل
+    print("\n" + "─" * 50)
+    print("ارسال با کانال ایمیل:")
+    print("─" * 50)
+    email_factory = EmailNotificationFactory()
+    send_notification(email_factory, "سفارش شما ثبت شد")
+
+    # ✨ گسترش آینده:
+    # برای افزودن کانال پوش‌نوتیفیکیشن:
+    # 1. PushNotifier و PushLogger بسازید
+    # 2. PushNotificationFactory از NotificationFactory ارث ببرد
+    # 3. در تابع send_notification هیچ تغییری نیاز نیست!
+
+
+if __name__ == "__main__":
+    main()
+
+# ╔═════════╗
+# ║ OUTPUT: ║ 
+# ╚═════════╝
+
+# 🚀 سیستم نوتیفیکیشن چندکاناله
+# 
+# ──────────────────────────────────────────────────
+# ارسال با کانال پیامک:
+# ──────────────────────────────────────────────────
+# 📱 ارسال پیامک: کد تأیید: 789012
+# 📝 [پیامک] لاگ: پیام 'کد تأیید: 789012' ارسال شد
+# 
+# ──────────────────────────────────────────────────
+# ارسال با کانال ایمیل:
+# ──────────────────────────────────────────────────
+# ✉️ ارسال ایمیل: سفارش شما ثبت شد
+# 📝 [ایمیل] لاگ: پیام 'سفارش شما ثبت شد' ارسال شد
+```
+
+## 5.2. 🅱️ JavaExamples
 
 مثال اول DocumentBuilderFactory:
 
@@ -863,347 +1513,3 @@ public class ImageConverterFactory implements MediaConverterFactory {
 
 که کار آن این است که در حالت‌های موسیقی و ویدئو و عکس بتواند فرمت‌های متفاوت را تبدیل نماید.
 
-# 5. 🅰️Creational.Builder
-
-هنگامی که شرایط زیر برقرار باشد می‌توان از این «الگوی‌طراحی» استفاده نمود
-
-* هنگام  **تولید آبجکت با تعداد پارامتر زیاد**
-* هنگامی‌که ساخت آبجکت Cost زیاد دارد(مثل کوئری دیتابیس مثلا QuerySet در جنگو)
-* هنگامی‌که نمونه‌های قابل تولید از کلاس(باتوجه به مقادیر) می‌تواند رفتار متفاوت داشته باشند
-* **هدف‌ایجاد**: تسهیل مقداردهی پارامترهای زیاد هنگام ساخت کلاس به‌صورت یکجا
-    * فراهم کردن یک رابط برای ساخت شیء پیچیده به‌صورت تدریجی و مرحله‌ای
-* اجزا
-    * **Product**:(محصول) شیء نهایی است که توسط Builder ساخته می‌شود.
-    * **Builder**: یک رابط یا کلاس انتزاعی که مسئول ایجاد و عملیات ساخت بخش‌های مختلف شیء است.
-    * **ConcreteBuilder**: پیاده‌سازی واقعی کلاس Builder است که جزئیات ساخت را انجام می‌دهد(کمک می‌کند تا فرآیند ساخت طبق دستورالعمل‌های مشخص پیش برود)
-    * **Director**: مسئول هدایت فرآیند ساخت است (گاهی اوقات اختیاری است).
-        * وقتی ترتیب توابع مهم باشد و الگوی خاصی مد نظر باشد از این ساختار استفاده می‌کنیم
-        * اگر فرآیند ساخت پیچیده باشد، می‌توانیم از Director استفاده کنیم تا فرآیند ساخت تحت کنترل باشد.
-        * اگر ساده باشد، می‌توانیم از Builder به‌طور مستقیم استفاده کنیم.
-    * **Client**: مسئول درخواست از Builder برای ساخت شیء است.
-* مثال: هنگام ایجاد یک کلاس QueryBuilder برای SQL که نیازمند تعداد پارامترهای زیاد نظیر موارد زیر می‌باشد:
-    * تعداد اجزای Selection
-    * دریافت تک به تک عبارت‌های شرطی که بعنوان where استفاده خواهد شد یا همانWhere clause ها
-    * GroupBy ها
-    * OrderBy ها و …
-* نکات
-    * استفاده از innerclassها دراین الگوی طراحی توصیه می‌شود
-        * پیشنهاد می‌شود کلاس اصلی را به‌صورت innerClass درون کلاس Builder تعریف نمود تا پیچیدگی کاهش یابد
-    * معمولاً اسم Builder را به انتهای کلاس می‌افزایند
-    * متدهایی تحت عناوین مثلاً build یا getResult ایجاد نماییم تا بعنوان ارائه دهنده خروجی نهایی یا آبجکت نهایی عمل نماید
-
-## 5.1. 🅱️ Python
-
-```python
-# ╔═════════╗
-# ║ Product ║
-# ╚═════════╝
-class Computer:
-    def __init__(self, processor, memory, storage, graphics):
-        self.processor = processor
-        self.memory = memory
-        self.storage = storage
-        self.graphics = graphics
-
-    def __str__(self):
-        return f"Computer with {self.processor} CPU, {self.memory}GB RAM, {self.storage}GB Storage, {self.graphics} Graphics."
-
-
-# ╔═════════╗
-# ║ Builder ║ # سازنده
-# ╚═════════╝
-from abc import ABC, abstractmethod
-
-
-class ComputerBuilder(ABC):  # یک رابط است که تمامی متدهایی را که برای ساخت یک کامپیوتر نیاز داریم (مثلاً تنظیم پردازنده، حافظه، ذخیره‌سازی و گرافیک) را تعریف می‌کند.
-
-    @abstractmethod
-    def set_processor(self, processor: str):
-        pass
-
-    @abstractmethod
-    def set_memory(self, memory: int):
-        pass
-
-    @abstractmethod
-    def set_storage(self, storage: int):
-        pass
-
-    @abstractmethod
-    def set_graphics(self, graphics: str):
-        pass
-
-    @abstractmethod
-    def build(self) -> Computer:
-        pass
-
-
-# ╔═════════════════╗
-# ║ ConcreteBuilder ║ # پیاده‌سازی واقعی سازنده
-# ╚═════════════════╝
-class GamingComputerBuilder(ComputerBuilder):
-
-    def __init__(self):
-        self.computer = Computer(None, None, None, None)
-
-    def set_processor(self, processor: str):
-        self.computer.processor = processor
-
-    def set_memory(self, memory: int):
-        self.computer.memory = memory
-
-    def set_storage(self, storage: int):
-        self.computer.storage = storage
-
-    def set_graphics(self, graphics: str):
-        self.computer.graphics = graphics
-
-    def build(self) -> Computer:
-        return self.computer
-
-
-# ╔══════════╗
-# ║ Director ║ # مسئول ساخت
-# ╚══════════╝
-class Director:  # فرآیند ساخت کامپیوترهای خاص را مدیریت می‌کند
-
-    def __init__(self, builder: ComputerBuilder):
-        self.builder = builder
-
-    def construct_gaming_computer(self):
-        self.builder.set_processor("Intel i9")
-        self.builder.set_memory(32)
-        self.builder.set_storage(1024)
-        self.builder.set_graphics("NVIDIA RTX 3080")
-
-    def construct_office_computer(self):
-        self.builder.set_processor("Intel i5")
-        self.builder.set_memory(16)
-        self.builder.set_storage(512)
-        self.builder.set_graphics("Integrated")
-
-
-# ╔════════╗
-# ║ Client ║
-# ╚════════╝
-if __name__ == "__main__":  # استفاده از Director
-
-    gaming_computer_builder = GamingComputerBuilder()
-    director = Director(gaming_computer_builder)
-    director.construct_gaming_computer()
-
-    gaming_computer = gaming_computer_builder.build()
-    print(gaming_computer)
-
-    # استفاده از Director برای ساخت یک کامپیوتر اداری
-    office_computer_builder = GamingComputerBuilder()  # می‌توان از همان کلاس برای ساخت نوع دیگری از کامپیوتر استفاده کرد
-    director = Director(office_computer_builder)
-    director.construct_office_computer()
-
-    office_computer = office_computer_builder.build()
-    print(office_computer)
-
-###### output:
-# Computer with Intel i9 CPU, 32GB RAM, 1024GB Storage, NVIDIA RTX 3080 Graphics.
-# Computer with Intel i5 CPU, 16GB RAM, 512GB Storage, Integrated Graphics.
-```
-
-## 5.2. 🅱️ Java
-
-* در جاوا کلاس‌هایی از جمله DocumentBuilder وStringBuilder و Locale.Builder یا JsonBuilder وجود دارد که در آن از این شیوه استفاده شده است
-
-### 5.2.1. ✅️ StringBuilder
-
-کلاس StringBuilder (موجود در Java.lang) قابلیت افزودن دیتا به یک رشته را به گونه‌ای دارد که بعنوان رشته اصلی عمل کرده و هر بار دیتای جدید مستقیماً با آن اضافه می‌شود و نیازبه ساخت شیء string جدید بعنوان subString نیست تا آن شیء را به رشته اصلی(شیء اصلی) append نماییم
-
-```java
-StringBuilder builder = new StringBuilder();
-string result = builder.append("Hello, I am").append(33).append("years old").toString();
-```
-
-### 5.2.2. ✅️ H264PropertiesBuilder
-
-#### 5.2.2.1. ❇️ without Builder
-
-فرض کنید کلاس decoder فرمت H262 را بخواهیم پیاده‌سازی نماییم آنگاه بدلیل وجود پارامترهای زیاد، در حالت بدون Builder به شکل زیر می‌باشد(۱-کلاس سازنده با پارامتر زیاد ۲-getter برای هرکدام ۳-setter برای هرکدام)
-
-```java
-public class H263Properties{
-    int keyInt;
-    int minKeyInt;
-    int sceneCut;
-    int bFrames
-    int bAdabt
-    int qp
-    int bitrate
-    boolean bFrameBias
-    int crf
-    int qpstep
-    int pbRatio
-    int chromaOffset
-    float rateTol
-    byte pass
-    boolean state
-    int direct
-    int meRange
-    boolean weightB
-    boolean noFastPSkip
-
-    #تابع سازنده
-    public  H263Properties(int keyInt, int minKeyInt, int sceneCut,int bFrames,int bAdabt, int qp, int bitrate, boolean bFrameBias, int crf, int qpstep, int pbRatio, int chromaOffset, float rateTol, byte pass, boolean state, int direct, int meRange, boolean weightB, boolean noFastPSkip){}
-
-    #ایجاد کلاس سِتِر برای همه پارامترهای این کلاس
-    public void setMinKeyInt(int minKeyInt){
-        this.minKeyInt = minKeyInt;
-        return this.minKeyInt = minKeyInt;
-    }
-
-    #ایجاد کلاس گِتِر برای همه پارامترهای این کلاس
-    public int getMinKeyInt(){
-        return minKeyInt;
-    }
-    
-}
-```
-
-کلاس main شیوه بدون Builder به شکل زیر خواهد شد
-
-```java
-public class Main {
-    public static void main(String[] args){
-        H263Properties  decoder – new  H263Properties();
-        decoder.setbAdapt(12) ;
-        decoder.setbweghtB(yes) ;
-        decoder.setrateTol (1.5) ;
-        …
-        تعداد بسیار زیاد باید تنظیم نماید
-    }
-}
-```
-
-#### 5.2.2.2. ❇️ with Builder
-
-باید کلاسH264Properties بدون Builder را همانند بخش قبل داشته باشیم و همراه آن کلاس در وضعیت Builder نیز به شکل زیر تولید شود
-
-```java
-public class H263Properties‌Builder{
-    int keyInt;
-    int minKeyInt;
-    int sceneCut;
-    int bFrames
-    int bAdabt
-    int qp
-    int bitrate
-    boolean bFrameBias
-    int crf
-    int qpstep
-    int pbRatio
-    int chromaOffset
-    float rateTol
-    byte pass
-    boolean state
-    int direct
-    int meRange
-    boolean weightB
-    boolean noFastPSkip
-
-    #نوشت تابع مشابه سِتِر اما بدون کلمه سِتِر برای همه پارامترهای این کلاس به شکل زیر
-    public  H263PropertiesBuilder MinKeyInt(int minKeyInt){ #نکته: کلمه سِت از نام تابع حذف شده است
-        this.minKeyInt = minKeyInt;
-        return this;
-    }
-    
-    public H263Properties build() {
-        H263Properties decoder = new  H263Properties();
-        decoder.setbAdapt(badapt) ;
-        decoder.setbweghtB(weightB) ;
-        decoder.setrateTol (rateTol) ;
-        ...
-        //یک بار برای تک تک پارامترها مقدارها را قرار می‌دهیم
-    }
-}
-```
-
-کلاس main شیوه Builder به شکل زیر خواهد شد
-
-```java
-public class Main {
-    public static void main(String[] args){
-        H263Properties decoderBuilder = new  H263PropertiesBuilder();
-        H263Properties decoder = builderDecoder.frame(12).KeyInt(17).rateTol(1.5).minKeyInt(2).sceneCut(9)……….build() ;
-    }
-}
-```
-
-* **نکته‌ها**
-    * در کلاس Builder مقدار بازگشتی تابع Setter هرکدام از پارامترها باید به‌جای نوع(مثلا int یا string یا …) به نام کلاس تغییر پیدا کند
-    * در کلاس Builder کلمه set از نام تابع بازگشتی حذف می‌شود
-    * در کلاس Builder توابع getter همانند وضعیت بدون Builder خواهند بود
-    * در کلاس Builder تابع build را ایجاد نماییم که قرار است خروجی نهایی رو برگرداند
-
-# 6. 🅰️Creational.Prototype
-
-این امکان را می‌دهد که یک شیء جدید را از طریق کپی کردن شیء موجود و اعمال تغییرات بر روی نسخه‌های جدید، ایجاد کنید
-
-* اغلب در موقعیت‌هایی استفاده می‌شود که نیاز به ایجاد نسخه‌های مشابه از یک شیء با تنظیمات خاص نیاز باشد
-* **هدف**: جلوگیری از ساختن مکرر اشیاء مشابه است
-    * زمانی که ایجاد اشیاء پیچیده هزینه‌بر است
-    * زمانی که نیاز به ایجاد نسخه‌های مشابه با تفاوت‌های جزئی داریم
-    * زمانی که تغییرات زیادی روی شیء انجام نمی‌دهید
-    * زمانی که می‌خواهید تاریخچه از اشیاء ایجاد شده داشته باشید
-* **Shallow Copy(کپی سطحی)**: یک کپی سطحی از شیء اصلی ایجاد می‌شود.
-    * به این معنی که شیء جدید به شیء اصلی اشاره می‌کند (درواقع، به آن ارجاع داده می‌شود) در حالی که مقادیر اولیه (مثل لیست‌ها) به صورت مشترک بین شیء اصلی و کپی استفاده می‌شوند.
-* **Deep Copy**: در این حالت، یک کپی کامل از شیء اصلی و تمام مقادیر داخلی آن ایجاد می‌شود. در این حالت، حتی شیء‌های داخلی (مثل لیست‌ها) نیز به طور کامل کپی می‌شوند و از شیء اصلی جدا می‌شوند.
-
-## 6.1. 🅱️Python
-
-```python
-import copy
-
-
-class Prototype:
-    def __init__(self, name, data):
-        self.name = name
-        self.data = data  # یک لیست به عنوان داده
-
-    def __str__(self):
-        return f"Prototype(Name: {self.name}, Data: {self.data})"
-
-    def clone_shallow(self):  # کپی سطحی (Shallow Copy)
-        return copy.copy(self)
-
-    def clone_deep(self):  # کپی عمیق (Deep Copy)
-        return copy.deepcopy(self)
-
-
-original_prototype = Prototype("Original", [1, 2, 3])
-shallow_copy = original_prototype.clone_shallow()
-deep_copy = original_prototype.clone_deep()
-
-shallow_copy.data[0] = 100  # تغییر اولین عنصر در لیست کپی سطحی
-deep_copy.data[1] = 200  # تغییر دومین عنصر در لیست کپی عمیق
-
-# نمایش نتایج
-print("Original Prototype:", original_prototype)
-print("Shallow Copy:", shallow_copy)
-print("Deep Copy:", deep_copy)
-
-# بررسی حافظه
-print("\nMemory Address of original prototype data:", id(original_prototype.data))
-print("Memory Address of shallow copy data:", id(shallow_copy.data))
-print("Memory Address of deep copy data:", id(deep_copy.data))
-
-# output:
-## -----> Original Prototype: Prototype(Name: Original, Data: [100, 2, 3])
-## -----> Shallow Copy: Prototype(Name: Original, Data: [100, 2, 3])
-## -----> Deep Copy: Prototype(Name: Original, Data: [1, 200, 3])
-## -----> 
-## -----> Memory Address of original prototype data: 140324630499072
-## -----> Memory Address of shallow  copy      data: 140324630499072
-## -----> Memory Address of deep     copy      data: 140324630507968
-
-```
-
-</div>
-
-* DAO(DataAccessObject):  یک Design Pattern است. می‌گوید متدهای ادیت در دیتابیس را از یک کلاس اصلی جدا کرده و یک کلاس همنام با افزونه DAO بسازید و وظیفه واکشی و ثبت اطلاعات پیرامون کلاس اصلی را به آن بسپارید
