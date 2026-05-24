@@ -1,4 +1,4 @@
-<div dir="rtl">
+from numpy.ma.extras import column_stack<div dir="rtl">
 
 # 1. 🅰️ PreDefine modules
 
@@ -1231,6 +1231,7 @@ df.columns
 
 ```python
 import matplotlib.pyplot as plt  # برای کارهای ظراحی و گرافیکی
+import pandas as pd
 
 # ╔══════════╗
 # ║ LinePlot ║
@@ -1298,8 +1299,15 @@ plt.ylabel("Usage (%)")
 plt.title("Bar usages Figure")
 plt.show()
 
-
-
+# ╔══════════╗
+# ║ FromFile ║
+# ╚══════════╝
+data = pd.read_csv('FullFileName.csv')
+df = pd.DataFrame(data, column=['CSV_Sotoon1', 'CSV_Sotoon2'])
+Sotoon1 = df["CSV_Sotoon1"]
+Sotoon2 = df["CSV_Sotoon2"]
+plt.scatter(Sotoon1, Sotoon2)
+plt.show()
 ```
 
 # 4. 🅰️ Environment
