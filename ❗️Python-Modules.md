@@ -1146,16 +1146,19 @@ print(np.max(arr, axis=1))  # [3 6 9] → بیشینه هر سطر
 ![pandasDataStructure](/home/Files/01-Programming/GitHub/Codes/_srcFiles/Images/pandasDataStructure.jpg "pandasDataStructure")
 
 ```python
-import pandas ad pd
+import pandas
+
+ad
+pd
 data = pd.read_csv('FileName.csv')
 data.describe()
 data["Age"].max()
 data.head()
 data.tail()
-df = pd.DataFrame(data,columns = ['Age' , 'Date'])
-print (df["Age"] > 5)
+df = pd.DataFrame(data, columns=['Age', 'Date'])
+print(df["Age"] > 5)
 df.shape()
-df.iloc[:3,1:2]
+df.iloc[:3, 1:2]
 df.iloc[:3]
 df.index
 df.columns
@@ -1217,16 +1220,87 @@ df.columns
 | **تولید**      | کنترل کیفیت با نمودارهای کنترل           | `rolling().mean()`, `std()`, `quantile()`   |
 | **بازاریابی**  | تحلیل بازده کمپین‌های تبلیغاتی           | `groupby().agg()`, `corr()`, `pct_change()` |
 
-
-
-
 ## 3.4. 🅱️Matplotlib
 
+یک کتابخانه متن‌باز و استاندارد با وظیفه Data Visualization یا تصویرسازی داده‌های عددی به نمایش‌های قابل درک را برعهده دارد. به صورت خلاصه تحقق جمله «هز آنالیز نیاز به تصویرسازی دارد»
+
+* انواع نمودارهای دو‌بعدی و سه‌بعدی (خطی، پراکندگی، میله‌ای، دایره‌ای، هیستوگرام، باکس‌پلات، هیت‌مپ و...) ایجاد می‌کند.
+* چندین نمودار را در یک صفحه (Subplots) کنار هم قرار دهند.
+* برچسب‌ها، عنوان‌ها، راهنما (Legend)، گریدها و مقیاس‌ها را شخصی‌سازی کنند.
+* خروجی‌ها را با کیفیت بالا در فرمت‌های متنوع (PNG، PDF، SVG، EPS و...) ذخیره یا به‌صورت تعاملی نمایش دهند.
+
 ```python
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt  # برای کارهای ظراحی و گرافیکی
+
+# ╔══════════╗
+# ║ LinePlot ║
+# ╚══════════╝
+x1, x2 = [0, 2, 4, 6], [1, 3, 5, 7]
+y1, y2 = [20, 22, 24, 26], [26, 24, 22, 20]
+ax1 = plt.plot(x1, y1, color='blue')
+ax2 = plt.plot(x2, y2, color='green')
+plt.legend(['Figure1', 'Figure2'], loc='best')  # راهنمای خطوط که هر خط مربوط به چه پارامتری است
+plt.title("نمودار رشد", fontsize=20)
+plt.xlabel("محور افقی", fontsize=10)  # لیبل نمودار عمودی
+plt.ylabel("محور عمودی", fontsize=10)  # لیبل نمودار افقی
+plt.grid()  # شبکه‌ای نشون دادن نمودار که مربع مربع داخل فضای خالی نمودار نمایش داده شود
+
+plt.savefig('/tmp/01.jpg')  # ذخیره نمودار در مسیر خاص و حتما باید قبل از نمایش باشد و گرنه ذخیره نمیکند
+plt.show()
+
+# ╔═════════════╗
+# ║ ScatterPlot ║
+# ╚═════════════╝
+
+X3 = [30, 32, 33, 28.5, 35, 29, 29]
+Y3 = [100, 115, 115, 75, 125, 79, 89]
+plt.scatter(X3, Y3)
+plt.title("X-Y")
+plt.xlabel("X")
+plt.ylabel("Y")
+plt.show()
+
+# ╔═══════════╗
+# ║ Histogram ║
+# ╚═══════════╝
+data = [12, 15, 14, 10, 18, 13, 16, 14, 12, 15, 17, 19, 14, 13, 11, 16, 15, 14, 13, 12]
+
+# 📊 رسم هیستوگرام: توزیع فراوانی داده‌ها
+plt.hist(data, color='blue', edgecolor='black',  # رنگ حاشیه ستون‌ها
+         bins=60,  # تعداد دسته‌ها (ستون‌های نمودار)
+         alpha=0.9)  # شفافیت (0=نامرئی، 1=کاملاً مات)
+plt.title(" توزیع نمرات دانشجویان")  # عنوان بالای نمودار
+plt.xlabel("نمره")  # برچسب محور افقی (X)
+plt.ylabel("تعداد دانشجو")  # برچسب محور عمودی (Y)
+
+# نمایش خطوط شبکه برای خوانایی بهتر
+plt.grid(axis='y', linestyle='--', alpha=0.5)  # گرید فقط روی محور Y
+plt.show()  # نمایش نهایی نمودار (ضروری برای باز شدن پنجره)
+
+# ╔═════════╗
+# ║ boxPlot ║ # برای تحلیل مقادی پراکندگی و فراوانی در یک نمودار
+# ╚═════════╝
+values = [1, 2, 5, 6, 6, 7, 7]
+plt.boxplot(values)
+plt.yticks(range(1, 9))
+plt.ylabel("Values")
+plt.grid()
+plt.show()
+
+# ╔═════╗
+# ║ bar ║
+# ╚═════╝
+lables, usage = ["Ali", "Behrooz", "Reza", "Hassan", "Hossent"], [100, 50, 75.6, 60, 55]
+y_positions = range(len(lables))
+plt.bar(y_positions, usage)
+plt.xticks(y_positions, lables)
+plt.ylabel("Usage (%)")
+plt.title("Bar usages Figure")
+plt.show()
+
+
 
 ```
-
 
 # 4. 🅰️ Environment
 
