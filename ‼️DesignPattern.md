@@ -201,7 +201,8 @@ if (firstInstance == anotherInstance){
 
 ### 1.3.1. ✅️LazySingletonClass
 
-طبق قاعده جاوا(در بحث Class Loading ) اولین Touch از یک کلاس(حتی Import در Junit ) سبب Instantiate از تمامی مقادیر استاتیک آن کلاس می‌شود. پس کلاس سینگلتون حتماً دارای یک نمونه آبجکت می‌باشد.حالا اگر برنامه به‌صورت سینگلتون باشد و حتی یک ارتباط با دیتابیس نداشته باشد آنگاه اتقلاف منابع خواهیم داشت(این مثال در برخی منابع ممکن است دارای Cost زیاد باشد) پس می‌توان قطعه کد بالا به‌صورت Lazy نگارش شود یعنی هرگاه به شیء نیاز شد آنگاه آبجکت تولید گردد
+طبق قاعده جاوا(در بحث Class Loading ) اولین Touch از یک کلاس(حتی Import در Junit ) سبب Instantiate از تمامی مقادیر استاتیک آن کلاس می‌شود. پس کلاس سینگلتون حتماً دارای یک نمونه آبجکت می‌باشد.حالا اگر برنامه به‌صورت سینگلتون باشد و حتی یک ارتباط با دیتابیس نداشته باشد آنگاه اتقلاف منابع خواهیم داشت(این مثال در برخی منابع ممکن است دارای Cost زیاد
+باشد) پس می‌توان قطعه کد بالا به‌صورت Lazy نگارش شود یعنی هرگاه به شیء نیاز شد آنگاه آبجکت تولید گردد
 
 ```java
 public class DBConnection {
@@ -1515,7 +1516,8 @@ public class ImageConverterFactory implements MediaConverterFactory {
 
 # 6. 🅰️ Behavioral.Command
 
-الگویی است که یک «دستور یا درخواست یا عملیات» را به‌جای اینکه مستقیم و فوری اجرا کند ابتدا آن را بعنوان یک آبجکت مستقل درنظر می‌گیرد. آبجکتی که تمام اطلاعات لازم برای انجام دستور نظیر گیرندهٔ عملیات، پارامترها، و … را در خودش نگه می‌دارد نتیجه این است که فرستندهٔ درخواست(Invoker) از اجراکنندهٔ واقعی(Receiver) جدا می‌شود و در این خلال می‌توان علمیات متفاوت نظیر صف‌کردن، ذخیره‌کردن، لاگ‌گرفتن، اجرای با تأخیر، و Undo یا Redo را نیز داشته باشیم و هندل نماییم
+الگویی است که یک «دستور یا درخواست یا عملیات» را به‌جای اینکه مستقیم و فوری اجرا کند ابتدا آن را بعنوان یک آبجکت مستقل درنظر می‌گیرد. آبجکتی که تمام اطلاعات لازم برای انجام دستور نظیر گیرندهٔ عملیات، پارامترها، و … را در خودش نگه می‌دارد نتیجه این است که فرستندهٔ درخواست(Invoker) از اجراکنندهٔ واقعی(Receiver) جدا می‌شود و در این خلال می‌توان علمیات
+متفاوت نظیر صف‌کردن، ذخیره‌کردن، لاگ‌گرفتن، اجرای با تأخیر، و Undo یا Redo را نیز داشته باشیم و هندل نماییم
 
 به زبان ساده: به‌جای اینکه “کلیک روی دکمه” مستقیم برود و “کد روشن‌کردن چراغ” را صدا بزند، یک آبجکت Command می‌سازید که می‌گوید «روشن‌کردن چراغ با این پارامترها»، بعد دکمه فقط execute() را صدا می‌زند.
 
@@ -1553,7 +1555,7 @@ public class ImageConverterFactory implements MediaConverterFactory {
     * Observer/Event: الگوی طراحی آبزرو برای «خبر کردن چند شنونده» است؛ کامند برای «نمایندگی یک عمل».
     * ChainOfResponsibility: درخواست در یک زنجیره پاس می‌شود تا یکی هندل کند؛ در کامند، درخواست از قبل به شکل آبجکت فرمان ساخته شده و فراخوانی کننده آن را اجرا می‌کند.
 
-## 🅱️ Examples
+## 6.1. 🅱️ Examples
 
 مثال 1️⃣️:
 
@@ -1571,6 +1573,7 @@ class Device(ABC):
     def turn_off(self, *args, **kwargs):
         raise NotImplementedError
 
+
 # -------------------- devices --------------------
 class TV(Device):
     def turn_on(self, *args, **kwargs):
@@ -1579,12 +1582,14 @@ class TV(Device):
     def turn_off(self, *args, **kwargs):
         print('TV is off')
 
+
 class DVDPlayer(Device):
     def turn_on(self, *args, **kwargs):
         print('DVD Player is on')
 
     def turn_off(self, *args, **kwargs):
         print('DVD Player is off')
+
 
 # -------------------- Command Interface --------------------
 class RemoteControlCommand(ABC):
@@ -1601,12 +1606,14 @@ class TurnOnCommand(RemoteControlCommand):
     def execute(self):
         self.device.turn_on()
 
+
 class TurnOffCommand(RemoteControlCommand):
     def __init__(self, device: Device):
         self.device = device
 
     def execute(self):
         self.device.turn_off()
+
 
 # -------------------- Invoker --------------------
 class RemoteControl:
@@ -1621,6 +1628,7 @@ class RemoteControl:
             self.commands[command_name].execute()
         else:
             raise KeyError(f'Command {command_name} does not exist')
+
 
 # -------------------- client --------------------
 if __name__ == '__main__':
@@ -2012,3 +2020,590 @@ if __name__ == "__main__":
     * بعضی عملیات‌ها undo واقعی ندارند (مثل ایمیل). اینجا مفهوم عملیات جبرانی مطرح می‌شود.
     * این سبک طراحی پایهٔ خیلی از سیستم‌های workflow، orchestration و حتی sagas (در مقیاس بزرگ‌تر) است.
 
+# 7. 🅰️ Behavioral.Mediator(ارتباط همه کامپوننت‌ها فقط ازطریق وایط)
+
+```text
+  ┌─────────┐        ┌─────────┐         ┌─────────┐
+  │  شیء A  │         │  شیء B  │        │  شیء C  │
+  └────┬────┘        └────┬────┘         └────┬────┘
+       │                  │                   │
+       │همگان تنها با واسط(میانجی) حرف می‌زنند │
+       │                  │                   │
+       ▼                  ▼                   ▼
+  ┌────────────────────────────────────────────────┐
+  │              Mediator (میانجی)                 │
+  │   می‌داند چه زمان  باید به چه شیء پیام بدهد     │
+  └────────────────────────────────────────────────┘
+```
+
+* این الگوی طراحی تحت عنوان میانجی شناخته می‌شود.
+* ارتباطات پیچیده و درهم‌تنیده بین اشیاء را متمرکز می‌کند. به جای اینکه اشیاء مستقیماً یکدیگر را بشناسند و صدا بزنند، همه از طریق یک شیء میانجی (Mediator) با هم ارتباط می‌گیرند
+* مزایا
+    * کاهش وابستگی: کامپوننت‌ها همدیگر را نمی‌شناسند
+    * تغییر آسان: افزودن کامپوننت جدید = تغییر فقط میانجی
+    * تست‌پذیری: هر کامپوننت جداگانه تست می‌شود
+    * خوانایی: منطق ارتباط در یک جا متمرکز است
+* ️ معایب
+    * میانجی بزرگ: اگر مراقب نباشید، میانجی تبدیل به یک «خدای همه‌کاره» (God Object) می‌شود
+    * اگر میانجی خراب شود، کل سیستم از کار می‌افتد
+    * پیچیدگی پنهان: فهم جریان برنامه سخت‌تر می‌شود چون همه‌چیز از یک نقطه رد می‌شود
+
+## 7.1. 🅱️ Examples1
+
+چت‌روم به عنوان Mediator عمل می‌کند. هر کاربر فقط پیامش را به چت‌روم می‌دهد و چت‌روم آن را به بقیه می‌رساند.
+
+```python
+from __future__ import annotations
+from abc import ABC, abstractmethod
+from typing import List
+
+
+class ChatMediator(ABC):
+    """رابط انتزاعی میانجی برای چت‌روم.
+    هر میانجی یا mediator باید بتواند پیام یک فرستنده را به بقیه برساند."""
+
+    @abstractmethod
+    def send_message(self, message: str, sender: "User") -> None:
+        """ارسال پیام از طرف یک کاربر به بقیه کاربران.
+
+        Args:
+            message: متن پیام.
+            sender: کاربری که پیام را فرستاده (تا به خودش برنگردد).
+        """
+        pass
+
+
+class ChatRoom(ChatMediator):
+    """چت‌روم به عنوان میانجی مرکزی.
+    تمام پیام‌ها از اینجا عبور می‌کنند.
+    هیچ کاربری مستقیماً با کاربر دیگر ارتباط ندارد."""
+
+    def __init__(self) -> None:
+        self._users: List[User] = []
+
+    def add_user(self, user: "User") -> None:
+        """افزودن کاربر به چت‌روم.
+
+        Args:
+            user: کاربری که وارد چت‌روم می‌شود.
+        """
+        self._users.append(user)
+
+    def send_message(self, message: str, sender: "User") -> None:
+        """ارسال پیام به همه کاربران به جز فرستنده.
+
+        Args:
+            message: متن پیام.
+            sender: فرستنده پیام (خودش پیام را دریافت نمی‌کند).
+        """
+        for user in self._users:
+            if user is not sender:
+                user.receive(message)
+
+
+class User:
+    """کاربر چت.
+    هر کاربر فقط یک میانجی (چت‌روم) را می‌شناسد و هیچ اطلاعی از بقیه کاربران ندارد.
+    """
+
+    def __init__(self, name: str, mediator: ChatMediator) -> None:
+        """
+        Args:
+            name: نام کاربر.
+            mediator: چت‌رومی که کاربر در آن عضو است.
+        """
+        self.name = name
+        self._mediator = mediator
+
+    def send(self, message: str) -> None:
+        """ارسال پیام از طریق میانجی.
+
+        Args:
+            message: متن پیام ارسالی.
+        """
+        print(f"[{self.name}] ارسال: {message}")
+        self._mediator.send_message(message, self)
+
+    def receive(self, message: str) -> None:
+        """دریافت پیام از میانجی.
+        Args:
+            message: متن پیام دریافتی.
+        """
+        print(f"  ← [{self.name}] دریافت: {message}")
+
+
+# ─── استفاده ───
+if __name__ == "__main__":
+    # ۱. ساخت چت‌روم (Mediator)
+    room = ChatRoom()
+
+    # ۲. ساخت کاربران (همه فقط چت‌روم را می‌شناسند)
+    ali = User("علی", room)
+    sara = User("سارا", room)
+    reza = User("رضا", room)
+
+    # ۳. عضویت در چت‌روم
+    room.add_user(ali)
+    room.add_user(sara)
+    room.add_user(reza)
+
+    # ۴. علی پیام می‌فرستد → سارا و رضا دریافت می‌کنند
+    ali.send("سلام، سرور اصلی بالا اومد!")
+    # خروجی:
+    # [علی] ارسال: سلام، سرور اصلی بالا اومد!
+    #   ← [سارا] دریافت: سلام، سرور اصلی بالا اومد!
+    #   ← [رضا] دریافت: سلام، سرور اصلی بالا اومد!
+```
+
+## 7.2. 🅱️ Examples2
+
+پیاده‌سازی مثال بالا به روش دیگر: چت‌روم به عنوان Mediator عمل می‌کند. هر کاربر فقط پیامش را به چت‌روم می‌دهد و چت‌روم آن را به بقیه می‌رساند.
+
+```python
+from abc import ABC, abstractmethod
+from typing import Any, List
+
+
+# region mediator interface
+
+class Mediator(ABC):
+    @abstractmethod
+    def notify(self, message: str, sender: Any):
+        raise NotImplementedError
+
+    @abstractmethod
+    def add_component(self, component: 'Component'):
+        raise NotImplementedError
+
+
+# endregion
+
+# region components
+
+class Component:
+    def __init__(self, mediator: Mediator, name: str) -> None:
+        self.name = name
+        self._mediator = mediator
+        # mediator.add_component(self)
+
+    def __repr__(self):
+        return f'<Component name={self.name} />'
+
+    def __str__(self):
+        return repr(self)
+
+    def send(self, message: str) -> None:
+        self._mediator.notify(message, self)
+
+    def receive(self, message: str) -> None:
+        print(f'{self} received {message}')
+
+
+# endregion
+
+# region concrete mediator
+
+class ConcreteMediator(Mediator):
+    def __init__(self):
+        self._components: List[Component] = []
+
+    def add_component(self, component: Component):
+        if component not in self._components:
+            self._components.append(component)
+
+    def notify(self, message: str, sender: Any):
+        for component in self._components:
+            if component != sender:
+                component.receive(message)
+
+
+# endregion
+
+# region client
+
+if __name__ == '__main__':
+    # mediator object
+    mediator_object = ConcreteMediator()
+
+    # components
+    component_1 = Component(mediator_object, 'Component 1')
+    component_2 = Component(mediator_object, 'Component 2')
+    component_3 = Component(mediator_object, 'Component 3')
+
+    # add components to mediator
+    mediator_object.add_component(component_1)
+    mediator_object.add_component(component_2)
+    mediator_object.add_component(component_3)
+
+    # send message
+    component_1.send(message='this is component 1 message')
+    print('----------')
+    component_3.send(message='this is component 3 message')
+
+# endregion
+
+# python3 main.py 
+# output: <Component name=Component 2 /> received this is component 1 message
+# output: <Component name=Component 3 /> received this is component 1 message
+# output: ----------
+# output: <Component name=Component 1 /> received this is component 3 message
+# output: <Component name=Component 2 /> received this is component 3 message
+
+```
+
+## 7.3. 🅱️ Examples3
+
+سیستم هماهنگی سفارش فروشگاه آنلاین
+چالش: وقتی مشتری سفارشی ثبت می‌کند، چندین ماژول باید به ترتیب فعال شوند:
+
+1. انبار → موجودی را چک کند
+2. پرداخت → پول را کسر کند
+3. ارسال → بسته را بفرستد
+
+بدون Mediator، ماژول «انبار» باید ماژول «پرداخت» را بشناسد و مستقیماً صدا بزند. ماژول «پرداخت» باید «ارسال» را بشناسد. اگر فردا ماژول «فاکتور» اضافه شود، باید کد همه ماژول‌ها را تغییر دهید.
+
+راه‌حل: یک OrderMediator می‌سازیم که تمام هماهنگی‌ها را مدیریت کند.
+
+```python
+from __future__ import annotations
+from abc import ABC, abstractmethod
+
+
+class OrderMediator(ABC):
+    """رابط انتزاعی Mediator یا همان میانجی برای هماهنگی فرآیند سفارش.
+
+    هر کامپوننت (انبار، پرداخت، ارسال) رویدادهای خود را به این میانجی گزارش می‌دهد و میانجی تصمیم می‌گیرد مرحله بعدی چیست.
+    """
+
+    @abstractmethod
+    def notify(self, sender: str, event: str) -> None:
+        """اطلاع‌رسانی یک رویداد و تصمیم‌گیری برای مرحله بعد.
+
+        Args:
+            sender: نام کامپوننت فرستنده (مثل 'inventory').
+            event: نوع رویداد (مثل 'stock_confirmed').
+        """
+        ...
+
+
+class OrderSystem(OrderMediator):
+    """میانجی یا mediator اصلی سیستم سفارش.
+
+    این کلاس تنها جایی است که منطق ترتیب مراحل سفارش نوشته شده. هیچ کامپوننتی از مرحله بعدی خبر ندارد.
+    """
+
+    def __init__(self) -> None:
+        # ساخت کامپوننت‌ها و تزریق Mediator به آن‌ها
+        self.inventory = Inventory(self)
+        self.payment = Payment(self)
+        self.shipping = Shipping(self)
+        self.notification = Notification(self)
+
+    def notify(self, sender: str, event: str) -> None:
+        """مدیریت جریان سفارش بر اساس رویدادها.
+
+        Args:
+            sender: کامپوننتی که رویداد را فرستاده.
+            event: نوع رویداد رخ‌داده.
+        """
+        if event == "order_placed":
+            print("📦 سفارش ثبت شد")
+            print("   → بررسی موجودی انبار...")
+            self.inventory.check_stock()
+
+        elif event == "stock_confirmed":
+            print("✅ موجودی تأیید شد")
+            print("   → شروع فرآیند پرداخت...")
+            self.payment.process()
+
+        elif event == "payment_done":
+            print("💳 پرداخت موفق")
+            print("   → هماهنگی ارسال بسته...")
+            self.shipping.dispatch()
+
+        elif event == "shipped":
+            print("🚚 بسته ارسال شد")
+            print("   → ارسال پیامک به مشتری...")
+            self.notification.send_sms()
+
+        elif event == "sms_sent":
+            print("📱 پیامک ارسال شد")
+            print("🎉 فرآیند سفارش تکمیل!")
+
+
+class Inventory:
+    """ماژول انبار - فقط میانجی را می‌شناسد."""
+
+    def __init__(self, mediator: OrderMediator) -> None:
+        self._mediator = mediator
+
+    def check_stock(self) -> None:
+        """بررسی موجودی و اطلاع‌رسانی به میانجی."""
+        print("      [انبار] کالا موجود است ✓")
+        self._mediator.notify("inventory", "stock_confirmed")
+
+
+class Payment:
+    """ماژول پرداخت - فقط میانجی را می‌شناسد."""
+
+    def __init__(self, mediator: OrderMediator) -> None:
+        self._mediator = mediator
+
+    def process(self) -> None:
+        """پردازش پرداخت و اطلاع‌رسانی به Mediator."""
+        print("      [پرداخت] مبلغ ۲,۵۰۰,۰۰۰ تومان کسر شد ✓")
+        self._mediator.notify("payment", "payment_done")
+
+
+class Shipping:
+    """ماژول ارسال - فقط میانجی را می‌شناسد."""
+
+    def __init__(self, mediator: OrderMediator) -> None:
+        self._mediator = mediator
+
+    def dispatch(self) -> None:
+        """ارسال بسته و اطلاع‌رسانی به Mediator."""
+        print("      [ارسال] کد رهگیری: ۱۲۳۴۵۶۷۸۹ ✓")
+        self._mediator.notify("shipping", "shipped")
+
+
+class Notification:
+    """ماژول اطلاع‌رسانی - فقط میانجی را می‌شناسد."""
+
+    def __init__(self, mediator: OrderMediator) -> None:
+        self._mediator = mediator
+
+    def send_sms(self) -> None:
+        """ارسال پیامک و اطلاع‌رسانی به Mediator."""
+        print("      [پیامک] «سفارش شما ارسال شد» ✓")
+        self._mediator.notify("notification", "sms_sent")
+
+
+# ─── استفاده ───
+if __name__ == "__main__":
+    system = OrderSystem()
+
+    # فقط یک رویداد اولیه → بقیه مراحل خودکار طی می‌شود
+    system.notify("customer", "order_placed")
+
+    # خروجی:
+    # 📦 سفارش ثبت شد
+    #    → بررسی موجودی انبار...
+    #       [انبار] کالا موجود است ✓
+    # ✅ موجودی تأیید شد
+    #    → شروع فرآیند پرداخت...
+    #       [پرداخت] مبلغ ۲,۵۰۰,۰۰۰ تومان کسر شد ✓
+    # 💳 پرداخت موفق
+    #    → هماهنگی ارسال بسته...
+    #       [ارسال] کد رهگیری: ۱۲۳۴۵۶۷۸۹ ✓
+    # 🚚 بسته ارسال شد
+    #    → ارسال پیامک به مشتری...
+    #       [پیامک] «سفارش شما ارسال شد» ✓
+    # 📱 پیامک ارسال شد
+    # 🎉 فرآیند سفارش تکمیل!
+```
+
+## 7.4. 🅱️ Examples4: Event Bus for microservice architecture
+
+چالش: در یک سیستم بزرگ (مثلاً اسنپ یا دیجی‌کالا)، ده‌ها سرویس وجود دارد: سرویس کاربران، سرویس سفارشات، سرویس ایمیل، سرویس تحلیل داده، سرویس پیامک و... .
+
+* اگر هر سرویس بخواهد مستقیماً با بقیه API صدا بزند:
+    * سرویس کاربران باید آدرس ۱۰ سرویس دیگر را بداند
+    * اگر سرویس ایمیل دان شود، سرویس کاربران هم خطا می‌دهد
+    * اضافه کردن سرویس جدید = تغییر کد ۱۰ سرویس قدیمی
+* راه‌حل: یک Event Bus (که در واقع یک Mediator است) می‌سازیم. هر سرویس فقط رویدادهایش را در Event Bus منتشر می‌کند و هر سرویسی که علاقه‌مند است، مشترک آن رویداد می‌شود.
+* نکته کلیدی: اگر فردا سرویس «پوش نوتیفیکیشن» اضافه شود، فقط یک کلاس جدید PushService می‌سازید و آن را در user.registered مشترک می‌کنید. هیچ‌کدام از ۴ سرویس قبلی تغییر نمی‌کنند.
+
+```python
+from __future__ import annotations
+from abc import ABC, abstractmethod
+from typing import Dict, List, Callable, Any
+from collections import defaultdict
+
+
+class EventMediator(ABC):
+    """رابط انتزاعی Mediator برای سیستم Event Bus.
+
+    در معماری میکروسرویس، این رابط تضمین می‌کند که سرویس‌ها
+    مستقیماً با هم وابستگی نداشته باشند.
+    """
+
+    @abstractmethod
+    def subscribe(self, event_type: str, handler: Callable[[Dict[str, Any]], None]) -> None:
+        """ثبت‌نام برای دریافت یک نوع رویداد خاص.
+
+        Args:
+            event_type: نوع رویداد (مثل 'user.registered').
+            handler: تابعی که هنگام وقوع رویداد اجرا می‌شود.
+        """
+        ...
+
+    @abstractmethod
+    def publish(self, event_type: str, data: Dict[str, Any]) -> None:
+        """انتشار یک رویداد و اطلاع‌رسانی به تمام مشترکین.
+
+        Args:
+            event_type: نوع رویداد.
+            data: داده‌های همراه رویداد.
+        """
+        ...
+
+
+class EventBus(EventMediator):
+    """Event Bus به عنوان Mediator مرکزی معماری میکروسرویس.
+
+    این کلاس تنها نقطه ارتباطی بین تمام سرویس‌هاست.
+    هر سرویس فقط این کلاس را می‌شناسد و هیچ اطلاعی
+    از بقیه سرویس‌ها ندارد.
+
+    Attributes:
+        _subscribers: دیکشنری از نوع رویداد به لیست handlerها.
+    """
+
+    def __init__(self) -> None:
+        self._subscribers: Dict[str, List[Callable]] = defaultdict(list)
+
+    def subscribe(self, event_type: str, handler: Callable[[Dict[str, Any]], None]) -> None:
+        """ثبت یک handler برای نوع خاصی از رویداد.
+
+        Args:
+            event_type: نوع رویداد (مثل 'user.registered').
+            handler: تابع واکنش به رویداد.
+        """
+        self._subscribers[event_type].append(handler)
+        print(f"   🔔 مشترک جدید برای [{event_type}] ثبت شد")
+
+    def publish(self, event_type: str, data: Dict[str, Any]) -> None:
+        """انتشار رویداد و اجرای handler تمام مشترکین.
+
+        Args:
+            event_type: نوع رویداد منتشرشده.
+            data: داده‌های رویداد (مثل اطلاعات کاربر).
+        """
+        handlers = self._subscribers.get(event_type, [])
+        if not handlers:
+            print(f"   ⚠️ رویداد [{event_type}] مشترکی ندارد")
+            return
+
+        print(f"\n📡 رویداد [{event_type}] منتشر شد: {data}")
+        for handler in handlers:
+            handler(data)
+
+
+# ─── سرویس‌های مستقل (هر کدام در یک فایل/پکیج جداگانه هستند) ───
+
+
+class UserService:
+    """سرویس مدیریت کاربران.
+
+    مسئولیت: ثبت‌نام کاربر و انتشار رویداد.
+    وابستگی: فقط EventMediator (هیچ سرویس دیگری را نمی‌شناسد).
+    """
+
+    def __init__(self, bus: EventMediator) -> None:
+        self._bus = bus
+
+    def register_user(self, username: str, email: str) -> None:
+        """ثبت‌نام کاربر جدید و اطلاع‌رسانی به سیستم.
+
+        Args:
+            username: نام کاربری.
+            email: ایمیل کاربر.
+        """
+        print(f"\n👤 ثبت‌نام کاربر: {username}")
+        # ذخیره در دیتابیس (شبیه‌سازی)
+        self._bus.publish("user.registered", {
+            "username": username,
+            "email": email,
+        })
+
+
+class EmailService:
+    """سرویس ایمیل.
+
+    مسئولیت: ارسال ایمیل‌های خودکار.
+    وابستگی: فقط EventMediator.
+    """
+
+    def __init__(self, bus: EventMediator) -> None:
+        self._bus = bus
+        # اعلام علاقه‌مندی به رویداد ثبت‌نام
+        self._bus.subscribe("user.registered", self._on_user_registered)
+
+    def _on_user_registered(self, data: Dict[str, Any]) -> None:
+        """واکنش به ثبت‌نام کاربر جدید.
+
+        Args:
+            data: داده‌های رویداد شامل username و email.
+        """
+        print(f"   📧 ایمیل خوش‌آمدگویی → {data['email']}")
+
+
+class AnalyticsService:
+    """سرویس تحلیل داده.
+
+    مسئولیت: به‌روزرسانی داشبورد آماری.
+    وابستگی: فقط EventMediator.
+    """
+
+    def __init__(self, bus: EventMediator) -> None:
+        self._bus = bus
+        self._bus.subscribe("user.registered", self._on_user_registered)
+
+    def _on_user_registered(self, data: Dict[str, Any]) -> None:
+        """ثبت آمار ثبت‌نام جدید.
+
+        Args:
+            data: داده‌های رویداد.
+        """
+        print(f"   📊 آمار: کاربر جدید '{data['username']}' به داشبورد اضافه شد")
+
+
+class SMSService:
+    """سرویس پیامک.
+
+    مسئولیت: ارسال پیامک تأیید.
+    وابستگی: فقط EventMediator.
+    """
+
+    def __init__(self, bus: EventMediator) -> None:
+        self._bus = bus
+        self._bus.subscribe("user.registered", self._on_user_registered)
+
+    def _on_user_registered(self, data: Dict[str, Any]) -> None:
+        """ارسال پیامک تأیید ثبت‌نام.
+
+        Args:
+            data: داده‌های رویداد.
+        """
+        print(f"   📱 پیامک تأیید → کاربر {data['username']}")
+
+
+# ─── استفاده ───
+if __name__ == "__main__":
+    # ۱. ساخت Event Bus (تنها نقطه ارتباطی)
+    bus = EventBus()
+
+    # ۲. راه‌اندازی سرویس‌ها (ترتیب مهم نیست!)
+    # هر سرویس خودش را در رویدادهای مورد علاقه‌اش ثبت می‌کند
+    email_svc = EmailService(bus)
+    analytics_svc = AnalyticsService(bus)
+    sms_svc = SMSService(bus)
+    user_svc = UserService(bus)
+
+    # ۳. ثبت‌نام کاربر
+    # UserService فقط یک رویداد منتشر می‌کند.
+    # بقیه سرویس‌ها خودکار و بدون وابستگی واکنش نشان می‌دهند.
+    user_svc.register_user("ali_dev", "ali@example.com")
+
+    # خروجی:
+    #    🔔 مشترک جدید برای [user.registered] ثبت شد
+    #    🔔 مشترک جدید برای [user.registered] ثبت شد
+    #    🔔 مشترک جدید برای [user.registered] ثبت شد
+    #
+    # 👤 ثبت‌نام کاربر: ali_dev
+    # 📡 رویداد [user.registered] منتشر شد: {'username': 'ali_dev', 'email': 'ali@example.com'}
+    #    📧 ایمیل خوش‌آمدگویی → ali@example.com
+    #    📊 آمار: کاربر جدید 'ali_dev' به داشبورد اضافه شد
+    #    📱 پیامک تأیید → کاربر ali_dev
+```
