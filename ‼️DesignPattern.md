@@ -2607,3 +2607,652 @@ if __name__ == "__main__":
     #    📊 آمار: کاربر جدید 'ali_dev' به داشبورد اضافه شد
     #    📱 پیامک تأیید → کاربر ali_dev
 ```
+
+# 8. 🅰️ Behavioral.Memento(ذخیره و بازیابی حالت داخلی یک شیء)
+
+ذخیره و بازیابی حالت داخلی یک شیء بدون نقض انکپسوله‌سازی
+
+* معمولاً برای پیاده‌سازی `undo` بکار می‌رود
+* سه رکن دارد
+    1. «متغیر» یا `Originator` : شیئی که وضعیت آن تغییر می‌کند و نیاز به ذخیره/بازیابی دارد.
+    2. «لحظه‌ی نشان‌شده» یا`Memento`: شیئی که وضعیت را در خود ذخیره می‌کند
+    3. «نگه‌دارنده لحظه‌های نشان‌شده» یا `Caretaker`:شیئی که مسئول نگهداری از عکس‌هاست، اما حق ندارد محتویات عکس(لحظه‌نشان‌شده) را تغییر دهد(فقط آن را نگه می‌دارد و وقتی خواستید به شما پس می‌دهد)
+* **Encapsulation**: چالش اصلی Memento کپسوله‌سازی (Encapsulation) است. اگر Caretaker یا «نگه‌دارنده لحظه‌های نشان‌شده» به متغیرهای داخلی «لحظه‌ی نشان‌شده» دسترسی داشته باشد، ممکن است آن‌ها را تغییر دهد که این کار اشتباه است. برای حل این مشکل Encapsulation الگوی طراحی Memento معمولاً دو رابط (Interface) دارد:
+    1. رابط پهن (Wide Interface):Originator به تمام فیلدهای خصوصی Memento دسترسی دارد تا بتواند وضعیت را بخواند و بنویسد.
+    2. رابط باریک (Narrow Interface): Caretaker فقط یک اشاره‌گر به Memento دارد و فقط آن را در یک لیست نگه می‌دارد. او نمی‌داند داخل Memento چه خبر است.
+        * (در زبان‌هایی مثل `Java/C++` این کار با کلاس‌های داخلی یا `Friend class`ها انجام می‌شود، اما در پایتون با استفاده از `__` یا `@property` این مفهوم را شبیه‌سازی می‌کنیم).
+* **MemoryManagement**: اگر وضعیت شیء شما بسیار بزرگ باشد (مثلاً یک تصویر بزرگ یا یک دیتابیس درون حافظه)، ذخیره کردن کامل آن در هر Memento باعث نشت حافظه (MemoryLeak) می‌شود. راه‌حل این است که به جای ذخیره کل وضعیت (Full State)، فقط تغییرات (Deltas / Diffs) را ذخیره کنید. یا اینکه از تکنیک Copy-on-Write استفاده کنید.
+* **Lifecycle یا چرخه حیات**
+    * چه کسی Memento را می‌سازد؟ Originator.
+    * چه کسی آن را نابود می‌کند؟ Caretaker (وقتی از تاریخچه حذف می‌شود).
+    * این تقسیم وظایف باعث می‌شود Originator نیازی نداشته باشد تاریخچه را در ذهن خود نگه دارد و Caretaker نیازی به درک منطق Originator داشته باشد.
+
+چه زمانی از آن استفاده کنیم؟
+
+* وقتی نیاز به پیاده‌سازی Undo/Redo دارید.
+* وقتی نیاز به ذخیره Snapshot (نقاط کنترل یا Checkpoints) دارید.
+* وقتی می‌خواهید وضعیت یک شیء را سریالایز (Serialize) کرده و بعداً بازیابی کنید.
+
+## 8.1. 🅱️ Examples1: TextEditor
+
+یک ویرایشگر متن ساده داریم که قابلیت "بازگشت به عقب" (Undo) را دارد.
+
+1. **رابط باریک (Narrow Interface)**: Caretaker فقط این را می‌بیند. هیچ متد دسترسی (Getter) ندارد و فقط یک شیءOpaque (غیرشفاف) است.
+2. **رابط پهن (Wide Interface)**: Originator این را می‌بیند و اجازه دارد تمام متغیرهای داخلی را بخواند و بنویسد.
+
+```python
+class TextEditorMemento:
+    """کلاس Memento که وضعیت ویرایشگر را ذخیره می‌کند."""
+
+    def __init__(self, text: str):
+        self._text = text  # ذخیره وضعیت فعلی متن
+
+    def get_text(self) -> str:
+        """
+        دریافت متن ذخیره شده.
+        
+        Returns:
+            str: متن ذخیره شده در این یادگار.
+        """
+        return self._text
+
+
+class TextEditor:
+    """کلاس Originator که وضعیت آن تغییر می‌کند و می‌تواند وضعیت خود را ذخیره و بازیابی کند."""
+
+    def __init__(self):
+        self._text = ""
+
+    def type_words(self, words: str) -> None:
+        """
+        اضافه کردن کلمات به متن.
+        
+        Args:
+            words (str): کلماتی که باید به متن اضافه شوند.
+        """
+        self._text += words
+
+    def get_text(self) -> str:
+        """
+        دریافت متن فعلی.
+        
+        Returns:
+            str: متن فعلی ویرایشگر.
+        """
+        return self._text
+
+    def create_memento(self) -> TextEditorMemento:
+        """
+        ایجاد یک «لحظه‌ی نشان‌شده» یا همان Memento از وضعیت فعلی.
+        
+        Returns:
+            TextEditorMemento: شیئی که وضعیت فعلی را در خود دارد.
+        """
+        return TextEditorMemento(self._text)  # ایجاد عکس از وضعیت فعلی
+
+    def restore(self, memento: TextEditorMemento) -> None:
+        """
+        بازیابی وضعیت ویرایشگر از روی یک «لحظه‌ی نشان‌شده».
+        
+        Args:
+            memento (TextEditorMemento): «لحظه‌ی نشان‌شده» که وضعیت قبلی را دارد.
+        """
+        self._text = memento.get_text()  # بازگرداندن تخته وایت‌برد به حالت عکس
+
+
+class History:
+    """
+    کلاس Caretaker که مسئول نگهداری از تاریخچه «لحظه‌های نشان‌شده» است
+    """
+
+    def __init__(self):
+        self._mementos = []
+
+    def push(self, memento: TextEditorMemento) -> None:
+        """
+        ذخیره یک «لحظه‌ی نشان‌شده» در تاریخچه.
+        
+        Args:
+            memento (TextEditorMemento): «لحظه‌ی نشان‌شده» که باید ذخیره شود.
+        """
+        # اضافه کردن عکس به لیست عکس‌ها
+        self._mementos.append(memento)
+
+    def pop(self) -> TextEditorMemento:
+        """
+        دریافت آخرین «لحظه‌ی نشان‌شده» ذخیره شده.
+        
+        Returns:
+            TextEditorMemento: آخرین «لحظه‌ی نشان‌شده» ذخیره شده.
+        """
+        return self._mementos.pop()  # برداشتن آخرین عکس از لیست
+
+
+# 9. --- اجرای مثال ---
+editor = TextEditor()
+history = History()
+
+editor.type_words("سلام ")
+history.push(editor.create_memento())  # ذخیره وضعیت
+
+editor.type_words("دنیا ")
+history.push(editor.create_memento())  # ذخیره وضعیت
+
+editor.type_words("!!")
+print(f"متن فعلی: {editor.get_text()}")  # خروجی: سلام دنیا !!
+
+# 10. بازگشت به عقب (Undo)
+editor.restore(history.pop())
+print(f"بعد از اولین Undo: {editor.get_text()}")  # خروجی: سلام دنیا 
+
+editor.restore(history.pop())
+print(f"بعد از دومین Undo: {editor.get_text()}")  # خروجی: سلام 
+```
+
+### 8.1.1. ✅️ شکل دوم از پیاده‌سازی
+
+```python
+from typing import List
+
+
+# Memento
+class Memento:
+    def __init__(self, state: str):
+        self._state = state
+
+    @property
+    def state(self):
+        return self._state
+
+    def __str__(self):
+        return repr(self)
+
+    def __repr__(self):
+        return f'<Memento state="{self._state}" />'
+
+
+# Originator
+class TextEditor:
+    def __init__(self):
+        self._content = ''
+
+    @property
+    def content(self):
+        return self._content
+
+    def write(self, text: str):
+        self._content += text
+
+    def save(self) -> Memento:
+        return Memento(self._content)
+
+    def restore(self, memento: Memento):
+        if memento:
+            self._content = memento.state
+
+
+# CareTaker
+class CareTaker:
+    def __init__(self, editor: TextEditor):
+        self._editor = editor
+        self._history: List[Memento] = []
+        self.save_state()
+
+    def save_state(self):
+        self._history.append(self._editor.save())
+
+    def undo(self):
+        if not self._history:
+            return
+
+        self._editor.restore(self._history.pop())
+
+    def show_history(self):
+        print(self._history)
+
+
+if __name__ == '__main__':
+    editor_1 = TextEditor()
+    caretaker = CareTaker(editor_1)
+
+    editor_1.write('Hello ')
+    caretaker.save_state()
+    caretaker.show_history()
+    print(f'-------- {editor_1.content} --------')
+
+    editor_1.write('World!')
+    # caretaker.save_state()
+    caretaker.show_history()
+    print(f'-------- {editor_1.content} --------')
+
+    caretaker.undo()
+    caretaker.show_history()
+    print(f'-------- {editor_1.content} --------')
+
+    caretaker.undo()
+    caretaker.show_history()
+    print(f'-------- {editor_1.content} --------')
+```
+
+## 8.2. 🅱️ Examples2: ConfigurationManager
+
+```python
+from dataclasses import dataclass
+from typing import Dict, Any, List
+import copy
+
+
+@dataclass()
+class ConfigMemento:
+    settings: Dict[str, Any]
+    version: str
+
+
+class ConfigurationManager:
+    def __init__(self):
+        self._settings = {'theme': 'light',
+                          'font_size': 12,
+                          'auto_save': True,
+                          'language': 'en'}
+        self._version = '1.0.0'
+
+    def update_settings(self, key: str, value: Any):
+        if key not in self._settings:
+            raise KeyError(f'Invalid settings key: {key}')  # ارور هنگامی که یک کلید را بخواهیم تنظیم نماییم که در لیست وجود ندارد
+
+        self._settings[key] = value
+
+    def create_memento(self) -> ConfigMemento:
+        return ConfigMemento(settings=copy.deepcopy(self._settings),
+                             version=self._version)
+
+    def restore_from_memento(self, memento: ConfigMemento):
+        self._settings = copy.deepcopy(memento.settings)
+        self._version = memento.version
+
+    def display_config(self):
+        for key, value in self._settings.items():
+            print(f'{key}: {value}')
+
+        print('=======================================')
+
+
+class ConfigHistory:
+    def __init__(self):
+        self._history: List[ConfigMemento] = []
+        self._redo_stack: List[ConfigMemento] = []
+        self._max_states = 10
+
+    def save_state(self, memento: ConfigMemento) -> None:
+        if len(self._history) >= self._max_states:
+            self._history.pop(0)
+
+        self._history.append(memento)
+        self._redo_stack.clear()
+
+    def undo(self) -> ConfigMemento:
+        if not self._history:
+            raise ValueError('There is no history')
+
+        current_state = self._history.pop()
+        self._redo_stack.append(current_state)
+
+        if not self._history:
+            return current_state
+
+        return self._history[-1]
+
+    def redo(self) -> ConfigMemento:
+        if not self._redo_stack:
+            raise ValueError('There is no item in redo_stack')
+
+        next_state = self._redo_stack.pop()
+        self._history.append(next_state)
+        return next_state
+
+    def get_current_state(self) -> ConfigMemento:
+        if not self._history:
+            raise ValueError('There is no history')
+
+        return self._history[-1]
+
+
+if __name__ == '__main__':
+    config_manager = ConfigurationManager()
+    history = ConfigHistory()
+
+    # initial state
+    history.save_state(config_manager.create_memento())
+    config_manager.display_config()
+
+    # change some configs
+    config_manager.update_settings('theme', 'dark')
+    config_manager.update_settings('font_size', 20)
+
+    history.save_state(config_manager.create_memento())
+    config_manager.display_config()
+
+    # change other settings
+    config_manager.update_settings('auto_save', False)
+    config_manager.update_settings('language', 'fa')
+
+    history.save_state(config_manager.create_memento())
+    config_manager.display_config()
+
+    # first undo operation
+    print('-------- undo last operation ---------')
+    config_manager.restore_from_memento(history.undo())
+    config_manager.display_config()
+
+    # second undo operation
+    print('-------- undo last operation ---------')
+    config_manager.restore_from_memento(history.undo())
+    config_manager.display_config()
+
+    print('-------- redo last operation ---------')
+    config_manager.restore_from_memento(history.redo())
+    config_manager.display_config()
+```
+
+## 8.3. 🅱️ Examples3 : فرم چند مرحله‌ای (Use Case رایج)
+
+هدف این مثال: در این مثال می‌خواهیم نشان دهیم که Caretaker چگونه می‌تواند چندین وضعیت را مدیریت کند و ما بتوانیم نه فقط به مرحله قبل، بلکه به یک مرحله خاص در گذشته برگردیم. این الگو در فرم‌های ثبت‌نام چند مرحله‌ای (Wizard) در وب‌سایت‌ها بسیار رایج است.
+
+```python
+from typing import Dict, Any, List, Optional
+
+
+# --- Memento ---
+class FormStepState:
+    """
+    یادگاری که وضعیت فرم در یک مرحله خاص را نگه می‌دارد.
+    """
+
+    def __init__(self, step_name: str, data: Dict[str, Any]) -> None:
+        self.__step_name = step_name
+        self.__data = data.copy()  # کپی کردن دیکشنری برای جلوگیری از تغییرات مرجع
+
+    def get_step_name(self) -> str:
+        """دریافت نام مرحله"""
+        return self.__step_name
+
+    def get_data(self) -> Dict[str, Any]:
+        """دریافت داده‌های ذخیره شده"""
+        return self.__data
+
+
+# --- Originator ---
+class UserProfile:
+    """
+    پروفایل کاربر که در طول مراحل فرم پر می‌شود.
+    """
+
+    def __init__(self) -> None:
+        self._data: Dict[str, Any] = {}
+
+    def update_data(self, new_data: Dict[str, Any]) -> None:
+        """
+        به روز رسانی داده‌های پروفایل
+        Args:
+            new_data (Dict[str, Any]): داده‌های جدید برای اضافه شدن
+        """
+        self._data.update(new_data)
+        print(f"داده‌های فعلی پروفایل: {self._data}")
+
+    def create_memento(self, step_name: str) -> FormStepState:
+        """
+        ایجاد یادگار از وضعیت فعلی
+        Args:
+            step_name (str): نام مرحله‌ای که در آن هستیم
+        Returns:
+            FormStepState: یادگار ساخته شده
+        """
+        return FormStepState(step_name, self._data)
+
+    def restore_from_memento(self, memento: FormStepState) -> None:
+        """
+        بازگرداندن پروفایل به وضعیت یک یادگار خاص
+        Args:
+            memento (FormStepState): یادگاری که باید بازیابی شود
+        """
+        self._data = memento.get_data().copy()
+        print(f"پروفایل به مرحله '{memento.get_step_name()}' بازگشت. داده‌ها: {self._data}")
+
+
+# --- Caretaker ---
+class FormWizard:
+    """
+    مدیر فرم که تاریخچه مراحل را نگه می‌دارد.
+    """
+
+    def __init__(self) -> None:
+        self._steps_history: List[FormStepState] = []
+
+    def save_step(self, memento: FormStepState) -> None:
+        """
+        ذخیره وضعیت یک مرحله
+        Args:
+            memento (FormStepState): یادگار مرحله
+        """
+        self._steps_history.append(memento)
+
+    def go_back_to_step(self, step_name: str) -> Optional[FormStepState]:
+        """
+        پیدا کردن و بازگرداندن یادگار یک مرحله خاص (برای بازگشت به عقب)
+        Args:
+            step_name (str): نام مرحله‌ای که می‌خواهیم به آن برگردیم
+        Returns:
+            Optional[FormStepState]: یادگار پیدا شده یا None
+        """
+        # جستجو در تاریخچه برای پیدا کردن مرحله مورد نظر
+        for i in range(len(self._steps_history) - 1, -1, -1):
+            if self._steps_history[i].get_step_name() == step_name:
+                # حذف مراحل بعد از این مرحله از تاریخچه
+                self._steps_history = self._steps_history[:i + 1]
+                return self._steps_history[i]
+        return None
+
+
+# --- اجرای مثال ---
+if __name__ == "__main__":
+    profile = UserProfile()
+    wizard = FormWizard()
+
+    # مرحله ۱: اطلاعات شخصی
+    profile.update_data({"name": "Ali", "age": 30})
+    wizard.save_step(profile.create_memento("Personal_Info"))
+
+    # مرحله ۲: آدرس
+    profile.update_data({"city": "Tehran", "zip": "12345"})
+    wizard.save_step(profile.create_memento("Address"))
+
+    # مرحله ۳: پرداخت (کاربر منصرف می‌شود و می‌خواهد به مرحله آدرس برگردد)
+    profile.update_data({"card_number": "1234-5678"})
+
+    print("\n--- کاربر پشیمان شد و می‌خواهد به مرحله Address برگردد ---")
+    # Caretaker وضعیت مرحله Address را پیدا می‌کند
+    target_memento = wizard.go_back_to_step("Address")
+
+    if target_memento:
+        # Originator خود را از روی آن بازیابی می‌کند
+        profile.restore_from_memento(target_memento)
+```
+
+## 8.4. 🅱️ Examples4: Industry Standard
+
+* شرح مثال: مدیریت تراکنش‌های مالی و بانکی
+* هدف این مثال: در صنعت بانکداری و سیستم‌های مالی، مفهوم Rollback حیاتی است. اگر یک تراکنش چند مرحله‌ای (مثلاً کسر از حساب A، اضافه به حساب B، ثبت در لاگ) در مرحله دوم به خطا بخورد، سیستم باید دقیقاً به حالتی برگردد که قبل از شروع تراکنش داشته است.
+* این مثال نشان‌دهنده مدیریت خطا، کپسوله‌سازی دقیق و استفاده از Memento برای تضمین یکپارچگی داده‌ها(Data و Integrity)است.
+* در این مثال، TransactionManager (Caretaker) هیچ درکی از منطق بانکی ندارد؛ فقط اسنپ‌شات‌ها را نگه می‌دارد.
+* در مثال پایین BankAccount (Originator) به شدت از موجودی خود محافظت می‌کند و فقط از طریق متدهای withdraw و deposit تغییر می‌کند.
+* استفاده از __slots__ در AccountSnapshot نشان‌دهنده توجه به مدیریت حافظه در مقیاس بزرگ است (وقتی میلیون‌ها تراکنش در ثانیه ثبت می‌شود، هر بایت حافظه مهم است).
+* این الگو تضمین می‌کند که حتی در صورت بروز فاجعه (Exception)، داده‌های مالی سیستم دچار تناقض (Inconsistency) نمی‌شوند.
+
+```python
+from typing import List
+import random
+
+
+# --- Memento ---
+class AccountSnapshot:
+    """
+    اسنپ‌شات (عکس فوری) از وضعیت حساب بانکی.
+    در اینجا از __slots__ برای بهینه‌سازی حافظه استفاده شده است (یک تکنیک فنی در پایتون).
+    """
+    __slots__ = ['__balance', '__account_id']
+
+    def __init__(self, account_id: str, balance: float) -> None:
+        self.__account_id = account_id
+        self.__balance = balance
+
+    def get_balance(self) -> float:
+        """دریافت موجودی ذخیره شده"""
+        return self.__balance
+
+    def get_account_id(self) -> str:
+        """دریافت شناسه حساب"""
+        return self.__account_id
+
+
+# --- Originator ---
+class BankAccount:
+    """
+    حساب بانکی که وضعیت مالی آن تغییر می‌کند.
+    """
+
+    def __init__(self, account_id: str, initial_balance: float) -> None:
+        self.__account_id = account_id
+        self.__balance = initial_balance
+
+    def deposit(self, amount: float) -> None:
+        """
+        واریز به حساب
+        Args:
+            amount (float): مبلغ واریزی
+        """
+        self.__balance += amount
+
+    def withdraw(self, amount: float) -> None:
+        """
+        برداشت از حساب
+        Args:
+            amount (float): مبلغ برداشتی
+        """
+        self.__balance -= amount
+
+    def get_balance(self) -> float:
+        """دریافت موجودی فعلی"""
+        return self.__balance
+
+    def create_snapshot(self) -> AccountSnapshot:
+        """
+        ایجاد اسنپ‌شات قبل از شروع تراکنش
+        Returns:
+            AccountSnapshot: وضعیت حساب قبل از تغییر
+        """
+        return AccountSnapshot(self.__account_id, self.__balance)
+
+    def rollback(self, snapshot: AccountSnapshot) -> None:
+        """
+        بازگرداندن حساب به وضعیت اسنپ‌شات (Rollback)
+        Args:
+            snapshot (AccountSnapshot): اسنپ‌شاتی که باید بازیابی شود
+        """
+        self.__balance = snapshot.get_balance()
+        print(f"[Rollback] حساب {self.__account_id} به موجودی {self.__balance} بازگشت.")
+
+
+# --- Caretaker ---
+class TransactionManager:
+    """
+    مدیر تراکنش‌ها که مسئولیت شروع، کامیت و رول‌بک تراکنش‌ها را بر عهده دارد.
+    """
+
+    def __init__(self) -> None:
+        # در یک سیستم واقعی، این لیست ممکن است در یک دیتابیس لاگ شود
+        self._active_snapshots: List[AccountSnapshot] = []
+
+    def begin_transaction(self, account: BankAccount) -> AccountSnapshot:
+        """
+        شروع تراکنش و ذخیره وضعیت فعلی
+        Args:
+            account (BankAccount): حسابی که تراکنش روی آن انجام می‌شود
+        Returns:
+            AccountSnapshot: اسنپ‌شات اولیه برای رول‌بک احتمالی
+        """
+        snapshot = account.create_snapshot()
+        self._active_snapshots.append(snapshot)
+        return snapshot
+
+    def commit_transaction(self, snapshot: AccountSnapshot) -> None:
+        """
+        تایید تراکنش و حذف اسنپ‌شات از لیست فعال (چون دیگر نیازی به رول‌بک نیست)
+        Args:
+            snapshot (AccountSnapshot): اسنپ‌شاتی که باید از لیست حذف شود
+        """
+        if snapshot in self._active_snapshots:
+            self._active_snapshots.remove(snapshot)
+            print("[Commit] تراکنش با موفقیت تایید شد. اسنپ‌شات حذف گردید.")
+
+    def rollback_transaction(self, account: BankAccount, snapshot: AccountSnapshot) -> None:
+        """
+        لغو تراکنش و بازگرداندن وضعیت به حالت اول
+        Args:
+            account (BankAccount): حسابی که باید رول‌بک شود
+            snapshot (AccountSnapshot): اسنپ‌شات اولیه
+        """
+        account.rollback(snapshot)
+        if snapshot in self._active_snapshots:
+            self._active_snapshots.remove(snapshot)
+
+
+# --- شبیه‌سازی یک تراکنش انتقال وجه ---
+def transfer_money(from_acc: BankAccount, to_acc: BankAccount, amount: float, manager: TransactionManager) -> None:
+    """
+    شبیه‌سازی انتقال وجه با قابلیت رول‌بک در صورت بروز خطا
+    Args:
+        from_acc (BankAccount): حساب مبدا
+        to_acc (BankAccount): حساب مقصد
+        amount (float): مبلغ انتقال
+        manager (TransactionManager): مدیر تراکنش‌ها
+    """
+    print(f"\n--- شروع انتقال {amount} تومان از حساب {from_acc.get_balance()} به حساب مقصد ---")
+
+    # ۱. شروع تراکنش و گرفتن اسنپ‌شات از حساب مبدا
+    snapshot = manager.begin_transaction(from_acc)
+
+    try:
+        # ۲. برداشت از مبدا
+        from_acc.withdraw(amount)
+
+        # ۳. شبیه‌سازی یک خطای ناگهانی در سیستم (مثلاً قطعی شبکه یا خطای مقصد)
+        if random.choice([True, False]):
+            raise Exception("خطای شبکه در هنگام واریز به حساب مقصد!")
+
+        # ۴. واریز به مقصد
+        to_acc.deposit(amount)
+
+        # ۵. تایید تراکنش
+        manager.commit_transaction(snapshot)
+        print(f"انتقال موفق. موجودی مبدا: {from_acc.get_balance()}")
+
+    except Exception as e:
+        # در صورت بروز خطا، رول‌بک کردن تراکنش
+        print(f"[Error] {e}")
+        manager.rollback_transaction(from_acc, snapshot)
+
+
+# --- اجرای مثال ---
+if __name__ == "__main__":
+    # تنظیم seed برای اینکه در اجراهای مختلف، گاهی خطا رخ دهد و گاهی ندهد
+    random.seed(42)
+
+    account_a = BankAccount("ACC-101", 1000.0)
+    account_b = BankAccount("ACC-202", 500.0)
+    tx_manager = TransactionManager()
+
+    # تلاش برای انتقال وجه (ممکن است به دلیل خطای شبیه‌سازی شده، رول‌بک شود)
+    transfer_money(account_a, account_b, 200.0, tx_manager)
+
+    print(f"\nوضعیت نهایی حساب A: {account_a.get_balance()}")
+```
