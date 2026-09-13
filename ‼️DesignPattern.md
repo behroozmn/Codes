@@ -18,7 +18,7 @@ The Design Patterns are descriptions of communicating objects and class that are
         * **FactoryMethod**: پنهان‌سازی پیچیدگی‌های ساخت شیء برپایه وراثت(البته نیاز به نوشتن کد بیشتری دارد)
         * **AbstractFactory**: همانند FactoryMethod-pattern بگونه Factory والد و Factory فرزند(داینامیک‌سازی کلاس فرزند) پیچیدگی زیاد کلاس‌ها را هنگام ایجاد شیء تسهیل می‌دهد. مناسب FrameWork نویسی زیرا پیچیدگی‌ها مرتفع می‌گردد
         * **Builder**: هنگام تولید آبجکت با تعداد پارامتر زیاد کاربرد دارد تا کارها و اقدام‌ها کاهش یابد
-        * **Prototype**: اشیاء جدید توسط کپی از شیء موجود[بجای ایجاد شیء جدید از طریق توابع سازنده (Constructor)]
+        * **Prototype**: به جای ایجاد شیء جدید از طریق توابع سازنده، اشیاء جدید توسط کپی از شیء موجود ایجاد شوند
     * Structural Patterns: الگوهای طراحی بر مبنای «تنظیم روابط آبجکت‌ها» از نوع **ترکیب‌سازی** آبجکت‌ها با یکدیگر
         * **Adapter**: تبدیل رابط یک کلاس به رابط دیگری که کلاینت انتظار دارد، تا کلاس‌های ناسازگار با هم بتوانند همکاری کنند.
         * **Bridge**: جداسازی یک انتزاع (abstraction) از پیاده‌سازی (implementation) آن، تا هر دو بتوانند مستقل از هم تغییر کنند.
@@ -40,7 +40,7 @@ The Design Patterns are descriptions of communicating objects and class that are
         * **Template** Method: تعریف الگوریتمی در یک متد که برخی مراحل آن به زیرکلاس‌ها واگذار شده است — ساختار کلی ثابت است، ولی جزئیات توسط زیرکلاس‌ها پیاده‌سازی می‌شوند.
         * **Visitor**: افزودن عملکردهای جدید به مجموعه‌ای از کلاس‌ها بدون تغییر کد آن‌ها، با تعریف یک کلاس "بازدیدکننده" که بر روی آن‌ها عمل می‌کند.
 
-# 1. 🅰️Creational.Singleton
+# 1. 🅰️Creational.Singleton(تنها تولید یک شیءبه ازای هربار ساخت شیء جدید)
 
 * **ساخت تنها و تنها یک نمونه از یک شیء**: در این روش هرگاه از یک کلاس یک شیء جدید می‌سازیم آنگاه فقط وفقط یک شیء ساخته‌می‌شود(همان شیء ساخته شده که برای اولین بار از این کلاس ساخته شده است)
 * **تضمین کنترل منابع**: زمانی که محدودیت منابع(مثل:دیتابیس یا پرینتر یا فایل)وجود داشته باشد و بخواهیم تضیمن شود که ارتباط فقط باید از یک کلاس خاص صورت پذیرد
@@ -257,11 +257,11 @@ public class DBConnection {
 
 توضیحات: اگر یک thread داخل محدوده بلوک Synchronized قرار داشته باشد آنگاه اگر thread دوم به این بلاک برسد، صبر می‌کند تا thread اول از این بلاک عبور کند و سپس Thread دوم وارد این بلاک می‌شود.(پردازه برای دومی قفل می‌شود و با خروج اولی قفل آن باز می‌شود)
 
-# 2. 🅰️Creational.Builder
+# 2. 🅰️Creational.Builder(مدیریت هزینه‌ها و منابع‌ها در هنگام تولید آبجکت با تعداد پارامتر زیاد)
 
 هنگامی که شرایط زیر برقرار باشد می‌توان از این «الگوی‌طراحی» استفاده نمود
 
-* هنگام  **تولید آبجکت با تعداد پارامتر زیاد**
+* هنگام **تولید آبجکت با تعداد پارامتر زیاد**
 * هنگامی‌که ساخت آبجکت Cost زیاد دارد(مثل کوئری دیتابیس مثلا QuerySet در جنگو)
 * هنگامی‌که نمونه‌های قابل تولید از کلاس(باتوجه به مقادیر) می‌تواند رفتار متفاوت داشته باشند
 * **هدف‌ایجاد**: تسهیل مقداردهی پارامترهای زیاد هنگام ساخت کلاس به‌صورت یکجا
@@ -281,7 +281,7 @@ public class DBConnection {
     * GroupBy ها
     * OrderBy ها و …
 * نکات
-    * استفاده از innerclassها دراین الگوی طراحی توصیه می‌شود
+    * استفاده از inner class ها دراین الگوی طراحی توصیه می‌شود
         * پیشنهاد می‌شود کلاس اصلی را به‌صورت innerClass درون کلاس Builder تعریف نمود تا پیچیدگی کاهش یابد
     * معمولاً اسم Builder را به انتهای کلاس می‌افزایند
     * متدهایی تحت عناوین مثلاً build یا getResult ایجاد نماییم تا بعنوان ارائه دهنده خروجی نهایی یا آبجکت نهایی عمل نماید
@@ -535,7 +535,7 @@ public class Main {
     * در کلاس Builder توابع getter همانند وضعیت بدون Builder خواهند بود
     * در کلاس Builder تابع build را ایجاد نماییم که قرار است خروجی نهایی رو برگرداند
 
-# 3. 🅰️Creational.Prototype
+# 3. 🅰️Creational.Prototype(به جای ایجاد شیء جدید از طریق توابع سازنده، اشیاء جدید توسط کپی از شیء موجود ایجاد شوند)
 
 این امکان را می‌دهد که یک شیء جدید را از طریق کپی کردن شیء موجود و اعمال تغییرات بر روی نسخه‌های جدید، ایجاد کنید
 
@@ -598,11 +598,9 @@ print("Memory Address of deep copy data:", id(deep_copy.data))
 
 ```
 
-</div>
-
 * DAO(DataAccessObject):  یک Design Pattern است. می‌گوید متدهای ادیت در دیتابیس را از یک کلاس اصلی جدا کرده و یک کلاس همنام با افزونه DAO بسازید و وظیفه واکشی و ثبت اطلاعات پیرامون کلاس اصلی را به آن بسپارید
 
-# 4. 🅰️Creational.FactoryMethod
+# 4. 🅰️Creational.FactoryMethod(پنهان‌سازی پیچیدگی‌های ساخت شیء برپایه وراثت)
 
 در این الگوی طراحی مسئولیت انتخاب نوع شیء و چگونگی پیاده‌سازی را به زیرکلاس‌ها واگذار می‌کند، در حالی که کلاس پایه الگوریتم کلی کار را حفظ می‌کند. به عبارتی در کلاس پایه(والد) می‌دانیم که چه کاری قرار است انجام شود ولی چگونگی انجام کار و پیاده‌سازی و اعمال پیچیدگی‌ها در زیرکلاس انجام خواهد شد
 
@@ -1137,7 +1135,7 @@ public class CalculationFactory {
 }
 ```
 
-# 5. 🅰️Creational.AbstractFactory
+# 5. 🅰️Creational.AbstractFactory(همانند FactoryMethod فقط هنگام پیچیدگی بیشتر)
 
 الگوی Abstract Factory یک الگوی طراحی از نوع Creational (سازنده) است که برای ساخت خانواده‌ای از اشیای مرتبط یا وابسته به هم، بدون مشخص کردن کلاس دقیق آن‌ها استفاده می‌شود.به زبان ساده:به‌جای اینکه مستقیماً از کلاس‌ها نمونه بسازیم (new)، یک کارخانه می‌سازیم که خودش اشیای مرتبط را برای ما تولید می‌کند.
 
@@ -1304,16 +1302,14 @@ class Notifier(ABC):
     """قرارداد ارسال نوتیفیکیشن"""
 
     @abstractmethod
-    def send(self, message: str) -> bool:
-        pass
+    def send(self, message: str) -> bool:   pass
 
 
 class Logger(ABC):
     """قرارداد لاگ‌گیری رویدادها"""
 
     @abstractmethod
-    def log(self, event: str) -> None:
-        pass
+    def log(self, event: str) -> None:    pass
 
 
 # =============================================================================
@@ -1514,7 +1510,7 @@ public class ImageConverterFactory implements MediaConverterFactory {
 
 که کار آن این است که در حالت‌های موسیقی و ویدئو و عکس بتواند فرمت‌های متفاوت را تبدیل نماید.
 
-# 6. 🅰️ Behavioral.Command
+# 6. 🅰️ Behavioral.Command(انجام عملیات تحت آبجکت مستقل)
 
 الگویی است که یک «دستور یا درخواست یا عملیات» را به‌جای اینکه مستقیم و فوری اجرا کند ابتدا آن را بعنوان یک آبجکت مستقل درنظر می‌گیرد. آبجکتی که تمام اطلاعات لازم برای انجام دستور نظیر گیرندهٔ عملیات، پارامترها، و … را در خودش نگه می‌دارد نتیجه این است که فرستندهٔ درخواست(Invoker) از اجراکنندهٔ واقعی(Receiver) جدا می‌شود و در این خلال می‌توان علمیات
 متفاوت نظیر صف‌کردن، ذخیره‌کردن، لاگ‌گرفتن، اجرای با تأخیر، و Undo یا Redo را نیز داشته باشیم و هندل نماییم
@@ -2020,7 +2016,7 @@ if __name__ == "__main__":
     * بعضی عملیات‌ها undo واقعی ندارند (مثل ایمیل). اینجا مفهوم عملیات جبرانی مطرح می‌شود.
     * این سبک طراحی پایهٔ خیلی از سیستم‌های workflow، orchestration و حتی sagas (در مقیاس بزرگ‌تر) است.
 
-# 7. 🅰️ Behavioral.Mediator(ارتباط همه کامپوننت‌ها فقط ازطریق وایط)
+# 7. 🅰️ Behavioral.Mediator(ارتباط همه کامپوننت‌ها فقط ازطریق واسط)
 
 ```text
   ┌─────────┐        ┌─────────┐         ┌─────────┐
@@ -3256,3 +3252,462 @@ if __name__ == "__main__":
 
     print(f"\nوضعیت نهایی حساب A: {account_a.get_balance()}")
 ```
+
+# 9. 🅰️ Behavioral.Observer(هنگام تغییر وضعیت یک شیء، همه وابسته‌ها به‌طور خودکار به‌روز شوند)
+
+پیاده‌سازی مکانیزم Publish-Subscribe (انتشار-اشتراک) توسط تعریف یک رابطه "یک به چند" بین اشیاء به طوری که وقتی یک شیء (به نام Subject یا Publisher) وضعیتش تغییر می‌کند، تمام اشیاء وابسته به آن (به نام Observers یا Subscribers) به صورت خودکار مطلع شده و به‌روزرسانی می‌شوند.
+
+* مثال‌ها
+    * یک سایت فرشگاهی که وقتی تراکنش پرداخت انجام شد به فرآینده‌های مستقل میگوید که هرکدام کارهای خودش را انجام دهد
+        * ارسال پیامک
+        * ارسال ایمیل
+        * کم کردن از انبار
+        * شروع پردازش ارسال مرسوله
+        * کلیه کارهای مورد نیاز
+    * اطلاع‌رسانی به نفرات دنبال کننده یک صفحه برای ارسال یک ویدیو در صفحه آپارات خود
+
+* ارکان اصلی
+    1. Subject(موضوع/ناشر): شیئی که وضعیت آن تغییر می‌کند و لیستی از مشاهده‌گران را نگهداری می‌کند.
+    2. Observer(مشاهده‌گر): شیئی که منتظر تغییرات Subject است و یک متد update دارد تا در صورت تغییر، صدا زده شود.
+* django.core.signals
+    * این الگوی طراحی در جنگو تحت عنوان django.core.signals در هسته خود پیاده‌سازی کرده است.
+    * تابع post_save تمام وابستگی هایبین app ها را دارد و هنگام نیاز سیگنال به دیگران میدهد که کارهای نیاز رو انجام دهد
+* کپسوله‌سازی و Coupling (وابستگی): بزرگترین مزیت Observer، کاهش وابستگی (Loose Coupling) است. Subject فقط می‌داند که Observerها یک رابط مشترک (update) را پیاده‌سازی کرده‌اند. او نمی‌داند آن‌ها چه کلاس‌هایی هستند، چه کار می‌کنند یا چند تا هستند. شما می‌توانید در زمان اجرا (Runtime) Observerها را اضافه یا حذف کنید بدون اینکه کد Subject را تغییر دهید
+* نشت حافظه (Memory Leaks): اگر یک Observer دیگر نیازی به دریافت نوتیفیکیشن ندارد (مثلاً پنجره‌ای در UI بسته شده است) اما فراموش کنید آن را از لیست Subject حذف (detach) کنید، Subject همچنان یک Reference به آن نگه می‌دارد. این کار باعث می‌شود garbage collector نتواند آن Observer را از حافظه پاک کند و حافظه سیستم پر می‌شود.
+* ترتیب اطلاع‌رسانی و وابستگی متقابل: Observerها هرگز نباید فرض کنند که به ترتیب خاصی صدا زده می‌شوند. همچنین، یک Observer نباید در متد update خود، وضعیت Subject را تغییر دهد، زیرا این کار باعث ایجاد حلقه بی‌نهایت (Infinite Loop) یا رفتارهای پیش‌بینی‌ناپذیر می‌شود.
+
+## 9.1. 🅱️ Examples1: درک پایه با یک ایستگاه هواشناسی
+
+هدف این مثال: نشان دادن ساختار پایه الگو، یعنی نحوه ثبت‌نام (attach)، لغو اشتراک (detach) و اطلاع‌رسانی (notify). در این مثال از مدل Pull استفاده می‌کنیم؛ یعنی Subject فقط خبر می‌دهد که "تغییری رخ داد" و Observer خودش باید برود و داده جدید را از Subject بخواند.
+
+```python
+from abc import ABC, abstractmethod
+from typing import List
+
+
+# --- Observer Interface ---
+class DisplayElement(ABC):
+    """
+    رابط پایه برای تمام نمایشگرها.
+    """
+
+    @abstractmethod
+    def display(self) -> None:
+        """نمایش اطلاعات روی صفحه"""
+        pass
+
+
+class Observer(ABC):
+    """
+    رابط مشاهده‌گر که متد به‌روزرسانی را تعریف می‌کند.
+    """
+
+    @abstractmethod
+    def update(self, temperature: float, humidity: float) -> None:
+        """
+        به‌روزرسانی وضعیت مشاهده‌گر هنگام تغییر داده‌ها.
+        
+        Args:
+            temperature (float): دمای جدید.
+            humidity (float): رطوبت جدید.
+        """
+        pass
+
+
+# --- Subject Interface ---
+class Subject(ABC):
+    """
+    رابط موضوع (ناشر) برای مدیریت مشاهده‌گران.
+    """
+
+    @abstractmethod
+    def register_observer(self, observer: Observer) -> None:
+        """
+        ثبت‌نام یک مشاهده‌گر جدید.
+        
+        Args:
+            observer (Observer): مشاهده‌گری که باید اضافه شود.
+        """
+        pass
+
+    @abstractmethod
+    def remove_observer(self, observer: Observer) -> None:
+        """
+        حذف یک مشاهده‌گر.
+        
+        Args:
+            observer (Observer): مشاهده‌گری که باید حذف شود.
+        """
+        pass
+
+    @abstractmethod
+    def notify_observers(self) -> None:
+        """اطلاع‌رسانی به تمام مشاهده‌گران ثبت‌نام شده."""
+        pass
+
+
+# --- Concrete Subject ---
+class WeatherData(Subject):
+    """
+    کلاس اصلی ایستگاه هواشناسی که داده‌ها را دریافت و مدیریت می‌کند.
+    """
+
+    def __init__(self) -> None:
+        self._observers: List[Observer] = []  # لیست مشاهده‌گران
+        self._temperature: float = 0.0
+        self._humidity: float = 0.0
+
+    def register_observer(self, observer: Observer) -> None:
+        self._observers.append(observer)
+
+    def remove_observer(self, observer: Observer) -> None:
+        self._observers.remove(observer)
+
+    def notify_observers(self) -> None:
+        # صدا زدن متد update تمام مشاهده‌گران
+        for observer in self._observers:
+            observer.update(self._temperature, self._humidity)
+
+    def measurements_changed(self) -> None:
+        """این متد زمانی صدا زده می‌شود که داده‌های جدیدی از سنسورها برسد."""
+        self.notify_observers()
+
+    def set_measurements(self, temperature: float, humidity: float) -> None:
+        """
+        تنظیم داده‌های جدید هواشناسی.
+        
+        Args:
+            temperature (float): دمای اندازه‌گیری شده.
+            humidity (float): رطوبت اندازه‌گیری شده.
+        """
+        self._temperature = temperature
+        self._humidity = humidity
+        self.measurements_changed()  # اطلاع‌رسانی به مشاهده‌گران
+
+
+# --- Concrete Observers ---
+class CurrentConditionsDisplay(Observer, DisplayElement):
+    """
+    نمایشگر شرایط فعلی آب و هوا.
+    """
+
+    def __init__(self, weather_data: Subject) -> None:
+        self._temperature = 0.0
+        self._humidity = 0.0
+        self._weather_data = weather_data
+        # ثبت‌نام در ایستگاه هواشناسی
+        self._weather_data.register_observer(self)
+
+    def update(self, temperature: float, humidity: float) -> None:
+        self._temperature = temperature
+        self._humidity = humidity
+        self.display()
+
+    def display(self) -> None:
+        print(f"نمایشگر فعلی: دما = {self._temperature}°C, رطوبت = {self._humidity}%")
+
+
+# --- اجرای مثال ---
+if __name__ == "__main__":
+    weather_data = WeatherData()
+
+    # ایجاد و ثبت‌نام نمایشگر
+    current_display = CurrentConditionsDisplay(weather_data)
+
+    # تغییر داده‌ها (این کار باعث notify شدن خودکار می‌شود)
+    weather_data.set_measurements(25.5, 60.0)
+    weather_data.set_measurements(28.0, 55.0)
+```
+
+## 9.2. 🅱️ Examples2: سیستم اطلاع‌رسانی موجودی فروشگاه
+
+هدف این مثال: در این مثال می‌خواهیم مدل Push را پیاده‌سازی کنیم. یعنی Subject دقیقاً مشخص کند چه چیزی تغییر کرده است. همچنین نشان می‌دهیم که چگونه Observerهای مختلف می‌توانند به یک روکش واحد، واکنش‌های کاملاً متفاوتی نشان دهند. این الگو در سیستم‌های E-commerce برای اطلاع‌رسانی کاهش موجودی یا تغییر قیمت بسیار رایج است.
+
+```python
+from abc import ABC, abstractmethod
+from typing import List, Dict, Any
+
+
+# --- Observer Interface ---
+class StockObserver(ABC):
+    """
+    رابط مشاهده‌گر برای سیستم موجودی.
+    """
+
+    @abstractmethod
+    def update(self, product_name: str, new_stock: int, price_changed: bool) -> None:
+        """
+        به‌روزرسانی وضعیت بر اساس داده‌های ارسال شده (Push Model).
+        
+        Args:
+            product_name (str): نام محصولی که تغییر کرده است.
+            new_stock (int): موجودی جدید محصول.
+            price_changed (bool): آیا قیمت هم تغییر کرده است؟
+        """
+        pass
+
+
+# --- Subject ---
+class ProductInventory:
+    """
+    کلاس مدیریت موجودی محصولات (Subject).
+    """
+
+    def __init__(self) -> None:
+        self._observers: List[StockObserver] = []
+        self._products: Dict[str, Dict[str, Any]] = {}  # دیکشنری برای نگهداری محصولات
+
+    def attach(self, observer: StockObserver) -> None:
+        """اضافه کردن مشاهده‌گر"""
+        if observer not in self._observers:
+            self._observers.append(observer)
+
+    def detach(self, observer: StockObserver) -> None:
+        """حذف مشاهده‌گر برای جلوگیری از نشت حافظه"""
+        try:
+            self._observers.remove(observer)
+        except ValueError:
+            pass
+
+    def notify(self, product_name: str, new_stock: int, price_changed: bool) -> None:
+        """
+        اطلاع‌رسانی به تمام مشاهده‌گران با ارسال مستقیم داده‌ها (Push).
+        
+        Args:
+            product_name (str): نام محصول تغییر یافته.
+            new_stock (int): موجودی جدید.
+            price_changed (bool): وضعیت تغییر قیمت.
+        """
+        for observer in self._observers:
+            observer.update(product_name, new_stock, price_changed)
+
+    def update_stock(self, product_name: str, quantity: int, new_price: float = None) -> None:
+        """
+        به‌روزرسانی موجودی یک محصول و اطلاع‌رسانی به سیستم.
+        
+        Args:
+            product_name (str): نام محصول.
+            quantity (int): تعداد اضافه/کم شده.
+            new_price (float, optional): قیمت جدید در صورت تغییر.
+        """
+        if product_name not in self._products:
+            self._products[product_name] = {"stock": 0, "price": 0.0}
+
+        self._products[product_name]["stock"] += quantity
+        price_changed = False
+        if new_price is not None:
+            self._products[product_name]["price"] = new_price
+            price_changed = True
+
+        current_stock = self._products[product_name]["stock"]
+        print(f"[Inventory] موجودی {product_name} به {current_stock} تغییر یافت.")
+
+        # فراخوانی notify با مدل Push (ارسال مستقیم داده‌ها)
+        self.notify(product_name, current_stock, price_changed)
+
+
+# --- Concrete Observers ---
+class EmailAlertSystem(StockObserver):
+    """
+    سیستم اطلاع‌رسانی ایمیلی (فقط وقتی موجودی کم است ایمیل می‌زند).
+    """
+
+    def update(self, product_name: str, new_stock: int, price_changed: bool) -> None:
+        # منطق فیلترینگ: فقط اگر موجودی زیر ۱۰ بود ایمیل بزن
+        if new_stock < 10:
+            print(f"[Email] هشدار: موجودی {product_name} کم است ({new_stock} عدد). ایمیل ارسال شد.")
+
+
+class AnalyticsDashboard(StockObserver):
+    """
+    داشبورد تحلیلی (همه تغییرات را لاگ می‌کند).
+    """
+
+    def update(self, product_name: str, new_stock: int, price_changed: bool) -> None:
+        status = "و تغییر قیمت" if price_changed else ""
+        print(f"[Dashboard] لاگ سیستم: {product_name} -> موجودی: {new_stock} {status}")
+
+
+# --- اجرای مثال ---
+if __name__ == "__main__":
+    inventory = ProductInventory()
+
+    # ثبت‌نام سیستم‌های مختلف
+    email_system = EmailAlertSystem()
+    dashboard = AnalyticsDashboard()
+
+    inventory.attach(email_system)
+    inventory.attach(dashboard)
+
+    print("--- به‌روزرسانی اولیه ---")
+    inventory.update_stock("Laptop", 50)  # موجودی ۵۰ -> ایمیل زده نمی‌شود
+
+    print("\n--- فروش و کاهش موجودی ---")
+    inventory.update_stock("Laptop", -45)  # موجودی ۵ -> ایمیل زده می‌شود
+
+    print("\n--- تغییر قیمت ---")
+    inventory.update_stock("Smartphone", 20, new_price=999.0)
+```
+
+## 9.3. 🅱️ Examples3: سیستم فید داده‌های بازار مالی (Industry Standard)
+
+هدف این مثال: این یک مثال کاملاً فنی از صنعت FinTech (فناوری مالی) است. در این سیستم، یک Market Data Feed (Subject) به صورت مداوم و با فرکانس بالا قیمت سهام را دریافت می‌کند. چندین سیستم (Observer) مثل ربات معامله‌گر، موتور نمودار و سیستم لاگ مالی به این داده‌ها نیاز دارند. در این مثال، Thread Safety برای جلوگیری از Race Condition و مدیریت دقیق
+چرخه حیات Observerها پوشش داده شده است.
+
+```python
+import threading
+import time
+from abc import ABC, abstractmethod
+from typing import List, Protocol
+
+
+# --- استفاده از Protocol برای تعریف رابط (روش مدرن و Pythonic) ---
+class MarketObserver(Protocol):
+    """
+    پروتکل مشاهده‌گر بازار مالی.
+    استفاده از Protocol به جای ABC اجازه می‌دهد کلاس‌ها بدون نیاز به ارث‌بری صریح، 
+    فقط با پیاده‌سازی متد update، به عنوان Observer شناخته شوند (Duck Typing با تایید استاتیک).
+    """
+
+    def update(self, symbol: str, price: float, timestamp: float) -> None:
+        """
+        دریافت تیک (Tick) جدید بازار.
+        
+        Args:
+            symbol (str): نماد سهام.
+            price (float): قیمت جدید.
+            timestamp (float): زمان دقیق ثبت قیمت.
+        """
+        ...
+
+
+# --- Subject ---
+class MarketDataFeed:
+    """
+    فید داده‌های بازار مالی (Subject).
+    این کلاس باید در محیطی با Threadهای متعدد (چند نخی) امن باشد.
+    """
+
+    def __init__(self) -> None:
+        self._observers: List[MarketObserver] = []
+        # استفاده از Lock برای تضمین Thread Safety در هنگام تغییر لیست Observerها
+        self._lock = threading.Lock()
+
+    def subscribe(self, observer: MarketObserver) -> None:
+        """
+        ثبت‌نام امن در محیط چند نخی.
+        
+        Args:
+            observer (MarketObserver): مشاهده‌گری که باید اضافه شود.
+        """
+        with self._lock:
+            if observer not in self._observers:
+                self._observers.append(observer)
+
+    def unsubscribe(self, observer: MarketObserver) -> None:
+        """
+        لغو اشتراک امن برای جلوگیری از نشت حافظه.
+        
+        Args:
+            observer (MarketObserver): مشاهده‌گری که باید حذف شود.
+        """
+        with self._lock:
+            try:
+                self._observers.remove(observer)
+            except ValueError:
+                pass
+
+    def broadcast_tick(self, symbol: str, price: float, timestamp: float) -> None:
+        """
+        ارسال تیک قیمتی به تمام مشاهده‌گران.
+        نکته فنی: لیست Observerها را در یک کپی (Snapshot) می‌رییم تا اگر در حین notify
+        یکی از Observerها خودش را unsubscribe کرد، حلقه با خطا مواجه نشود.
+        
+        Args:
+            symbol (str): نماد سهام.
+            price (float): قیمت لحظه‌ای.
+            timestamp (float): زمان ثبت.
+        """
+        # کپی کردن لیست در داخل قفل برای جلوگیری از تغییر حین پیمایش
+        with self._lock:
+            observers_snapshot = list(self._observers)
+
+        # صدا زدن Observerها خارج از قفل برای جلوگیری از Deadlock
+        for observer in observers_snapshot:
+            observer.update(symbol, price, timestamp)
+
+
+# --- Concrete Observers ---
+class TradingBot:
+    """
+    ربات معامله‌گر (فقط به تغییرات شدید قیمت واکنش نشان می‌دهد).
+    """
+
+    def __init__(self, bot_id: str) -> None:
+        self.bot_id = bot_id
+        self._last_price: float = 0.0
+
+    def update(self, symbol: str, price: float, timestamp: float) -> None:
+        # منطق فیلترینگ: فقط اگر نوسان بیشتر از ۲٪ بود معامله کن
+        if self._last_price > 0 and abs(price - self._last_price) / self._last_price > 0.02:
+            action = "BUY" if price > self._last_price else "SELL"
+            print(f"[{self.bot_id}] نوسان شدید در {symbol}! قیمت: {price} -> دستور {action} ارسال شد.")
+        self._last_price = price
+
+
+class ChartingEngine:
+    """
+    موتور رسم نمودار (همه تیک‌ها را برای رسم کندل‌استیک ذخیره می‌کند).
+    """
+
+    def update(self, symbol: str, price: float, timestamp: float) -> None:
+        # در سیستم واقعی، این داده‌ها در یک آرایه حلقوی (Ring Buffer) ذخیره می‌شوند
+        print(f"[Chart] آپدیت نمودار {symbol}: قیمت={price}, زمان={timestamp:.2f}")
+
+
+class FinancialAuditLogger:
+    """
+    سیستم لاگ مالی (برای ثبت تمام تیک‌ها جهت ممیزی و Compliance).
+    """
+
+    def update(self, symbol: str, price: float, timestamp: float) -> None:
+        # شبیه‌سازی عملیات I/O کند (نوشتن در دیتابیس)
+        # در سیستم واقعی، این Observer باید در یک Thread جداگانه یا از طریق Queue اجرا شود
+        # تا سرعت broadcast را پایین نیاورد.
+        pass  # print(f"[Audit] لاگ شد: {symbol} @ {price}")
+
+
+# --- اجرای مثال و شبیه‌سازی محیط Real-time ---
+if __name__ == "__main__":
+    feed = MarketDataFeed()
+
+    # ایجاد Observerها
+    bot = TradingBot("AlphaBot")
+    chart = ChartingEngine()
+    logger = FinancialAuditLogger()
+
+    # ثبت‌نام
+    feed.subscribe(bot)
+    feed.subscribe(chart)
+    feed.subscribe(logger)
+
+    print("--- شروع دریافت داده‌های بازار ---")
+
+    # شبیه‌سازی دریافت تیک‌های قیمتی در یک حلقه
+    # در سیستم واقعی، این داده‌ها از طریق سوکت (WebSocket) از بورس دریافت می‌شوند
+    ticks = [
+        ("AAPL", 150.0),
+        ("AAPL", 151.0),
+        ("AAPL", 155.0),  # نوسان شدید (بیش از ۲٪ نسبت به ۱۵۱) -> ربات باید BUY بزند
+        ("AAPL", 148.0),  # نوسان شدید نزولی -> ربات باید SELL بزند
+    ]
+
+    for symbol, price in ticks:
+        current_time = time.time()
+        feed.broadcast_tick(symbol, price, current_time)
+        time.sleep(0.1)  # شبیه‌سازی فاصله زمانی بین تیک‌ها
+
+    print("\n--- پایان شبیه‌سازی ---")
+```
+
+</div>
