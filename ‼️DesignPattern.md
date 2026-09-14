@@ -3713,4 +3713,10 @@ if __name__ == "__main__":
     print("\n--- پایان شبیه‌سازی ---")
 ```
 
+# 10. 🅰️ Behavioral.Interpreter
+
+## 10.1. 🅱️ Examples1:
+
+## 10.1. 🅱️ Examples1:
+
 </div>
