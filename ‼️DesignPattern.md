@@ -3713,10 +3713,280 @@ if __name__ == "__main__":
     print("\n--- پایان شبیه‌سازی ---")
 ```
 
-# 10. 🅰️ Behavioral.Interpreter
+# 10. 🅰️ Behavioral.Interpreter(پیاده‌سازی قوانین و سیاست ذیل درخت انتزاعی ABS بجای کد طولانی و شرط‌های پیچیده)
 
-## 10.1. 🅱️ Examples1:
+* تعریف
+    * برای پیاده‌سازی یک مجموعه قوانین دلخواه(که ازقبل تعریف شده-مثلا قواعد ریاضی) به نحوی که داده های جدید(عبارت ها و گزاره‌های موجود) به این قواعد عرضه شود تا تحت این سیاست مورد بررسی و وزن‌دهی واقع گردد و نهایتا در چهارچوب تعریف شده اجرا شود(مثلا تبدیل فرمول داده شده به عملگر و عملوند)
+    * در این الگو، به جای نوشتن کدهای شرطی پیچیده و تو در تو، ما گرامر (دستور زبان) را به صورت یک درخت نحو انتزاعی (AST) مدل‌سازی می‌کنیم.
+    * هر گره در این درخت، نماینده یک قانون یا عملگر است و وظیفه دارد بخش مربوط به خودش را «تفسیر» و اجرا کند.
+* اجزای اصلی این الگوی طراحی
+    * Context: حاوی اطلاعات سراسری(قواعد) یا وضعیت‌هایی است که مفسر در حین تفسیر به آن‌ها نیاز دارد.
+    * AbstractExpression: یک اینترفیس (یا کلاس انتزاعی) که متد `interpret(context)` را تعریف می‌کند. تمام گره‌های درخت باید این متد را پیاده‌سازی کنند.
+    * TerminalExpression: پیاده‌سازی متد `interpret` برای نمادهای پایه (برگ‌های درخت). مثل اعداد در ریاضی، یا نام فیلدها در کوئری.
+    * NonTerminalExpression: پیاده‌سازی متد `interpret` برای قواعد پیچیده (گره‌های داخلی درخت). مثل عملگرهای +، -، AND، OR. این گره‌ها معمولاً از سایر عبارات (پایانه یا غیرپایانه) در درون خود استفاده می‌کنند (الگوی Composite).
+    * Client: درخت نحو انتزاعی (AST - Abstract Syntax Tree) را می‌سازد و متد `interpret` را روی گره ریشه فراخوانی می‌کند.
+* کاربردها
+    * در ساختار داخلی همه ORMها
+    * موتورهای جستجو و کوئری (Query Engines): مثل تبدیل رشته‌های متنی جستجو در سایت‌های فروشگاهی به فیلترهای دیتابیس.
+    * موتورهای قوانین تجاری (Business Rule Engines): محاسبه پویای تخفیف‌ها، شرایط وام بانکی، یا سطوح دسترسی کاربران بر اساس قوانینی که ادمین در پنل مدیریت تعریف می‌کند.
+    * مفسرهای فرمول‌ساز (Formula Evaluators): مثل سلول‌های اکسل که یک رشته متنی مثل SUM(A1:B2) * 1.09 را دریافت کرده و محاسبه می‌کنند.
+    * پارسرهای فایل‌های پیکربندی (Config Parsers): خواندن و تفسیر فایل‌های YAML، JSON یا فایل‌های تنظیمات اختصاصی (DSL).
+    * موتورهای Regular Expression (Regex): در باطن، موتورهای رجکس از الگوی مفسر برای تفسیر الگوی متنی و تطبیق آن با رشته ورودی استفاده می‌کنند.
+* چه زمانی استفاده کنیم
+    * وقتی گرامر زبان ساده است و نیازی به ابزارهای سنگین Parser (مثل ANTLR یا Yacc) ندارید.
+    * وقتی می‌خواهید ساختار زبان (گرامر) را به صورت کلاس‌های شیءگرا مدل‌سازی کنید تا به راحتی قابل توسعه باشد.
+    * وقتی درخت AST (درخت نحو انتزاعی) به راحتی قابل ساخت است (مثلاً توسط یک Parser ساده یا به صورت دستی).
+* چه زمانی استفاده نکنیم
+    * گرامر پیچیده: اگر زبان شما پیچیده است (مثل SQL واقعی یا یک زبان برنامه‌نویسی)، استفاده از این الگو باعث ایجاد هزاران کلاس و پیچیدگی وحشتناک می‌شود. در این موارد از Parser Generatorها استفاده کنید.
+    * کارایی (Performance): مفسرهای مبتنی بر الگوی Interpreter به دلیل استفاده از بازگشت (Recursion) و ایجاد اشیاء زیاد برای هر گره درخت، ممکن است در حلقه‌های بسیار بزرگ (مثل پردازش میلیون‌ها رکورد در ثانیه) کند عمل کنند. در این موارد باید AST را به Bytecode کامپایل کنید.
+* مزایا:
+    * توسعه‌پذیری: اضافه کردن قوانین یا عملگرهای جدید (مثل NOT یا >=) بسیار آسان است؛ فقط کافیست یک کلاس جدید بسازید.
+    * خوانایی: کد به شدت به گرامر زبان نزدیک است و درک آن برای برنامه‌نویسان دیگر راحت است.
 
-## 10.1. 🅱️ Examples1:
+## 10.1. 🅱️ Examples1: ماشین حساب عبارات ریاضی
+
+در این مثال، یک مفسر بسیار ساده می‌سازیم که می‌تواند عبارات ریاضی شامل جمع و تفریق را ارزیابی کند. هدف درک نحوه ساخت درخت (AST) و فراخوانی بازگشتی متد interpret است.
+
+```python
+from abc import ABC, abstractmethod
+
+
+# ╔════════════════════╗
+# ║ AbstractExpression ║
+# ╚════════════════════╝
+class Expression(ABC):
+    """اینترفیس پایه برای تمام عبارات در درخت نحو انتزاعی (AST)."""
+
+    @abstractmethod
+    def interpret(self) -> float:
+        """
+        متد تفسیر که باید توسط تمام کلاس‌های فرزند پیاده‌سازی شود.
+        
+        Returns:
+            float: نتیجه عددی تفسیر شده از این گره از درخت.
+        """
+        pass
+
+
+# ╔══════════════════════╗
+# ║ Terminal Expressions ║
+# ╚══════════════════════╝
+class NumberExpression(Expression):
+    """عبارت پایانه که نماینده یک عدد ثابت در درخت است."""
+
+    def __init__(self, value: float) -> None:
+        self._value = value  # مقدار عددی را درون گره ذخیره می‌کنیم
+
+    def interpret(self) -> float:
+        return self._value  # برگ درخت: فقط مقدار خودش را برمی‌گرداند
+
+✅️
+
+
+# ╔══════════════════════════╗
+# ║ Non-Terminal Expressions ║
+# ╚══════════════════════════╝
+class AddExpression(Expression):
+    """عبارت غیرپایانه برای عملگر جمع که دو زیردرخت را با هم ترکیب می‌کند."""
+
+    def __init__(self, left_expr: Expression, right_expr: Expression) -> None:  # دریافت عبارت سمت چپ و راست برای پردازش بازگشتی
+        self._left = left_expr
+        self._right = right_expr
+
+    def interpret(self) -> float:
+        return self._left.interpret() + self._right.interpret()  # ابتدا فرزندان تفسیر می‌شوند، سپس عمل جمع انجام می‌شود
+
+
+class SubtractExpression(Expression):
+    """عبارت غیرپایانه برای عملگر تفریق."""
+
+    def __init__(self, left_expr: Expression, right_expr: Expression) -> None:
+        self._left = left_expr
+        self._right = right_expr
+
+    def interpret(self) -> float:
+        return self._left.interpret() - self._right.interpret()  # تفریق مقدار تفسیر شده سمت چپ از سمت راست
+
+
+# ╔════════╗
+# ║ Client ║ ---> ساخت درخت و اجرا
+# ╚════════╝
+def run_simple_math_interpreter() -> None:
+    """تابع کلاینت که درخت AST را برای عبارت (۱۰ + ۵) - ۳ می‌سازد و اجرا می‌کند."""
+    # ساخت برگ‌های درخت (اعداد)
+    num_10 = NumberExpression(10.0)
+    num_5 = NumberExpression(5.0)
+    num_3 = NumberExpression(3.0)
+
+    # ساخت گره‌های داخلی (عملگرها)
+    add_node = AddExpression(num_10, num_5)  # گره جمع: (۱۰ + ۵)
+
+    root_node = SubtractExpression(add_node, num_3)  # گره ریشه (تفریق): (۱۰ + ۵) - ۳
+
+    final_result = root_node.interpret()  # فراخوانی مفسر از گره ریشه (اجرای بازگشتی کل درخت)
+
+    print(f"[مثال ساده] نتیجه عبارت (10 + 5) - 3 برابر است با: {final_result}")
+
+
+# اجرای مثال ساده
+run_simple_math_interpreter()
+```
+
+## 10.2. 🅱️ Examples2: DbContext
+
+```python
+from abc import ABC, abstractmethod
+from typing import Any, Callable
+
+
+class DbContext:
+    def __init__(self, data: list[dict]):
+        self.data = data
+
+
+class Expression(ABC):
+    @abstractmethod
+    def interpret(self, context: DbContext):
+        raise NotImplementedError
+
+
+__all__ = ['Select', 'Where', 'Query', 'Expression']
+
+
+class Select(Expression):
+    def __init__(self, field: str):
+        self.field = field
+
+    def interpret(self, context: DbContext):
+        return [row[self.field] for row in context.data]
+
+
+class Where(Expression):
+    def __init__(self, condition: Callable[[Any], bool]):
+        self.condition = condition
+
+    def interpret(self, context: DbContext):
+        return [row for row in context.data if self.condition(row)]
+
+
+class Query(Expression):
+    def __init__(self, select: Select, where: Where):
+        self.select = select
+        self.where = where
+
+    def interpret(self, context: DbContext):
+        filtered_data = self.where.interpret(context)
+        return self.select.interpret(DbContext(filtered_data))
+
+
+if __name__ == '__main__':
+    data = [{'name': 'ali', 'age': 25},
+            {'name': 'Mohammad', 'age': 30},
+            {'name': 'sara', 'age': 28},
+            {'name': 'reza', 'age': 17}, ]
+
+    context = DbContext(data)
+
+    query = Query(select=Select('name'),
+                  where=Where(lambda row: row['age'] >= 25))
+    result = query.interpret(context)
+    print(result)
+```
+
+## 10.3. 🅱️ Examples3: ConfigurationManager
+
+```python
+from abc import ABC, abstractmethod
+import re
+
+
+class ConfigurationContext:
+    def __init__(self):
+        self.settings = {}
+
+    def set(self, key, value):
+        if re.fullmatch('^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$', value):
+            self.settings[key] = float(value)
+        else:
+            self.settings[key] = value
+
+    def enable(self, key):
+        self.settings[key] = True
+
+    def disable(self, key):
+        self.settings[key] = False
+
+    def __str__(self):
+        return str(self.settings)
+
+
+class Expression(ABC):
+    @abstractmethod
+    def interpret(self, context: ConfigurationContext):
+        raise NotImplementedError
+
+
+__all__ = ['SetCommand', 'EnableCommand', 'DisableCommand']
+
+
+class SetCommand(Expression):
+    def __init__(self, key, value):
+        self.key = key
+        self.value = value
+
+    def interpret(self, context: ConfigurationContext):
+        context.set(key=self.key, value=self.value)
+
+
+class EnableCommand(Expression):
+    def __init__(self, key):
+        self.key = key
+
+    def interpret(self, context: ConfigurationContext):
+        context.enable(key=self.key)
+
+
+class DisableCommand(Expression):
+    def __init__(self, key):
+        self.key = key
+
+    def interpret(self, context: ConfigurationContext):
+        context.disable(key=self.key)
+
+
+def parse_configuration(configs: list[str]) -> list[Expression]:
+    expressions = []
+
+    for line in configs:
+        tokens = line.split()
+        command = tokens[0]
+
+        match command:
+            case 'set':
+                expressions.append(SetCommand(tokens[1], tokens[2]))
+            case 'enable':
+                expressions.append(EnableCommand(tokens[1]))
+            case 'disable':
+                expressions.append(DisableCommand(tokens[1]))
+
+    return expressions
+
+
+if __name__ == '__main__':
+    config_lines = ['set timeout 30',
+                    'set retries 5',
+                    'enable logging',
+                    'disable cache',
+                    'set log_level information',
+                    'enable watermark']
+
+    context = ConfigurationContext()
+    expr = parse_configuration(config_lines)
+
+    for exp in expr:
+        exp.interpret(context)
+
+    print(context)
+```
 
 </div>
