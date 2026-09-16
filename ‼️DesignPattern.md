@@ -5157,7 +5157,6 @@ if __name__ == "__main__":
 
 ## 13.4. 🅱️ Examples4:
 
- fdsfasd **abc** fsdfhkasdf
 
 # 14. 🅰️ Behavioral.Strategy
 
