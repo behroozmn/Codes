@@ -5139,13 +5139,237 @@ if __name__ == "__main__":
     * Template Method از وراثت (Inheritance) استفاده می‌کند و بخش‌هایی از یک الگوریتم ثابت را تغییر می‌دهد.
     * Strategy از ترکیب (Composition) استفاده می‌کند و کل الگوریتم را به صورت یکپارچه جایگزین می‌کند.
 
-## 12.1. 🅱️ Examples1:
+## 12.1. 🅱️ Examples1: Data Exporter
 
-## 12.2. 🅱️ Examples2:
+در این مثال، یک فرآیند استاندارد صادرات داده داریم: ۱) آماده‌سازی داده، ۲) فرمت‌دهی، ۳) ذخیره‌سازی. کلاس‌های CSVExporter و JSONExporter فقط مراحل فرمت‌دهی و ذخیره‌سازی را تغییر می‌دهند.
 
-## 12.3. 🅱️ Examples3:
+```python
+from __future__ import annotations
+from abc import ABC, abstractmethod
+from typing import List, Dict, Any
 
-## 12.4. 🅱️ Examples4:
+
+# ---------------------------------------------------------
+# 1. کلاس انتزاعی پایه (Abstract Template)
+# ---------------------------------------------------------
+class DataExporterTemplate(ABC):
+    """
+    کلاس پایه که اسکلت الگوریتم اکسپورت داده را تعریف می‌کند.
+    """
+
+    def export(self, data: List[Dict[str, Any]]) -> None:
+        """
+        متد الگو (Template Method): جریان اصلی الگوریتم را مدیریت می‌کند.
+        این متد نباید در زیرکلاس‌ها بازنویسی شود (در پایتون با قرارداد نام‌گذاری یا منطق کنترل می‌شود).
+        """
+        print("شروع فرآیند اکسپورت داده...")
+
+        self._validate_data(data)  # مرحله ۱: اعتبارسنجی (مشترک برای همه)
+
+        formatted_data = self._format_data(data)  # مرحله ۲: فرمت‌دهی (متغیر، پیاده‌سازی توسط زیرکلاس)
+
+        # مرحله ۳: ذخیره‌سازی (متغیر، پیاده‌سازی توسط زیرکلاس)
+        self._save_data(formatted_data)
+
+        self._on_export_complete()  # مرحله ۴: قلاب پایان (اختیاری، پیاده‌سازی پیش‌فرض دارد)
+
+        print("فرآیند اکسپورت با موفقیت پایان یافت.\n")
+
+    def _validate_data(self, data: List[Dict[str, Any]]) -> None:
+        """یک متد کمکی مشترک که نیازی به بازنویسی ندارد."""
+        if not data:
+            raise ValueError("داده‌های ورودی برای اکسپورت نمی‌تواند خالی باشد.")
+        print("  -> داده‌ها با موفقیت اعتبارسنجی شدند.")
+
+    @abstractmethod
+    def _format_data(self, data: List[Dict[str, Any]]) -> str:
+        """عملیات اولیه (Primitive Operation): باید توسط زیرکلاس پیاده‌سازی شود."""
+        pass
+
+    @abstractmethod
+    def _save_data(self, formatted_data: str) -> None:
+        """عملیات اولیه (Primitive Operation): باید توسط زیرکلاس پیاده‌سازی شود."""
+        pass
+
+    def _on_export_complete(self) -> None:
+        """
+        متد قلاب (Hook Method): پیاده‌سازی پیش‌فرض خالی است. زیرکلاس‌ها می‌توانند در صورت نیاز آن را بازنویسی کنند.
+        """
+        pass
+
+
+# ---------------------------------------------------------
+# 2. کلاس‌های مشخص (Concrete Classes)
+# ---------------------------------------------------------
+class CSVExporter(DataExporterTemplate):
+    """پیاده‌سازی خاص برای اکسپورت داده به فرمت CSV"""
+
+    def _format_data(self, data: List[Dict[str, Any]]) -> str:
+        print("  -> فرمت‌دهی داده‌ها به CSV...")
+        # شبیه‌سازی تبدیل به CSV
+        headers = ",".join(data[0].keys())
+        rows = "\n".join([",".join(str(val) for val in row.values()) for row in data])
+        return f"{headers}\n{rows}"
+
+    def _save_data(self, formatted_data: str) -> None:
+        print(f"  -> ذخیره فایل CSV در دیسک. (حجم: {len(formatted_data)} بایت)")
+
+    def _on_export_complete(self) -> None:
+        """بازنویسی قلاب برای ارسال نوتیفیکیشن خاص CSV"""
+        print("  -> [Hook] ایمیل اطلاع‌رسانی اکسپورت CSV ارسال شد.")
+
+
+class JSONExporter(DataExporterTemplate):
+    """پیاده‌سازی خاص برای اکسپورت داده به فرمت JSON"""
+
+    def _format_data(self, data: List[Dict[str, Any]]) -> str:
+        print("  -> فرمت‌دهی داده‌ها به JSON...")
+        # شبیه‌سازی تبدیل به JSON
+        return str(data).replace("'", '"')
+
+    def _save_data(self, formatted_data: str) -> None:
+        print(f"  -> آپلود فایل JSON به فضای ابری. (حجم: {len(formatted_data)} بایت)")
+        # در اینجا قلاب _on_export_complete بازنویسی نشده و از حالت پیش‌فرض (خالی) استفاده می‌شود.
+
+
+# ---------------------------------------------------------
+# تست مثال ساده
+# ---------------------------------------------------------
+if __name__ == "__main__":
+    sample_data = [{"id": 1, "name": "Ali"}, {"id": 2, "name": "Sara"}]
+
+    print("--- تست اکسپورت CSV ---")
+    csv_exporter = CSVExporter()
+    csv_exporter.export(sample_data)
+
+    print("--- تست اکسپورت JSON ---")
+    json_exporter = JSONExporter()
+    json_exporter.export(sample_data)
+```
+
+## 12.2. 🅱️ Examples2: پایپ‌لاین پردازش پرداخت - Payment Pipeline
+
+در محیط‌های واقعی، الگوی Template Method برای ساخت پایپ‌لاین‌های پردازشی استفاده می‌شود. در این مثال، یک پایپ‌لاین پرداخت را پیاده‌سازی می‌کنیم که مراحل: ۱) لاگ شروع، ۲) اعتبارسنجی امنیتی، ۳) کسر موجودی (متغیر)، ۴) ثبت تراکنش در دیتابیس (مشترک)، و ۵) مدیریت خطا (قلاب) را دارد.
+
+```python
+from __future__ import annotations
+from abc import ABC, abstractmethod
+from typing import Dict, Any
+import uuid
+
+
+# ---------------------------------------------------------
+# 1. کلاس انتزاعی پایه (Payment Pipeline Template)
+# ---------------------------------------------------------
+class PaymentPipelineTemplate(ABC):
+    """
+    مدیریت چرخه حیات پردازش پرداخت با ساختاری ثابت و مراحل قابل توسعه.
+    """
+
+    def process_payment(self, user_id: str, amount: float) -> bool:
+        """
+        متد الگو: جریان اصلی پردازش پرداخت را هماهنگ می‌کند.
+        بازگشت: True در صورت موفقیت، False در صورت شکست.
+        """
+        transaction_id = str(uuid.uuid4())
+        print(f"[Pipeline] شروع پردازش پرداخت. شناسه تراکنش: {transaction_id}")
+
+        try:
+            # ۱. قلاب پیش‌پردازش (مثلاً بررسی وضعیت تحریم یا محدودیت کاربر)
+            if not self._pre_process_hook(user_id, amount):
+                print("[Pipeline] پرداخت توسط قلاب پیش‌پردازش رد شد.")
+                return False
+
+            # ۲. عملیات اولیه: کسر موجودی (وابسته به درگاه)
+            self._deduct_funds(user_id, amount)
+
+            # ۳. عملیات مشترک: ثبت تراکنش در سیستم مرکزی
+            self._record_transaction(transaction_id, user_id, amount)
+
+            # ۴. قلاب پس‌پردازش (مثلاً ارسال پیامک یا ایمیل موفقیت)
+            self._post_process_hook(user_id, amount, transaction_id)
+
+            print(f"[Pipeline] پرداخت با موفقیت انجام شد.\n")
+            return True
+
+        except PaymentProcessingError as error:
+            # ۵. مدیریت خطای متمرکز با استفاده از قلاب
+            print(f"[Pipeline] خطا در پردازش: {error}")
+            self._on_error_hook(user_id, amount, str(error))
+            return False
+
+    def _record_transaction(self, transaction_id: str, user_id: str, amount: float) -> None:
+        """متد کمکی مشترک: ثبت در دیتابیس مرکزی (غیر قابل تغییر توسط زیرکلاس)."""
+        print(f"  -> [DB] ثبت تراکنش {transaction_id} به مبلغ {amount} برای کاربر {user_id}")
+
+    @abstractmethod
+    def _deduct_funds(self, user_id: str, amount: float) -> None:
+        """عملیات اولیه: منطق اختصاصی کسر پول از درگاه خاص."""
+        pass
+
+    def _pre_process_hook(self, user_id: str, amount: float) -> bool:
+        """قلاب پیش‌پردازش: به طور پیش‌فرض همیشه True برمی‌گرداند."""
+        return True
+
+    def _post_process_hook(self, user_id: str, amount: float, transaction_id: str) -> None:
+        """قلاب پس‌پردازش: به طور پیش‌فرض هیچ کاری انجام نمی‌دهد."""
+        pass
+
+    def _on_error_hook(self, user_id: str, amount: float, error_message: str) -> None:
+        """قلاب مدیریت خطا: به طور پیش‌فرض فقط لاگ می‌کند."""
+        print(f"  -> [Error Hook] خطای ثبت شده برای کاربر {user_id}: {error_message}")
+
+
+# ---------------------------------------------------------
+# 2. کلاس‌های مشخص (Concrete Pipelines)
+# ---------------------------------------------------------
+class PaymentProcessingError(Exception):
+    """اکسپشن اختصاصی برای خطاهای پردازش پرداخت"""
+    pass
+
+
+class CreditCardPayment(PaymentPipelineTemplate):
+    """پیاده‌سازی پایپ‌لاین پرداخت با کارت اعتباری"""
+
+    def _deduct_funds(self, user_id: str, amount: float) -> None:
+        print(f"  -> [CreditCard] اتصال به درگاه بانکی و کسر {amount} تومان...")
+        # شبیه‌سازی احتمال خطا
+        if amount > 10_000_000:
+            raise PaymentProcessingError("مبلغ بیش از سقف مجاز کارت اعتباری است.")
+        print("  -> [CreditCard] کسر وجه با موفقیت انجام شد.")
+
+    def _post_process_hook(self, user_id: str, amount: float, transaction_id: str) -> None:
+        print(f"  -> [Hook] ارسال پیامک رسید پرداخت به کاربر {user_id}")
+
+
+class WalletPayment(PaymentPipelineTemplate):
+    """پیاده‌سازی پایپ‌لاین پرداخت با کیف پول داخلی"""
+
+    def _pre_process_hook(self, user_id: str, amount: float) -> bool:
+        print(f"  -> [Hook] بررسی اعتبار کیف پول کاربر {user_id}...")
+        # شبیه‌سازی بررسی موجودی کیف پول قبل از شروع فرآیند اصلی
+        return True  # فرض می‌کنیم اعتبار کافی است
+
+    def _deduct_funds(self, user_id: str, amount: float) -> None:
+        print(f"  -> [Wallet] کسر {amount} تومان از موجودی کیف پول داخلی...")
+        print("  -> [Wallet] کسر وجه با موفقیت انجام شد.")
+
+
+# ---------------------------------------------------------
+# تست مثال کاربردی
+# ---------------------------------------------------------
+if __name__ == "__main__":
+    print("=== سناریوی ۱: پرداخت موفق با کارت اعتباری ===")
+    credit_payment = CreditCardPayment()
+    credit_payment.process_payment(user_id="U-100", amount=500_000)
+
+    print("=== سناریوی ۲: پرداخت ناموفق با کارت اعتباری (سقف مجاز) ===")
+    credit_payment.process_payment(user_id="U-100", amount=15_000_000)
+
+    print("=== سناریوی ۳: پرداخت موفق با کیف پول ===")
+    wallet_payment = WalletPayment()
+    wallet_payment.process_payment(user_id="U-200", amount=150_000)
+```
 
 # 13. 🅰️ Behavioral.Visitor
 
@@ -5156,7 +5380,6 @@ if __name__ == "__main__":
 ## 13.3. 🅱️ Examples3:
 
 ## 13.4. 🅱️ Examples4:
-
 
 # 14. 🅰️ Behavioral.Strategy
 
