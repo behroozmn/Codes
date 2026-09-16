@@ -3780,8 +3780,6 @@ class NumberExpression(Expression):
     def interpret(self) -> float:
         return self._value  # برگ درخت: فقط مقدار خودش را برمی‌گرداند
 
-✅️
-
 
 # ╔══════════════════════════╗
 # ║ Non-Terminal Expressions ║
@@ -3988,5 +3986,1137 @@ if __name__ == '__main__':
 
     print(context)
 ```
+
+# 11. 🅰️ Behavioral.State(تغییر رفتار آبجکت بر اساس تغییر وضعیت)
+
+الگوی State یکی از الگوهای طراحی رفتاری (Behavioral) است که به یک شی اجازه می‌دهد زمانی که وضعیت داخلی (Internal State) آن تغییر می‌کند، رفتار خود را نیز تغییر دهد. این الگو در واقع پیاده‌سازی مفهوم ماشین حالت متناهی (Finite State Machine - FSM) در برنامه‌نویسی شی‌گرا است.
+
+* این الگو از سه بخش اصلی تشکیل شده است:
+    * Context (کانتکست): کلاسی که مرجع (Reference) به یک شی از نوع State را نگه می‌دارد. این کلاس وضعیت فعلی را مدیریت کرده و درخواست‌های کلاینت را به State فعلی Delegate (ارجاع) می‌کند.
+    * State Interface (رابط وضعیت): یک اینترفیس (یا کلاس انتزاعی) که رفتارهای مشترک بین تمام وضعیت‌ها را تعریف می‌کند.
+    * Concrete States (وضعیت‌های مشخص): کلاس‌هایی که رفتارهای خاص هر وضعیت را پیاده‌سازی می‌کنند. مهم‌ترین ویژگی این کلاس‌ها این است که مدیریت ترنزیشن‌ها (تغییر وضعیت به وضعیت بعدی) را بر عهده دارند.
+* مزایا (Pros)
+    * رعایت اصل Open/Closed: افزودن وضعیت‌های جدید نیازی به تغییر کدهای موجود (حذف if/else یا switch/caseهای غول‌پیکر) ندارد.
+    * اصل Single Responsibility: منطق هر وضعیت در کلاس مخصوص خودش متمرکز می‌شود.
+    * یکپارچگی ترنزیشن‌ها: تغییرات وضعیت از یک نقطه مرکزی (داخل Concrete Stateها) کنترل می‌شود و از ایجاد وضعیت‌های غیرمجاز (Invalid States) جلوگیری می‌کند.
+* معایب (Cons)
+    * وقوع Overhead کلاس‌ها: اگر تعداد وضعیت‌ها کم باشد و به ندرت تغییر کنند، استفاده از این الگو باعث ایجاد تعداد زیادی کلاس بیهوده می‌شود.
+    * پیچیدگی در Stateهای موازی: اگر یک شی بتواند همزمان در چند وضعیت مستقل باشد (مثلاً یک کاراکتر بازی هم "در حال دویدن" باشد و هم "تیراندازی")، الگوی State کلاسیک جوابگو نیست و نیاز به Statechart یا الگوهای پیچیده‌تر دارد.
+* تفاوت کلیدی State با Strategy: بسیاری این دو را اشتباه می‌گیرند. تفاوت اصلی در مالکیت ترنزیشن است
+    * در Strategy، کلاینت الگوریتم (استراتژی) را انتخاب و inject می‌کند. استراتژی‌ها همدیگر را نمی‌شناسند و مستقل هستند.
+    * در State، خودِ وضعیت‌ها می‌دانند که وضعیت بعدی چیست و Context را به وضعیت بعدی سوییچ می‌کنند. Stateها به Context و سایر Stateها آگاهند
+
+## 11.1. 🅱️ کاربردهای این  الگوی طراحی
+
+* تجارت الکترونیک و مالی (E-Commerce & Finance)
+    * چرخه حیات سفارش: پیش‌نویس ← ثبت‌شده ← پرداخت‌شده ← ارسال‌شده ← تحویل‌شده ← لغو/مرجوعی
+    * پردازش پرداخت: در انتظار ← در حال پردازش ← موفق ← ناموفق ← بازگشت وجه
+    * اشتراک و صورتحساب: آزمایشی ← فعال ← سررسید گذشته ← لغو شده ← منقضی
+    * کیف پول دیجیتال: فعال ← مسدود ← در حال بررسی ← بسته‌شده
+    * چرخه حیات فاکتور: پیش‌نویس ← صادرشده ← ارسال‌شده ← پرداخت‌شده ← باطل‌شده
+* بازی‌سازی (Game Development)
+    * شخصیت بازی (Character): بیکار ← در حال دویدن ← پریدن ← حمله ← دفاع ← آسیب‌دیده ← مرده
+    * هوش مصنوعی دشمن (AI): گشت‌زنی ← تعقیب ← حمله ← فرار ← مرده
+    * وضعیت بازی (Game Session): منوی اصلی ← در حال بازی ← مکث (Pause) ← پایان بازی ← نمایش امتیاز
+    * سلاح بازی: آماده ← در حال شلیک ← در حال شارژ مجدد ← خراب‌شده
+    * ماشین مسابقه: پارک ← دنده ۱ تا ۶ ← معکوس ← خاموش
+* شبکه و مخابرات (Networking & Telecom)
+    * اتصال TCP: CLOSED ← LISTEN ← SYN_SENT ← SYN_RECEIVED ← ESTABLISHED ← FIN_WAIT ← TIME_WAIT
+    * وضعیت تماس تلفنی: بیکار ← شماره‌گیری ← زنگ خوردن ← متصل ← در انتظار (Hold) ← قطع‌شده
+    * چرخه حیات درخواست HTTP: آماده ← در حال اتصال ← ارسال هدر ← ارسال بدنه ← دریافت پاسخ ← تکمیل‌شده
+    * اتصال WebSocket: در حال اتصال (Connecting) ← باز (Open) ← در حال بسته‌شدن (Closing) ← بسته (Closed)
+* مدیریت محتوا و اسناد (CMS & Document Workflow)
+    * گردش کار مقاله/محتوا: پیش‌نویس ← در انتظار بررسی ← تأیید شده ← منتشر شده ← بایگانی شده
+    * گردش کار تأیید (Approval): ارسال‌شده ← در حال بررسی مدیر ← تأیید شده ← رد شده ← نیاز به بازنگری
+    * مدیریت تیکت پشتیبانی: باز ← در حال بررسی ← در انتظار پاسخ مشتری ← حل‌شده ← بسته‌شده
+    * چرخه حیات قرارداد: پیش‌نویس ← در حال مذاکره ← امضا شده ← فعال ← منقضی ← فسخ‌شده
+* اینترنت اشیاء و سیستم‌های نهفته (IoT & Embedded)
+    * دستگاه هوشمند خانگی: خاموش ← روشن ← حالت خواب ← خطا ← در حال به‌روزرسانی
+    * آسانسور: بیکار ← در حال حرکت بالا ← در حال حرکت پایین ← درب باز ← درب بسته ← اورژانس
+    * چراغ راهنمایی: قرمز ← زرد ← سبز ← چشمک‌زن (خرابی)
+    * دستگاه خودپرداز (ATM): بیکار ← کارت وارد شده ← رمز تایید شده ← در حال پردازش ← خطا
+    * دستگاه فروش خودکار (Vending Machine): بیکار ← سکه وارد شده ← محصول انتخاب شده ← در حال تحویل ← بدون موجودی
+    * سیستم آلارم/امنیت: غیرفعال ← فعال ← در حال شمارش معکوس ← آژیر ← خطا
+* سیستم‌عامل و مدیریت فرآیند (OS & Process Management)
+    * چرخه حیات Thread/Process: جدید ← آماده اجرا ← در حال اجرا ← در انتظار ← خاتمه‌یافته
+    * تراکنش دیتابیس: فعال ← نیمه‌متعهد ← متعهد شده ← شکست‌خورده ← لغو شده
+    * مدیریت اتصال (Connection Pool): آزاد ← در حال استفاده ← خراب ← در حال بازسازی
+* رابط کاربری (UI/UX)
+    * دکمه (Button): عادی ← هاور ← فشرده ← غیرفعال ← در حال بارگذاری
+    * فرم ثبت‌نام: در حال ویرایش ← در حال اعتبارسنجی ← خطا ← در حال ارسال ← موفق
+    * پخش‌کننده رسانه: متوقف ← در حال پخش ← مکث ← بافر کردن ← خطا
+    * آپلود فایل: در انتظار ← در حال آپلود ← در حال پردازش ← تکمیل ← ناموفق
+    * Wizard/مراحل نصب: مرحله ۱ ← مرحله ۲ ← ... ← تکمیل
+* DevOps و CI/CD
+    * پایپ‌لاین CI/CD: در صف ← در حال بیلد ← در حال تست ← در حال دیپلوی ← موفق ← شکست‌خورده
+    * چرخه حیات کانتینر: ایجاد شده ← در حال اجرا ← متوقف ← مکث ← حذف شده
+    * وضعیت سرور/نود: سالم ← در حال بررسی ← ناسالم ← در حال تعمیر ← خارج از سرویس
+* حمل‌ونقل و لجستیک (Transportation & Logistics)
+    * چرخه حیات مرسوله پستی: ثبت‌شده ← جمع‌آوری شده ← در حال سورت ← در حال حمل ← رسیده به مقصد ← تحویل‌شده
+    * سفر تاکسی اینترنتی: درخواست ← جستجوی راننده ← راننده یافت شد ← در مسیر مسافر ← در حال سفر ← تکمیل ← لغو
+    * پرواز هواپیما: برنامه‌ریزی‌شده ← در حال سوار شدن ← تأخیر ← در حال پرواز ← فرود آمده ← لغو شده
+* احراز هویت و امنیت (Auth & Security)
+    * نشست کاربر (Session): احراز هویت نشده ← احراز هویت شده ← منقضی ← قفل شده
+    * حساب کاربری: فعال ← تعلیق شده ← در انتظار تأیید ایمیل ← قفل شده (تلاش ناموفق) ← حذف شده
+    * توکن OAuth: صادر شده ← فعال ← منقضی ← ابطال شده
+* کامپایلر و پردازش زبان (Compiler & NLP)
+    * واحد تحلیل لغوی (Lexer): شروع ← در حال خواندن شناسه ← در حال خواندن عدد ← در رشته ← در کامنت ← خطا
+    * ماشین حالت برای Regex: وضعیت‌های مختلف بر اساس الگو
+    * پارسر (Parser): وضعیت‌های مختلف گرامر
+* پزشکی و سلامت (Healthcare)
+    * چرخه حیات بیمار در بیمارستان: پذیرش ← تریاژ ← در انتظار پزشک ← تحت درمان ← بستری ← ترخیص
+    * وضعیت دستگاه پزشکی: آماده ← در حال استفاده ← کالیبراسیون ← خطا ← نگهداری
+
+## 11.2. 🅱️ Examples1: چراغ راهنما که به صورت خودکار بین سه وضعیت (قرمز، زرد، سبز) جابه‌جا می‌شود.
+
+1. ایجاد شیء TrafficLight
+2. تنظیم وضعیت اولیه روی RedLight
+3. حلقه ۳ بار تکرار می‌شود:
+
+- 🔄 دور اول:
+    - switch() فراخوانی می‌شود
+    - RedLight.handle() اجرا می‌شود
+    - چاپ: "Red Light: Vehicles must stop."
+    - تغییر وضعیت به GreenLight
+- 🔄 دور دوم:
+- switch() فراخوانی می‌شود
+    - GreenLight.handle() اجرا می‌شود
+    - چاپ: "Green Light: Vehicles must go."
+    - تغییر وضعیت به YellowLight
+- 🔄 دور سوم:
+- switch() فراخوانی می‌شود
+    - YellowLight.handle() اجرا می‌شود
+    - چاپ: "Yellow Light: Vehicles should speed down."
+    - تغییر وضعیت به RedLight
+
+```python
+from abc import ABC, abstractmethod
+
+
+# region state
+# این بخش رابط (Interface) یا کلاس انتزاعی وضعیت را تعریف می‌کند.
+# تمام وضعیت‌های مشخص (Concrete States) باید این کلاس را پیاده‌سازی کنند
+# تا کانتکست بتواند بدون دانستن نوع دقیق وضعیت، با آن‌ها کار کند.
+
+class TrafficLightState(ABC):
+    @abstractmethod
+    def handle(self, traffic_light: 'TrafficLight') -> None:
+        """
+        متد اصلی که رفتار مخصوص هر وضعیت را تعریف می‌کند.
+        نکته مهم: در این الگوی، خودِ وضعیت‌ها وظیفه دارند که پس از انجام رفتار، کانتکست را به وضعیت بعدی (ترنزیشن) تغییر دهند.
+        """
+        raise NotImplementedError
+
+
+# endregion
+
+# region concrete states
+# این بخش وضعیت‌های مشخص (Concrete States) را تعریف می‌کند.
+# هر کلاس نشان‌دهنده یک وضعیت خاص از چراغ راهنمایی است و منطق مختص به خود را دارد.
+
+class RedLight(TrafficLightState):
+    def handle(self, traffic_light: 'TrafficLight') -> None:
+        print('Red Light: Vehicles must stop.')
+        traffic_light.state = GreenLight()  # تغییر وضعیت به سبز پس از انجام رفتار فعلی (ترنزیشن)
+
+
+class GreenLight(TrafficLightState):
+    def handle(self, traffic_light: 'TrafficLight') -> None:
+        print('Green Light: Vehicles must go.')
+        traffic_light.state = YellowLight()  # تغییر وضعیت به زرد
+
+
+class YellowLight(TrafficLightState):
+    def handle(self, traffic_light: 'TrafficLight') -> None:
+        print('Yellow Light: Vehicles should speed down.')
+        traffic_light.state = RedLight()  # تغییر وضعیت به قرمز (با این کار چرخه کامل می‌شود)
+
+
+# endregion
+
+# region context
+# این بخش کانتکست (Context) را تعریف می‌کند.
+# کانتکست کلاسی است که کلاینت با آن تعامل دارد. این کلاس مرجعی به شیء وضعیت فعلی
+# را نگه می‌دارد و درخواست‌های کلاینت را به وضعیت فعلی Delegate (ارجاع) می‌کند.
+
+class TrafficLight:
+    def __init__(self) -> None:
+        # وضعیت اولیه در اینجا None است و در کد کلاینت مقداردهی می‌شود
+        self._state: TrafficLightState | None = None
+
+    @property
+    def state(self) -> TrafficLightState | None:
+        return self._state
+        """دریافت وضعیت فعلی چراغ راهنمایی"""
+
+    @state.setter
+    def state(self, value: TrafficLightState) -> None:
+        """
+        تنظیم وضعیت جدید.
+        توضیح: در این Setter یک لاگ ساده چاپ می‌شود تا تغییر وضعیت‌ها قابل ردیابی باشد. این کار باعث می‌شود هر بار که Stateها کانتکست را تغییر می‌دهند، یک پیام ثبت شود.
+        """
+        self._state = value
+        print(f'Traffic light state changed to {self._state.__class__.__name__}')
+
+    def switch(self) -> None:
+        """
+        متد درخواست (Request).
+        توضیح: این متد رفتار را به وضعیت فعلی (State) Delegate می‌کند.
+        کلاینت فقط همین متد را فراخوانی می‌کند و نیازی به دانستن منطق داخلی ندارد.
+        """
+        if self.state:
+            self.state.handle(self)
+
+
+# endregion
+
+# region client code
+# این بخش کد کلاینت است که از الگوی طراحی استفاده می‌کند.
+# مزیت اصلی اینجاست: کلاینت هیچ if/else یا switch/case‌ای برای تغییر وضعیت‌ها ندارد.
+
+if __name__ == '__main__':
+    light = TrafficLight()  # ایجاد یک شیء از کانتکست (چراغ راهنمایی)
+    light.state = RedLight()  # تنظیم وضعیت اولیه روی چراغ قرمز (State اولیه توسط کلاینت تعیین می‌شود)
+    # شبیه‌سازی ۳ بار تغییر وضعیت (چرخه: قرمز -> سبز -> زرد -> قرمز)
+    for _ in range(3):
+        light.switch()
+
+# endregion
+```
+
+## 11.3. 🅱️ Examples2: چرخه حیات سفارش در یک سیستم فروشگاهی
+
+* چرخه حیات سفارش در این کد:
+    * در انتظار پرداخت (PendingPayment) → وضعیت اولیه
+    * پرداخت شده (Paid) → پس از پرداخت موفق
+    * ارسال شده (Shipped) → پس از ارسال مرسوله
+    * تحویل داده شده (Delivered) → پس از تحویل به مشتری
+    * لغو شده (Cancelled) → می‌تواند از وضعیت "در انتظار پرداخت" یا "پرداخت شده" رخ دهد
+    * مرجوع شده (Returned) → پس از مرجوع کردن کالا توسط مشتری
+
+```python
+from abc import ABC, abstractmethod
+from typing import Optional
+from datetime import datetime
+
+
+# region state
+
+# این بخش رابط (Interface) وضعیت‌های سفارش را تعریف می‌کند.
+# تمام وضعیت‌های مشخص (Concrete States) باید این کلاس انتزاعی را پیاده‌سازی کنند.
+# این کار باعث می‌شود کانتکست (Order) بتواند بدون دانستن نوع دقیق وضعیت،
+# با آن‌ها کار کند و درخواست‌ها را به وضعیت فعلی Delegate کند.
+
+class OrderState(ABC):
+    """
+    کلاس انتزاعی پایه برای تمام وضعیت‌های سفارش.
+    
+    این کلاس یک قرارداد (Contract) تعریف می‌کند که تمام وضعیت‌های سفارش
+    باید آن را پیاده‌سازی کنند. هر وضعیت رفتارهای مخصوص به خود را برای
+    این عملیات‌ها پیاده‌سازی می‌کند.
+    """
+
+    @abstractmethod
+    def pay(self, order: 'Order') -> None:
+        """
+        پردازش پرداخت سفارش.
+        
+        Args:
+            order: شیء سفارش که وضعیت آن باید تغییر کند
+        """
+        pass
+
+    @abstractmethod
+    def cancel(self, order: 'Order', reason: str) -> None:
+        """
+        لغو سفارش.
+        
+        Args:
+            order: شیء سفارش که وضعیت آن باید تغییر کند
+            reason: دلیل لغو سفارش
+        """
+        pass
+
+    @abstractmethod
+    def ship(self, order: 'Order', tracking_number: str) -> None:
+        """
+        ارسال سفارش.
+        
+        Args:
+            order: شیء سفارش که وضعیت آن باید تغییر کند
+            tracking_number: کد رهگیری مرسوله
+        """
+        pass
+
+    @abstractmethod
+    def deliver(self, order: 'Order') -> None:
+        """
+        تحویل سفارش به مشتری.
+        
+        Args:
+            order: شیء سفارش که وضعیت آن باید تغییر کند
+        """
+        pass
+
+    @abstractmethod
+    def return_items(self, order: 'Order', reason: str) -> None:
+        """
+        مرجوع کردن اقلام سفارش.
+        
+        Args:
+            order: شیء سفارش که وضعیت آن باید تغییر کند
+            reason: دلیل مرجوع کردن
+        """
+        pass
+
+    @abstractmethod
+    def get_status(self) -> str:
+        """
+        دریافت وضعیت فعلی سفارش به صورت متنی.
+        
+        Returns:
+            str: نام وضعیت فعلی
+        """
+        pass
+
+
+# endregion
+
+# region concrete states
+
+# این بخش وضعیت‌های مشخص (Concrete States) را تعریف می‌کند.
+# هر کلاس نشان‌دهنده یک وضعیت خاص از چرخه حیات سفارش است
+# و منطق تجاری (Business Logic) مخصوص به آن وضعیت را پیاده‌سازی می‌کند.
+
+class PendingPaymentState(OrderState):
+    """
+    وضعیت در انتظار پرداخت.
+    
+    این وضعیت اولیه یک سفارش جدید است. در این وضعیت:
+    - پرداخت مجاز است و سفارش را به وضعیت Paid منتقل می‌کند
+    - لغو مجاز است و سفارش را به وضعیت Cancelled منتقل می‌کند
+    - ارسال، تحویل و مرجوعی مجاز نیستند
+    """
+
+    def pay(self, order: 'Order') -> None:
+        """پردازش پرداخت و تغییر وضعیت به PaidState"""
+        print('Processing payment ...')
+        order.payment_date = datetime.now()
+        order.state = PaidState()  # ترنزیشن به وضعیت پرداخت شده
+        print('Payment successful, order is now paid')
+
+    def cancel(self, order: 'Order', reason: str) -> None:
+        """لغو سفارش قبل از پرداخت و تغییر وضعیت به CancelledState"""
+        print(f'cancelling order before payment. reason: {reason}')
+        order.cancel_date = datetime.now()
+        order.cancellation_reason = reason
+        order.state = CancelledState()  # ترنزیشن به وضعیت لغو شده
+
+    def ship(self, order: 'Order', tracking_number: str) -> None:
+        """تلاش برای ارسال سفارش پرداخت نشده - مجاز نیست"""
+        print('cannot ship order before payment')
+
+    def deliver(self, order: 'Order') -> None:
+        """تلاش برای تحویل سفارش پرداخت نشده - مجاز نیست"""
+        print('cannot deliver order before payment')
+
+    def return_items(self, order: 'Order', reason: str) -> None:
+        """تلاش برای مرجوع کردن سفارش پرداخت نشده - مجاز نیست"""
+        print('cannot return items before payment')
+
+    def get_status(self) -> str:
+        """برگرداندن نام وضعیت فعلی"""
+        return 'Pending Payment'
+
+
+class PaidState(OrderState):
+    """
+    وضعیت پرداخت شده.
+    
+    در این وضعیت سفارش پرداخت شده و منتظر ارسال است:
+    - پرداخت مجدد مجاز نیست (قبلاً پرداخت شده)
+    - لغو مجاز است و فرآیند بازگشت وجه آغاز می‌شود
+    - ارسال مجاز است و سفارش را به وضعیت Shipped منتقل می‌کند
+    - تحویل و مرجوعی مجاز نیستند (هنوز ارسال نشده)
+    """
+
+    def pay(self, order: 'Order') -> None:
+        """تلاش برای پرداخت مجدد - مجاز نیست"""
+        print('order is already paid')
+
+    def cancel(self, order: 'Order', reason: str) -> None:
+        """لغو سفارش پرداخت شده و آغاز فرآیند بازگشت وجه"""
+        print(f'cancelling paid order. reason: {reason}')
+        print('initiating refund process ...')
+        order.cancellation_date = datetime.now()
+        order.cancellation_reason = reason
+        order.state = CancelledState()  # ترنزیشن به وضعیت لغو شده
+
+    def ship(self, order: 'Order', tracking_number: str) -> None:
+        """ارسال سفارش و تغییر وضعیت به ShippedState"""
+        print(f'shipping order with tracking number: {tracking_number}')
+        order.shipping_date = datetime.now()
+        order.tracking_number = tracking_number
+        order.state = ShippedState()  # ترنزیشن به وضعیت ارسال شده
+
+    def deliver(self, order: 'Order') -> None:
+        """تلاش برای تحویل سفارش ارسال نشده - مجاز نیست"""
+        print("cannot deliver order that hasn't been shipped")
+
+    def return_items(self, order: 'Order', reason: str) -> None:
+        """تلاش برای مرجوع کردن سفارش ارسال نشده - مجاز نیست"""
+        print("cannot return items from order that hasn't been shipped")
+
+    def get_status(self) -> str:
+        """برگرداندن نام وضعیت فعلی"""
+        return 'Paid - awaiting shipment'
+
+
+class ShippedState(OrderState):
+    """
+    وضعیت ارسال شده.
+    
+    در این وضعیت سفارش ارسال شده و در حال حمل است:
+    - پرداخت مجدد مجاز نیست
+    - لغو مجاز نیست (سفارش در مسیر است)
+    - ارسال مجدد مجاز نیست
+    - تحویل مجاز است و سفارش را به وضعیت Delivered منتقل می‌کند
+    - مرجوعی مجاز نیست (هنوز تحویل داده نشده)
+    """
+
+    def pay(self, order: 'Order') -> None:
+        """تلاش برای پرداخت مجدد - مجاز نیست"""
+        print('order is already paid')
+
+    def cancel(self, order: 'Order', reason: str) -> None:
+        """تلاش برای لغو سفارش ارسال شده - مجاز نیست"""
+        print('cannot cancel order that has already been shipped')
+
+    def ship(self, order: 'Order', tracking_number: str) -> None:
+        """تلاش برای ارسال مجدد - مجاز نیست"""
+        print('order is already shipped')
+
+    def deliver(self, order: 'Order') -> None:
+        """تحویل سفارش و تغییر وضعیت به DeliveredState"""
+        print('marking order as delivered')
+        order.delivery_date = datetime.now()
+        order.state = DeliveredState()  # ترنزیشن به وضعیت تحویل داده شده
+
+    def return_items(self, order: 'Order', reason: str) -> None:
+        """تلاش برای مرجوع کردن سفارش تحویل نشده - مجاز نیست"""
+        print('cannot return order that has not been delivered')
+
+    def get_status(self) -> str:
+        """برگرداندن نام وضعیت فعلی"""
+        return 'Shipped - in transit'
+
+
+class DeliveredState(OrderState):
+    """
+    وضعیت تحویل داده شده.
+    
+    در این وضعیت سفارش به مشتری تحویل داده شده است:
+    - پرداخت مجدد مجاز نیست
+    - لغو مجاز نیست (سفارش تحویل داده شده)
+    - ارسال مجدد مجاز نیست
+    - تحویل مجدد مجاز نیست
+    - مرجوعی مجاز است و سفارش را به وضعیت Returned منتقل می‌کند
+    """
+
+    def pay(self, order: 'Order') -> None:
+        """تلاش برای پرداخت مجدد - مجاز نیست"""
+        print('order is already paid')
+
+    def cancel(self, order: 'Order', reason: str) -> None:
+        """تلاش برای لغو سفارش تحویل داده شده - مجاز نیست"""
+        print('cannot cancel order that has been delivered')
+
+    def ship(self, order: 'Order', tracking_number: str) -> None:
+        """تلاش برای ارسال مجدد - مجاز نیست"""
+        print('order is already shipped')
+
+    def deliver(self, order: 'Order') -> None:
+        """تلاش برای تحویل مجدد - مجاز نیست"""
+        print('order is already delivered')
+
+    def return_items(self, order: 'Order', reason: str) -> None:
+        """مرجوع کردن اقلام و تغییر وضعیت به ReturnedState"""
+        print(f'Processing return request. reason: {reason}')
+        order.return_date = datetime.now()
+        order.return_reason = reason
+        order.state = ReturnedState()  # ترنزیشن به وضعیت مرجوع شده
+
+    def get_status(self) -> str:
+        """برگرداندن نام وضعیت فعلی"""
+        return 'Delivered'
+
+
+class CancelledState(OrderState):
+    """
+    وضعیت لغو شده (Terminal State).
+    
+    این یک وضعیت نهایی است. در این وضعیت هیچ عملیاتی مجاز نیست:
+    - پرداخت مجاز نیست
+    - لغو مجدد مجاز نیست
+    - ارسال مجاز نیست
+    - تحویل مجاز نیست
+    - مرجوعی مجاز نیست
+    """
+
+    def pay(self, order: 'Order') -> None:
+        """تلاش برای پرداخت سفارش لغو شده - مجاز نیست"""
+        print('order is already paid')
+
+    def cancel(self, order: 'Order', reason: str) -> None:
+        """تلاش برای لغو مجدد - مجاز نیست"""
+        print('order is already canceled')
+
+    def ship(self, order: 'Order', tracking_number: str) -> None:
+        """تلاش برای ارسال سفارش لغو شده - مجاز نیست"""
+        print('cannot ship cancelled order')
+
+    def deliver(self, order: 'Order') -> None:
+        """تلاش برای تحویل سفارش لغو شده - مجاز نیست"""
+        print('cannot deliver cancelled order')
+
+    def return_items(self, order: 'Order', reason: str) -> None:
+        """تلاش برای مرجوع کردن سفارش لغو شده - مجاز نیست"""
+        print('cannot return cancelled order')
+
+    def get_status(self) -> str:
+        """برگرداندن نام وضعیت فعلی"""
+        return 'Cancelled'
+
+
+class ReturnedState(OrderState):
+    """
+    وضعیت مرجوع شده (Terminal State).
+    
+    این یک وضعیت نهایی است. در این وضعیت هیچ عملیاتی مجاز نیست:
+    - پرداخت مجاز نیست
+    - لغو مجاز نیست
+    - ارسال مجاز نیست
+    - تحویل مجاز نیست
+    - مرجوعی مجدد مجاز نیست
+    """
+
+    def pay(self, order: 'Order') -> None:
+        """تلاش برای پرداخت سفارش مرجوع شده - مجاز نیست"""
+        print('order is already paid')
+
+    def cancel(self, order: 'Order', reason: str) -> None:
+        """تلاش برای لغو سفارش مرجوع شده - مجاز نیست"""
+        print('cannot cancel returned order')
+
+    def ship(self, order: 'Order', tracking_number: str) -> None:
+        """تلاش برای ارسال سفارش مرجوع شده - مجاز نیست"""
+        print('cannot ship returned order')
+
+    def deliver(self, order: 'Order') -> None:
+        """تلاش برای تحویل سفارش مرجوع شده - مجاز نیست"""
+        print('cannot deliver returned order')
+
+    def return_items(self, order: 'Order', reason: str) -> None:
+        """تلاش برای مرجوع کردن مجدد - مجاز نیست"""
+        print('order is already returned')
+
+    def get_status(self) -> str:
+        """برگرداندن نام وضعیت فعلی"""
+        return 'Returned'
+
+
+# endregion
+
+# region context
+
+# این بخش کانتکست (Context) را تعریف می‌کند.
+# کلاس Order کانتکست الگوی State است که:
+# 1. داده‌های سفارش را نگهداری می‌کند
+# 2. مرجعی به وضعیت فعلی (State) را نگه می‌دارد
+# 3. درخواست‌های کلاینت را به وضعیت فعلی Delegate می‌کند
+
+class Order:
+    """
+    کانتکست سفارش در الگوی State.
+    
+    این کلاس مسئول نگهداری داده‌های سفارش و مدیریت وضعیت فعلی است.
+    تمام عملیات‌های سفارش (پرداخت، لغو، ارسال، تحویل، مرجوعی) به وضعیت
+    فعلی Delegate می‌شوند و وضعیت فعلی تصمیم می‌گیرد که آیا عملیات
+    مجاز است یا خیر و در صورت مجاز بودن، وضعیت را به وضعیت بعدی تغییر می‌دهد.
+    
+    Attributes:
+        order_id: شناسه یکتای سفارش
+        items: لیست اقلام سفارش
+        customer: نام مشتری
+        state: وضعیت فعلی سفارش (از نوع OrderState)
+        payment_date: تاریخ پرداخت
+        shipping_date: تاریخ ارسال
+        delivery_date: تاریخ تحویل
+        cancellation_date: تاریخ لغو
+        return_date: تاریخ مرجوعی
+        tracking_number: کد رهگیری مرسوله
+        cancellation_reason: دلیل لغو سفارش
+        return_reason: دلیل مرجوعی
+    """
+
+    def __init__(self, order_id: str, items: list[str], customer: str) -> None:
+        """
+        ایجاد یک سفارش جدید با وضعیت اولیه PendingPaymentState.
+        
+        Args:
+            order_id: شناسه یکتای سفارش
+            items: لیست اقلام سفارش
+            customer: نام مشتری
+        """
+        self.order_id = order_id
+        self.items = items
+        self.customer = customer
+        self.state: OrderState = PendingPaymentState()  # وضعیت اولیه
+
+        # فیلدهای زمانی و اطلاعاتی سفارش
+        self.payment_date: Optional[datetime] = None
+        self.shipping_date: Optional[datetime] = None
+        self.delivery_date: Optional[datetime] = None
+        self.cancel_date: Optional[datetime] = None
+        self.return_date: Optional[datetime] = None
+        self.tracking_number: Optional[str] = None
+        self.cancellation_reason: Optional[str] = None
+        self.return_reason: Optional[str] = None
+
+    def pay(self) -> None:
+        """
+        درخواست پرداخت سفارش.
+        
+        این متد عملیات پرداخت را به وضعیت فعلی Delegate می‌کند.
+        وضعیت فعلی تصمیم می‌گیرد که آیا پرداخت مجاز است یا خیر.
+        """
+        self.state.pay(self)
+
+    def cancel(self, reason: str) -> None:
+        """
+        درخواست لغو سفارش.
+        
+        Args:
+            reason: دلیل لغو سفارش
+            
+        این متد عملیات لغو را به وضعیت فعلی Delegate می‌کند.
+        """
+        self.state.cancel(self, reason)
+
+    def ship(self, tracking_number: str) -> None:
+        """
+        درخواست ارسال سفارش.
+        
+        Args:
+            tracking_number: کد رهگیری مرسوله
+            
+        این متد عملیات ارسال را به وضعیت فعلی Delegate می‌کند.
+        """
+        self.state.ship(self, tracking_number)
+
+    def deliver(self) -> None:
+        """
+        درخواست تحویل سفارش.
+        
+        این متد عملیات تحویل را به وضعیت فعلی Delegate می‌کند.
+        """
+        self.state.deliver(self)
+
+    def return_items(self, reason: str) -> None:
+        """
+        درخواست مرجوع کردن اقلام سفارش.
+        
+        Args:
+            reason: دلیل مرجوع کردن
+            
+        این متد عملیات مرجوعی را به وضعیت فعلی Delegate می‌کند.
+        """
+        self.state.return_items(self, reason)
+
+    def get_status(self) -> None:
+        """
+        چاپ اطلاعات کامل سفارش و وضعیت فعلی آن.
+        
+        این متد تمام اطلاعات سفارش شامل وضعیت فعلی، تاریخ‌ها و دلایل
+        را به صورت خوانا چاپ می‌کند.
+        """
+        print(f'Order #{self.order_id} status:')
+        print(f'customer: {self.customer}')
+        print(f'items: {",".join(self.items)}')
+        print(f'current status: {self.state.get_status()}')
+
+        # چاپ تاریخ‌ها و اطلاعات اضافی در صورت وجود
+        if self.payment_date:
+            print(f'paid on {self.payment_date}')
+        if self.shipping_date:
+            print(f'shipped on {self.shipping_date}')
+            print(f'tracking number: {self.tracking_number}')
+        if self.delivery_date:
+            print(f'delivered on {self.delivery_date}')
+        if self.cancel_date:
+            print(f'cancelled on {self.cancel_date}')
+            print(f'reason: {self.cancellation_reason}')
+        if self.return_date:
+            print(f'returned on {self.return_date}')
+            print(f'return reason: {self.return_reason}')
+
+        print('---------------------------------------------')
+
+
+# endregion
+
+# region client code
+
+# این بخش کد کلاینت است که از الگوی طراحی استفاده می‌کند.
+# مزیت اصلی الگوی State در اینجا مشخص می‌شود: کلاینت هیچ if/else یا
+# switch/case‌ای برای مدیریت ترنزیشن‌های وضعیت ندارد. تمام منطق
+# ترنزیشن در کلاس‌های State متمرکز شده است.
+
+if __name__ == '__main__':
+    # ایجاد یک سفارش جدید (وضعیت اولیه: PendingPayment)
+    order_1 = Order(order_id='ord_0001', items=['Phone', 'T-Shirt'], customer='Mohammad')
+    order_1.get_status()
+
+    # پرداخت سفارش (ترنزیشن: PendingPayment → Paid)
+    order_1.pay()
+    order_1.get_status()
+
+    # ارسال سفارش (ترنزیشن: Paid → Shipped)
+    order_1.ship(tracking_number='shipping-1244523')
+    order_1.get_status()
+
+    # تحویل سفارش (ترنزیشن: Shipped → Delivered)
+    order_1.deliver()
+    order_1.get_status()
+
+    # مرجوع کردن اقلام (ترنزیشن: Delivered → Returned)
+    order_1.return_items('Not interested')
+    order_1.get_status()
+
+# endregion
+```
+
+## 11.4. 🅱️ Examples3:دستگاه خودپرداز - ATM
+
+یک دستگاه خودپرداز را شبیه‌سازی می‌کنیم که ۳ وضعیت دارد: بیکار (Idle)، کارت وارد شده (CardInserted) و رمز تایید شده (PinVerified).
+
+```python
+from __future__ import annotations
+from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING
+
+# برای جلوگیری از ImportError در تایپ‌هینت‌ها (Circular Dependency)
+if TYPE_CHECKING:
+    pass
+
+
+# ---------------------------------------------------------
+# 1. تعریف اینترفیس وضعیت (State Interface)
+# ---------------------------------------------------------
+class ATMState(ABC):
+    """رابط پایه برای تمام وضعیت‌های دستگاه خودپرداز"""
+
+    @abstractmethod
+    def insert_card(self) -> None:
+        pass
+
+    @abstractmethod
+    def enter_pin(self, pin: str) -> None:
+        pass
+
+    @abstractmethod
+    def withdraw_cash(self, amount: int) -> None:
+        pass
+
+    @abstractmethod
+    def eject_card(self) -> None:
+        pass
+
+
+# ---------------------------------------------------------
+# 2. تعریف کانتکست (Context)
+# ---------------------------------------------------------
+class ATMContext:
+    """کانتکست دستگاه خودپرداز که وضعیت فعلی را نگه می‌دارد"""
+
+    def __init__(self) -> None:
+        # وضعیت اولیه دستگاه روی حالت بیکار تنظیم می‌شود
+        self._state: ATMState = IdleState(self)
+        self._card_inserted: bool = False
+
+    def set_state(self, state: ATMState) -> None:
+        """تغییر وضعیت فعلی دستگاه (فقط توسط Stateها فراخوانی می‌شود)"""
+        self._state = state
+        print(f"[ATM] وضعیت دستگاه تغییر کرد به: {state.__class__.__name__}")
+
+    # متدهای زیر صرفاً برای Delegate کردن درخواست کاربر به State فعلی هستند
+    def insert_card(self) -> None:
+        self._state.insert_card()
+
+    def enter_pin(self, pin: str) -> None:
+        self._state.enter_pin(pin)
+
+    def withdraw_cash(self, amount: int) -> None:
+        self._state.withdraw_cash(amount)
+
+    def eject_card(self) -> None:
+        self._state.eject_card()
+
+
+# ---------------------------------------------------------
+# 3. وضعیت‌های مشخص (Concrete States)
+# ---------------------------------------------------------
+class IdleState(ATMState):
+    """وضعیت بیکار: دستگاه منتظر وارد کردن کارت است"""
+
+    def __init__(self, context: ATMContext) -> None:
+        self._context = context
+
+    def insert_card(self) -> None:
+        print("[IdleState] کارت دریافت شد. لطفاً رمز عبور را وارد کنید.")
+        # ترنزیشن به وضعیت بعدی
+        self._context.set_state(CardInsertedState(self._context))
+
+    def enter_pin(self, pin: str) -> None:
+        print("[IdleState] خطا: ابتدا باید کارت را وارد کنید.")
+
+    def withdraw_cash(self, amount: int) -> None:
+        print("[IdleState] خطا: ابتدا باید کارت را وارد و رمز را تایید کنید.")
+
+    def eject_card(self) -> None:
+        print("[IdleState] کارتی در دستگاه وجود ندارد.")
+
+
+class CardInsertedState(ATMState):
+    """وضعیت کارت وارد شده: دستگاه منتظر وارد کردن رمز است"""
+
+    def __init__(self, context: ATMContext) -> None:
+        self._context = context
+
+    def insert_card(self) -> None:
+        print("[CardInsertedState] خطا: کارت از قبل وارد شده است.")
+
+    def enter_pin(self, pin: str) -> None:
+        if pin == "1234":
+            print("[CardInsertedState] رمز صحیح است. دسترسی به منو باز شد.")
+            self._context.set_state(PinVerifiedState(self._context))
+        else:
+            print("[CardInsertedState] رمز اشتباه است. کارت خارج شد.")
+            self._context.set_state(IdleState(self._context))
+
+    def withdraw_cash(self, amount: int) -> None:
+        print("[CardInsertedState] خطا: ابتدا رمز عبور را وارد کنید.")
+
+    def eject_card(self) -> None:
+        print("[CardInsertedState] کارت شما خارج شد.")
+        self._context.set_state(IdleState(self._context))
+
+
+class PinVerifiedState(ATMState):
+    """وضعیت رمز تایید شده: کاربر مجاز به برداشت وجه است"""
+
+    def __init__(self, context: ATMContext) -> None:
+        self._context = context
+
+    def insert_card(self) -> None:
+        print("[PinVerifiedState] خطا: در حال حاضر در حال استفاده از دستگاه هستید.")
+
+    def enter_pin(self, pin: str) -> None:
+        print("[PinVerifiedState] شما از قبل وارد شده‌اید.")
+
+    def withdraw_cash(self, amount: int) -> None:
+        print(f"[PinVerifiedState] مبلغ {amount} تومان در حال تحویل است...")
+        print("[PinVerifiedState] عملیات موفق. کارت در حال خروج است.")
+        # پس از برداشت، دستگاه به حالت بیکار برمی‌گردد
+        self._context.set_state(IdleState(self._context))
+
+    def eject_card(self) -> None:
+        print("[PinVerifiedState] انصراف از عملیات. کارت شما خارج شد.")
+        self._context.set_state(IdleState(self._context))
+
+
+# ---------------------------------------------------------
+# تست مثال ساده
+# ---------------------------------------------------------
+if __name__ == "__main__":
+    atm = ATMContext()
+
+    atm.withdraw_cash(500)  # خطا
+    atm.insert_card()  # تغییر به CardInserted
+    atm.enter_pin("9999")  # رمز اشتباه -> برگشت به Idle
+    atm.insert_card()  # تغییر به CardInserted
+    atm.enter_pin("1234")  # رمز صحیح -> تغییر به PinVerified
+    atm.withdraw_cash(200)  # برداشت وجه -> برگشت به Idle
+```
+
+## 11.5. 🅱️ Examples3: سیستم پردازش سفارش فروشگاهی
+
+در محیط‌های صنعتی (Enterprise)، الگوی State معمولاً با تزریق وابستگی (Dependency Injection)، لاگینگ، و سیستم‌های رویداد (Event-Driven) ترکیب می‌شود. در این مثال، چرخه حیات یک سفارش (Order) را بررسی می‌کنیم. ما از dataclass برای نگهداری داده‌ها و اینترفیس‌هایی برای Logger و EventBus استفاده می‌کنیم تا کد کاملاً Testable و ماژولار باشد.
+
+```python
+from __future__ import annotations
+from abc import ABC, abstractmethod
+from dataclasses import dataclass, field
+from typing import Protocol, Any
+from datetime import datetime
+
+
+# ---------------------------------------------------------
+# 1. تعریف وابستگی‌های زیرساختی (Infrastructure Dependencies)
+# ---------------------------------------------------------
+class LoggerProtocol(Protocol):
+    """پروتکل لاگر برای رعایت اصل Dependency Inversion"""
+
+    def info(self, message: str) -> None: ...
+
+    def error(self, message: str) -> None: ...
+
+
+class EventBusProtocol(Protocol):
+    """پروتکل انتشار رویداد برای ارتباط با سایر میکروسرویس‌ها"""
+
+    def publish(self, event_name: str, payload: dict[str, Any]) -> None: ...
+
+
+# پیاده‌سازی پیش‌فرض برای تست (در محیط واقعی از Redis/RabbitMQ استفاده می‌شود)
+class ConsoleLogger:
+    def info(self, message: str) -> None:
+        print(f"[INFO {datetime.now().strftime('%H:%M:%S')}] {message}")
+
+    def error(self, message: str) -> None:
+        print(f"[ERROR {datetime.now().strftime('%H:%M:%S')}] {message}")
+
+
+class InMemoryEventBus:
+    def publish(self, event_name: str, payload: dict[str, Any]) -> None:
+        print(f"[EVENT BUS] انتشار رویداد '{event_name}' با داده‌های: {payload}")
+
+
+# ---------------------------------------------------------
+# 2. مدل داده‌ای سفارش (Order Data Model)
+# ---------------------------------------------------------
+@dataclass
+class OrderData:
+    """داده‌های خالص سفارش (جداسازی Data از Behavior)"""
+    order_id: str
+    customer_id: str
+    total_amount: float
+    items: list[str]
+    created_at: datetime = field(default_factory=datetime.now)
+    tracking_code: str | None = None
+
+
+# ---------------------------------------------------------
+# 3. اینترفیس وضعیت سفارش (Order State Interface)
+# ---------------------------------------------------------
+class OrderState(ABC):
+    """رابط وضعیت‌های چرخه حیات سفارش"""
+
+    @abstractmethod
+    def submit(self) -> None:
+        """تایید و ثبت نهایی سفارش"""
+        pass
+
+    @abstractmethod
+    def pay(self) -> None:
+        """پرداخت سفارش"""
+        pass
+
+    @abstractmethod
+    def ship(self) -> None:
+        """ارسال سفارش"""
+        pass
+
+    @abstractmethod
+    def cancel(self) -> None:
+        """لغو سفارش"""
+        pass
+
+
+# ---------------------------------------------------------
+# 4. کانتکست سفارش (Order Context)
+# ---------------------------------------------------------
+class OrderContext:
+    """
+    کانتکست سفارش. 
+    در معماری صنعتی، Context داده‌ها را نگه می‌دارد و Stateها رفتارها را.
+    """
+
+    def __init__(self, order_data: OrderData, logger: LoggerProtocol, event_bus: EventBusProtocol) -> None:
+        self.data = order_data
+        self.logger = logger
+        self.event_bus = event_bus
+
+        # وضعیت اولیه: پیش‌نویس (Draft)
+        self._state: OrderState = DraftState(self)
+        self.logger.info(f"سفارش {self.data.order_id} ایجاد شد.")
+
+    @property
+    def state_name(self) -> str:
+        return self._state.__class__.__name__
+
+    def transition_to(self, state: OrderState) -> None:
+        """تغییر وضعیت با ثبت لاگ"""
+        prev_state = self.state_name
+        self._state = state
+        self.logger.info(f"سفارش {self.data.order_id}: تغییر وضعیت از {prev_state} به {self.state_name}")
+
+    # Delegate کردن متدها به State فعلی
+    def submit(self) -> None: self._state.submit()
+
+    def pay(self) -> None: self._state.pay()
+
+    def ship(self) -> None: self._state.ship()
+
+    def cancel(self) -> None: self._state.cancel()
+
+
+# ---------------------------------------------------------
+# 5. وضعیت‌های مشخص (Concrete States) - با منطق تجاری (Business Logic)
+# ---------------------------------------------------------
+class DraftState(OrderState):
+    """وضعیت پیش‌نویس: سفارش هنوز نهایی نشده است"""
+
+    def __init__(self, context: OrderContext) -> None:
+        self._ctx = context
+
+    def submit(self) -> None:
+        self._ctx.logger.info("سفارش در حال بررسی موجودی انبار است...")
+        # شبیه‌سازی بررسی انبار
+        self._ctx.transition_to(SubmittedState(self._ctx))
+        self._ctx.event_bus.publish("order.submitted", {"order_id": self._ctx.data.order_id})
+
+    def pay(self) -> None:
+        self._ctx.logger.error("امکان پرداخت برای سفارش پیش‌نویس وجود ندارد.")
+
+    def ship(self) -> None:
+        self._ctx.logger.error("سفارش پیش‌نویس قابل ارسال نیست.")
+
+    def cancel(self) -> None:
+        self._ctx.logger.info("سفارش پیش‌نویس حذف شد.")
+        self._ctx.transition_to(CancelledState(self._ctx))
+
+
+class SubmittedState(OrderState):
+    """وضعیت ثبت شده: سفارش تایید و منتظر پرداخت است"""
+
+    def __init__(self, context: OrderContext) -> None:
+        self._ctx = context
+
+    def submit(self) -> None:
+        self._ctx.logger.error("سفارش از قبل ثبت شده است.")
+
+    def pay(self) -> None:
+        self._ctx.logger.info("در حال اتصال به درگاه پرداخت...")
+        # شبیه‌سازی موفقیت پرداخت
+        self._ctx.transition_to(PaidState(self._ctx))
+        self._ctx.event_bus.publish("payment.success", {"amount": self._ctx.data.total_amount})
+
+    def ship(self) -> None:
+        self._ctx.logger.error("تا زمانی که پرداخت انجام نشده، ارسال امکان‌پذیر نیست.")
+
+    def cancel(self) -> None:
+        self._ctx.logger.info("سفارش ثبت شده لغو شد. موجودی انبار آزاد می‌شود.")
+        self._ctx.transition_to(CancelledState(self._ctx))
+        self._ctx.event_bus.publish("order.cancelled", {"reason": "user_request"})
+
+
+class PaidState(OrderState):
+    """وضعیت پرداخت شده: آماده‌سازی برای ارسال"""
+
+    def __init__(self, context: OrderContext) -> None:
+        self._ctx = context
+
+    def submit(self) -> None:
+        self._ctx.logger.error("سفارش از قبل ثبت و پرداخت شده است.")
+
+    def pay(self) -> None:
+        self._ctx.logger.error("این سفارش قبلاً پرداخت شده است.")
+
+    def ship(self) -> None:
+        self._ctx.logger.info("بسته‌بندی انجام شد. تحویل به شرکت پست...")
+        self._ctx.data.tracking_code = "TRK-987654321"
+        self._ctx.transition_to(ShippedState(self._ctx))
+        self._ctx.event_bus.publish("order.shipped", {"tracking": self._ctx.data.tracking_code})
+
+    def cancel(self) -> None:
+        self._ctx.logger.info("درخواست لغو سفارش پرداخت شده. ارجاع به واحد مالی برای بازگشت وجه.")
+        self._ctx.transition_to(CancelledState(self._ctx))
+
+
+class ShippedState(OrderState):
+    """وضعیت ارسال شده: سفارش در مسیر است"""
+
+    def __init__(self, context: OrderContext) -> None:
+        self._ctx = context
+
+    def submit(self) -> None: self._ctx.logger.error("عملیات غیرمجاز.")
+
+    def pay(self) -> None: self._ctx.logger.error("عملیات غیرمجاز.")
+
+    def ship(self) -> None: self._ctx.logger.error("سفارش از قبل ارسال شده است.")
+
+    def cancel(self) -> None:
+        self._ctx.logger.error("امکان لغو سفارش ارسال شده وجود ندارد. باید از پروسه مرجوعی استفاده کنید.")
+
+
+class CancelledState(OrderState):
+    """وضعیت لغو شده: حالت نهایی (Terminal State)"""
+
+    def __init__(self, context: OrderContext) -> None:
+        self._ctx = context
+
+    # در حالت‌های نهایی (Terminal)، تمام عملیات با خطا مواجه می‌شوند
+    def submit(self) -> None: self._ctx.logger.error("سفارش لغو شده است.")
+
+    def pay(self) -> None: self._ctx.logger.error("سفارش لغو شده است.")
+
+    def ship(self) -> None: self._ctx.logger.error("سفارش لغو شده است.")
+
+    def cancel(self) -> None: self._ctx.logger.error("سفارش از قبل لغو شده است.")
+
+
+# ---------------------------------------------------------
+# تست مثال صنعتی
+# ---------------------------------------------------------
+if __name__ == "__main__":
+    # تزریق وابستگی‌ها (Dependency Injection)
+    logger = ConsoleLogger()
+    event_bus = InMemoryEventBus()
+
+    # ایجاد داده‌های سفارش
+    order_data = OrderData(order_id="ORD-1001",
+                           customer_id="CUST-55",
+                           total_amount=1500000.0,
+                           items=["Laptop", "Mouse"])
+
+    # ایجاد کانتکست
+    order = OrderContext(order_data, logger, event_bus)
+
+    print("\n--- سناریوی ۱: تلاش برای پرداخت قبل از ثبت ---")
+    order.pay()
+
+    print("\n--- سناریوی ۲: چرخه حیات نرمال (Submit -> Pay -> Ship) ---")
+    order.submit()
+    order.pay()
+    order.ship()
+
+    print("\n--- سناریوی ۳: تلاش برای لغو سفارش ارسال شده ---")
+    order.cancel()
+
+    print("\n--- سناریوی ۴: ایجاد سفارش جدید و لغو آن قبل از پرداخت ---")
+    order2_data = OrderData(order_id="ORD-1002", customer_id="CUST-60", total_amount=500000.0, items=["Keyboard"])
+    order2 = OrderContext(order2_data, logger, event_bus)
+    order2.submit()
+    order2.cancel()
+```
+
+* نکات کلیدی
+    * جداسازی Data و Behavior: داده‌های سفارش در OrderData (یک dataclass) نگه‌داری می‌شوند تا Stateها فقط روی رفتار (Behavior) تمرکز کنند. این کار از آلودگی Stateها به منطق دیتابیس جلوگیری می‌کند.
+    * Dependency Injection: لاگر و Event Bus از طریق Constructor به Context تزریق شده‌اند. Stateها به این وابستگی‌ها از طریق Context دسترسی دارند. این یعنی اگر بخواهیم لاگر را به فایل یا Sentry تغییر دهیم، نیازی به تغییر کدهای State نیست.
+    * Event-Driven Architecture: در هر ترنزیشن مهم، یک رویداد (Event) منتشر می‌شود. این در معماری‌های میکروسرویس برای اطلاع‌رسانی به سرویس‌های دیگر (مثل سرویس ایمیل یا انبار) حیاتی است.
+    * Terminal States: وضعیت CancelledState یک وضعیت نهایی است. در این وضعیت، تمام متدها با خطای منطقی
+
+## 11.6. 🅱️ Examples3
 
 </div>
