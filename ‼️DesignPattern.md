@@ -5662,14 +5662,17 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import List, Protocol
 
+
 # ---------------------------------------------------------
 # 1. تعریف ساختار داده‌ای محصولات (Elements)
 # ---------------------------------------------------------
 class Product(ABC):
     """رابط پایه برای تمام محصولات."""
+
     @abstractmethod
     def accept(self, visitor: CheckoutVisitor) -> None:
         pass
+
 
 @dataclass
 class PhysicalProduct(Product):
@@ -5681,6 +5684,7 @@ class PhysicalProduct(Product):
     def accept(self, visitor: CheckoutVisitor) -> None:
         visitor.visit_physical_product(self)
 
+
 @dataclass
 class DigitalProduct(Product):
     """محصول دیجیتال (بدون حمل و نقل، مالیات متفاوت)."""
@@ -5690,6 +5694,7 @@ class DigitalProduct(Product):
 
     def accept(self, visitor: CheckoutVisitor) -> None:
         visitor.visit_digital_product(self)
+
 
 @dataclass
 class SubscriptionService(Product):
@@ -5707,7 +5712,7 @@ class SubscriptionService(Product):
 # ---------------------------------------------------------
 class CheckoutVisitor(ABC):
     """رابط عملیات‌های مربوط به تسویه حساب."""
-    
+
     @abstractmethod
     def visit_physical_product(self, product: PhysicalProduct) -> None:
         pass
@@ -5729,6 +5734,7 @@ class TaxCalculatorVisitor(CheckoutVisitor):
     بازدیدکننده محاسبه مالیات.
     این کلاس وضعیت (State) جمع‌آوری می‌کند (مجموع مالیات).
     """
+
     def __init__(self) -> None:
         self._total_tax: float = 0.0
 
@@ -5755,7 +5761,7 @@ class TaxCalculatorVisitor(CheckoutVisitor):
 
 class ShippingCalculatorVisitor(CheckoutVisitor):
     """بازدیدکننده محاسبه هزینه و وزن حمل‌ونقل."""
-    
+
     def __init__(self) -> None:
         self._total_weight: float = 0.0
         self._shipping_cost: float = 0.0
@@ -5789,7 +5795,7 @@ class ShippingCalculatorVisitor(CheckoutVisitor):
 # ---------------------------------------------------------
 class ShoppingCart:
     """سبد خرید که نقش Object Structure را بازی می‌کند."""
-    
+
     def __init__(self) -> None:
         self._products: List[Product] = []
 
@@ -5974,7 +5980,13 @@ if __name__ == '__main__':
     print('setting up smart home ...')
     home = SmartHome()
     home.add_device(SmartLight('Living room lights'))
-    home.add_device(SmartThermostat('Main thermostat', 20.5))
+    home.add_device(SmartThermostat('Main thermostat', 20.5))[main.py](.. /../../ 02 - Data / Programming - Python / % 5
+    B % E2 % 9
+    C % 8
+    F % EF % B8 % 8
+    F % 5
+    D % 20
+    DesignPattern_OrdooKhani / 39 - Strategy - Example / behavioral / strategy / samples / sample_1 / main.py)
     home.add_device(SmartLock('Front door lock'))
 
     print('\ncurrent status:')
@@ -5993,15 +6005,447 @@ if __name__ == '__main__':
 
 ```
 
-# 14. 🅰️ Behavioral.Strategy
+# 14. 🅰️ Behavioral.Strategy(تغییر عملکرد سیستم در لحظه ران‌تایم به ازای شرایط متفاوت حتی وقتی بخواهیم شرایط جدید وضع کنیم)
 
-## 14.1. 🅱️ Examples1:
+* هدف: بتوانیم در لحظه runtime عملکرد یک الگوریتم(سیستم) را تغییر بدهیم
+    * مثلا در سیستم فروش مدیریت تخفیف‌هاتوسط آن صورت بگیرد که به ازای روزهای مبارک در سال تعداد روز و مقدار تخفیف متفاوت باشد
+    * وقتی تعداد حالت ها زیاد بشه میتوان از این استفاده کرد
+    * سنارویوهای متفاوت در حالت های متفاوت از عملکرد سیاست‌ها
+* تعریف
+    * الگوی استراتژی به شما اجازه می‌دهد تا یک خانواده از الگوریتم‌ها را تعریف کرده، هر کدام را در یک کلاس مجزا قرار دهید و اشیاء آن‌ها را درون یک کلاس دیگر (Context) قابل تعویض (Interchangeable) کنید.
+    * به زبان ساده: به جای اینکه یک کلاس بزرگ با هزاران خط کد و if/elseهای تو در تو بسازید که کارهای مختلف را انجام دهد، آن رفتارها را به کلاس‌های جداگانه (استراتژی‌ها) منتقل می‌کنید.
+* اجزای اصلی الگو (Structure)
+    * رابط استراتژی (Strategy Interface): یک اینترفیس (یا کلاس انتزاعی) که یک متد مشترک برای تمام الگوریتم‌های مشخص تعریف می‌کند.
+    * استراتژی‌های مشخص (Concrete Strategies): کلاس‌هایی که رابط استراتژی را پیاده‌سازی می‌کنند و هر کدام الگوریتم خاص خود را دارند.
+    * زمینه / کانتکست (Context): کلاسی که رفتار اصلی را دارد و به جای پیاده‌سازی الگوریتم، یک مرجع (Reference) از نوع "رابط استراتژی" را نگه می‌دارد و کار را به استراتژیِ تزریق شده، واگذار (Delegate) می‌کند.
+    *
+* ملاحظات طراحی و اصول SOLID: استفاده از این الگو مستقیماً از دو اصل مهم SOLID پشتیبانی می‌کند:
+    * اصل Open/Closed (OCP): کلاس Context بدون نیاز به تغییر کدش (Close for modification)، با افزودن استراتژی‌های جدید، رفتارهای جدیدی می‌پذیرد (Open for extension).
+    * اصل Single Responsibility (SRP): منطق پیچیده و شرطی از کلاس Context خارج شده و هر استراتژی فقط مسئول یک الگوریتم خاص است.
+* مزایا:
+    * حذف بلوک‌های شرطی پیچیده (switch یا if/elseهای طولانی).
+    * جداسازی دغدغه‌ها (Separation of Concerns).
+    * امکان تغییر الگوریتم در زمان اجرا (Runtime).
+    * افزایش قابلیت تست‌پذیری (می‌توان استراتژی‌ها را به راحتی Mock یا Unit Test کرد).
+* معایب:
+    * افزایش تعداد کلاس‌ها (اگر الگوریتم‌ها خیلی ساده باشند، استفاده از این الگو Overkill یا زیاده‌روی است).
+    * کلاینت‌ها باید تفاوت بین استراتژی‌ها را بدانند تا بتوانند استراتژی مناسب را انتخاب و تزریق کنند.
+* چه زمانی از این الگو استفاده کنیم؟‍
+    * زمانی که چندین کلاس دارید که فقط در رفتارشان تفاوت دارند و با if/else بین آن‌ها سوییچ می‌کنید.
+    * زمانی که نیاز دارید الگوریتم‌ها را در زمان اجرا (Runtime) به صورت داینامیک تغییر دهید.
+    * زمانی که می‌خواهید از افشای جزئیات پیچیده الگوریتم‌ها به کلاس‌های دیگر جلوگیری کنید (Encapsulation).
 
-## 14.2. 🅱️ Examples2:
+## 14.1. 🅱️ Examples1: تخفیف در سایت فروشگاهی
 
-## 14.3. 🅱️ Examples3:
+```python
+from typing import Callable
 
-## 14.4. 🅱️ Examples4:
+
+class Order:
+    def __init__(self, price, discount_strategy: Callable[['Order'], float]):
+        self.price = price
+        self.discount_strategy = discount_strategy
+
+    def price_after_discount(self):
+        if self.discount_strategy:
+            discount = self.discount_strategy(self)
+        else:
+            discount = 0
+
+        return self.price - discount
+
+    def __str__(self):
+        return f'Price: {self.price}, price after discount: {self.price_after_discount()}'
+
+
+def on_sale_discount(item: Order):
+    return item.price * 0.25 + 20
+
+
+def twenty_percent_discount(item: Order):
+    return item.price * .2
+
+
+if __name__ == '__main__':
+    print('item with on_sale_discount strategy')
+    order = Order(20000, on_sale_discount)
+    print(order)
+
+    print('---------------')
+
+    print('item with twenty_percent_discount strategy')
+    order = Order(20000, twenty_percent_discount)
+    print(order)
+```
+
+## 14.2. 🅱️ Examples2: payment
+
+پیاده‌سازی الگوی طراحی استراتژی (Strategy Pattern) برای سیستم پردازش پرداخت. این ماژول شامل رابط استراتژی، استراتژی‌های مشخص پرداخت و کلاس زمینه (Context) است.
+
+```python
+import uuid
+from abc import ABC, abstractmethod
+from collections import namedtuple
+
+# تعریف یک NamedTuple برای نگهداری ساختاریافته نتیجه پرداخت (شامل مبلغ اصلی و کارمزد)
+PaymentStrategyResult = namedtuple('PaymentStrategyResult', ['amount', 'fee'])
+
+
+# region strategy interface
+
+class PaymentStrategy(ABC):
+    """
+    رابط (Interface) استراتژی پرداخت.
+    این کلاس انتزاعی، قرارداد مشترک برای تمام روش‌های پرداخت را تعریف می‌کند.
+    """
+
+    @abstractmethod
+    def pay(self, amount: float) -> PaymentStrategyResult:
+        """
+        پردازش مبلغ پرداختی بر اساس استراتژی مشخص.
+
+        :param amount: مبلغی که باید پردازش شود (از نوع float).
+        :return: یک شیء PaymentStrategyResult شامل مبلغ و کارمزد محاسبه شده.
+        """
+        raise NotImplementedError
+
+
+# endregion
+
+# region concrete strategies
+
+class CreditCardPayment(PaymentStrategy):
+    """
+    استراتژی مشخص برای پرداخت از طریق کارت اعتباری.
+    """
+
+    def __init__(self, card_number: str, cvv: str):
+        """
+        مقداردهی اولیه استراتژی پرداخت با کارت اعتباری.
+
+        :param card_number: شماره کارت اعتباری (رشته متنی).
+        :param cvv: کد امنیتی کارت (رشته متنی).
+        """
+        self.card_number = card_number
+        self.cvv = cvv
+
+    def pay(self, amount: float) -> PaymentStrategyResult:
+        """
+        اجرای منطق پرداخت کارت اعتباری و محاسبه کارمزد (۲ درصد).
+
+        :param amount: مبلغ پرداختی.
+        :return: نتیجه پرداخت شامل مبلغ و کارمزد.
+        """
+        print(f'Processing credit card payment of ${amount:.2f} for {self.card_number}')
+        return PaymentStrategyResult(amount, amount * 0.02)
+
+
+class PaypalPayment(PaymentStrategy):
+    """
+    استراتژی مشخص برای پرداخت از طریق پی‌پال (Paypal).
+    """
+
+    def __init__(self, email: str):
+        """
+        مقداردهی اولیه استراتژی پرداخت پی‌پال.
+
+        :param email: آدرس ایمیل مرتبط با حساب پی‌پال.
+        """
+        self.email = email
+
+    def pay(self, amount: float) -> PaymentStrategyResult:
+        """
+        اجرای منطق پرداخت پی‌پال و محاسبه کارمزد (۱ درصد).
+
+        :param amount: مبلغ پرداختی.
+        :return: نتیجه پرداخت شامل مبلغ و کارمزد.
+        """
+        print(f'Processing paypal payment of ${amount:.2f} for {self.email}')
+        return PaymentStrategyResult(amount, amount * 0.01)
+
+
+class CryptoPayment(PaymentStrategy):
+    """
+    استراتژی مشخص برای پرداخت از طریق رمزارز (Crypto).
+    """
+
+    def __init__(self, wallet_address: str):
+        """
+        مقداردهی اولیه استراتژی پرداخت رمزارز.
+
+        :param wallet_address: آدرس کیف پول رمزارز مقصد.
+        """
+        self.wallet_address = wallet_address
+
+    def pay(self, amount: float) -> PaymentStrategyResult:
+        """
+        اجرای منطق پرداخت رمزارز و محاسبه کارمزد (۱ درصد).
+
+        :param amount: مبلغ پرداختی.
+        :return: نتیجه پرداخت شامل مبلغ و کارمزد.
+        """
+        print(f'Processing crypto payment of ${amount:.2f} for {self.wallet_address}')
+        return PaymentStrategyResult(amount, amount * 0.01)
+
+
+# endregion
+
+# region context
+
+class PaymentProcessor:
+    """
+    کلاس زمینه (Context) در الگوی استراتژی.
+    این کلاس یک مرجع به یک شیء استراتژی نگهداری می‌کند و عملیات پرداخت را به آن واگذار می‌نماید.
+    """
+
+    def __init__(self, strategy: PaymentStrategy = None):
+        """
+        مقداردهی اولیه پردازشگر پرداخت.
+
+        :param strategy: استراتژی پرداخت پیش‌فرض (اختیاری).
+        """
+        self._strategy = strategy
+
+    @property
+    def strategy(self):
+        """
+        دریافت استراتژی پرداخت فعلی.
+
+        :return: شیء استراتژی پرداخت فعلی.
+        """
+        return self._strategy
+
+    @strategy.setter
+    def strategy(self, value):
+        """
+        تنظیم یا تغییر استراتژی پرداخت در زمان اجرا.
+
+        :param value: شیء استراتژی پرداخت جدید.
+        """
+        self._strategy = value
+
+    def process_payment(self, amount: float) -> PaymentStrategyResult:
+        """
+        شروع فرآیند پردازش پرداخت با استفاده از استراتژی تنظیم شده.
+
+        :param amount: مبلغی که باید پردازش شود.
+        :return: نتیجه نهایی پرداخت.
+        :raises ValueError: اگر استراتژی پرداخت تنظیم نشده باشد.
+        """
+        if self.strategy is None:
+            raise ValueError('Strategy is not set')
+
+        return self.strategy.pay(amount)
+
+
+# endregion
+
+# region client
+
+if __name__ == '__main__':
+    # ایجاد نمونه‌ای از پردازشگر پرداخت بدون استراتژی پیش‌فرض
+    processor = PaymentProcessor()
+
+    # ۱. تنظیم استراتژی پرداخت به کارت اعتباری و انجام پرداخت
+    processor.strategy = CreditCardPayment(card_number='1234-5678-1234-5678', cvv='1234')
+    result = processor.process_payment(100)
+    print(f'Payment result: {result._asdict()}')
+
+    # ۲. تغییر استراتژی پرداخت به پی‌پال در زمان اجرا و انجام پرداخت
+    processor.strategy = PaypalPayment(email='test@test.com')
+    result = processor.process_payment(100)
+    print(f'Payment result: {result._asdict()}')
+
+    # ۳. تغییر استراتژی پرداخت به رمزارز و انجام پرداخت
+    processor.strategy = CryptoPayment(wallet_address=str(uuid.uuid4()))
+    result = processor.process_payment(100)
+    print(f'Payment result: {result._asdict()}')
+
+# endregion
+```
+
+## 14.3. 🅱️ Examples3: Payment System2
+
+سیستم پردازش پرداخت: در این مثال، یک سبد خرید داریم که می‌تواند روش پرداخت خود را در زمان اجرا تغییر دهد (کارت اعتباری، پی‌پال، یا رمزارز).
+
+```python
+from abc import ABC, abstractmethod
+from typing import Protocol
+
+
+# --- ۱. رابط استراتژی (Strategy Interface) ---
+class PaymentStrategy(Protocol):
+    """
+    رابط استراتژی پرداخت.
+    تمام روش‌های پرداخت باید این متد را پیاده‌سازی کنند.
+    """
+
+    @abstractmethod
+    def pay(self, amount: float) -> None:
+        """پردازش مبلغ مشخص شده."""
+        pass
+
+
+# --- ۲. استراتژی‌های مشخص (Concrete Strategies) ---
+class CreditCardPayment(PaymentStrategy):
+    """استراتژی پرداخت با کارت اعتباری."""
+
+    def __init__(self, card_number: str, cvv: str) -> None:
+        self.card_number = card_number
+        self.cvv = cvv
+
+    def pay(self, amount: float) -> None:
+        print(f"[کارت اعتباری] پرداخت {amount} تومان با کارت {self.card_number[-4:]} انجام شد.")
+
+
+class CryptoPayment(PaymentStrategy):
+    """استراتژی پرداخت با رمزارز."""
+
+    def __init__(self, wallet_address: str) -> None:
+        self.wallet_address = wallet_address
+
+    def pay(self, amount: float) -> None:
+        print(f"[رمزارز] پرداخت {amount} تومان به کیف پول {self.wallet_address} ارسال شد.")
+
+
+# --- ۳. زمینه / کانتکست (Context) ---
+class ShoppingCart:
+    """
+    کلاس کانتکست که سبد خرید را مدیریت می‌کند.
+    این کلاس نمی‌داند پرداخت چگونه انجام می‌شود، فقط به استراتژی وابسته است.
+    """
+
+    def __init__(self, payment_strategy: PaymentStrategy) -> None:
+        # تزریق وابستگی (Dependency Injection) استراتژی در زمان ساخت
+        self._payment_strategy = payment_strategy
+
+    def set_payment_strategy(self, strategy: PaymentStrategy) -> None:
+        """تغییر استراتژی پرداخت در زمان اجرا."""
+        self._payment_strategy = strategy
+
+    def checkout(self, total_amount: float) -> None:
+        """
+        نهایی کردن خرید.
+        منطق پرداخت به استراتژی تزریق شده واگذار (Delegate) می‌شود.
+        """
+        print(f"مجموع سبد خرید: {total_amount} تومان")
+        # فراخوانی متد استراتژی بدون نیاز به دانستن جزئیات پیاده‌سازی
+        self._payment_strategy.pay(total_amount)
+
+
+# --- اجرای مثال ---
+if __name__ == "__main__":
+    # ایجاد استراتژی‌ها
+    credit_card = CreditCardPayment(card_number="1234567812345678", cvv="123")
+    crypto_wallet = CryptoPayment(wallet_address="0xABC123...XYZ")
+
+    # ایجاد کانتکست با استراتژی اولیه
+    cart = ShoppingCart(payment_strategy=credit_card)
+
+    # تسویه حساب با کارت اعتباری
+    cart.checkout(total_amount=500000.0)
+
+    print("-" * 40)
+
+    # تغییر استراتژی در زمان اجرا به رمزارز
+    cart.set_payment_strategy(strategy=crypto_wallet)
+
+    # تسویه حساب مجدد با استراتژی جدید
+    cart.checkout(total_amount=750000.0)
+```
+
+## 14.4. 🅱️ Examples4: Route Navigator
+
+مسیریاب و ناوبری: در این مثال، یک سیستم مسیریاب داریم که بسته به نوع حمل و نقل (رانندگی، پیاده‌روی، دوچرخه)، مسیرهای متفاوتی را محاسبه می‌کند.
+
+```python
+from abc import ABC, abstractmethod
+from typing import Protocol, List
+
+
+# --- ۱. رابط استراتژی (Strategy Interface) ---
+class RouteStrategy(Protocol):
+    """
+    رابط استراتژی مسیریابی.
+    تعریف قرارداد مشترک برای تمام الگوریتم‌های مسیریابی.
+    """
+
+    @abstractmethod
+    def build_route(self, start_point: str, end_point: str) -> List[str]:
+        """
+        محاسبه و ساخت مسیر.
+        خروجی باید لیستی از دستورالعمل‌های مسیر باشد.
+        """
+        pass
+
+
+# --- ۲. استراتژی‌های مشخص (Concrete Strategies) ---
+class DrivingRouteStrategy(RouteStrategy):
+    """استراتژی مسیریابی برای رانندگی (با ماشین)."""
+
+    def build_route(self, start_point: str, end_point: str) -> List[str]:
+        # شبیه‌سازی یک الگوریتم پیچیده مسیریابی
+        return [
+            f"شروع رانندگی از {start_point}",
+            "ورود به اتوبان شهید همت به سمت شرق",
+            "خروج از خروجی ونک",
+            f"رسیدن به مقصد: {end_point}"
+        ]
+
+
+class WalkingRouteStrategy(RouteStrategy):
+    """استراتژی مسیریابی برای پیاده‌روی."""
+
+    def build_route(self, start_point: str, end_point: str) -> List[str]:
+        return [
+            f"شروع پیاده‌روی از {start_point}",
+            "حرکت به سمت ایستگاه مترو",
+            "عبور از پارک لاله",
+            f"رسیدن به مقصد: {end_point}"
+        ]
+
+
+# --- ۳. زمینه / کانتکست (Context) ---
+class Navigator:
+    """
+    کلاس کانتکست (ناوبر).
+    وظیفه اصلی آن نمایش مسیر است، اما الگوریتم ساخت مسیر را به استراتژی واگذار می‌کند.
+    """
+
+    def __init__(self, route_strategy: RouteStrategy) -> None:
+        self._route_strategy = route_strategy
+
+    def change_route_strategy(self, strategy: RouteStrategy) -> None:
+        """امکان تغییر نوع مسیریابی در حین سفر."""
+        self._route_strategy = strategy
+
+    def navigate(self, start: str, end: str) -> None:
+        """
+        اجرای فرآیند مسیریابی.
+        """
+        print(f"\n--- در حال محاسبه مسیر از {start} به {end} ---")
+        # دریافت مسیر از استراتژی فعلی
+        route_steps: List[str] = self._route_strategy.build_route(start, end)
+
+        # نمایش مراحل مسیر
+        for step in route_steps:
+            print(f"-> {step}")
+
+
+# --- اجرای مثال ---
+if __name__ == "__main__":
+    # تعریف نقاط مبدا و مقصد
+    origin = "میدان آزادی"
+    destination = "برج میلاد"
+
+    # ایجاد ناوبر با استراتژی پیش‌فرض (رانندگی)
+    my_navigator = Navigator(route_strategy=DrivingRouteStrategy())
+    my_navigator.navigate(origin, destination)
+
+    # فرض کنید ماشین خراب شده و باید پیاده ادامه دهیم (تغییر استراتژی در Runtime)
+    my_navigator.change_route_strategy(strategy=WalkingRouteStrategy())
+    my_navigator.navigate(origin, destination)
+```
 
 # 15. 🅰️ Behavioral.Iterator
 

@@ -157,7 +157,7 @@ trans -e google -s ar -t fa -show-original n -show-original-phonetics n -show-tr
     * [ALT+Insert]:‌ autoGenerate[Getter , Setter,Tostring, ...]
     * [psvm]: تمام ساختار تابع مین را خوکار ایجاد میکند
 * theme
-  * Ayu Dark: بهروز از این استفاده میکنه گاها
+  * Ayu Dark(Island): بهروز از این استفاده میکنه گاها
   * dracula vscode
   * night-owl-native
   * vscode dark
