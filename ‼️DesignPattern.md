@@ -38,7 +38,7 @@ The Design Patterns are descriptions of communicating objects and class that are
         * **State**: اجازه دادن به یک شیء که رفتارش را با تغییر حالت داخلی‌اش تغییر دهد، گویی کلاس آن تغییر کرده است.
         * **Strategy**: تعریف خانواده‌ای از الگوریتم‌ها، کپسوله‌سازی هرکدام و جایگزینی آن‌ها به‌صورت قابل تعویض در زمان اجرا.
         * **Template Method**: تعریف الگوریتمی در یک متد که برخی مراحل آن به زیرکلاس‌ها واگذار شده است — ساختار کلی ثابت است، ولی جزئیات توسط زیرکلاس‌ها پیاده‌سازی می‌شوند.
-        * **Visitor**: افزودن عملکردهای جدید به مجموعه‌ای از کلاس‌ها بدون تغییر کد آن‌ها، با تعریف یک کلاس "بازدیدکننده" که بر روی آن‌ها عمل می‌کند.
+        * **Visitor**: (موارد خاص کاربرد دارد) افزودن عملکردهای جدید به مجموعه‌ای از کلاس‌ها بدون تغییر کد آن‌ها، با تعریف یک کلاس "بازدیدکننده" که بر روی آن‌ها عمل می‌کند.
 
 # 1. 🅰️Creational.Singleton(تنها تولید یک شیءبه ازای هربار ساخت شیء جدید)
 
@@ -5371,15 +5371,627 @@ if __name__ == "__main__":
     wallet_payment.process_payment(user_id="U-200", amount=150_000)
 ```
 
-# 13. 🅰️ Behavioral.Visitor
+# 13. 🅰️ Behavioral.Visitor()
+
+* تعاریف و توضسیحات پایه
+    * پیاده‌سازی یک وجه مشترک از کلاس‌های متفاوت بگونه‌ای که پیچیدگی درکلاس مستقل باشد و تنها وجه مشترک در کلاس پایه آورده شود
+    * بدون تغییر در کلاس‌های عناصری که عملیات روی آن‌ها انجام می‌شود، الگوریتم‌های جدیدی به آن‌ها اضافه کنید.
+    * فراخوانی متد بر اساس نوع شی و نوع بازدیدکننده به صورت پویا (Dynamic) تعیین شود.
+* اجزای اصلی
+    * Visitor Interface: اینترفیسی که برای هر کلاس Concrete Element، یک متد visit تعریف می‌کند.
+    * Concrete Visitor: الگوریتم‌های جدید را پیاده‌سازی می‌کند.
+    * Element Interface: متد accept(visitor) را تعریف می‌کند.
+    * Concrete Element: متد accept را پیاده‌سازی می‌کند (معمولاً با visitor.visit(self)).
+    * Object Structure: ساختاری (مثل لیست یا درخت) که عناصر را نگه می‌دارد و به Visitor اجازه می‌دهد آن‌ها را پیمایش کند.
+* مزایا (Pros)
+    * اصل Open/Closed: افزودن عملیات جدید (Visitor جدید) بدون تغییر در کلاس‌های موجود (Elements) امکان‌پذیر است.
+    * اصل Single Responsibility: عملیات‌های مرتبط و پیچیده را از کلاس‌های Element خارج کرده و در یک Visitor متمرکز می‌کند.
+    * تجمع وضعیت (Accumulating State): Visitor می‌تواند در حین پیمایش ساختار، وضعیت (State) جمع‌آوری کند (مثلاً محاسبه مجموع قیمت‌ها).
+* معایب (Cons)
+    * نقض Open/Closed برای Elements: اگر یک Element جدید به ساختار اضافه کنید، باید اینترفیس Visitor و تمام Concrete Visitorهای موجود را تغییر دهید. (این الگو فقط زمانی خوب است که ساختار عناصر پایدار و عملیات متغیر باشد).
+    * نقض کپسوله‌سازی (Encapsulation): Visitor برای انجام کار خود معمولاً نیاز به دسترسی به atributهای خصوصی Elementها دارد. این کار باعث می‌شود Elementها مجبور شوند فیلدهای بیشتری را Public کنند یا Visitor را به عنوان Friend معرفی کنند.
+    * پیچیدگی ساختار: درک جریان اجرا (به دلیل Double Dispatch) برای توسعه‌دهندگان تازه‌کار دشوار است.
+* تفاوت کلیدی با Strategy و State
+    * در Strategy، کلاینت استراتژی را به Context تزریق می‌کند.
+    * در Visitor، ساختار اشیاء (Elements) ثابت است و ما الگوریتم‌های مختلف را روی این ساختار "سوار" می‌کنیم.
 
 ## 13.1. 🅱️ Examples1:
 
-## 13.2. 🅱️ Examples2:
+```python
+from abc import ABC, abstractmethod
+from typing import Any
 
-## 13.3. 🅱️ Examples3:
+
+# region element
+
+class Shape(ABC):
+    @abstractmethod
+    def accept(self, visitor: 'ShapeVisitor') -> Any:
+        raise NotImplementedError
+
+
+# endregion
+
+# region concrete elements
+
+class Circle(Shape):
+    def __init__(self, radius: float):
+        self.radius = radius
+
+    def accept(self, visitor: 'ShapeVisitor') -> Any:
+        return visitor.visit_circle(self)
+
+
+class Rectangle(Shape):
+    def __init__(self, width: float, height: float):
+        self.width = width
+        self.height = height
+
+    def accept(self, visitor: 'ShapeVisitor') -> Any:
+        return visitor.visit_rectangle(self)
+
+
+# endregion
+
+# region visitor
+
+class ShapeVisitor(ABC):
+    @abstractmethod
+    def visit_circle(self, circle: Circle) -> Any:
+        raise NotImplementedError
+
+    @abstractmethod
+    def visit_rectangle(self, rectangle: Rectangle) -> Any:
+        raise NotImplementedError
+
+
+# endregion
+
+# region concrete visitors
+
+class AreaCalculationVisitor(ShapeVisitor):
+    def visit_circle(self, circle: Circle):
+        return circle.radius * circle.radius * 3.14
+
+    def visit_rectangle(self, rectangle: Rectangle):
+        return rectangle.width * rectangle.height
+
+
+class PerimeterCalculationVisitor(ShapeVisitor):
+    def visit_circle(self, circle: Circle) -> Any:
+        return 2 * 3.14 * circle.radius
+
+    def visit_rectangle(self, rectangle: Rectangle) -> Any:
+        return (rectangle.width + rectangle.height) * 2
+
+
+# endregion
+
+# region client code
+
+if __name__ == '__main__':
+    shape_1 = Circle(radius=4)
+    # shape_1 = Rectangle(width=4, height=6)
+
+    visitor_1 = AreaCalculationVisitor()
+    # visitor_1 = PerimeterCalculationVisitor()
+    print(f'calculation result : {shape_1.accept(visitor_1)}')
+
+# endregion
+```
+
+## 13.2. 🅱️ Examples2: پردازش و خروجی گرفتن از اسناد
+
+در این مثال، یک سند متنی داریم که از اجزای مختلفی (پاراگراف، تصویر، جدول) تشکیل شده است. ما می‌خواهیم بتوانیم از این سند خروجی HTML، Markdown و یا شمارش کلمات بگیریم. بدون Visitor، هر کلاس Element باید متدهای `to_html`, `to_md`, `count_words` را داشته باشد که با افزودن هر فرمت جدید، تمام کلاس‌ها باید تغییر کنند.
+
+```python
+from __future__ import annotations
+from abc import ABC, abstractmethod
+from typing import List
+
+
+# ---------------------------------------------------------
+# 1. اینترفیس بازدیدکننده (Visitor Interface)
+# ---------------------------------------------------------
+class DocumentVisitor(ABC):
+    """رابطی برای تعریف عملیات‌هایی که روی اجزای سند انجام می‌شود."""
+
+    @abstractmethod
+    def visit_paragraph(self, element: Paragraph) -> None:
+        pass
+
+    @abstractmethod
+    def visit_image(self, element: Image) -> None:
+        pass
+
+    @abstractmethod
+    def visit_table(self, element: Table) -> None:
+        pass
+
+
+# ---------------------------------------------------------
+# 2. اینترفیس عنصر (Element Interface)
+# ---------------------------------------------------------
+class DocumentElement(ABC):
+    """رابطی برای تمام اجزای سند."""
+
+    @abstractmethod
+    def accept(self, visitor: DocumentVisitor) -> None:
+        """متد accept برای پیاده‌سازی مکانیزم Double Dispatch."""
+        pass
+
+
+# ---------------------------------------------------------
+# 3. عناصر مشخص (Concrete Elements)
+# ---------------------------------------------------------
+class Paragraph(DocumentElement):
+    def __init__(self, text: str) -> None:
+        self._text = text
+
+    @property
+    def text(self) -> str:
+        return self._text
+
+    def accept(self, visitor: DocumentVisitor) -> None:
+        # ارسال خود (self) به بازدیدکننده (Dispatch دوم)
+        visitor.visit_paragraph(self)
+
+
+class Image(DocumentElement):
+    def __init__(self, url: str, alt: str) -> None:
+        self._url = url
+        self._alt = alt
+
+    @property
+    def url(self) -> str: return self._url
+
+    @property
+    def alt(self) -> str: return self._alt
+
+    def accept(self, visitor: DocumentVisitor) -> None:
+        visitor.visit_image(self)
+
+
+class Table(DocumentElement):
+    def __init__(self, rows: int, cols: int) -> None:
+        self._rows = rows
+        self._cols = cols
+
+    @property
+    def rows(self) -> int: return self._rows
+
+    @property
+    def cols(self) -> int: return self._cols
+
+    def accept(self, visitor: DocumentVisitor) -> None:
+        visitor.visit_table(self)
+
+
+# ---------------------------------------------------------
+# 4. بازدیدکنندگان مشخص (Concrete Visitors)
+# ---------------------------------------------------------
+class HTMLExporterVisitor(DocumentVisitor):
+    """بازدیدکننده برای تبدیل سند به HTML."""
+
+    def __init__(self) -> None:
+        self._html_output: List[str] = []
+
+    def visit_paragraph(self, element: Paragraph) -> None:
+        self._html_output.append(f"<p>{element.text}</p>")
+
+    def visit_image(self, element: Image) -> None:
+        self._html_output.append(f'<img src="{element.url}" alt="{element.alt}">')
+
+    def visit_table(self, element: Table) -> None:
+        self._html_output.append(f"<table rows='{element.rows}' cols='{element.cols}'></table>")
+
+    def get_result(self) -> str:
+        return "\n".join(self._html_output)
+
+
+class WordCountVisitor(DocumentVisitor):
+    """بازدیدکننده برای شمارش تعداد کلمات در سند."""
+
+    def __init__(self) -> None:
+        self._word_count: int = 0
+
+    def visit_paragraph(self, element: Paragraph) -> None:
+        # شمارش کلمات متن پاراگراف
+        self._word_count += len(element.text.split())
+
+    def visit_image(self, element: Image) -> None:
+        # تصاویر کلمه ندارند (یا فقط alt text را می‌شماریم)
+        self._word_count += len(element.alt.split())
+
+    def visit_table(self, element: Table) -> None:
+        pass  # جدول خالی فرض می‌شود
+
+    @property
+    def total_words(self) -> int:
+        return self._word_count
+
+
+# ---------------------------------------------------------
+# 5. ساختار شیء (Object Structure) و تست
+# ---------------------------------------------------------
+class Document:
+    """مجموعه‌ای از عناصر سند."""
+
+    def __init__(self) -> None:
+        self._elements: List[DocumentElement] = []
+
+    def add_element(self, element: DocumentElement) -> None:
+        self._elements.append(element)
+
+    def export(self, visitor: DocumentVisitor) -> None:
+        """پیمایش ساختار و اعمال بازدیدکننده روی هر عنصر."""
+        for element in self._elements:
+            element.accept(visitor)
+
+
+if __name__ == "__main__":
+    # ایجاد ساختار سند
+    doc = Document()
+    doc.add_element(Paragraph("سلام این یک تست است."))
+    doc.add_element(Image(url="logo.png", alt="لوگوی شرکت"))
+    doc.add_element(Paragraph("پاراگراف دوم با چند کلمه"))
+    doc.add_element(Table(rows=3, cols=4))
+
+    # تست خروجی HTML
+    html_visitor = HTMLExporterVisitor()
+    doc.export(html_visitor)
+    print("--- خروجی HTML ---")
+    print(html_visitor.get_result())
+
+    # تست شمارش کلمات
+    count_visitor = WordCountVisitor()
+    doc.export(count_visitor)
+    print("\n--- شمارش کلمات ---")
+    print(f"تعداد کل کلمات: {count_visitor.total_words}")
+```
+
+## 13.3. 🅱️ Examples3: موتور محاسبه مالیات و حمل‌ونقل در سبد خرید
+
+در سیستم‌های Enterprise (مثل فروشگاه‌های اینترنتی)، سبد خرید شامل محصولات مختلفی است (فیزیکی، دیجیتال، اشتراک). قوانین مالیات، تخفیف و وزن برای حمل‌ونقل برای هر محصول متفاوت است.
+
+به جای اینکه کلاس‌های Product پر از متدهای calculate_tax(), calculate_shipping() شوند، ما از Visitor استفاده می‌کنیم تا منطق هر دامنه (مالیات، حمل‌ونقل) در کلاس‌های مجزا (Visitor) متمرکز شود.
+
+```python
+from __future__ import annotations
+from abc import ABC, abstractmethod
+from dataclasses import dataclass
+from typing import List, Protocol
+
+# ---------------------------------------------------------
+# 1. تعریف ساختار داده‌ای محصولات (Elements)
+# ---------------------------------------------------------
+class Product(ABC):
+    """رابط پایه برای تمام محصولات."""
+    @abstractmethod
+    def accept(self, visitor: CheckoutVisitor) -> None:
+        pass
+
+@dataclass
+class PhysicalProduct(Product):
+    """محصول فیزیکی (نیاز به حمل و نقل و مالیات بر ارزش افزوده)."""
+    name: str
+    price: float
+    weight_kg: float
+
+    def accept(self, visitor: CheckoutVisitor) -> None:
+        visitor.visit_physical_product(self)
+
+@dataclass
+class DigitalProduct(Product):
+    """محصول دیجیتال (بدون حمل و نقل، مالیات متفاوت)."""
+    name: str
+    price: float
+    download_size_mb: float
+
+    def accept(self, visitor: CheckoutVisitor) -> None:
+        visitor.visit_digital_product(self)
+
+@dataclass
+class SubscriptionService(Product):
+    """سرویس اشتراکی (مالیات معاف، بدون وزن)."""
+    name: str
+    monthly_fee: float
+    duration_months: int
+
+    def accept(self, visitor: CheckoutVisitor) -> None:
+        visitor.visit_subscription(self)
+
+
+# ---------------------------------------------------------
+# 2. اینترفیس بازدیدکننده (Visitor Interface)
+# ---------------------------------------------------------
+class CheckoutVisitor(ABC):
+    """رابط عملیات‌های مربوط به تسویه حساب."""
+    
+    @abstractmethod
+    def visit_physical_product(self, product: PhysicalProduct) -> None:
+        pass
+
+    @abstractmethod
+    def visit_digital_product(self, product: DigitalProduct) -> None:
+        pass
+
+    @abstractmethod
+    def visit_subscription(self, product: SubscriptionService) -> None:
+        pass
+
+
+# ---------------------------------------------------------
+# 3. بازدیدکنندگان صنعتی (Concrete Visitors)
+# ---------------------------------------------------------
+class TaxCalculatorVisitor(CheckoutVisitor):
+    """
+    بازدیدکننده محاسبه مالیات.
+    این کلاس وضعیت (State) جمع‌آوری می‌کند (مجموع مالیات).
+    """
+    def __init__(self) -> None:
+        self._total_tax: float = 0.0
+
+    def visit_physical_product(self, product: PhysicalProduct) -> None:
+        # مالیات ۹٪ برای کالای فیزیکی
+        tax = product.price * 0.09
+        self._total_tax += tax
+        print(f"  [Tax] مالیات کالای فیزیکی '{product.name}': {tax:.2f}")
+
+    def visit_digital_product(self, product: DigitalProduct) -> None:
+        # مالیات ۵٪ برای کالای دیجیتال
+        tax = product.price * 0.05
+        self._total_tax += tax
+        print(f"  [Tax] مالیات کالای دیجیتال '{product.name}': {tax:.2f}")
+
+    def visit_subscription(self, product: SubscriptionService) -> None:
+        # خدمات اشتراکی معاف از مالیات
+        print(f"  [Tax] سرویس '{product.name}' معاف از مالیات است.")
+
+    @property
+    def total_tax(self) -> float:
+        return self._total_tax
+
+
+class ShippingCalculatorVisitor(CheckoutVisitor):
+    """بازدیدکننده محاسبه هزینه و وزن حمل‌ونقل."""
+    
+    def __init__(self) -> None:
+        self._total_weight: float = 0.0
+        self._shipping_cost: float = 0.0
+
+    def visit_physical_product(self, product: PhysicalProduct) -> None:
+        self._total_weight += product.weight_kg
+        # هزینه حمل: ۵۰,۰۰۰ تومان به ازای هر کیلوگرم
+        cost = product.weight_kg * 50000
+        self._shipping_cost += cost
+        print(f"  [Shipping] وزن '{product.name}': {product.weight_kg}kg | هزینه: {cost:.2f}")
+
+    def visit_digital_product(self, product: DigitalProduct) -> None:
+        # کالای دیجیتال حمل و نقل فیزیکی ندارد
+        print(f"  [Shipping] کالای دیجیتال '{product.name}' نیاز به ارسال فیزیکی ندارد.")
+
+    def visit_subscription(self, product: SubscriptionService) -> None:
+        # سرویس اشتراکی حمل و نقل ندارد
+        print(f"  [Shipping] سرویس '{product.name}' نیاز به ارسال فیزیکی ندارد.")
+
+    @property
+    def total_weight(self) -> float:
+        return self._total_weight
+
+    @property
+    def total_shipping_cost(self) -> float:
+        return self._shipping_cost
+
+
+# ---------------------------------------------------------
+# 4. ساختار شیء (Object Structure) و تست
+# ---------------------------------------------------------
+class ShoppingCart:
+    """سبد خرید که نقش Object Structure را بازی می‌کند."""
+    
+    def __init__(self) -> None:
+        self._products: List[Product] = []
+
+    def add_product(self, product: Product) -> None:
+        self._products.append(product)
+
+    def checkout(self, visitor: CheckoutVisitor) -> None:
+        """پیمایش سبد خرید و اعمال منطق بازدیدکننده."""
+        print(f"\n--- شروع پردازش با {visitor.__class__.__name__} ---")
+        for product in self._products:
+            product.accept(visitor)
+
+
+if __name__ == "__main__":
+    # پر کردن سبد خرید
+    cart = ShoppingCart()
+    cart.add_product(PhysicalProduct(name="لپ‌تاپ", price=50000000, weight_kg=2.5))
+    cart.add_product(DigitalProduct(name="لایسنس ویندوز", price=2000000, download_size_mb=5000))
+    cart.add_product(SubscriptionService(name="اشتراک ویژه سایت", monthly_fee=100000, duration_months=12))
+    cart.add_product(PhysicalProduct(name="ماوس بی‌سیم", price=500000, weight_kg=0.2))
+
+    # محاسبه مالیات
+    tax_visitor = TaxCalculatorVisitor()
+    cart.checkout(tax_visitor)
+    print(f"\n>>> مجموع کل مالیات: {tax_visitor.total_tax:,.2f} تومان")
+
+    # محاسبه حمل و نقل
+    shipping_visitor = ShippingCalculatorVisitor()
+    cart.checkout(shipping_visitor)
+    print(f"\n>>> مجموع وزن: {shipping_visitor.total_weight} kg")
+    print(f">>> مجموع هزینه ارسال: {shipping_visitor.total_shipping_cost:,.2f} تومان")
+```
 
 ## 13.4. 🅱️ Examples4:
+
+```python
+from abc import ABC, abstractmethod
+from dataclasses import dataclass
+
+
+# region element interfaces
+
+class SmartDevice(ABC):
+    @abstractmethod
+    def accept(self, visitor: 'SmartHomeVisitor'):
+        pass
+
+
+# endregion
+
+# region concrete elements
+
+@dataclass
+class SmartLight(SmartDevice):
+    name: str
+    brightness: int = 50
+    is_on: bool = False
+
+    def accept(self, visitor: 'SmartHomeVisitor'):
+        return visitor.visit_light(self)
+
+    def set_brightness(self, level: int):
+        self.brightness = max(0, min(100, level))
+
+
+@dataclass
+class SmartThermostat(SmartDevice):
+    name: str
+    current_temp: float
+    target_temp: float = 22.0
+    mode: str = 'heat'
+
+    def accept(self, visitor: 'SmartHomeVisitor'):
+        return visitor.visit_thermostat(self)
+
+    def set_temperature(self, temp: float):
+        self.target_temp = temp
+
+
+@dataclass
+class SmartLock(SmartDevice):
+    name: str
+    is_locked: bool = True
+    battery_level: int = 100
+
+    def accept(self, visitor: 'SmartHomeVisitor'):
+        return visitor.visit_lock(self)
+
+
+# endregion
+
+# region visitor
+
+class SmartHomeVisitor(ABC):
+    @abstractmethod
+    def visit_light(self, light: SmartLight):
+        pass
+
+    @abstractmethod
+    def visit_thermostat(self, thermostat: SmartThermostat):
+        pass
+
+    @abstractmethod
+    def visit_lock(self, lock: SmartLock):
+        pass
+
+
+# endregion
+
+# region concrete visitors
+
+class StatusReportVisitor(SmartHomeVisitor):
+    def visit_light(self, light: SmartLight):
+        status = 'ON' if light.is_on else 'OFF'
+        return f'{light.name}: {status} (Brightness: {light.brightness}%)'
+
+    def visit_thermostat(self, thermostat: SmartThermostat):
+        return (f'{thermostat.name}: current {thermostat.current_temp} C / '
+                f'Target {thermostat.target_temp} C. ({thermostat.mode})')
+
+    def visit_lock(self, lock: SmartLock):
+        status = 'LOCKED' if lock.is_locked else 'UNLOCKED'
+        return f'{lock.name}: {status} (Battery: {lock.battery_level}%)'
+
+
+class AutomationVisitor(SmartHomeVisitor):
+    def __init__(self, time_of_day: str, outside_temp: float):
+        # morning, day, evening, night
+        self.time_of_day = time_of_day
+        self.outside_temp = outside_temp
+
+    def visit_light(self, light: SmartLight):
+        if self.time_of_day == 'night':
+            light.is_on = False
+        elif self.time_of_day in ['morning', 'evening']:
+            light.is_on = True
+            light.set_brightness(70)
+        else:
+            light.is_on = True
+            light.set_brightness(30)
+
+    def visit_thermostat(self, thermostat: SmartThermostat):
+        if self.outside_temp < 15:
+            thermostat.mode = 'heat'
+        elif self.outside_temp > 25:
+            thermostat.mode = 'cool'
+        else:
+            thermostat.mode = 'auto'
+
+        if self.time_of_day == 'night':
+            thermostat.set_temperature(18.0 if thermostat.mode == 'heat' else 25.0)
+        elif self.time_of_day == 'morning':
+            thermostat.set_temperature(21.0 if thermostat.mode == 'heat' else 24.0)
+
+    def visit_lock(self, lock: SmartLock):
+        if self.time_of_day == 'night':
+            lock.is_locked = True
+
+
+# endregion
+
+# region client code
+
+class SmartHome:
+    def __init__(self):
+        self.devices: list[SmartDevice] = []
+
+    def add_device(self, device: SmartDevice):
+        self.devices.append(device)
+
+    def apply_visitor(self, visitor: 'SmartHomeVisitor'):
+        results = []
+        for device in self.devices:
+            result = device.accept(visitor)
+            if result:
+                results.append(result)
+
+        return results
+
+
+if __name__ == '__main__':
+    print('setting up smart home ...')
+    home = SmartHome()
+    home.add_device(SmartLight('Living room lights'))
+    home.add_device(SmartThermostat('Main thermostat', 20.5))
+    home.add_device(SmartLock('Front door lock'))
+
+    print('\ncurrent status:')
+    status_visitor = StatusReportVisitor()
+    for report in home.apply_visitor(status_visitor):
+        print(report)
+
+    print('\nApplying automation ...')
+    automation_visitor = AutomationVisitor('evening', 18.0)
+    home.apply_visitor(automation_visitor)
+
+    for report in home.apply_visitor(status_visitor):
+        print(report)
+
+# endregion
+
+```
 
 # 14. 🅰️ Behavioral.Strategy
 
@@ -5391,5 +6003,24 @@ if __name__ == "__main__":
 
 ## 14.4. 🅱️ Examples4:
 
-</div>
+# 15. 🅰️ Behavioral.Iterator
 
+## 15.1. 🅱️ Examples1:
+
+## 15.2. 🅱️ Examples2:
+
+## 15.3. 🅱️ Examples3:
+
+## 15.4. 🅱️ Examples4:
+
+# 16. 🅰️ Behavioral.ChainOfResponsibility
+
+## 16.1. 🅱️ Examples1:
+
+## 16.2. 🅱️ Examples2:
+
+## 16.3. 🅱️ Examples3:
+
+## 16.4. 🅱️ Examples4:
+
+</div>
