@@ -5371,7 +5371,7 @@ if __name__ == "__main__":
     wallet_payment.process_payment(user_id="U-200", amount=150_000)
 ```
 
-# 13. 🅰️ Behavioral.Visitor()
+# 13. 🅰️ Behavioral.Visitor(پیاده‌سازی وجه‌های متفاوت در زیرکلاس‌های مختص به آن وجه و فقط در استفاده در کلاس اصلی)
 
 * تعاریف و توضسیحات پایه
     * پیاده‌سازی یک وجه مشترک از کلاس‌های متفاوت بگونه‌ای که پیچیدگی درکلاس مستقل باشد و تنها وجه مشترک در کلاس پایه آورده شود
@@ -6447,7 +6447,7 @@ if __name__ == "__main__":
     my_navigator.navigate(origin, destination)
 ```
 
-# 15. 🅰️ Behavioral.Iterator
+# 15. 🅰️ Behavioral.Iterator()
 
 ## 15.1. 🅱️ Examples1:
 
@@ -6457,7 +6457,7 @@ if __name__ == "__main__":
 
 ## 15.4. 🅱️ Examples4:
 
-# 16. 🅰️ Behavioral.ChainOfResponsibility
+# 16. 🅰️ Behavioral.ChainOfResponsibility()
 
 ## 16.1. 🅱️ Examples1:
 
@@ -6465,6 +6465,38 @@ if __name__ == "__main__":
 
 ## 16.3. 🅱️ Examples3:
 
-## 16.4. 🅱️ Examples4:
+# 17. 🅰️ Structural.Adapter()
+
+## 17.1. 🅱️ Examples1:
+
+## 17.2. 🅱️ Examples2:
+
+## 17.3. 🅱️ Examples3:
+
+# 18. 🅰️ Structural.Composite()
+
+## 18.1. 🅱️ Examples1:
+
+## 18.2. 🅱️ Examples2:
+
+## 18.3. 🅱️ Examples3:
+
+# 19. 🅰️ Structural.Facade()
+
+## 19.1. 🅱️ Examples1:
+
+## 19.2. 🅱️ Examples2:
+
+## 19.3. 🅱️ Examples3:
+
+# 20. 🅰️ Structural.Decorator()
+
+## 20.1. 🅱️ Examples1:
+
+## 20.2. 🅱️ Examples2:
+
+## 20.3. 🅱️ Examples3:
+
+## 20.4. 🅱️ Examples4:
 
 </div>
