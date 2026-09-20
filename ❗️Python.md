@@ -2586,31 +2586,30 @@ show_data(Fname="Behi")
 # 6. 🅰️ Iterate
 
 * Iterate(فعل پیمایش): فرآیند «چرخیدن روی عناصر یک مجموعه» گفته می‌شود
-    * Iterate کردن یعنی پیمایش یک مجموعه داده، عنصر به عنصر.
-    * کاربردهای iterate:
-        * حلقه‌های for
-        * تابع‌هایی که روی داده پیمایش می‌کنند: sum(), list(), tuple(), max(), min()
-        * توابع map(), filter(), zip()
+    * فعل Iterate کردن یعنی پیمایش یک مجموعه داده، عنصر به عنصر.
+    * مواردی که توسط آن روی یک Iterable عمل پیمایش صورت می‌گیرد
+        * انواع حلقه نظیر for یا while یا هر مورد مشابه
+        * تابع‌هایی که روی داده پیمایش می‌کنند:
+            * sum(), list(), tuple(), max(), min() map(), filter(), zip()
         * ساختارهای داده‌ای جدید از روی داده‌های موجود
         * پردازش فایل‌ها خط به خط
-* Iterable(Object): `__iter__()`
-    * شیء‌ای که می‌توان روی آن حلقه زد مثل : List,Tuple,String,Dictionary,Set,Range,File,...
+* Iterable(is an Object): List or Tuple or String or Dictionary or Set or Range or File or ...
+    * شیء‌ای که می‌توان (مثلا توسط حلقه) روی آن پیمایش نمود مثل :
     * هر شیء پایتونی که دارای متد `__iter__()` باشد، یک iterable است
     * هر شیء Iterable را می‌توان توسط مکانیزم Iterator پیمایش کرد
     * هر شیء iterable را می‌توان با `for` یا توابعی مثل `iter()` و `next()` پیمایش(iterate) کرد.
     * موضوع توالی و پشت سر هم بودن، جزء مهمترین مولفه در این ساختار است
     * به صورت عادی نمی‌توان روی یک iterableObjects عمل iterate انجام داد. ابتدا باید تبدیل کنیم به iterator و سپس آن را پیمایش یا iterate کنیم
     * یک iterableObject به صورت پیش‌فرض iterator نیست بلکه باید توسط افزودن توابع تظیر `__next__()` به آن قابلیت مکانیزم Iterator را اضافه کنیم
-* Iterator(Object): `__iter__()` و `__next__()`
-    * شیء‌ای که وضعیت پیمایش را نگه می‌دارد و می‌توان با `next()` عنصر بعدی را بگیرد.
-    * شیئی که دارای `__iter__()` و `__next__()` است.
-        * `__iter__()` سبب افزودن  `obj.iter()` می‌شود
-        * `__next__()`  سبب افزودن  `obj.next()` می‌شود
-    * پایتون از مکانیسم ایتریتور (iterator) برای پیمایش استفاده می‌کند.
-        * وقتی یک for روی یک iterable اجرا می‌شود، پایتون متد `__iter__()` را فراخوانی می‌کند تا یک ایتریتور ایجاد شود.
+* Iterator(is an Object): an object that can iterate on items by itself, and It can sequentially access the elements of an iterable(iterable such as List or tuple or ...)
+    * شیئی است که توابع پیمایش المان‌ها نظیر `__iter__()` و `__next__()` در بدنه آن تعریف شده است
+        * بدنه تابع `__iter__()` سبب افزودن  `obj.iter()` در هنگام استفاده می‌شود
+        * بدنه تابع `__next__()`  سبب افزودن  `obj.next()` در هنگام استفاده می‌شود
+    * شیئی است که وضعیت پیمایش را نگه می‌دارد و می‌توان با `next()` عنصر بعدی را بگیرد.
+    * وقتی یک for روی یک iterable نظیر List,Tuple,String,Dictionary,Set,Range,File,...اجرا می‌شود
+        * پایتون متد `__iter__()` را فراخوانی می‌کند تا یک ایتریتور ایجاد شود.
         * سپس متد `__next__()` فراخوانی می‌شود تا هر بار عنصر بعدی را بگیرد.
         * وقتی عناصر تمام شوند، Exception با نام StopIteration رخ می‌دهد و حلقه پایان می‌یابد.
-    * an object that can iterate on items by itself, and It can sequentially access the elements of an iterable
     * `iterator=iterableObjects.iter()`
 
 ```python
@@ -5214,8 +5213,8 @@ print(MathConstants.PI)  # 3.1415926535
 * زمانی استفاده می‌شود که کلاس شما نیاز به `__init__` و  `__repr__` و `__eq__` داشته باشد
 * هنگام نیاز به کنترل کامل روی `__init__` از این روش استفاده نشود
 * پشتیبانی از وراثت
-* مقدار حافظه زیادتری نسبت به حالت عادی میگیرد مگر اینکه `slots=True` را قرار دهید 
-* در حالت عادی Mutable یعنی قابل تغییر است مگر اینکه توسط  `frozen=True` به Immutable تبدیل نمایید 
+* مقدار حافظه زیادتری نسبت به حالت عادی میگیرد مگر اینکه `slots=True` را قرار دهید
+* در حالت عادی Mutable یعنی قابل تغییر است مگر اینکه توسط  `frozen=True` به Immutable تبدیل نمایید
 
 مثال اول:
 

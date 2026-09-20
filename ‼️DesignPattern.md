@@ -6447,15 +6447,314 @@ if __name__ == "__main__":
     my_navigator.navigate(origin, destination)
 ```
 
-# 15. 🅰️ Behavioral.Iterator()
+# 15. 🅰️ Behavioral.Iterator(پیمایش روی عناصر فارغ از نوع و جنس آنها)
 
-## 15.1. 🅱️ Examples1:
+* بصورت پیش‌فرض در پایتون پیاده‌سازی شده است و نیاز به پیاده‌سازی درپایتون نیست و تنها باید استفاده گردد
+* این الگو به شما اجازه می‌دهد تا عناصر یک مجموعه (Collection) را بدون اطلاع از ساختار درونی آن (آرایه، درخت، لیست پیوندی و...) و به صورت ترتیبی پیمایش کنید.
+* تعریف و هدف (Intent): جداسازی منطق پیمایش (Traversal) از ساختار داده (Data Structure) است. به جای اینکه کلاس مجموعه (Collection) هم وظیفه ذخیره داده را داشته باشد و هم وظیفه پیمایش آن‌ها، این دو مسئولیت از هم جدا می‌شوند.
+* اجزای اصلی الگو (Structure)
+    *     رابط تکرارکننده (Iterator Interface): عملیات لازم برای پیمایش را تعریف می‌کند (مثل `next()` برای دریافت عنصر بعدی و `has_next()` برای بررسی وجود عنصر بعدی). در پایتون این موارد با متدهای جادویی `__next__` و `__iter__` پیاده‌سازی می‌شوند.
+    *     تکرارکننده مشخص (Concrete Iterator): رابط تکرارکننده را پیاده‌سازی می‌کند و وضعیت فعلی پیمایش (مثل ایندکس فعلی) را در خود نگه می‌دارد.
+    * رابط قابل پیمایش (Iterable Interface): متدی برای دریافت یک شیء Iterator را تعریف می‌کند.
+    * مجموعه مشخص (Concrete Collection): رابط Iterable را پیاده‌سازی کرده و یک نمونه از Concrete Iterator مربوط به خود را برمی‌گرداند.
+* ملاحظات طراحی و اصول SOLID
+    *     اصل Single Responsibility (SRP): این مهم‌ترین دستاورد این الگو است. کد پیچیده پیمایش از کلاس Collection خارج شده و به کلاس Iterator منتقل می‌شود. حالا Collection فقط مسئول مدیریت داده‌هاست و Iterator فقط مسئول پیمایش. 
+    * اصل Open/Closed (OCP): می‌توانید انواع جدیدی از Collectionها و Iteratorها (مثلاً پیمایش معکوس) را بدون تغییر کد کلاینت یا کدهای موجود اضافه کنید.
+* مزایا
+    * اصل SRP: همانطور که گفته شد، مسئولیت‌ها تفکیک می‌شوند.
+    * رابط یکپارچه (Uniform Interface): کلاینت برای پیمایش یک آرایه، یک درخت یا یک گراف، از یک کد یکسان (for item in collection) استفاده می‌کند.
+    * پیمایش‌های موازی: چون وضعیت پیمایش (ایندکس) درون خود Iterator است، می‌توانید همزمان چندین پیمایش مختلف روی یک Collection واحد انجام دهید بدون اینکه تداخلی ایجاد شود.
+* معایب
+    * پیچیدگی اضافی برای ساختارهای ساده: اگر از ساختارهای داده ساده و استاندارد زبان (مثل list یا dict در پایتون) استفاده می‌کنید، پیاده‌سازی دستی این الگو زیاده‌روی (Overkill) است، زیرا خود زبان این الگو را به صورت داخلی پیاده‌سازی کرده است.
+* چه زمانی از این الگو استفاده کنیم؟
+    * زمانی که ساختار داده شما پیچیده است (مثل درخت یا گراف) و نمی‌خواهید کلاینت درگیر الگوریتم‌های پیچیده پیمایش (مثل DFS یا BFS) شود.
+    * زمانی که می‌خواهید ساختار درونی مجموعه را از دید کلاینت مخفی کنید (Encapsulation).
+    * زمانی که نیاز دارید چندین پیمایش مستقل و همزمان روی یک مجموعه واحد داشته باشید.
 
-## 15.2. 🅱️ Examples2:
+## 15.1. 🅱️ Examples1: BookShelf
 
-## 15.3. 🅱️ Examples3:
+```python
+class Book:
+    def __init__(self, title, author):
+        self.title = title
+        self.author = author
 
-## 15.4. 🅱️ Examples4:
+    def __str__(self):
+        return f'{self.title} by {self.author}'
+
+
+class BookShelf:
+    def __init__(self):
+        self.books = []
+
+    def add_book(self, book: Book):
+        self.books.append(book)
+
+    def __iter__(self):
+        for book in self.books:
+            yield book
+
+
+if __name__ == '__main__':
+    shelf = BookShelf()
+    shelf.add_book(Book('title 1', 'author 1'))
+    shelf.add_book(Book('title 2', 'author 2'))
+    shelf.add_book(Book('title 3', 'author 3'))
+    shelf.add_book(Book('title 4', 'author 4'))
+    shelf.add_book(Book('title 5', 'author 5'))
+
+    for book in shelf:
+        print(book)
+
+```
+
+## 15.2. 🅱️ Examples2: FibonacciSequence
+
+```python
+class FibonacciIterator:
+    def __init__(self, max_limit: int):
+        self.max_limit = max_limit
+        self.a = 0
+        self.b = 1
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.a > self.max_limit:
+            raise StopIteration()
+
+        current = self.a
+        self.a, self.b = self.b, self.a + self.b
+
+        return current
+
+
+class FibonacciSequence:
+    def __init__(self, max_limit: int):
+        self.max_limit = max_limit
+
+    def __iter__(self):
+        return FibonacciIterator(self.max_limit)
+
+
+def fibonacci_generator(max_limit: int):
+    a, b = 0, 1
+    while a <= max_limit:
+        yield a
+        a, b = b, a + b
+
+
+if __name__ == '__main__':
+    fib_seq = FibonacciSequence(100)
+    for num in fib_seq:
+        print(num, end=' ')
+
+    print('')
+    for num in fibonacci_generator(100):
+        print(num, end=' ')
+```
+
+## 15.3. 🅱️ Examples3: CustomRange
+
+```python
+class CustomRange:
+    def __init__(self, start, stop, step=1):
+        self.current = start
+        self.stop = stop
+        self.step = step
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if (self.step > 0 and self.current >= self.stop) or (self.step < 0 and self.current <= self.stop):
+            raise StopIteration()
+
+        current = self.current
+        self.current += self.step
+        return current
+
+
+if __name__ == '__main__':
+    for num in CustomRange(10, 100, 5):
+        print(num, end=' ')
+```
+
+## 15.4. 🅱️ Examples4: پیمایش یک مجموعه سفارشی در ایستگاه‌های رادیویی
+
+در این مثال، یک مجموعه سفارشی برای نگهداری ایستگاه‌های رادیو داریم. می‌خواهیم بتوانیم روی آن‌ها حلقه for بزنیم بدون اینکه ساختار درونی آن (که در اینجا یک دیکشنری است) را افشا کنیم.
+
+
+```python
+from typing import Iterator, Iterable, List, Dict
+
+
+# --- ۱. مدل داده ---
+class RadioStation:
+    """کلاس مدل برای نگهداری اطلاعات یک ایستگاه رادیویی."""
+
+    def __init__(self, frequency: float, name: str) -> None:
+        self.frequency = frequency
+        self.name = name
+
+    def __str__(self) -> str:
+        return f"{self.name} ({self.frequency} MHz)"
+
+
+# --- ۲. تکرارکننده مشخص (Concrete Iterator) ---
+class StationIterator(Iterator):
+    """
+    تکرارکننده اختصاصی برای پیمایش ایستگاه‌ها.
+    وضعیت پیمایش (ایندکس) را در خود نگه می‌دارد.
+    """
+
+    def __init__(self, stations: List[RadioStation]) -> None:
+        # لیست ایستگاه‌ها را برای پیمایش ذخیره می‌کنیم
+        self._stations = stations
+        self._index = 0
+
+    def __next__(self) -> RadioStation:
+        """
+        دریافت عنصر بعدی.
+        اگر به انتهای لیست رسیدیم، خطای StopIteration را مطرح می‌کنیم.
+        """
+        if self._index >= len(self._stations):
+            raise StopIteration
+
+        station = self._stations[self._index]
+        self._index += 1
+        return station
+
+
+# --- ۳. مجموعه مشخص (Concrete Collection / Iterable) ---
+class StationCollection(Iterable):
+    """
+    مجموعه ایستگاه‌ها.
+    این کلاس فقط داده‌ها را مدیریت می‌کند و منطق پیمایش را به Iterator واگذار می‌کند.
+    """
+
+    def __init__(self) -> None:
+        # ساختار درونی می‌تواند هر چیزی باشد (لیست، دیکشنری و...)
+        self._stations: List[RadioStation] = []
+
+    def add_station(self, station: RadioStation) -> None:
+        """افزودن یک ایستگاه جدید به مجموعه."""
+        self._stations.append(station)
+
+    def __iter__(self) -> StationIterator:
+        """
+        بازگرداندن یک نمونه از تکرارکننده.
+        این متد باعث می‌شود بتوانیم از حلقه for روی این کلاس استفاده کنیم.
+        """
+        return StationIterator(self._stations)
+
+
+# --- اجرای مثال ---
+if __name__ == "__main__":
+    # ایجاد مجموعه و افزودن ایستگاه‌ها
+    collection = StationCollection()
+    collection.add_station(RadioStation(88.5, "رادیو پیام"))
+    collection.add_station(RadioStation(91.0, "رادیو جوان"))
+    collection.add_station(RadioStation(95.5, "رادیو فرهنگ"))
+
+    # پیمایش مجموعه با استفاده از حلقه for (کلاینت نیازی به دانستن ساختار درونی ندارد)
+    print("--- لیست ایستگاه‌های رادیویی ---")
+    for station in collection:
+        print(f"در حال گوش دادن به: {station}")
+```
+
+## 15.5. 🅱️ Examples5: پیمایس در ساختار درختی سیستم فایل و پوشه‌ها
+
+```python
+from typing import Iterator, Iterable, List, Optional
+from collections import deque
+
+
+# --- ۱. مدل داده (ساختار درختی) ---
+class FileSystemNode:
+    """نمایش یک فایل یا پوشه در سیستم."""
+
+    def __init__(self, name: str, is_directory: bool) -> None:
+        self.name = name
+        self.is_directory = is_directory
+        self.children: List['FileSystemNode'] = []
+
+    def add_child(self, child: 'FileSystemNode') -> None:
+        """افزودن زیرمجموعه (فقط برای پوشه‌ها)."""
+        if self.is_directory:
+            self.children.append(child)
+
+
+# --- ۲. تکرارکننده مشخص (Concrete Iterator) ---
+class FileSystemIterator(Iterator):
+    """
+    تکرارکننده برای پیمایش درختی (BFS - سطح به سطح).
+    منطق پیچیده پیمایش درخت در اینجا مخفی شده است.
+    """
+
+    def __init__(self, root_nodes: List[FileSystemNode]) -> None:
+        # استفاده از صف (Queue) برای پیمایش سطح به سطح (BFS)
+        self._queue = deque(root_nodes)
+
+    def __next__(self) -> FileSystemNode:
+        """دریافت گره بعدی از صف."""
+        if not self._queue:
+            raise StopIteration
+
+        current_node = self._queue.popleft()
+
+        # اگر گره فعلی پوشه است، فرزندان آن را به صف اضافه کن
+        if current_node.is_directory:
+            self._queue.extend(current_node.children)
+
+        return current_node
+
+
+# --- ۳. مجموعه مشخص (Concrete Collection) ---
+class FileSystem(Iterable):
+    """
+    کانتکست یا مجموعه اصلی سیستم فایل.
+    """
+
+    def __init__(self) -> None:
+        self._roots: List[FileSystemNode] = []
+
+    def add_root(self, node: FileSystemNode) -> None:
+        """افزودن یک درایو یا ریشه جدید."""
+        self._roots.append(node)
+
+    def __iter__(self) -> FileSystemIterator:
+        """بازگرداندن تکرارکننده درختی."""
+        return FileSystemIterator(self._roots)
+
+
+# --- اجرای مثال ---
+if __name__ == "__main__":
+    # ساخت یک ساختار درختی ساده
+    root_c = FileSystemNode("Drive_C", is_directory=True)
+
+    folder_docs = FileSystemNode("Documents", is_directory=True)
+    folder_docs.add_child(FileSystemNode("resume.pdf", is_directory=False))
+    folder_docs.add_child(FileSystemNode("notes.txt", is_directory=False))
+
+    folder_pics = FileSystemNode("Pictures", is_directory=True)
+    folder_pics.add_child(FileSystemNode("vacation.jpg", is_directory=False))
+
+    root_c.add_child(folder_docs)
+    root_c.add_child(folder_pics)
+    root_c.add_child(FileSystemNode("pagefile.sys", is_directory=False))
+
+    # ایجاد سیستم فایل
+    my_system = FileSystem()
+    my_system.add_root(root_c)
+
+    # پیمایش ساختار پیچیده درختی به صورت کاملاً ساده و مسطح!
+    print("--- پیمایش تمام فایل‌ها و پوشه‌ها ---")
+    for node in my_system:
+        node_type = "[پوشه]" if node.is_directory else "[فایل]"
+        print(f"{node_type} {node.name}")
+```
 
 # 16. 🅰️ Behavioral.ChainOfResponsibility()
 
