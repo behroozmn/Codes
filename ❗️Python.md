@@ -2922,7 +2922,7 @@ d = DefaultDict()
 print(d['name'])  # Key 'name' not found, but I'm helping!
 ```
 
-## 6.2. 🅱️ Set `{}`
+## 6.2. 🅱️ Set `{}` ► UnRepeatable
 
 * NoRepeat(uniq): مجموعه‌ای که محتوی آن بدون شک تکراری نخواهند شد
 * در آن مرتب سازی معنی ندارد
@@ -3073,7 +3073,7 @@ fs = frozenset([1, 2])
 # fs.remove(1) → AttributeError
 ```
 
-## 6.3. 🅱️ Tupple`()`
+## 6.3. 🅱️ Tupple`()` ► immutable
 
 * تاپل (tuple) یک ساختار داده غیرقابل تغییر (immutable) و مرتب (ordered) در پایتون است
 * ثبات داده بدلیل عدم تغییر
@@ -3249,7 +3249,7 @@ obj.func1(*numbers)  # اگر ستاره نباشد ارور میدهد
 
 ```
 
-## 6.4. 🅱️ List `[]`
+## 6.4. 🅱️ List `[]` ► mutable
 
 * مرتب (ordered) است عناصر ترتیب خاصی دارند.
 * تغییرپذیر (mutable) است می‌تونی عناصرش رو تغییر بدی.
