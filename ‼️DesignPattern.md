@@ -8060,7 +8060,8 @@ if __name__ == '__main__':
     * لایه سرویس در معماری چندلایه (Service Layer in Layered Architecture): در بک‌اند (مثل Spring Boot یا Django)، کلاس‌های Service دقیقاً نقش Facade را برای لایه Repository/DAO بازی می‌کنند. آن‌ها کوئری‌های پیچیده دیتابیس، کش کردن (Redis) و اعتبارسنجی را پشت یک متد ساده مثل getUserProfile() پنهان می‌کنند تا Controllerها تمیز بمانند.
     * سیستم‌های هوشمند ساختمان و IoT (Smart Home / IoT): اپلیکیشن‌های موبایلی که خانه هوشمند را کنترل می‌کنند، از Facade استفاده می‌کنند. وقتی کاربر دکمه "حالت خواب" (Sleep Mode) را می‌زند، Facade به صورت همزمان قفل‌ها را چک می‌کند، ترموستات را تنظیم می‌کند و چراغ‌ها را خاموش می‌کند.
     * کتابخانه‌های ارتباط با سرویس‌های ابری (Cloud SDKs): SDKهای مربوط به AWS یا Azure بسیار پیچیده هستند. فریم‌ورک‌هایی مثل Terraform یا Serverless Framework از الگوی Facade استفاده می‌کنند تا APIهای پیچیده و تو در تو (Nested) این سرویس‌ها را به دستورات ساده‌ای مثل deploy() یا provision() تبدیل کنند.
-    * یکپارچه‌سازی APIهای شخص ثالث (Third-Party API Wrappers): وقتی سیستم شما نیاز به دریافت اطلاعات از APIهای خارجی (مثل APIهای هواشناسی، نقشه‌ها یا شبکه‌های اجتماعی) دارد، به جای پراکنده کردن کدهای HTTP Request و مدیریت Tokenها در کل پروژه، یک WeatherFacade یا SocialMediaFacade می‌سازید که متدهایی مثل get_current_weather() دارد و تمام پیچیدگی‌های REST/GraphQL را در داخل خود مدیریت می‌کند.
+    * یکپارچه‌سازی APIهای شخص ثالث (Third-Party API Wrappers): وقتی سیستم شما نیاز به دریافت اطلاعات از APIهای خارجی (مثل APIهای هواشناسی، نقشه‌ها یا شبکه‌های اجتماعی) دارد، به جای پراکنده کردن کدهای HTTP Request و مدیریت Tokenها در کل پروژه، یک WeatherFacade یا SocialMediaFacade می‌سازید که متدهایی مثل get_current_weather() دارد و تمام پیچیدگی‌های
+      REST/GraphQL را در داخل خود مدیریت می‌کند.
 
   ![DesignPattern.Structural.Facade.png](_srcFiles/Images/DesignPattern.Structural.Facade.png "DesignPattern.Structural.Facade.png")
 
@@ -8117,11 +8118,7 @@ class PaymentSystem:
         - اعتبارسنجی اطلاعات کارت
     """
 
-    def process_payment(
-            self,
-            payment_details: Dict[str, Any],
-            amount: float
-    ) -> bool:
+    def process_payment(self, payment_details: Dict[str, Any], amount: float) -> bool:
         """
         پردخت را انجام می‌دهد
         
@@ -8145,12 +8142,7 @@ class ShippingSystem:
         - ایجاد شماره پیگیری
     """
 
-    def schedule_delivery(
-            self,
-            product_id: int,
-            quantity: int,
-            address: str
-    ) -> str:
+    def schedule_delivery(self, product_id: int, quantity: int, address: str) -> str:
         """
         تحویل محصول را برنامه‌ریزی می‌کند
         
@@ -8175,11 +8167,7 @@ class NotificationSystem:
         - اطلاع‌رسانی به مشتری
     """
 
-    def send_confirmation(
-            self,
-            email: str,
-            order_details: Dict[str, Any]
-    ) -> None:
+    def send_confirmation(self, email: str, order_details: Dict[str, Any]) -> None:
         """
         ایمیل تأیید سفارش را ارسال می‌کند
         
@@ -8216,14 +8204,7 @@ class OrderFacade:
         self.shipping_system: ShippingSystem = ShippingSystem()
         self.notification_system: NotificationSystem = NotificationSystem()
 
-    def place_order(
-            self,
-            product_id: int,
-            quantity: int,
-            payment_details: Dict[str, Any],
-            email: str,
-            shipping_address: str
-    ) -> str:
+    def place_order(self, product_id: int, quantity: int, payment_details: Dict[str, Any], email: str, shipping_address: str) -> str:
         """
         سفارش را از ابتدا تا انتها انجام می‌دهد
         
@@ -8258,19 +8239,13 @@ class OrderFacade:
             raise Exception('Payment failed')
 
         # مرحله 3: برنامه‌ریزی تحویل
-        tracking_number: str = self.shipping_system.schedule_delivery(
-            product_id,
-            quantity,
-            shipping_address
-        )
+        tracking_number: str = self.shipping_system.schedule_delivery(product_id, quantity, shipping_address)
 
         # مرحله 4: ارسال تأیید
-        order_details: Dict[str, Any] = {
-            'product_id': product_id,
-            'quantity': quantity,
-            'amount': amount,
-            'tracking_number': tracking_number
-        }
+        order_details: Dict[str, Any] = {'product_id': product_id,
+                                         'quantity': quantity,
+                                         'amount': amount,
+                                         'tracking_number': tracking_number}
         self.notification_system.send_confirmation(email, order_details)
 
         print('\n=== order processed successfully ===')
@@ -8283,15 +8258,11 @@ if __name__ == '__main__':
 
     try:
         # سفارش را ثبت می‌کنیم
-        tracking_num: str = order_facade.place_order(
-            product_id='product-12345',
-            quantity=10,
-            payment_details={
-                'card': '1111-1111-1111-1111'
-            },
-            email='test@gmail.com',
-            shipping_address='Tehran - Shariati'
-        )
+        tracking_num: str = order_facade.place_order(product_id='product-12345',
+                                                     quantity=10,
+                                                     payment_details={'card': '1111-1111-1111-1111'},
+                                                     email='test@gmail.com',
+                                                     shipping_address='Tehran - Shariati')
         print(f'Your tracking number is {tracking_num}')
 
     except Exception as e:
@@ -8300,7 +8271,14 @@ if __name__ == '__main__':
 
 ```
 
-## 19.2. 🅱️ Examples2:
+## 19.2. 🅱️ Examples2:  احراز هویت و ثبت‌نام کاربران
+
+| سرویس                     | عملکرد                                          |
+|---------------------------|-------------------------------------------------|
+| **UserService**           | مدیریت کاربران (بررسی منحصربه‌فرد بودن و ایجاد) |
+| **PasswordHasherService** | رمزگذاری و تایید رمز عبور                       |
+| **EmailService**          | ارسال ایمیل‌های فعال‌سازی                       |
+| **AuthService**           | هماهنگی تمام سرویس‌ها برای انجام ثبت‌نام کامل   |
 
 ```python
 import uuid
