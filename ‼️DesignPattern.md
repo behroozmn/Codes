@@ -19,15 +19,15 @@ The Design Patterns are descriptions of communicating objects and class that are
         * **AbstractFactory**: همانند FactoryMethod-pattern بگونه Factory والد و Factory فرزند(داینامیک‌سازی کلاس فرزند) پیچیدگی زیاد کلاس‌ها را هنگام ایجاد شیء تسهیل می‌دهد. مناسب FrameWork نویسی زیرا پیچیدگی‌ها مرتفع می‌گردد
         * **Builder**: هنگام تولید آبجکت با تعداد پارامتر زیاد کاربرد دارد تا کارها و اقدام‌ها کاهش یابد
         * **Prototype**: به جای ایجاد شیء جدید از طریق توابع سازنده، اشیاء جدید توسط کپی از شیء موجود ایجاد شوند
-    * Structural Patterns: الگوهای طراحی بر مبنای «تنظیم روابط آبجکت‌ها» از نوع **ترکیب‌سازی** آبجکت‌ها با یکدیگر
-        * **Adapter**: تبدیل رابط یک کلاس به رابط دیگری که کلاینت انتظار دارد، تا کلاس‌های ناسازگار با هم بتوانند همکاری کنند.
+    * Structural Patterns: ساماندهی آبجکت‌ها برپایه نحوه ترکیب‌سازی کلاس‌ها باهم که وقتی پروژه بزرگ شود قابلیت توسعه وجود داشته باشد و دچار به هم ریختگی نشود
+        * **Adapter**: زمانی استفاده می‌شود که یک دو آبجکت با هم سازگاری ندارند و یک کلاس واسط طراحی میکنی که توسط آن با هم آداپته یا سازگار گردند
         * **Bridge**: جداسازی یک انتزاع (abstraction) از پیاده‌سازی (implementation) آن، تا هر دو بتوانند مستقل از هم تغییر کنند.
         * **Composite**: ترکیب اشیاء به‌صورت ساختار درختی برای نمایش سلسله‌مراتب "کل-جزء"، به‌گونه‌ای که کلاینت یکسان با اجزای تکی و گروهی رفتار کند.
         * **Decorator**: افزودن مسئولیت‌های جدید به یک شیء به‌صورت پویا (بدون تغییر کد یا ارث‌بری)، با پیچیدن آن در یک شیء دکوراتور.
         * **Facade**: فراهم‌کردن یک رابط ساده و یکپارچه برای مجموعه‌ای از رابط‌های پیچیده یک زیرسیستم.
         * **Flyweight**: استفاده‌ی بهینه از حافظه با به‌اشتراک‌گذاری بخش‌های مشترک حالت اشیاء بین تعداد زیادی از آن‌ها.
         * **Proxy**: کنترل دسترسی به یک شیء با استفاده از یک جایگزین (نماینده) که همان رابط را پیاده‌سازی می‌کند (مثلاً برای lazy loading، امنیت، یا لاگ‌گیری).
-    * Behavioral Patterns: الگوهای‌طراحی برمبنای «تنظیم روابط‌آبجکت‌ها» از نوع استفاده یک آبجکت در آبجکت دیگر(رفع پیچیدگی)
+    * Behavioral Patterns: «تنظیم روابط‌آبجکت‌ها» برپایه استفاده یک آبجکت در آبجکت دیگر(رفع پیچیدگی)
         * **Chain of Responsibility**: انتقال درخواست در یک زنجیره از گیرنده‌ها تا زمانی که یکی از آن‌ها آن را پردازش کند.
         * **Command**: کپسوله‌سازی یک درخواست به‌صورت یک شیء فرمان، برای پارامترسازی کلاینت‌ها با درخواست‌های مختلف یا پیاده‌سازی `undo` یا `redo`.
         * **Interpreter**: تعریف گرامر یک زبان ساده و یک مفسر برای آن زبان با استفاده از بازنمایی سلسله‌مراتبی از عبارات.
@@ -6755,7 +6755,7 @@ if __name__ == "__main__":
         print(f"{node_type} {node.name}")
 ```
 
-# 16. 🅰️ Behavioral.Chain_Of_Responsibility()
+# 16. 🅰️ Behavioral.Chain_Of_Responsibility(درخواست به ترتیب درطول یک زنجیره‌ای از پردازش‌گرها پاس داده می‌شود یعنی هر شیء خروجی خود را به ورودی شیء بعدی میدهد)
 
 هدف اصلی این الگو، کاهش وابستگی (Decoupling) بین فرستنده (Sender) و گیرنده (Receiver) یک درخواست است. به جای اینکه یک شیء درخواست را مستقیماً به یک شیء خاص ارسال کند، درخواست را در طول یک زنجیره از پردازش‌گرها (Handlers) پاس می‌دهد. هر پردازش‌گر در زنجیره تصمیم می‌گیرد که درخواست را خودش پردازش کند یا آن را به پردازش‌گر بعدی در زنجیره منتقل نماید.
 
@@ -6917,7 +6917,7 @@ if __name__ == '__main__':
     logger_chain.log_message(LogLevel.CRITICAL, 'Information message')
 ```
 
-## 16.1. 🅱️ Examples2: سیستم لاگ‌گیری سلسله‌مراتبی به روش دوم
+## 16.2. 🅱️ Examples2: سیستم لاگ‌گیری سلسله‌مراتبی به روش دوم
 
 ```python
 from abc import ABC, abstractmethod
@@ -7024,7 +7024,7 @@ if __name__ == "__main__":
     error_logger.log_message(LogLevel.ERROR, "خطای بحرانی در دیتابیس رخ داد!")
 ```
 
-## 16.2. 🅱️ Examples3: Authentication Pipeline
+## 16.3. 🅱️ Examples3: Authentication Pipeline
 
 هدف آن این است که یک درخواست ورود، به صورت مرحله‌به‌مرحله از فیلترهای امنیتی عبور کند.
 
@@ -7220,7 +7220,7 @@ requests = [
 client_code(ip_handler, requests)
 ```
 
-## 16.3. 🅱️ Examples4: Order Validation Pipeline
+## 16.4. 🅱️ Examples4: Order Validation Pipeline
 
 در این مثال، یک سفارش باید از چندین فیلتر (بررسی موجودی، بررسی پرداخت، بررسی کلاهبرداری) عبور کند. اگر هر مرحله رد شود، زنجیره متوقف شده و سفارش ثبت نمی‌شود.
 
@@ -7338,13 +7338,222 @@ if __name__ == "__main__":
         print("سفارش رد شد (زنجیره متوقف شد).")
 ```
 
-# 17. 🅰️ Structural.Adapter()
+# 17. 🅰️ Structural.Adapter(ایجاد کلاس واسط برای سازگاری بین دو ماژول ناسازگار)
+
+هدف اصلی این الگو، تبدیل رابط (Interface) یک کلاس به رابط دیگری است که کلاینت انتظار دارد. این الگو به کلاس‌هایی اجازه می‌دهد که به دلیل داشتن رابط‌های ناسازگار، در کنار یکدیگر کار کنند (در غیر این صورت امکان‌پذیر نبود).
+
+* اجزای اصلی (Components)
+    * Target (هدف): رابط یا کلاس انتزاعی که کلاینت از آن استفاده می‌کند.
+    * Adaptee (سازگار‌شونده): کلاس موجود با رابط ناسازگار که نیاز به تطبیق دارد.
+    * Adapter (سازگارکننده): کلاسی که رابط Target را پیاده‌سازی کرده و فراخوانی‌ها را به Adaptee ارجاع می‌دهد.
+    * Client (کلاینت): کدی که با اشیاء رابط Target تعامل دارد.
+* انواع پیاده‌سازی
+    * Object Adapter (بر اساس ترکیب/Composition): (روش استاندارد و پیشنهادی) در این روش، Adapter رابط Target را پیاده‌سازی کرده و یک شیء از Adaptee را درون خود ترکیب (Compose) می‌کند.
+    * Class Adapter (بر اساس وراثت/Inheritance): در این روش، Adapter همزمان از Target ارث‌بری کرده و از Adaptee نیز ارث‌بری می‌کند (نیاز به Multiple Inheritance دارد که در زبان‌هایی مثل Java و C# پشتیبانی نمی‌شود، اما در Python و C++ ممکن است). ما در مثال‌ها از روش استاندارد Object Adapter استفاده می‌کنیم.
+* تطبیق با اصول SOLID
+    * اصل مسئولیت واحد (SRP): منطق تبدیل رابط از منطق تجاری (Business Logic) کلاس‌های اصلی جدا می‌شود و فقط در Adapter قرار می‌گیرد.
+    * اصل باز/بسته (OCP): می‌توانید انواع جدیدی از Adapterها را برای سازگار کردن کلاس‌های جدید بدون تغییر در کد کلاینت یا Target معرفی کنید.
+* مزایا و معایب
+    * مزایا: جداسازی دغدغه‌ها (Separation of Concerns)، امکان استفاده از کتابخانه‌های Third-party بدون آلوده کردن کد اصلی، رعایت OCP.
+    * معایب: افزایش پیچیدگی کلی سیستم با افزودن کلاس‌ها و اینترفیس‌های جدید.
+* انواع کاربردها: جایگاه استفاده در پروژه‌های بزرگ صنعتی برای حل مشکلات یکپارچگی است.
+    * یکپارچه‌سازی درگاه‌های پرداخت (Payment Gateways Integration): شرکت‌ها معمولاً یک رابط داخلی استاندارد برای پرداخت دارند. برای اتصال به درگاه‌های مختلف (مثل Stripe، PayPal، یا درگاه‌های بانکی محلی که APIهای متفاوتی دارند)، از Adapter استفاده می‌کنند تا هر درگاه را با رابط داخلی شرکت سازگار کنند.
+    * انتزاع سرویس‌دهندگان ابری (Cloud Provider Abstraction): در معماری‌های Multi-Cloud، برای جلوگیری از Vendor Lock-in، یک رابط استاندارد برای ذخیره‌سازی فایل (مثل upload_file) تعریف می‌شود. سپس برای AWS S3، Google Cloud Storage و Azure Blob Storage جداگانه Adapter نوشته می‌شود تا API اختصاصی هر کدام را به رابط استاندارد تبدیل کنند.
+    * مهاجرت و اتصال به سیستم‌های قدیمی (Legacy System / SOAP to REST): زمانی که یک سازمان می‌خواهد سیستم‌های قدیمی (مثلاً مبتنی بر SOAP یا XML) را به معماری مدرن (مثل Microservices و REST/JSON) مهاجرت دهد، به جای بازنویسی سیستم قدیمی، یک Adapter (یا Facade/Adapter ترکیبی) می‌نویسد که درخواست‌های JSON/REST را به SOAP/XML ترجمه کرده و به سیستم
+      Legacy پاس دهد.
+    * استانداردسازی درایورهای پایگاه داده (Database Driver Standardization): در ORMها (مثل SQLAlchemy یا Hibernate) یا لایه Repository، از الگوی Adapter برای یکپارچه‌سازی کوئری‌ها استفاده می‌شود. Adapterهای متفاوتی برای PostgreSQL، MySQL و MongoDB نوشته می‌شود تا متدهای استاندارد Repository را به زبان کوئری مخصوص هر دیتابیس ترجمه کنند.
+    * یکپارچه‌سازی ابزارهای لاگ‌برداری و مانیتورینگ (Logging & Telemetry Adapters): در سیستم‌های Enterprise، ممکن است نیاز باشد لاگ‌ها همزمان به چندین مقصد (مثل ElasticSearch, Datadog, یا فایل‌های محلی) فرستاده شوند. یک رابط Logger استاندارد تعریف شده و Adapterهای مختلف، متدهای آن را به فرمت و API اختصاصی هر ابزار مانیتورینگ (مثل Log4j یا Winston)
+      تبدیل می‌کنند.
 
 ## 17.1. 🅱️ Examples1:
 
+این کد با استفاده از الگوی Adapter، خروجی یک پریز برق ۲۳۰ ولت اروپایی را به فرمت مورد انتظار (۱۲۰ ولت) تبدیل می‌کند تا یک دستگاه آمریکایی بتواند بدون آسیب دیدن از آن برای شارژ استفاده کند.
+
+```python
+from typing import Union
+
+# ۱. کلاس هدف (Target) - پریز برق استاندارد آمریکا
+class USPowerOutlet:
+    def output_120v(self) -> int:
+        # متدی که کلاینت (دستگاه آمریکایی) انتظار دارد آن را فراخوانی کند
+        print("providing 120 volt")
+        return 120
+
+
+# ۲. کلاس ناسازگار (Adaptee) - پریز برق اروپا
+class EuropeanPowerSocket:
+    def output_230v(self) -> int:
+        # کلاسی با رابط متفاوت که مستقیماً با دستگاه آمریکایی سازگار نیست
+        print("providing 230 volt")
+        return 230
+
+
+# ۳. کلاس سازگارکننده (Adapter)
+class EuropeanToUSAdapter(USPowerOutlet):
+    def __init__(self, european_power_socket: EuropeanPowerSocket) -> None:
+        # دریافت و نگهداری مرجع کلاس ناسازگار (پریز اروپا) درون آداپتور
+        self.european_power_socket = european_power_socket
+
+    def output_120v(self) -> float:
+        # پیاده‌سازی متد مورد انتظار کلاینت و ترجمه آن به متد کلاس ناسازگار
+        volts = self.european_power_socket.output_230v()
+        print(f'converting {volts}V to 120V')
+        # تبدیل ولتاژ ۲۳۰ به حدود ۱۲۰ ولت
+        return volts / 1.9167
+
+
+# ۴. کلاینت (Client) - دستگاه آمریکایی
+class AmericanDevice:
+    def __init__(self, power_source: USPowerOutlet) -> None:
+        # دستگاه فقط با رابط USPowerOutlet کار می‌کند (به لطف پلی‌مورفیسم، آداپتور هم پذیرفته می‌شود)
+        self.power_source = power_source
+
+    def charge(self) -> None:
+        # درخواست برق از منبع تغذیه (که می‌تواند پریز اصلی یا آداپتور باشد)
+        volts = self.power_source.output_120v()
+
+        # بررسی ولتاژ دریافتی
+        if volts == 120:
+            print("Device is charging properly!")
+        else:
+            print(f"Warning!: {volts}V detected. Device may be damaged")
+
+
+if __name__ == "__main__":
+    print('==== using us power outlet ====')
+    # حالت اول: اتصال مستقیم دستگاه به پریز استاندارد آمریکا
+    us_outlet = USPowerOutlet()
+    us_device = AmericanDevice(us_outlet)
+    us_device.charge()
+
+    print('\n==== using european power socket using adapter ====')
+    # حالت دوم: اتصال دستگاه به پریز اروپا از طریق آداپتور
+    euro_socket = EuropeanPowerSocket()
+    adapter = EuropeanToUSAdapter(euro_socket)
+    
+    # پاس دادن آداپتور به دستگاه (دستگاه فکر می‌کند با یک پریز آمریکایی طرف است)
+    us_device_with_adapter = AmericanDevice(adapter)
+    us_device_with_adapter.charge()
+```
+
 ## 17.2. 🅱️ Examples2:
 
-## 17.3. 🅱️ Examples3:
+## 17.3. 🅱️ Examples3: Payment Gateway (یکپارچه‌سازی درگاه پرداخت)
+
+سناریو: سیستم ما انتظار دارد پرداخت از طریق متد pay(amount) انجام شود. اما می‌خواهیم از یک درگاه پرداخت قدیمی استفاده کنیم که متد آن send_money(currency, value) است.
+
+```python
+from abc import ABC, abstractmethod
+
+
+# ۱. تعریف رابط هدف (Target) که کلاینت انتظار دارد
+class PaymentProcessor(ABC):
+    @abstractmethod
+    def pay(self, amount: float) -> bool:
+        pass
+
+
+# ۲. کلاس ناسازگار (Adaptee) - درگاه پرداخت قدیمی
+class LegacyPaymentGateway:
+    def send_money(self, currency: str, value: float) -> str:
+        # شبیه‌سازی پردازش در درگاه قدیمی
+        return f"SUCCESS: {value} {currency} sent via legacy gateway."
+
+
+# ۳. کلاس سازگارکننده (Adapter)
+class LegacyPaymentAdapter(PaymentProcessor):
+    def __init__(self, legacy_gateway: LegacyPaymentGateway):
+        # نگهداری مرجع کلاس ناسازگار درون سازگارکننده
+        self._legacy_gateway = legacy_gateway
+
+    def pay(self, amount: float) -> bool:
+        # ترجمه فراخوانی از رابط Target به رابط Adaptee
+        # فرض می‌کنیم واحد پول پیش‌فرض ریال (IRR) است
+        result = self._legacy_gateway.send_money(currency="IRR", value=amount)
+
+        # بررسی نتیجه و تبدیل به بولین مورد انتظار کلاینت
+        return result.startswith("SUCCESS")
+
+
+# ۴. کلاینت
+def checkout(processor: PaymentProcessor, total_amount: float) -> None:
+    print(f"در حال پردازش پرداخت به مبلغ {total_amount}...")
+    if processor.pay(total_amount):
+        print("پرداخت با موفقیت انجام شد.")
+    else:
+        print("پرداخت ناموفق بود.")
+
+
+# اجرای مثال
+if __name__ == "__main__":
+    legacy_gateway = LegacyPaymentGateway()
+    # استفاده از Adapter برای سازگار کردن درگاه قدیمی با رابط جدید
+    adapted_processor = LegacyPaymentAdapter(legacy_gateway)
+
+    checkout(adapted_processor, 150000.0)
+```
+
+## 17.3. 🅱️ Examples4: Notification Service
+
+سناریو: سیستم ما برای ارسال پیام از متد send_notification(user_email, message) استفاده می‌کند. اما سرویس دهنده پیامکی (SMS) ما فقط شماره موبایل می‌پذیرد و متد آن dispatch_sms(phone, text) است.
+
+```python
+from abc import ABC, abstractmethod
+from dataclasses import dataclass
+
+
+# ۱. رابط هدف (Target)
+class NotificationService(ABC):
+    @abstractmethod
+    def send_notification(self, user_email: str, message: str) -> None:
+        pass
+
+
+# ۲. کلاس ناسازگار (Adaptee) - سرویس دهنده پیامکی
+class SmsProvider:
+    def dispatch_sms(self, phone_number: str, text: str) -> None:
+        print(f"[SMS Provider] پیامک به {phone_number} ارسال شد: {text}")
+
+
+# ۳. مدل کاربر (برای نشان دادن تبدیل داده‌ها در Adapter)
+@dataclass
+class User:
+    email: str
+    phone: str
+
+
+# ۴. کلاس سازگارکننده (Adapter)
+class SmsNotificationAdapter(NotificationService):
+    def __init__(self, sms_provider: SmsProvider, user: User):
+        self._sms_provider = sms_provider
+        self._user = user
+
+    def send_notification(self, user_email: str, message: str) -> None:
+        # در اینجا Adapter وظیفه دارد داده‌ها را مپ کند
+        # چون سرویس پیامکی ایمیل را نمی‌فهمد، ما شماره موبایل کاربر را استخراج می‌کنیم
+        if user_email == self._user.email:
+            target_phone = self._user.phone
+            # ترجمه و ارسال به Adaptee
+            self._sms_provider.dispatch_sms(phone_number=target_phone, text=message)
+        else:
+            print("کاربر یافت نشد!")
+
+
+# ۵. کلاینت
+def notify_user(service: NotificationService, email: str, msg: str) -> None:
+    service.send_notification(email, msg)
+
+
+# اجرای مثال
+if __name__ == "__main__":
+    sms_service = SmsProvider()
+    my_user = User(email="ali@example.com", phone="09123456789")
+
+    # سازگار کردن سرویس پیامکی با رابط نوتیفیکیشن سیستم
+    adapted_service = SmsNotificationAdapter(sms_service, my_user)
+
+    notify_user(adapted_service, "ali@example.com", "سفارش شما ارسال شد.")
+```
 
 # 18. 🅰️ Structural.Composite()
 
@@ -7372,6 +7581,36 @@ if __name__ == "__main__":
 
 ## 20.4. 🅱️ Examples4:
 
+# 21. 🅰️ Structural.Flyweight()
+
+## 21.1. 🅱️ Examples1:
+
+## 21.2. 🅱️ Examples2:
+
+## 21.3. 🅱️ Examples3:
+
+## 21.4. 🅱️ Examples4:
+
+# 22. 🅰️ Structural.Proxy()
+
+## 22.1. 🅱️ Examples1:
+
+## 22.2. 🅱️ Examples2:
+
+## 22.3. 🅱️ Examples3:
+
+## 22.4. 🅱️ Examples4:
+
+# 23. 🅰️ Structural.Bridge()
+
+## 23.1. 🅱️ Examples1:
+
+## 23.2. 🅱️ Examples2:
+
+## 23.3. 🅱️ Examples3:
+
+## 23.4. 🅱️ Examples4:
+
 </div>
 
-# TODO:// هر کدام دارای ۵ مثال عنوان از کاربرد در صنعت داشته باشند
+# 24. TODO:// هر کدام دارای ۵ مثال عنوان از کاربرد در صنعت داشته باشند
