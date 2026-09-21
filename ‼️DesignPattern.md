@@ -51,6 +51,8 @@ The Design Patterns are descriptions of communicating objects and class that are
     * وجود تنها یک پرینتر
     * کانکشن به دیتابیس
 
+![️Creational.Singleton.png](_srcFiles/Images/️Creational.Singleton.png "️Creational.Singleton.png")
+
 ## 1.1. 🅱️Implement
 
 کلاسی که قرار است تحت الگوی طراحی Singleton باشد باید از قواعد زیر پیروی کند
@@ -263,6 +265,8 @@ public class DBConnection {
 # 2. 🅰️Creational.Builder(مدیریت هزینه‌ها و منابع‌ها در هنگام تولید آبجکت با تعداد پارامتر زیاد)
 
 هنگامی که شرایط زیر برقرار باشد می‌توان از این «الگوی‌طراحی» استفاده نمود
+
+![️Creational.Builder.png](_srcFiles/Images/️Creational.Builder.png "️Creational.Builder.png")
 
 * هنگام **تولید آبجکت با تعداد پارامتر زیاد**
 * هنگامی‌که ساخت آبجکت Cost زیاد دارد(مثل کوئری دیتابیس مثلا QuerySet در جنگو)
@@ -542,6 +546,8 @@ public class Main {
 
 این امکان را می‌دهد که یک شیء جدید را از طریق کپی کردن شیء موجود و اعمال تغییرات بر روی نسخه‌های جدید، ایجاد کنید
 
+![️Creational.Prototype.png](_srcFiles/Images/️Creational.Prototype.png "️Creational.Prototype.png")
+
 * اغلب در موقعیت‌هایی استفاده می‌شود که نیاز به ایجاد نسخه‌های مشابه از یک شیء با تنظیمات خاص نیاز باشد
 * **هدف**: جلوگیری از ساختن مکرر اشیاء مشابه است
     * زمانی که ایجاد اشیاء پیچیده هزینه‌بر است
@@ -607,6 +613,8 @@ print("Memory Address of deep copy data:", id(deep_copy.data))
 
 در این الگوی طراحی مسئولیت انتخاب نوع شیء و چگونگی پیاده‌سازی را به زیرکلاس‌ها واگذار می‌کند، در حالی که کلاس پایه الگوریتم کلی کار را حفظ می‌کند. به عبارتی در کلاس پایه(والد) می‌دانیم که چه کاری قرار است انجام شود ولی چگونگی انجام کار و پیاده‌سازی و اعمال پیچیدگی‌ها در زیرکلاس انجام خواهد شد
 
+![️Creational.FactoryMethod.png](_srcFiles/Images/️Creational.FactoryMethod.png "️Creational.FactoryMethod.png")
+
 * **هدف‌ایجاد**:پنهان‌سازی پیچیدگی‌های ساخت شیء(برنامه‌نویس درگیر پیچیدگی‌های آبجکت‌ها نشود و به سهولت نمونه بسازد)
 * این الگوی طراحی برپایه اصل وراثت بنا نهاده شده(Inheritance).نوع دقیق شیء توسط زیرکلاس‌ها مشخص می‌شود
 * موارد کاربرد
@@ -664,6 +672,7 @@ class DogFactory(AnimalFactory):
 class CatFactory(AnimalFactory):
     def create_animal(self):
         return Cat()
+
 
 # ✅️ ====> Alternative for Animal,AnimalFactory
 # ✅️ class Animal:
@@ -1140,6 +1149,8 @@ public class CalculationFactory {
 
 الگوی Abstract Factory یک الگوی طراحی از نوع Creational (سازنده) است که برای ساخت خانواده‌ای از اشیای مرتبط یا وابسته به هم، بدون مشخص کردن کلاس دقیق آن‌ها استفاده می‌شود.به زبان ساده:به‌جای اینکه مستقیماً از کلاس‌ها نمونه بسازیم (new)، یک کارخانه می‌سازیم که خودش اشیای مرتبط را برای ما تولید می‌کند.
 
+![Creational.AbstractFactory.png](_srcFiles/Images/Creational.AbstractFactory.png "Creational.AbstractFactory.png")
+
 * کارخانه‌ای که خودش کارخانه تولید می‌کند. یعنی Factory والد و Factory فرزند
 * کاربرد در سیستم‌های بزرگ و آبجکت‌های سنگین که بخواهند ساخت کلاس فرزند را dynamic کنند.
 * وجود interfaceهای مشترک از 2 گروه الف: به ازای هر Factory ب:به ازای هر کلاس‌هایی که داخل Factory است
@@ -1526,6 +1537,8 @@ public class ImageConverterFactory implements MediaConverterFactory {
 متفاوت نظیر صف‌کردن، ذخیره‌کردن، لاگ‌گرفتن، اجرای با تأخیر، و Undo یا Redo را نیز داشته باشیم و هندل نماییم
 
 به زبان ساده: به‌جای اینکه “کلیک روی دکمه” مستقیم برود و “کد روشن‌کردن چراغ” را صدا بزند، یک آبجکت Command می‌سازید که می‌گوید «روشن‌کردن چراغ با این پارامترها»، بعد دکمه فقط execute() را صدا می‌زند.
+
+![DesignPattern.Behavioral.Command.png](_srcFiles/Images/DesignPattern.Behavioral.Command.png "DesignPattern.Behavioral.Command.png")
 
 * معمولا در موارد زیر استفاده می‌شود
     * **کاهش وابستگی(Decoupling)**: فراخوانی کننده(Invoker) نداند دقیقاً چه کسی یا چگونه کار را انجام می‌دهد. فقط بداند «یک کامند قابل اجرا» دارد.
@@ -2053,6 +2066,8 @@ if __name__ == "__main__":
     * میانجی بزرگ: اگر مراقب نباشید، میانجی تبدیل به یک «خدای همه‌کاره» (God Object) می‌شود
     * اگر میانجی خراب شود، کل سیستم از کار می‌افتد
     * پیچیدگی پنهان: فهم جریان برنامه سخت‌تر می‌شود چون همه‌چیز از یک نقطه رد می‌شود
+
+![DesignPattern.Behavioral.Mediator.png](_srcFiles/Images/DesignPattern.Behavioral.Mediator.png "DesignPattern.Behavioral.Mediator.png")
 
 ## 7.1. 🅱️ Examples1
 
@@ -2617,6 +2632,8 @@ if __name__ == "__main__":
 # 8. 🅰️ Behavioral.Memento(ذخیره و بازیابی حالت داخلی یک شیء)
 
 ذخیره و بازیابی حالت داخلی یک شیء بدون نقض انکپسوله‌سازی
+
+![DesignPattern.Behavioral.Memento.png](_srcFiles/Images/DesignPattern.Behavioral.Memento.png "DesignPattern.Behavioral.Memento.png")
 
 * معمولاً برای پیاده‌سازی `undo` بکار می‌رود
 * سه رکن دارد
@@ -3267,6 +3284,8 @@ if __name__ == "__main__":
 
 پیاده‌سازی مکانیزم Publish-Subscribe (انتشار-اشتراک) توسط تعریف یک رابطه "یک به چند" بین اشیاء به طوری که وقتی یک شیء (به نام Subject یا Publisher) وضعیتش تغییر می‌کند، تمام اشیاء وابسته به آن (به نام Observers یا Subscribers) به صورت خودکار مطلع شده و به‌روزرسانی می‌شوند.
 
+![DesignPattern.Behavioral.Observer.jpeg](_srcFiles/Images/DesignPattern.Behavioral.Observer.jpeg "DesignPattern.Behavioral.Observer.jpeg")
+
 * مثال‌ها
     * یک سایت فرشگاهی که وقتی تراکنش پرداخت انجام شد به فرآینده‌های مستقل میگوید که هرکدام کارهای خودش را انجام دهد
         * ارسال پیامک
@@ -3288,6 +3307,8 @@ if __name__ == "__main__":
 * کپسوله‌سازی و Coupling (وابستگی): بزرگترین مزیت Observer، کاهش وابستگی (Loose Coupling) است. Subject فقط می‌داند که Observerها یک رابط مشترک (update) را پیاده‌سازی کرده‌اند. او نمی‌داند آن‌ها چه کلاس‌هایی هستند، چه کار می‌کنند یا چند تا هستند. شما می‌توانید در زمان اجرا (Runtime) Observerها را اضافه یا حذف کنید بدون اینکه کد Subject را تغییر دهید
 * نشت حافظه (Memory Leaks): اگر یک Observer دیگر نیازی به دریافت نوتیفیکیشن ندارد (مثلاً پنجره‌ای در UI بسته شده است) اما فراموش کنید آن را از لیست Subject حذف (detach) کنید، Subject همچنان یک Reference به آن نگه می‌دارد. این کار باعث می‌شود garbage collector نتواند آن Observer را از حافظه پاک کند و حافظه سیستم پر می‌شود.
 * ترتیب اطلاع‌رسانی و وابستگی متقابل: Observerها هرگز نباید فرض کنند که به ترتیب خاصی صدا زده می‌شوند. همچنین، یک Observer نباید در متد update خود، وضعیت Subject را تغییر دهد، زیرا این کار باعث ایجاد حلقه بی‌نهایت (Infinite Loop) یا رفتارهای پیش‌بینی‌ناپذیر می‌شود.
+
+![DesignPattern.Behavioral.Observer.png](_srcFiles/Images/DesignPattern.Behavioral.Observer.png "DesignPattern.Behavioral.Observer.png")
 
 ## 9.1. 🅱️ Examples1: درک پایه با یک ایستگاه هواشناسی
 
@@ -4000,6 +4021,8 @@ if __name__ == '__main__':
 # 11. 🅰️ Behavioral.State(تغییر رفتار آبجکت بر اساس تغییر وضعیت)
 
 الگوی State یکی از الگوهای طراحی رفتاری (Behavioral) است که به یک شی اجازه می‌دهد زمانی که وضعیت داخلی (Internal State) آن تغییر می‌کند، رفتار خود را نیز تغییر دهد. این الگو در واقع پیاده‌سازی مفهوم ماشین حالت متناهی (Finite State Machine - FSM) در برنامه‌نویسی شی‌گرا است.
+
+![DesignPattern.Behavioral.State.png](_srcFiles/Images/DesignPattern.Behavioral.State.png "DesignPattern.Behavioral.State.png")
 
 * این الگو از سه بخش اصلی تشکیل شده است:
     * Context (کانتکست): کلاسی که مرجع (Reference) به یک شی از نوع State را نگه می‌دارد. این کلاس وضعیت فعلی را مدیریت کرده و درخواست‌های کلاینت را به State فعلی Delegate (ارجاع) می‌کند.
@@ -5131,6 +5154,8 @@ if __name__ == "__main__":
 
 الگوی Template Method یکی از الگوهای طراحی رفتاری (Behavioral) است که اسکلت (Skeleton) یک الگوریتم را در یک کلاس پایه تعریف می‌کند، اما اجازه می‌دهد زیرکلاس‌ها (Subclasses) مراحل خاصی از آن الگوریتم را بدون تغییر در ساختار کلی الگوریتم بازنویسی (Override) کنند.
 
+![DesignPattern.Behavioral.TemplateMethod.png](_srcFiles/Images/DesignPattern.Behavioral.TemplateMethod.png "DesignPattern.Behavioral.TemplateMethod.png")
+
 * اجزای اصلی در این الگوی طراحی
     1. Abstract Class:
         * Template Method: متدی که مراحل الگوریتم را به ترتیب فراخوانی می‌کند. معمولاً این متد را final یا غیرقابل بازنویسی تعریف می‌کنند تا ساختار الگوریتم خراب نشود.
@@ -5404,6 +5429,8 @@ if __name__ == "__main__":
 * تفاوت کلیدی با Strategy و State
     * در Strategy، کلاینت استراتژی را به Context تزریق می‌کند.
     * در Visitor، ساختار اشیاء (Elements) ثابت است و ما الگوریتم‌های مختلف را روی این ساختار "سوار" می‌کنیم.
+
+![DesignPattern.Behavioral.Visitor.png](_srcFiles/Images/DesignPattern.Behavioral.Visitor.png "DesignPattern.Behavioral.Visitor.png")
 
 ## 13.1. 🅱️ Examples1:
 
@@ -6039,6 +6066,8 @@ if __name__ == '__main__':
     * زمانی که نیاز دارید الگوریتم‌ها را در زمان اجرا (Runtime) به صورت داینامیک تغییر دهید.
     * زمانی که می‌خواهید از افشای جزئیات پیچیده الگوریتم‌ها به کلاس‌های دیگر جلوگیری کنید (Encapsulation).
 
+![DesignPattern.Behavioral.Strategy.png](_srcFiles/Images/DesignPattern.Behavioral.Strategy.png "DesignPattern.Behavioral.Strategy.png")
+
 ## 14.1. 🅱️ Examples1: تخفیف در سایت فروشگاهی
 
 ```python
@@ -6475,6 +6504,8 @@ if __name__ == "__main__":
     * زمانی که می‌خواهید ساختار درونی مجموعه را از دید کلاینت مخفی کنید (Encapsulation).
     * زمانی که نیاز دارید چندین پیمایش مستقل و همزمان روی یک مجموعه واحد داشته باشید.
 
+![DesignPattern.Behavioral.Iterator.png](_srcFiles/Images/DesignPattern.Behavioral.Iterator.png "DesignPattern.Behavioral.Iterator.png")
+
 ## 15.1. 🅱️ Examples1: BookShelf
 
 ```python
@@ -6762,6 +6793,8 @@ if __name__ == "__main__":
 # 16. 🅰️ Behavioral.Chain_Of_Responsibility(درخواست به ترتیب درطول یک زنجیره‌ای از پردازش‌گرها پاس داده می‌شود یعنی هر شیء خروجی خود را به ورودی شیء بعدی میدهد)
 
 هدف اصلی این الگو، کاهش وابستگی (Decoupling) بین فرستنده (Sender) و گیرنده (Receiver) یک درخواست است. به جای اینکه یک شیء درخواست را مستقیماً به یک شیء خاص ارسال کند، درخواست را در طول یک زنجیره از پردازش‌گرها (Handlers) پاس می‌دهد. هر پردازش‌گر در زنجیره تصمیم می‌گیرد که درخواست را خودش پردازش کند یا آن را به پردازش‌گر بعدی در زنجیره منتقل نماید.
+
+![DesignPattern.Behavioral.ChainOfResponsibility.png](_srcFiles/Images/DesignPattern.Behavioral.ChainOfResponsibility.png "DesignPattern.Behavioral.ChainOfResponsibility.png")
 
 * ساختار و شرکت‌کنندگان (Structure & Participants)
     * Handler (پردازش‌گر پایه): یک رابط (Interface) یا کلاس انتزاعی که روش پردازش درخواست و همچنین مرجعی به پردازش‌گر بعدی در زنجیره را تعریف می‌کند.
@@ -7344,6 +7377,8 @@ if __name__ == "__main__":
 
 هدف اصلی این الگو، تبدیل رابط (Interface) یک کلاس به رابط دیگری است که کلاینت انتظار دارد. این الگو به کلاس‌هایی اجازه می‌دهد که به دلیل داشتن رابط‌های ناسازگار، در کنار یکدیگر کار کنند (در غیر این صورت امکان‌پذیر نبود).
 
+![DesignPattern.Structural.Adapter.png](_srcFiles/Images/DesignPattern.Structural.Adapter.png "DesignPattern.Structural.Adapter.png")
+
 * اجزای اصلی (Components)
     * Target (هدف): رابط یا کلاس انتزاعی که کلاینت از آن استفاده می‌کند.
     * Adaptee (سازگار‌شونده): کلاس موجود با رابط ناسازگار که نیاز به تطبیق دارد.
@@ -7366,6 +7401,8 @@ if __name__ == "__main__":
     * استانداردسازی درایورهای پایگاه داده (Database Driver Standardization): در ORMها (مثل SQLAlchemy یا Hibernate) یا لایه Repository، از الگوی Adapter برای یکپارچه‌سازی کوئری‌ها استفاده می‌شود. Adapterهای متفاوتی برای PostgreSQL، MySQL و MongoDB نوشته می‌شود تا متدهای استاندارد Repository را به زبان کوئری مخصوص هر دیتابیس ترجمه کنند.
     * یکپارچه‌سازی ابزارهای لاگ‌برداری و مانیتورینگ (Logging & Telemetry Adapters): در سیستم‌های Enterprise، ممکن است نیاز باشد لاگ‌ها همزمان به چندین مقصد (مثل ElasticSearch, Datadog, یا فایل‌های محلی) فرستاده شوند. یک رابط Logger استاندارد تعریف شده و Adapterهای مختلف، متدهای آن را به فرمت و API اختصاصی هر ابزار مانیتورینگ (مثل Log4j یا Winston)
       تبدیل می‌کنند.
+
+![DesignPattern.Structural.Adapter2.png](_srcFiles/Images/DesignPattern.Structural.Adapter2.png "DesignPattern.Structural.Adapter2.png")
 
 ## 17.1. 🅱️ Examples1:
 
@@ -7695,9 +7732,304 @@ if __name__ == "__main__":
 
 # 18. 🅰️ Structural.Composite()
 
-## 18.1. 🅱️ Examples1:
+الگوی کامپوزیت برای ساخت سلسله‌مراتب جزء-کل (Part-Whole Hierarchies) به شکل درختی استفاده می‌شود.هدف اصلی این الگو این است که به کلاینت (Client) اجازه دهد تا با اشیاء منفرد (اجزاء) و ترکیب اشیاء (کل‌ها) به صورت یکسان (Uniformly) رفتار کند. به عبارت دیگر، کلاینت نیازی نیست بداند با یک شیء تکی طرف است یا یک گروه از شیءها.
+
+![DesignPattern.Structural.Composite.jpg](_srcFiles/Images/DesignPattern.Structural.Composite.jpg "DesignPattern.Structural.Composite.jpg")
+
+* ساختار (Structure)
+    * Component (کامپوننت / رابط): یک اینترفیس یا کلاس انتزاعی که عملیات مشترک بین اشیاء ساده و پیچیده را تعریف می‌کند.
+    * Leaf (برگ / جزء): نماینده اشیاء پایه‌ای و منفرد است. این اشیاء فرزندی ندارند و عملیات اصلی را انجام می‌دهند.
+    * Composite (کامپوزیت / کل): نماینده اشیاء پیچیده‌ای است که می‌توانند دارای فرزند (Leaf یا Composite دیگر) باشند. این کلاس عملیات مدیریت فرزندان (افزودن، حذف، دریافت) را پیاده‌سازی می‌کند.
+    * Client (کلاینت): از طریق اینترفیس Component با تمام اشیاء کار می‌کند.
+* ملاحظات مهم در طراحی (Design Considerations)
+    * شفافیت در برابر ایمنی (Transparency vs. Safety):
+        * شفافیت: آیا متدهای مدیریت فرزندان (مثل add و remove) باید در اینترفیس پایه (Component) تعریف شوند؟ اگر بله، کلاینت می‌تواند با همه یکسان رفتار کند، اما ممکن است در زمان اجرا (Runtime) خطای UnsupportedOperation در کلاس Leaf رخ دهد.
+        * ایمنی: اگر متدهای مدیریت فرزندان فقط در کلاس Composite تعریف شوند، ایمنی در زمان کامپایل (Compile-time) تضمین می‌شود، اما کلاینت باید قبل از صدا زدن متدها، نوع شیء را بررسی کند (Type Checking) که اصل OCP را نقض می‌کند. معمولاً در زبان‌هایی مثل Python یا Java، رویکرد شفافیت (تعریف در اینترفیس پایه) ترجیح داده می‌شود.
+    * مدیریت حافظه و ارجاعات دوطرفه: اگر اشیاء کامپوزیت نیاز دارند به والد (Parent) خود دسترسی داشته باشند، باید مراقب حلقه‌های بی‌نهایت (Circular References) و نشت حافظه (Memory Leak) باشید.
+    * بهینه‌سازی و کش کردن (Caching): اگر ساختار درختی بسیار بزرگ و پیچیده است (مثل یک سند گرافیکی سنگین)، محاسبه مکرر عملیات روی کل درخت می‌تواند پرهزینه باشد. استفاده از الگوی Visitor یا کش کردن نتایج می‌تواند راهگشا باشد.
+    * مرتب‌سازی فرزندان: اگر ترتیب قرارگیری فرزندان اهمیت دارد، باید از ساختارهای داده‌ای مرتب (مثل List) به جای مجموعه‌های نامرتب (مثل Set) استفاده کنید.
+* مزایا: رعایت اصل Single Responsibility (منطق درخت در یک جا قرار می‌گیرد)، رعایت اصل Open/Closed (بدون تغییر کد کلاینت می‌توان کامپوزیت‌های جدید ساخت)، و ساده‌سازی کد کلاینت با استفاده از پلی‌مورفیسم.
+* معایب: محدود کردن نوع کامپوننت‌ها دشوار می‌شود (مثلاً اگر بخواهید کامپوزیت فقط اشیاء خاصی را بپذیرد، طراحی پیچیده می‌شود).
+* ۵ مورد از مهم‌ترین کاربردهای آن عبارتند از:
+    * فریم‌ورک‌های رابط کاربری گرافیکی (GUI Frameworks):در کتابخانه‌هایی مثل React، Angular، یا فریم‌ورک‌های دسکتاپ مثل JavaFX و WPF، کامپوننت‌های UI (مثل دکمه، تکست‌باکس) برگ‌ها هستند و کانتینرها (مثل Div، Panel، Window) کامپوزیت‌ها هستند. رندر کردن صفحه با یک الگوریتم یکسان (بازگشتی) روی کل درخت DOM انجام می‌شود.
+    * سیستم‌های گرافیکی و طراحی (Graphics & Drawing Applications): در نرم‌افزارهایی مثل Photoshop یا فرمت‌های برداری مثل SVG، اشکال ساده (خط، دایره) برگ‌ها هستند و گروه‌بندی اشکال (Group/Layers) کامپوزیت‌ها هستند. اعمال یک فیلتر یا تغییر مقیاس (Scale) روی یک گروه، به صورت خودکار روی تمام اعضای آن گروه اعمال می‌شود.
+    * سیستم‌های سازمانی و منابع انسانی (HR & Organizational Structures):برای مدل‌سازی ساختار شرکت‌ها. کارمندان عادی (Leaf) و مدیران/دپارتمان‌ها (Composite) که شامل چندین کارمند یا زیردپارتمان هستند. محاسبه حقوق و دستمزد کل شرکت یا یک دپارتمان خاص با جمع زدن بازگشتی حقوق اعضای آن انجام می‌شود.
+    * پلتفرم‌های تجارت الکترونیک و سبد خرید (E-commerce & Shopping Carts): مدیریت محصولات و پکیج‌ها. یک محصول تکی (Leaf) قیمت مشخصی دارد، اما یک "پکیج تخفیف‌دار" یا "باندل" (Composite) شامل چندین محصول است. قیمت نهایی سبد خرید با پیمایش درختی محاسبه می‌شود.
+    * پارسرهای کامپایلر و ساختار اسناد (Compilers & Document Parsers):در طراحی کامپایلرها، کد منبع به یک درخت نحو (Abstract Syntax Tree - AST) تبدیل می‌شود. گره‌های برگ (مثل متغیرها و عملگرهای ساده) و گره‌های کامپوزیت (مثل حلقه‌ها، شرط‌ها و بلوک‌های کد که شامل گره‌های دیگر هستند) با استفاده از الگوی کامپوزیت مدیریت و پیمایش می‌شوند.
+
+## 18.1. 🅱️ Examples1: سیستم منوی سلسله‌مراتبی (درختی) 
+
+هدف این کد این است که به کلاینت اجازه دهد بدون نیاز به بررسی نوع شیء (اینکه آیا با یک آیتم ساده طرف است یا یک زیرمنوی تو در تو)، با همه آن‌ها به یک شکل رفتار کند. این کار از طریق متد مشترک show_details انجام می‌شود که در کلاس‌های برگ (Leaf) فقط خودش را چاپ می‌کند، اما در کلاس کامپوزیت (Composite) به صورت بازگشتی (Recursive) تمام فرزندان خود را نیز نمایش می‌دهد.
+
+```python
+from abc import ABC, abstractmethod
+
+
+# ==========================================
+# ۱. کامپوننت (Component)
+# ==========================================
+class Component(ABC):
+    """
+    رابط پایه (Interface) برای تمام اشیاء در ساختار کامپوزیت.
+    این کلاس انتزاعی تضمین می‌کند که هم اشیاء ساده (Leaf) و هم اشیاء پیچیده (Composite)
+    دارای یک متد مشترک برای نمایش جزئیات هستند.
+    """
+    
+    @abstractmethod
+    def show_details(self) -> None:
+        """
+        متد انتزاعی برای نمایش جزئیات.
+        تمام کلاس‌های فرزند ملزم به پیاده‌سازی این متد هستند.
+        """
+        raise NotImplementedError
+
+
+# ==========================================
+# ۲. برگ (Leaf)
+# ==========================================
+class LeafElement(Component):
+    """
+    نماینده اشیاء پایه‌ای و منفرد (برگ‌های درخت).
+    این اشیاء هیچ فرزند دیگری ندارند و فقط عملیات اصلی خود را انجام می‌دهند.
+    """
+    
+    def __init__(self, position: str) -> None:
+        self.position = position
+
+    def show_details(self) -> None:
+        """
+        نمایش نام آیتم. 
+        چون این یک برگ است، فقط نام خودش را با یک تورفتگی (Tab) چاپ می‌کند.
+        """
+        print('\t', end='')
+        print(self.position)
+
+
+# ==========================================
+# ۳. کامپوزیت (Composite)
+# ==========================================
+class CompositeElement(Component):
+    """
+    نماینده اشیاء پیچیده (گره‌های درخت).
+    این اشیاء می‌توانند دارای فرزند باشند (که فرزند می‌تواند Leaf یا Composite دیگری باشد).
+    """
+    
+    def __init__(self, position: str) -> None:
+        self.position = position
+        # لیستی برای نگهداری اشیاء فرزند (رابط Component باعث می‌شود هر دو نوع Leaf و Composite اینجا ذخیره شوند)
+        self.children: list[Component] = []
+
+    def add(self, component: Component) -> None:
+        """افزودن یک کامپوننت (فرزند) به ساختار درختی"""
+        self.children.append(component)
+
+    def remove(self, component: Component) -> None:
+        """حذف یک کامپوننت از ساختار درختی"""
+        self.children.remove(component)
+
+    def show_details(self) -> None:
+        """
+        نمایش نام کامپوزیت و سپس پیمایش بازگشتی روی تمام فرزندان.
+        این همان نقطه قوت الگوی کامپوزیت است: کلاینت فقط یک بار این متد را صدا می‌زند،
+        اما کامپوزیت به صورت خودکار و بازگشتی کل زیردرخت را نمایش می‌دهد.
+        """
+        print(self.position)
+        for child in self.children:
+            # اضافه کردن تورفتگی برای نمایش بصری ساختار درختی (Hierarchy)
+            print('\t', end='')
+            # فراخوانی متد show_details روی فرزند (استفاده از پلی‌مورفیسم)
+            child.show_details()
+
+
+# ==========================================
+# بخش کلاینت (Client) و اجرای برنامه
+# ==========================================
+if __name__ == '__main__':
+    # ایجاد ریشه منو (یک کامپوزیت سطح بالا)
+    top_level_menu = CompositeElement('main menu')
+    
+    # ایجاد زیرمنوها (کامپوزیت‌های سطح میانی)
+    sub_menu_1 = CompositeElement('sub menu 1')
+    sub_menu_2 = CompositeElement('sub menu 2')
+    
+    # ایجاد آیتم‌های نهایی منو (برگ‌های سطح پایین)
+    sub_menu_11 = LeafElement('sub menu 11')
+    sub_menu_12 = LeafElement('sub menu 12')
+    sub_menu_21 = LeafElement('sub menu 21')
+    sub_menu_22 = LeafElement('sub menu 22')
+
+    # ساختاردهی به زیرمنوی اول (اتصال برگ‌ها به کامپوزیت)
+    sub_menu_1.add(sub_menu_11)
+    sub_menu_1.add(sub_menu_12)
+    
+    # ساختاردهی به زیرمنوی دوم
+    sub_menu_2.add(sub_menu_21)
+    sub_menu_2.add(sub_menu_22)
+
+    # ساختاردهی به منوی اصلی (اتصال کامپوزیت‌های میانی به کامپوزیت ریشه)
+    top_level_menu.add(sub_menu_1)
+    top_level_menu.add(sub_menu_2)
+
+    # فراخوانی متد روی ریشه. 
+    # توجه کنید که کلاینت نیازی به دانستن نوع اشیاء داخلی ندارد و کل درخت به صورت یکپارچه چاپ می‌شود.
+    top_level_menu.show_details()
+```
 
 ## 18.2. 🅱️ Examples2:
+
+این اسکریپت قصد دارد یک سیستم گرافیکی دوبعدی (مانند یک ویرایشگر ساده تصاویر یا رندرر SVG) را مدل‌سازی کند. در چنین سیستم‌هایی، ما اشکال هندسی پایه (مثل دایره و مربع) داریم و همچنین می‌توانیم چندین شکل را در یک «گروه» (Group) قرار دهیم. هدف اصلی این کد این است که به ما اجازه دهد یک «گروه» از اشکال را دقیقاً مثل یک «شکل تکی» در نظر بگیریم. وقتی به یک گروه دستور render (رندر/نمایش) یا move (جابجایی) می‌دهیم، گروه به صورت خودکار و بازگشتی این دستور را به تمام اعضای داخلی خود منتقل می‌کند. به این ترتیب، کلاینت (کسی که کد را صدا می‌زند) نیازی ندارد بداند آیا دارد با یک شکل تکی کار می‌کند یا یک گروه تو در تو از شکل‌ها؛ او فقط متد را صدا می‌زند و بقیه کارها به صورت یکپارچه انجام می‌شود.
+
+```python
+from abc import ABC, abstractmethod
+
+
+# region component interface
+
+class Graphic(ABC):
+    """
+    رابط پایه (Component Interface) برای تمام اشیاء گرافیکی.
+    این کلاس انتزاعی تضمین می‌کند که هم اشکال ساده (Leaf) و هم گروه‌ها (Composite)
+    دارای متدهای مشترک برای رندر شدن و جابجایی هستند.
+    """
+    
+    @abstractmethod
+    def render(self) -> None:
+        """
+        متد انتزاعی برای رندر (نمایش) شکل.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def move(self, x: int, y: int) -> None:
+        """
+        متد انتزاعی برای جابجایی شکل به مختصات جدید یا به اندازه مشخص.
+        """
+        raise NotImplementedError
+
+
+# endregion
+
+# region Leaf classes
+
+class Circle(Graphic):
+    """
+    کلاس برگ (Leaf) برای شکل دایره.
+    این کلاس هیچ فرزند یا شکل دیگری درون خود ندارد و فقط رفتارهای مختص به دایره را پیاده‌سازی می‌کند.
+    """
+    
+    def __init__(self, x: int, y: int, radius: int) -> None:
+        self.x = x
+        self.y = y
+        self.radius = radius
+
+    def render(self) -> None:
+        """رندر کردن دایره با چاپ مختصات و شعاع آن."""
+        print(f'Rendering Circle at ({self.x}, {self.y}) with radius {self.radius}')
+
+    def move(self, x: int, y: int) -> None:
+        """جابجایی دایره به اندازه x و y داده شده."""
+        self.x += x
+        self.y += y
+        print(f'Circle moved to ({self.x}, {self.y})')
+
+
+class Square(Graphic):
+    """
+    کلاس برگ (Leaf) برای شکل مربع.
+    مشابه دایره، این کلاس نیز یک شیء پایه‌ای بدون فرزند است.
+    """
+    
+    def __init__(self, x: int, y: int, side: int) -> None:
+        self.x = x
+        self.y = y
+        self.side = side
+
+    def render(self) -> None:
+        """رندر کردن مربع با چاپ مختصات و طول ضلع آن."""
+        print(f'Rendering Square at ({self.x}, {self.y}) with side {self.side}')
+
+    def move(self, x: int, y: int) -> None:
+        """جابجایی مربع به اندازه x و y داده شده."""
+        self.x += x
+        self.y += y
+        print(f'Square moved to ({self.x}, {self.y})')
+
+
+# endregion
+
+# region Composite classes
+
+class Group(Graphic):
+    """
+    کلاس کامپوزیت (Composite) برای گروه‌بندی اشکال.
+    این کلاس می‌تواند شامل اشکال ساده (Leaf) یا گروه‌های دیگر (Composite) باشد.
+    """
+    
+    def __init__(self, name: str) -> None:
+        self.name = name
+        # لیستی برای نگهداری اشیاء گرافیکی (هم شکل‌های ساده و هم گروه‌های دیگر)
+        self.graphics: list[Graphic] = []
+
+    def add(self, graphic: Graphic) -> None:
+        """افزودن یک شیء گرافیکی (فرزند) به این گروه."""
+        self.graphics.append(graphic)
+
+    def remove(self, graphic: Graphic) -> None:
+        """حذف یک شیء گرافیکی از این گروه."""
+        self.graphics.remove(graphic)
+
+    def render(self) -> None:
+        """
+        رندر کردن گروه.
+        این متد ابتدا نام گروه را چاپ کرده و سپس به صورت بازگشتی (تفویضی) 
+        متد render را روی تمام فرزندان خود فراخوانی می‌کند.
+        """
+        print(f'\nRendering Group {self.name}')
+        for graphic in self.graphics:
+            # استفاده از پلی‌مورفیسم: نیازی به بررسی نوع graphic نیست
+            graphic.render()
+
+    def move(self, x: int, y: int) -> None:
+        """
+        جابجایی گروه.
+        این متد مختصات جابجایی را به تمام اعضای گروه منتقل می‌کند تا آن‌ها نیز جابجا شوند.
+        این همان قابلیت کلیدی کامپوزیت است: جابجایی یک گروه = جابجایی تمام اعضای آن.
+        """
+        print(f'\nMoving Group {self.name} by ({x}, {y})')
+        for graphic in self.graphics:
+            # تفویض دستور move به تک‌تک فرزندان
+            graphic.move(x, y)
+
+
+# endregion
+
+# region client
+
+if __name__ == '__main__':
+    # ۱. ایجاد اشکال ساده (برگ‌ها / Leaves)
+    circle_1 = Circle(5, 5, 5)
+    circle_2 = Circle(12, 8, 9)
+    square_1 = Square(2, 6, 5)
+    square_2 = Square(4, 7, 6)
+
+    # ۲. ایجاد یک گروه (کامپوزیت / Composite)
+    group_1 = Group('First Group')
+    
+    # ۳. افزودن اشکال به گروه (ساخت درخت جزء-کل)
+    group_1.add(circle_1)
+    group_1.add(circle_2)
+    group_1.add(square_1)
+    group_1.add(square_2)
+
+    # ۴. استفاده یکپارچه از کامپوزیت
+    # کلاینت فقط با یک شیء (group_1) کار می‌کند، اما این دستور روی ۴ شکل داخلی اعمال می‌شود.
+    group_1.render()
+    
+    # جابجایی کل گروه؛ تمام اشکال درون گروه به اندازه (1, 2) جابجا خواهند شد.
+    group_1.move(1, 2)
+
+# endregion
+```
 
 ## 18.3. 🅱️ Examples3:
 
@@ -7750,5 +8082,8 @@ if __name__ == "__main__":
 ## 23.4. 🅱️ Examples4:
 
 </div>
+
+
+https://refactoring.guru/design-patterns/observer
 
 # 24. TODO:// هر کدام دارای ۵ مثال عنوان از کاربرد در صنعت داشته باشند
