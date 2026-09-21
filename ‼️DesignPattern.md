@@ -6585,7 +6585,6 @@ if __name__ == '__main__':
 
 در این مثال، یک مجموعه سفارشی برای نگهداری ایستگاه‌های رادیو داریم. می‌خواهیم بتوانیم روی آن‌ها حلقه for بزنیم بدون اینکه ساختار درونی آن (که در اینجا یک دیکشنری است) را افشا کنیم.
 
-
 ```python
 from typing import Iterator, Iterable, List, Dict
 
@@ -6756,13 +6755,588 @@ if __name__ == "__main__":
         print(f"{node_type} {node.name}")
 ```
 
-# 16. 🅰️ Behavioral.ChainOfResponsibility()
+# 16. 🅰️ Behavioral.Chain_Of_Responsibility()
 
-## 16.1. 🅱️ Examples1:
+هدف اصلی این الگو، کاهش وابستگی (Decoupling) بین فرستنده (Sender) و گیرنده (Receiver) یک درخواست است. به جای اینکه یک شیء درخواست را مستقیماً به یک شیء خاص ارسال کند، درخواست را در طول یک زنجیره از پردازش‌گرها (Handlers) پاس می‌دهد. هر پردازش‌گر در زنجیره تصمیم می‌گیرد که درخواست را خودش پردازش کند یا آن را به پردازش‌گر بعدی در زنجیره منتقل نماید.
 
-## 16.2. 🅱️ Examples2:
+* ساختار و شرکت‌کنندگان (Structure & Participants)
+    * Handler (پردازش‌گر پایه): یک رابط (Interface) یا کلاس انتزاعی که روش پردازش درخواست و همچنین مرجعی به پردازش‌گر بعدی در زنجیره را تعریف می‌کند.
+    * ConcreteHandler (پردازش‌گر مشخص): کلاس‌هایی که منطق واقعی پردازش درخواست را پیاده‌سازی می‌کنند. اگر نتوانند درخواست را پردازش کنند، آن را به هندلر بعدی پاس می‌دهند.
+    * Client (کلاینت): شیئی که درخواست را ایجاد کرده و زنجیره را پیکربندی و راه‌اندازی می‌کند.
+* اصول طراحی رعایت شده (Design Principles)
+    * اصل باز/بسته (Open/Closed Principle): شما می‌توانید بدون تغییر کدهای موجود، پردازش‌گرهای جدیدی به زنجیره اضافه کنید.
+    * اصل مسئولیت واحد (Single Responsibility Principle): هر کلاس در زنجیره فقط و فقط مسئول یک نوع خاص از پردازش است.
+    * اصل جداسازی (Decoupling): کلاینت نیازی ندارد بداند کدام شیء درخواست را پردازش می‌کند؛ فقط آن را به ابتدای زنجیره می‌دهد.
+* کاربردها (Applicability)
+    * زمانی که بیش از یک شیء می‌تواند یک درخواست را پردازش کند و هندلر مشخص از قبل تعیین نشده است.
+    * زمانی که می‌خواهید درخواست را به یکی از چندین شیء ارسال کنید بدون اینکه گیرنده را به صراحت مشخص کنید.
+    * زمانی که مجموعه شیءهایی که درخواست را پردازش می‌کنند باید به صورت پویا (Dynamically) در زمان اجرا تعیین شوند.
+* مزایا:
+    * کنترل بیشتری روی ترتیب پردازش درخواست‌ها دارید.
+    * کد را از ساختارهای شرطی پیچیده (if/else یا switch تو در تو) پاکسازی می‌کند.
+    * افزودن ویژگی‌های جدید (Middleware/Handler) بسیار آسان است.
+* معایب:
+    * اگر زنجیره به درستی پیکربندی نشود، ممکن است درخواست بدون پردازش رها شود.
+    * دیباگ کردن زنجیره‌های بسیار طولانی می‌تواند چالش‌برانگیز باشد.
+    * ایجاد زنجیرههای طولانی ممکن است سربار عملکردی (Performance Overhead) جزئی داشته باشد.
+* برخی موارد کاربرد
+    * پیاده‌سازی لاگ
+    *
 
-## 16.3. 🅱️ Examples3:
+## 16.1. 🅱️ Examples1: سیستم لاگ‌گیری سلسله‌مراتبی
+
+هدف آن این است که یک پیام لاگ، از ابتدای یک زنجیره وارد شود و هر پردازش‌گر (Logger) در مسیر، تصمیم بگیرد که آیا باید آن پیام را پردازش کند یا خیر.
+
+* مکانیزم عملکرد در این کد
+    1. زنجیره به این صورت چیده شده است: Console (INFO) ➔ File (ERROR) ➔ Email (CRITICAL).
+    2. وقتی متد log_message فراخوانی می‌شود، هر هندلر بررسی می‌کند که آیا سطح_لاگ_خودش <= سطح_لاگ_پیام است یا خیر.
+    3. اگر شرط برقرار بود، متد write را اجرا می‌کند.
+    4. نکته کلیدی این کد: پس از بررسی (چه پیام را نوشته باشد و چه ننوشته باشد)، پیام را همیشه به هندلر بعدی در زنجیره پاس می‌دهد (self._next_logger.log_message(...)). این یعنی زنجیره هرگز به صورت خودکار متوقف نمی‌شود (Short-circuit نمی‌شود) و پیام تا انتهای زنجیره پیش می‌رود.
+
+```python
+import abc
+from enum import Enum
+from typing import Optional  # اضافه شده برای تایپ‌هینت دقیق‌تر اشاره‌گر بعدی
+
+
+class LogLevel(Enum):
+    """
+    شمارش‌گر (Enum) برای تعریف سطوح مختلف لاگ.
+    مقدار عددی کمتر به معنای اولویت پایین‌تر است.
+    """
+    INFO = 1
+    DEBUG = 2
+    WARNING = 3
+    ERROR = 4
+    CRITICAL = 5
+
+
+class Logger(abc.ABC):
+    """
+    کلاس انتزاعی پایه برای پیاده‌سازی الگوی زنجیره مسئولیت (Chain of Responsibility).
+    این کلاس ساختار اصلی زنجیره و منطق عبور پیام را مدیریت می‌کند.
+    """
+
+    def __init__(self, level: LogLevel) -> None:
+        """
+        مقداردهی اولیه پردازش‌گر لاگ.
+        
+        :param level: سطح لاگی که این پردازش‌گر مسئول مدیریت آن است.
+        """
+        self._log_level: LogLevel = level
+        self._next_logger: Optional['Logger'] = None
+
+    def set_next(self, logger: 'Logger') -> 'Logger':
+        """
+        تنظیم پردازش‌گر بعدی در زنجیره.
+        
+        :param logger: نمونه‌ای از کلاس Logger که باید به انتهای زنجیره فعلی اضافه شود.
+        :return: خود شیء logger بازگردانده می‌شود تا امکان زنجیره‌سازی (Method Chaining) فراهم شود.
+        """
+        self._next_logger = logger
+        return logger
+
+    def log_message(self, level: LogLevel, message: str) -> None:
+        """
+        پردازش پیام لاگ. اگر سطح لاگ پیام، برابر یا بالاتر از سطح این پردازش‌گر باشد،
+        پیام را می‌نویسد و سپس در هر صورت آن را به پردازش‌گر بعدی در زنجیره پاس می‌دهد.
+        
+        :param level: سطح لاگ پیام ارسالی.
+        :param message: متن پیام لاگ.
+        """
+        # اگر سطح لاگ پیام >= سطح تعریف شده برای این هندلر باشد، آن را پردازش می‌کند
+        if self._log_level.value <= level.value:
+            self.write(message)
+
+        # پاس دادن پیام به پردازش‌گر بعدی در زنجیره (اگر وجود داشته باشد)
+        if self._next_logger is not None:
+            self._next_logger.log_message(level, message)
+
+    @abc.abstractmethod
+    def write(self, message: str) -> None:
+        """
+        متد انتزاعی که باید توسط کلاس‌های فرزند برای نحوه خاص نوشتن لاگ پیاده‌سازی شود.
+        
+        :param message: متن پیام لاگ که باید نوشته شود.
+        """
+        pass
+
+
+class ConsoleLogger(Logger):
+    """
+    پردازش‌گر مشخص برای نوشتن لاگ‌ها در کنسول (خروجی استاندارد).
+    """
+
+    def write(self, message: str) -> None:
+        print(f'Console logger: {message}')
+
+
+class FileLogger(Logger):
+    """
+    پردازش‌گر مشخص برای نوشتن لاگ‌ها در فایل.
+    (در این مثال ساده، برای نمایش عملکرد، در کنسول چاپ می‌شود).
+    """
+
+    def write(self, message: str) -> None:
+        print(f'File logger: {message}')
+
+
+class EmailLogger(Logger):
+    """
+    پردازش‌گر مشخص برای ارسال لاگ‌های حیاتی از طریق ایمیل.
+    (در این مثال ساده، برای نمایش عملکرد، در کنسول چاپ می‌شود).
+    """
+
+    def write(self, message: str) -> None:
+        print(f'Email logger: {message}')
+
+
+def setup_chain() -> Logger:
+    """
+    تابع کارخانه (Factory) برای پیکربندی و ساخت زنجیره مسئولیت.
+    
+    :return: اولین پردازش‌گر در زنجیره (نقطه ورود زنجیره).
+    """
+    console_logger = ConsoleLogger(LogLevel.INFO)
+    file_logger = FileLogger(LogLevel.ERROR)
+    email_logger = EmailLogger(LogLevel.CRITICAL)
+
+    # ساخت زنجیره به ترتیب: Console -> File -> Email
+    console_logger.set_next(file_logger).set_next(email_logger)
+
+    return console_logger
+
+
+if __name__ == '__main__':
+    # ۱. راه‌اندازی و دریافت نقطه شروع زنجیره
+    logger_chain = setup_chain()
+
+    # ۲. ارسال یک پیام با سطح CRITICAL به ابتدای زنجیره
+    # انتظار می‌رود این پیام توسط هر سه پردازشگر (Console, File, Email) پردازش شود،
+    # زیرا سطح CRITICAL (5) از سطح INFO (1)، ERROR (4) و CRITICAL (5) بزرگتر یا مساوی است.
+    logger_chain.log_message(LogLevel.CRITICAL, 'Information message')
+```
+
+## 16.1. 🅱️ Examples2: سیستم لاگ‌گیری سلسله‌مراتبی به روش دوم
+
+```python
+from abc import ABC, abstractmethod
+from typing import Optional
+from enum import Enum
+
+
+# تعریف سطوح مختلف لاگ
+class LogLevel(Enum):
+    DEBUG = 1
+    INFO = 2
+    ERROR = 3
+
+
+class AbstractLogger(ABC):
+    """
+    کلاس انتزاعی برای تعریف ساختار پایه پردازش‌گرهای لاگ.
+    """
+
+    def __init__(self, level: LogLevel) -> None:
+        # سطح لاگ این پردازش‌گر
+        self._level: LogLevel = level
+        # اشاره‌گر به پردازش‌گر بعدی در زنجیره
+        self._next_handler: Optional['AbstractLogger'] = None
+
+    def set_next(self, handler: 'AbstractLogger') -> 'AbstractLogger':
+        """
+        تنظیم پردازش‌گر بعدی در زنجیره و بازگرداندن آن برای امکان زنجیره‌سازی (Fluent Interface).
+        """
+        self._next_handler = handler
+        return handler
+
+    @abstractmethod
+    def write_log(self, message: str) -> None:
+        """
+        متد انتزاعی برای نوشتن پیام لاگ (باید در کلاس‌های فرزند پیاده‌سازی شود).
+        """
+        pass
+
+    def log_message(self, level: LogLevel, message: str) -> None:
+        """
+        متد اصلی که تصمیم می‌گیرد آیا این هندلر باید لاگ را چاپ کند یا به بعدی پاس دهد.
+        """
+        # اگر سطح درخواستی >= سطح این هندلر باشد، آن را پردازش می‌کند
+        if level.value >= self._level.value:
+            self.write_log(message)
+
+        # اگر هندلر بعدی وجود دارد و این هندلر نتوانست (یا خواست) پاس دهد، به بعدی منتقل می‌کند
+        # نکته: در این مثال خاص، همه هندلرها لاگ را چاپ می‌کنند اما در الگوهای واقعی معمولاً 
+        # اگر پردازش شد، زنجیره متوقف می‌شود. برای نشان دادن عبور از زنجیره، اینجا ادامه می‌دهیم.
+        if self._next_handler:
+            self._next_handler.log_message(level, message)
+
+
+class DebugLogger(AbstractLogger):
+    """پردازش‌گر لاگ‌های دیباگ."""
+
+    def __init__(self) -> None:
+        super().__init__(LogLevel.DEBUG)
+
+    def write_log(self, message: str) -> None:
+        print(f"[DEBUG]: {message}")
+
+
+class InfoLogger(AbstractLogger):
+    """پردازش‌گر لاگ‌های اطلاعاتی."""
+
+    def __init__(self) -> None:
+        super().__init__(LogLevel.INFO)
+
+    def write_log(self, message: str) -> None:
+        print(f"[INFO]: {message}")
+
+
+class ErrorLogger(AbstractLogger):
+    """پردازش‌گر لاگ‌های خطا."""
+
+    def __init__(self) -> None:
+        super().__init__(LogLevel.ERROR)
+
+    def write_log(self, message: str) -> None:
+        print(f"[ERROR]: {message}")
+
+
+# --- بخش اجرای برنامه (Client) ---
+if __name__ == "__main__":
+    # ۱. ایجاد پردازش‌گرها
+    debug_logger: AbstractLogger = DebugLogger()
+    info_logger: AbstractLogger = InfoLogger()
+    error_logger: AbstractLogger = ErrorLogger()
+
+    # ۲. اتصال آن‌ها به یکدیگر برای ساخت زنجیره
+    # زنجیره: Debug -> Info -> Error
+    debug_logger.set_next(info_logger).set_next(error_logger)
+
+    print("--- تست لاگ سطح DEBUG ---")
+    # هر سه هندلر آن را پردازش می‌کنند
+    debug_logger.log_message(LogLevel.DEBUG, "این یک پیام دیباگ است.")
+
+    print("\n--- تست لاگ سطح ERROR ---")
+    # فقط هندلر Error آن را پردازش می‌کند (چون سطحش بالاتر است)
+    # اما چون در متد log_message شرط توقف نگذاشتیم، همه چاپ می‌شوند. 
+    # (در حالت استاندارد اگر پردازش شود، زنجیره قطع می‌شود. برای سادگی اینجا همه چاپ می‌شوند).
+    error_logger.log_message(LogLevel.ERROR, "خطای بحرانی در دیتابیس رخ داد!")
+```
+
+## 16.2. 🅱️ Examples3: Authentication Pipeline
+
+هدف آن این است که یک درخواست ورود، به صورت مرحله‌به‌مرحله از فیلترهای امنیتی عبور کند.
+
+1.     درخواست اول: تمام فیلدها صحیح هستند. از تمام ۴ مرحله عبور کرده و پیام Authentication successful. Access granted را برمی‌گرداند.
+2. درخواست دوم: آی‌پی (192.168.1.2) در لیست سفید نیست. در مرحله اول رد می‌شود و پیام Untrusted IP address برمی‌گرداند.
+3. درخواست سوم: آی‌پی صحیح است، اما رمز عبور (secure1234) اشتباه است. از مرحله اول عبور می‌کند اما در مرحله دوم رد می‌شود و پیام Invalid credentials برمی‌گرداند.
+4. درخواست چهارم: آی‌پی و رمز عبور صحیح هستند، اما کد دو مرحله‌ای (1234567) اشتباه است. در مرحله سوم رد می‌شود و پیام Invalid 2FA code برمی‌گرداند.
+5. درخواست پنجم: سه مرحله اول با موفقیت طی می‌شوند، اما توکن نشست (qwe1234) نامعتبر است. در مرحله چهارم (آخر) رد می‌شود و پیام Invalid session برمی‌گرداند.
+
+```python
+from abc import ABC, abstractmethod
+from typing import Optional, List, Dict
+
+
+class AuthHandler(ABC):
+    """
+    کلاس انتزاعی پایه برای پیاده‌سازی الگوی زنجیره مسئولیت (Chain of Responsibility)
+    در فرآیند احراز هویت. این کلاس ساختار زنجیره و مکانیزم عبور درخواست را مدیریت می‌کند.
+    """
+
+    def __init__(self) -> None:
+        """مقداردهی اولیه و تنظیم اشاره‌گر به پردازش‌گر بعدی در زنجیره."""
+        self._next_handler: Optional['AuthHandler'] = None
+
+    def set_next(self, handler: 'AuthHandler') -> 'AuthHandler':
+        """
+        تنظیم پردازش‌گر بعدی در زنجیره.
+        
+        :param handler: نمونه‌ای از کلاس AuthHandler که باید به انتهای زنجیره فعلی اضافه شود.
+        :return: خود شیء handler بازگردانده می‌شود تا امکان زنجیره‌سازی (Method Chaining) فراهم شود.
+        """
+        self._next_handler = handler
+        return handler
+
+    @abstractmethod
+    def handle(self, request: Dict[str, any]) -> str:
+        """
+        متد انتزاعی برای پردازش درخواست احراز هویت.
+        باید توسط کلاس‌های فرزند پیاده‌سازی شود.
+        
+        :param request: دیکشنری حاوی اطلاعات درخواست احراز هویت.
+        :return: رشته‌ای حاوی پیام موفقیت یا خطای احراز هویت.
+        """
+        pass
+
+    def pass_to_next(self, request: Dict[str, any]) -> str:
+        """
+        پاس دادن درخواست به پردازش‌گر بعدی در زنجیره.
+        اگر پردازش‌گر بعدی وجود نداشته باشد، پیام خطای پیش‌فرض بازگردانده می‌شود.
+        
+        :param request: دیکشنری حاوی اطلاعات درخواست احراز هویت.
+        :return: نتیجه پردازش از سوی هندلر بعدی یا پیام خطای کمبود اعتبارنامه.
+        """
+        if self._next_handler:
+            return self._next_handler.handle(request)
+
+        return 'Authentication failed: Insufficient credentials'
+
+
+class IPWhiteListHandler(AuthHandler):
+    """
+    پردازش‌گر بررسی لیست سفید آی‌پی (IP Whitelist).
+    اولین مرحله از زنجیره احراز هویت.
+    """
+
+    def handle(self, request: Dict[str, any]) -> str:
+        # بررسی وجود آی‌پی درخواست در لیست مجاز
+        if request.get('ip') in ['192.168.1.1', '10.0.0.1']:
+            print(f'{self.__class__.__name__}: IP verified')
+            # در صورت موفقیت، درخواست به مرحله بعدی پاس داده می‌شود
+            return self.pass_to_next(request)
+
+        # در صورت عدم تطابق، زنجیره متوقف شده و پیام خطا بازگردانده می‌شود
+        return f'{self.__class__.__name__}: Untrusted IP address'
+
+
+class PasswordHandler(AuthHandler):
+    """
+    پردازش‌گر بررسی نام کاربری و رمز عبور.
+    دومین مرحله از زنجیره احراز هویت.
+    """
+
+    def handle(self, request: Dict[str, any]) -> str:
+        # بررسی تطابق نام کاربری و رمز عبور با مقادیر مورد انتظار
+        if request.get('username') == 'admin' and request.get('password') == 'secure123':
+            print(f'{self.__class__.__name__}: Credentials verified')
+            return self.pass_to_next(request)
+
+        return f'{self.__class__.__name__}: Invalid credentials'
+
+
+class TwoFactorHandler(AuthHandler):
+    """
+    پردازش‌گر بررسی کد احراز هویت دو مرحله‌ای (2FA).
+    سومین مرحله از زنجیره احراز هویت.
+    """
+
+    def handle(self, request: Dict[str, any]) -> str:
+        # بررسی صحت کد دو مرحله‌ای
+        if request.get('2fa_code') == '123456':
+            print(f'{self.__class__.__name__}: 2FA verified')
+            return self.pass_to_next(request)
+
+        return f'{self.__class__.__name__}: Invalid 2FA code'
+
+
+class SessionHandler(AuthHandler):
+    """
+    پردازش‌گر بررسی توکن نشست (Session Token).
+    آخرین مرحله از زنجیره احراز هویت که در صورت موفقیت، دسترسی نهایی را اعطا می‌کند.
+    """
+
+    def handle(self, request: Dict[str, any]) -> str:
+        # بررسی صحت توکن نشست
+        if request.get('session_token') == 'qwe123':
+            print(f'{self.__class__.__name__}: Session verified')
+            # این آخرین مرحله است، بنابراین به جای pass_to_next، پیام موفقیت نهایی بازگردانده می‌شود
+            return 'Authentication successful. Access granted'
+
+        return f'{self.__class__.__name__}: Invalid session'
+
+
+def client_code(handler: AuthHandler, requests: List[Dict[str, any]]) -> None:
+    """
+    تابع کلاینت برای اجرای تست روی زنجیره احراز هویت.
+    
+    :param handler: نقطه شروع زنجیره احراز هویت (اولین هندلر).
+    :param requests: لیستی از دیکشنری‌های حاوی داده‌های درخواست احراز هویت.
+    """
+    for request in requests:
+        print(f'\nAttempting to authenticate {request.get("username")}...')
+        result = handler.handle(request)
+        print(result)
+
+
+if __name__ == '__main__':
+    # ۱. ایجاد نمونه‌هایی از هر پردازش‌گر
+    ip_handler = IPWhiteListHandler()
+    password_handler = PasswordHandler()
+    two_factor_handler = TwoFactorHandler()
+    session_handler = SessionHandler()
+
+    # ۲. ساخت زنجیره احراز هویت به ترتیب: IP -> Password -> 2FA -> Session
+    ip_handler.set_next(password_handler)
+    .set_next(two_factor_handler)
+    .set_next(session_handler)
+
+# ۳. تعریف سناریوهای مختلف تست
+requests = [
+    {
+        # سناریو ۱: تمام اطلاعات صحیح است (موفقیت کامل)
+        'ip': '192.168.1.1',
+        'username': 'admin',
+        'password': 'secure123',
+        '2fa_code': '123456',
+        'session_token': 'qwe123'
+    },
+    {
+        # سناریو ۲: آی‌پی نامعتبر است (شکست در مرحله اول)
+        'ip': '192.168.1.2',
+        'username': 'random user 1',
+        'password': 'secure123',
+        '2fa_code': '123456',
+        'session_token': 'qwe123'
+    },
+    {
+        # سناریو ۳: آی‌پی صحیح است، اما رمز عبور اشتباه است (شکست در مرحله دوم)
+        'ip': '192.168.1.1',
+        'username': 'admin',
+        'password': 'secure1234',
+        '2fa_code': '123456',
+        'session_token': 'qwe123'
+    },
+    {
+        # سناریو ۴: آی‌پی و رمز عبور صحیح است، اما کد 2FA اشتباه است (شکست در مرحله سوم)
+        'ip': '192.168.1.1',
+        'username': 'admin',
+        'password': 'secure123',
+        '2fa_code': '1234567',
+        'session_token': 'qwe123'
+    },
+    {
+        # سناریو ۵: همه مراحل اولیه صحیح است، اما توکن نشست (Session) نامعتبر است (شکست در مرحله آخر)
+        'ip': '192.168.1.1',
+        'username': 'admin',
+        'password': 'secure123',
+        '2fa_code': '123456',
+        'session_token': 'qwe1234'
+    }
+]
+
+# ۴. اجرای کد کلاینت و ارسال درخواست‌ها به ابتدای زنجیره
+client_code(ip_handler, requests)
+```
+
+## 16.3. 🅱️ Examples4: Order Validation Pipeline
+
+در این مثال، یک سفارش باید از چندین فیلتر (بررسی موجودی، بررسی پرداخت، بررسی کلاهبرداری) عبور کند. اگر هر مرحله رد شود، زنجیره متوقف شده و سفارش ثبت نمی‌شود.
+
+```python
+from dataclasses import dataclass
+from typing import Optional
+
+
+@dataclass
+class Order:
+    """کلاس مدل برای نگهداری اطلاعات سفارش."""
+    order_id: int
+    amount: float
+    is_paid: bool
+    is_fraudulent: bool
+
+
+class OrderHandler:
+    """
+    کلاس پایه برای هندلرهای اعتبارسنجی سفارش.
+    """
+
+    def __init__(self) -> None:
+        # هندلر بعدی در زنجیره
+        self._next_handler: Optional['OrderHandler'] = None
+
+    def set_next(self, handler: 'OrderHandler') -> 'OrderHandler':
+        """تنظیم هندلر بعدی."""
+        self._next_handler = handler
+        return handler
+
+    def handle(self, order: Order) -> bool:
+        """
+        متد اصلی پردازش. اگر معتبر بود به بعدی پاس می‌دهد، در غیر این صورت False برمی‌گرداند.
+        """
+        # منطق اعتبارسنجی در کلاس‌های فرزند پیاده‌سازی می‌شود
+        if not self.validate(order):
+            return False  # اگر اعتبارسنجی ناموفق بود، زنجیره متوقف می‌شود
+
+        # اگر هندلر بعدی وجود دارد، درخواست را به آن پاس می‌دهد
+        if self._next_handler:
+            return self._next_handler.handle(order)
+
+        # اگر به آخر زنجیره رسیدیم و همه تایید کردند
+        return True
+
+    def validate(self, order: Order) -> bool:
+        """متد پایه که باید در کلاس‌های فرزند بازنویسی شود."""
+        raise NotImplementedError
+
+
+class InventoryHandler(OrderHandler):
+    """بررسی موجودی انبار."""
+
+    def validate(self, order: Order) -> bool:
+        print(f"بررسی موجودی برای سفارش {order.order_id}...")
+        # فرض می‌کنیم همیشه موجودی داریم، مگر اینکه مبلغ خاصی باشد
+        if order.amount > 10000:
+            print("خطا: موجودی انبار برای این مبلغ کافی نیست!")
+            return False
+        print("موجودی انبار تایید شد.")
+        return True
+
+
+class PaymentHandler(OrderHandler):
+    """بررسی وضعیت پرداخت."""
+
+    def validate(self, order: Order) -> bool:
+        print(f"بررسی وضعیت پرداخت برای سفارش {order.order_id}...")
+        if not order.is_paid:
+            print("خطا: سفارش پرداخت نشده است!")
+            return False
+        print("پرداخت تایید شد.")
+        return True
+
+
+class FraudHandler(OrderHandler):
+    """بررسی کلاهبرداری و امنیت."""
+
+    def validate(self, order: Order) -> bool:
+        print(f"بررسی امنیت و کلاهبرداری برای سفارش {order.order_id}...")
+        if order.is_fraudulent:
+            print("خطا: این سفارش مشکوک به کلاهبرداری است!")
+            return False
+        print("امنیت سفارش تایید شد.")
+        return True
+
+
+# --- بخش اجرای برنامه (Client) ---
+if __name__ == "__main__":
+    # ۱. ایجاد هندلرها
+    inventory_handler: OrderHandler = InventoryHandler()
+    payment_handler: OrderHandler = PaymentHandler()
+    fraud_handler: OrderHandler = FraudHandler()
+
+    # ۲. ساخت زنجیره: موجودی -> پرداخت -> امنیت
+    inventory_handler.set_next(payment_handler).set_next(fraud_handler)
+
+    # ۳. ایجاد یک سفارش موفق
+    valid_order: Order = Order(order_id=101, amount=500.0, is_paid=True, is_fraudulent=False)
+
+    print("--- پردازش سفارش موفق ---")
+    if inventory_handler.handle(valid_order):
+        print("سفارش با موفقیت ثبت و نهایی شد!\n")
+    else:
+        print("سفارش رد شد.\n")
+
+    # ۴. ایجاد یک سفارش ناموفق (پرداخت نشده)
+    invalid_order: Order = Order(order_id=102, amount=200.0, is_paid=False, is_fraudulent=False)
+
+    print("--- پردازش سفارش ناموفق (بدون پرداخت) ---")
+    if inventory_handler.handle(invalid_order):
+        print("سفارش با موفقیت ثبت و نهایی شد!")
+    else:
+        print("سفارش رد شد (زنجیره متوقف شد).")
+```
 
 # 17. 🅰️ Structural.Adapter()
 
@@ -6799,3 +7373,5 @@ if __name__ == "__main__":
 ## 20.4. 🅱️ Examples4:
 
 </div>
+
+# TODO:// هر کدام دارای ۵ مثال عنوان از کاربرد در صنعت داشته باشند
