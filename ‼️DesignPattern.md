@@ -77,8 +77,9 @@ class Singleton:
         if cls._instance is None:
             cls._instance = super().__new__(cls)
         return cls._instance
+```
 
-
+```python
 # ╔════════════╗
 # ║ Singleton1 ║ # ❌️ Old_Version: super(Singleton, cls) -----> ✅️New_Version: super()
 # ╚════════════╝
@@ -90,7 +91,9 @@ class Singleton:
             Singleton._instance = super(Singleton, cls).__new__(cls, *args, **kwargs)
         return Singleton._instance
 
+```
 
+```python
 # ╔════════════╗
 # ║ Singleton2 ║
 # ╚════════════╝
@@ -662,15 +665,13 @@ class CatFactory(AnimalFactory):
     def create_animal(self):
         return Cat()
 
-
-️
-######✅️ ====> Alternative for Animal,AnimalFactory
-######✅️ class Animal:
-######✅️     def speak(self):
-######✅️         raise NotImplementedError
-######✅️ class AnimalFactory:
-######✅️     def create_animal(self):
-######✅️         raise NotImplementedError
+# ✅️ ====> Alternative for Animal,AnimalFactory
+# ✅️ class Animal:
+# ✅️     def speak(self):
+# ✅️         raise NotImplementedError
+# ✅️ class AnimalFactory:
+# ✅️     def create_animal(self):
+# ✅️         raise NotImplementedError
 
 # Ussing
 print(DogFactory().create_animal().speak())  # Woof!
@@ -1194,8 +1195,17 @@ class WindowsFactory(GUIFactory):
 
 
 # === خانواده مک ===
+# === خانواده ویندوز ===
+class MacButton(Button):
+    def click(self): return "کلیک دکمه مک"
+
+
+class MacCheckbox(Checkbox):
+    def check(self): return "تیک چک‌باکس مک"
+
+
 class MacFactory(GUIFactory):
-    def create_button(self): return MacButton()  # فرض وجود
+    def create_button(self): return MacButton()
 
     def create_checkbox(self): return MacCheckbox()
 ```
@@ -5980,13 +5990,7 @@ if __name__ == '__main__':
     print('setting up smart home ...')
     home = SmartHome()
     home.add_device(SmartLight('Living room lights'))
-    home.add_device(SmartThermostat('Main thermostat', 20.5))[main.py](.. /../../ 02 - Data / Programming - Python / % 5
-    B % E2 % 9
-    C % 8
-    F % EF % B8 % 8
-    F % 5
-    D % 20
-    DesignPattern_OrdooKhani / 39 - Strategy - Example / behavioral / strategy / samples / sample_1 / main.py)
+    home.add_device(SmartThermostat('Main thermostat', 20.5))
     home.add_device(SmartLock('Front door lock'))
 
     print('\ncurrent status:')
@@ -7060,7 +7064,7 @@ class AuthHandler(ABC):
         return handler
 
     @abstractmethod
-    def handle(self, request: Dict[str, any]) -> str:
+    def handle(self, request: Dict[str]) -> str:
         """
         متد انتزاعی برای پردازش درخواست احراز هویت.
         باید توسط کلاس‌های فرزند پیاده‌سازی شود.
@@ -7070,7 +7074,7 @@ class AuthHandler(ABC):
         """
         pass
 
-    def pass_to_next(self, request: Dict[str, any]) -> str:
+    def pass_to_next(self, request: Dict[str]) -> str:
         """
         پاس دادن درخواست به پردازش‌گر بعدی در زنجیره.
         اگر پردازش‌گر بعدی وجود نداشته باشد، پیام خطای پیش‌فرض بازگردانده می‌شود.
@@ -7090,7 +7094,7 @@ class IPWhiteListHandler(AuthHandler):
     اولین مرحله از زنجیره احراز هویت.
     """
 
-    def handle(self, request: Dict[str, any]) -> str:
+    def handle(self, request: Dict[str]) -> str:
         # بررسی وجود آی‌پی درخواست در لیست مجاز
         if request.get('ip') in ['192.168.1.1', '10.0.0.1']:
             print(f'{self.__class__.__name__}: IP verified')
@@ -7107,7 +7111,7 @@ class PasswordHandler(AuthHandler):
     دومین مرحله از زنجیره احراز هویت.
     """
 
-    def handle(self, request: Dict[str, any]) -> str:
+    def handle(self, request: Dict[str]) -> str:
         # بررسی تطابق نام کاربری و رمز عبور با مقادیر مورد انتظار
         if request.get('username') == 'admin' and request.get('password') == 'secure123':
             print(f'{self.__class__.__name__}: Credentials verified')
@@ -7122,7 +7126,7 @@ class TwoFactorHandler(AuthHandler):
     سومین مرحله از زنجیره احراز هویت.
     """
 
-    def handle(self, request: Dict[str, any]) -> str:
+    def handle(self, request: Dict[str]) -> str:
         # بررسی صحت کد دو مرحله‌ای
         if request.get('2fa_code') == '123456':
             print(f'{self.__class__.__name__}: 2FA verified')
@@ -7137,7 +7141,7 @@ class SessionHandler(AuthHandler):
     آخرین مرحله از زنجیره احراز هویت که در صورت موفقیت، دسترسی نهایی را اعطا می‌کند.
     """
 
-    def handle(self, request: Dict[str, any]) -> str:
+    def handle(self, request: Dict[str]) -> str:
         # بررسی صحت توکن نشست
         if request.get('session_token') == 'qwe123':
             print(f'{self.__class__.__name__}: Session verified')
@@ -7147,7 +7151,7 @@ class SessionHandler(AuthHandler):
         return f'{self.__class__.__name__}: Invalid session'
 
 
-def client_code(handler: AuthHandler, requests: List[Dict[str, any]]) -> None:
+def client_code(handler: AuthHandler, requests: List[Dict[str]]) -> None:
     """
     تابع کلاینت برای اجرای تست روی زنجیره احراز هویت.
     
@@ -7168,9 +7172,7 @@ if __name__ == '__main__':
     session_handler = SessionHandler()
 
     # ۲. ساخت زنجیره احراز هویت به ترتیب: IP -> Password -> 2FA -> Session
-    ip_handler.set_next(password_handler)
-    .set_next(two_factor_handler)
-    .set_next(session_handler)
+    ip_handler.set_next(password_handler).set_next(two_factor_handler).set_next(session_handler)
 
 # ۳. تعریف سناریوهای مختلف تست
 requests = [
@@ -7372,6 +7374,7 @@ if __name__ == "__main__":
 ```python
 from typing import Union
 
+
 # ۱. کلاس هدف (Target) - پریز برق استاندارد آمریکا
 class USPowerOutlet:
     def output_120v(self) -> int:
@@ -7430,13 +7433,148 @@ if __name__ == "__main__":
     # حالت دوم: اتصال دستگاه به پریز اروپا از طریق آداپتور
     euro_socket = EuropeanPowerSocket()
     adapter = EuropeanToUSAdapter(euro_socket)
-    
+
     # پاس دادن آداپتور به دستگاه (دستگاه فکر می‌کند با یک پریز آمریکایی طرف است)
     us_device_with_adapter = AmericanDevice(adapter)
     us_device_with_adapter.charge()
 ```
 
 ## 17.2. 🅱️ Examples2:
+
+رابط‌های ناهمگون دو درگاه پرداخت (PayPal و یک سیستم بانکی قدیمی) را به یک رابط استاندارد یکپارچه تبدیل می‌کند تا سیستم فروشگاه اینترنتی بتواند بدون درگیر شدن با جزئیات و تفاوت‌های هر درگاه، عملیات پرداخت و بازگشت وجه را به صورت یکپارچه انجام دهد.
+
+```python
+from abc import ABC, abstractmethod
+
+
+# ۱. کلاس‌های ناسازگار (Adaptees) - سیستم‌های موجود که رابط متفاوتی دارند
+
+class PaypalSDK:
+    """درگاه پی‌پل که فقط با دلار کار می‌کند و متدهای متفاوتی دارد."""
+
+    def make_payment(self, dollars: float) -> bool:
+        print(f'Processing PayPal payment of ${dollars:.2f}')
+        return True
+
+    def issue_refund(self, dollars: float) -> bool:
+        print(f"Issuing PayPal refund of ${dollars:.2f}")
+        return True
+
+
+class LegacyBankSystem:
+    """سیستم بانکی قدیمی که با ارزهای مختلف کار می‌کند اما خروجی آن رشته متنی است."""
+
+    def initiate_transaction(self, transaction_type: str, amount: float, currency: str) -> str:
+        action = "PAYMENT" if transaction_type == 'PAY' else 'REFUND'
+        print(f'{action} of {amount:.2f} {currency} via legacy bank system')
+        return 'SUCCESS'
+
+
+# ۲. رابط هدف (Target) - رابط استانداردی که کلاینت انتظار دارد
+
+class PaymentProcessor(ABC):
+    """رابط استانداردی که سیستم فروشگاه اینترنتی با آن کار می‌کند."""
+
+    @abstractmethod
+    def process_payment(self, amount: float, currency: str) -> bool:
+        pass
+
+    @abstractmethod
+    def refund_payment(self, amount: float, currency: str) -> bool:
+        pass
+
+
+# ۳. کلاس‌های سازگارکننده (Adapters)
+
+class PaypalAdapter(PaymentProcessor):
+    """آداپتور پی‌پل: متدها را ترجمه کرده و تبدیل ارز را انجام می‌دهد."""
+
+    def __init__(self, paypal: PaypalSDK) -> None:
+        # نگهداری مرجع درگاه ناسازگار
+        self.paypal = paypal
+
+    def process_payment(self, amount: float, currency: str) -> bool:
+        # پی‌پل فقط دلار قبول می‌کند، پس اگر ارز چیز دیگری بود آن را تبدیل می‌کنیم
+        if currency != 'USD':
+            amount = self._convert_currency(amount, currency, 'USD')
+
+        # فراخوانی متد معادل در Adaptee
+        return self.paypal.make_payment(amount)
+
+    def refund_payment(self, amount: float, currency: str) -> bool:
+        if currency != 'USD':
+            amount = self._convert_currency(amount, currency, 'USD')
+
+        return self.paypal.issue_refund(amount)
+
+    def _convert_currency(self, amount: float, from_curr: str, to_curr: str) -> float:
+        # متد داخلی برای تبدیل ارز (منطق مخصوص آداپتور پی‌پل)
+        print(f'Converting {from_curr} to {to_curr}')
+        rates = {"EUR": 0.85, "USD": 1.0}
+        return amount * rates[to_curr] / rates[from_curr]
+
+
+class LegacyBankSystemAdapter(PaymentProcessor):
+    """آداپتور سیستم قدیمی: متدها را ترجمه کرده و خروجی رشته‌ای را به بولین تبدیل می‌کند."""
+
+    def __init__(self, bank: LegacyBankSystem) -> None:
+        # نگهداری مرجع سیستم بانکی قدیمی
+        self.bank = bank
+
+    def process_payment(self, amount: float, currency: str) -> bool:
+        # ترجمه متد و پارامترها برای سیستم قدیمی
+        result = self.bank.initiate_transaction('PAY', amount, currency)
+        # تبدیل خروجی رشته‌ای ('SUCCESS') به بولین (True) مورد انتظار Target
+        return result == 'SUCCESS'
+
+    def refund_payment(self, amount: float, currency: str) -> bool:
+        result = self.bank.initiate_transaction('REFUND', amount, currency)
+        return result == 'SUCCESS'
+
+
+# ۴. کلاینت (Client) - سیستم فروشگاه اینترنتی
+
+class ECommerceSystem:
+    """کلاینتی که فقط رابط استاندارد (PaymentProcessor) را می‌شناسد."""
+
+    def __init__(self, payment_processor: PaymentProcessor) -> None:
+        # تزریق وابستگی (Dependency Injection) از طریق رابط Target
+        self.payment_processor = payment_processor
+
+    def checkout(self, amount: float, currency: str) -> bool:
+        print(f'\nProcessing checkout for {amount:.2f} {currency}')
+        # کلاینت کاملاً بی‌خبر است که در پس‌زمینه کدام درگاه در حال استفاده است
+        return self.payment_processor.process_payment(amount, currency)
+
+    def process_refund(self, amount: float, currency: str) -> bool:
+        print(f'\nProcessing refund for {amount:.2f} {currency}')
+        return self.payment_processor.refund_payment(amount, currency)
+
+
+if __name__ == '__main__':
+    # ایجاد نمونه‌هایی از سیستم‌های ناسازگار (Adaptees)
+    paypal = PaypalSDK()
+    legacy_bank = LegacyBankSystem()
+
+    # ایجاد آداپتورها برای پوشش دادن تفاوت‌ها
+    paypal_adapter = PaypalAdapter(paypal)
+    legacy_bank_adapter = LegacyBankSystemAdapter(legacy_bank)
+
+    print('=== testing paypal ===')
+    # تزریق آداپتور پی‌پل به سیستم فروشگاه
+    shop = ECommerceSystem(paypal_adapter)
+    shop.checkout(100.00, 'USD')
+    shop.process_refund(50.00, 'USD')
+    # در این مرحله آداپتور پی‌پل به صورت خودکار یورو را به دلار تبدیل می‌کند
+    shop.checkout(80.00, 'EUR')
+
+    print('\n=== testing legacy bank system ===')
+    # تعویض آداپتور با آداپتور سیستم بانکی قدیمی (بدون نیاز به تغییر کد کلاینت)
+    shop = ECommerceSystem(legacy_bank_adapter)
+    shop.checkout(100.00, 'USD')
+    shop.process_refund(50.00, 'USD')
+    shop.checkout(80.00, 'EUR')
+```
 
 ## 17.3. 🅱️ Examples3: Payment Gateway (یکپارچه‌سازی درگاه پرداخت)
 
