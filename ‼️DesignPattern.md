@@ -7734,7 +7734,7 @@ if __name__ == "__main__":
     notify_user(adapted_service, "ali@example.com", "سفارش شما ارسال شد.")
 ```
 
-# 18. 🅰️ Structural.Composite()
+# 18. 🅰️ Structural.Composite(رفتار یکسان بین گره‌های زیرین و گره اصلی در ساختار درختی)
 
 الگوی کامپوزیت برای ساخت سلسله‌مراتب جزء-کل (Part-Whole Hierarchies) به شکل درختی استفاده می‌شود.هدف اصلی این الگو این است که به کلاینت (Client) اجازه دهد تا با اشیاء منفرد (اجزاء) و ترکیب اشیاء (کل‌ها) به صورت یکسان (Uniformly) رفتار کند. به عبارت دیگر، کلاینت نیازی نیست بداند با یک شیء تکی طرف است یا یک گروه از شیءها.
 
@@ -7763,7 +7763,8 @@ if __name__ == "__main__":
 
 ## 18.1. 🅱️ Examples1: سیستم منوی سلسله‌مراتبی (درختی)
 
-هدف این کد این است که به کلاینت اجازه دهد بدون نیاز به بررسی نوع شیء (اینکه آیا با یک آیتم ساده طرف است یا یک زیرمنوی تو در تو)، با همه آن‌ها به یک شکل رفتار کند. این کار از طریق متد مشترک show_details انجام می‌شود که در کلاس‌های برگ (Leaf) فقط خودش را چاپ می‌کند، اما در کلاس کامپوزیت (Composite) به صورت بازگشتی (Recursive) تمام فرزندان خود را نیز نمایش می‌دهد.
+هدف این کد این است که به کلاینت اجازه دهد بدون نیاز به بررسی نوع شیء (اینکه آیا با یک آیتم ساده طرف است یا یک زیرمنوی تو در تو)، با همه آن‌ها به یک شکل رفتار کند. این کار از طریق متد مشترک show_details انجام می‌شود که در کلاس‌های برگ (Leaf) فقط خودش را چاپ می‌کند، اما در کلاس کامپوزیت (Composite) به صورت بازگشتی (Recursive) تمام فرزندان خود را نیز
+نمایش می‌دهد.
 
 ```python
 from abc import ABC, abstractmethod
@@ -8038,13 +8039,632 @@ if __name__ == '__main__':
 
 ## 18.3. 🅱️ Examples3:
 
-# 19. 🅰️ Structural.Facade()
+# 19. 🅰️ Structural.Facade(قرار دادن چندین سرویس در کنار هم و در یک سرویس جداگانه توسط متدهای جداگانه از این سرویس‌ها استفاده کنیم)
+
+* برای ساده‌سازی رابط کاربری برای سیستم‌های پیچیده استفاده می‌شود
+* هدف و تعریف (Intent):الگوی Facade هدفش این است که یک رابط واحد و سطح بالا (High-level Interface) برای یک مجموعه از رابط‌ها در یک زیرسیستم (Subsystem) فراهم کند. این الگو یک رابط یکپارچه تعریف می‌کند که استفاده از زیرسیستم را بسیار آسان‌تر می‌کند و از پیچیدگی‌های داخلی آن برای کلاینت چشم‌پوشی می‌کند.
+* ساختار (Structure)
+    * این الگو معمولاً از ۳ بخش اصلی تشکیل شده است:
+    * Subsystem (زیرسیستم‌ها): کلاس‌های پیچیده‌ای که منطق اصلی کار را انجام می‌دهند. کلاینت به صورت مستقیم با این‌ها کار نمی‌کند.
+    * Facade (نما): یک کلاس ساده که می‌داند کدام کلاس‌های زیرسیستم برای انجام یک درخواست خاص باید فراخوانی شوند. این کلاس درخواست کلاینت را به اشیاء مناسب در زیرسیستم تفویض (Delegate) می‌کند.
+    * Client (کلاینت): فقط با کلاس Facade ارتباط برقرار می‌کند و نیازی به شناخت زیرسیستم‌ها ندارد.
+* ملاحظات مهم در طراحی (Design Considerations)
+    * کاهش کوپلینگ (Coupling): هدف اصلی Facade کاهش وابستگی کلاینت به زیرسیستم است. کلاینت نباید مستقیماً به کلاس‌های داخلی زیرسیستم ارجاع (Reference) داشته باشد.
+    * اصل Tell, Don't Ask (قانون دمیتر): Facade به ما کمک می‌کند تا از نقض قانون دمیتر جلوگیری کنیم. به جای اینکه کلاینت اشیاء زیرسیستم را بگیرد، وضعیت آن‌ها را بپرسد و سپس متدی را صدا بزند، فقط به Facade می‌گوید "چه کاری" انجام دهد.
+    * عدم قرار دادن منطق تجاری (No Business Logic): کلاس Facade نباید حاوی منطق تجاری (Business Logic) یا قوانین پیچیده باشد. وظیفه آن فقط مسیریابی (Routing) و هماهنگی (Orchestration) بین زیرسیستم‌هاست. اگر Facade بزرگ و پیچیده شد، یعنی جای منطق تجاری در زیرسیستم‌ها خالی است.
+    * تزریق وابستگی (Dependency Injection): بهتر است اشیاء زیرسیستم را از طریق Constructor به Facade تزریق کنید (به جای اینکه آن‌ها را درون Facade با new بسازید). این کار تست‌پذیری (Testability) را به شدت افزایش می‌دهد.
+    * معماری لایه‌ای (Layered Architecture): در معماری‌های چندلایه، از Facade برای تعریف نقاط ورود (Entry Points) هر لایه استفاده می‌شود. مثلاً لایه Service می‌تواند به عنوان Facade برای لایه Repository عمل کند تا لایه Controller با جزئیات دیتابیس درگیر نشود.
+    * مدیریت Facade های بزرگ: اگر یک کلاس Facade بیش از حد بزرگ شد و به اصطلاح "God Object" گردید، باید آن را به چندین Facade کوچکتر با مسئولیت‌های مجزا (مثلاً OrderFacade, PaymentFacade) تقسیم کنید.
+* ۵ مورد از مهم‌ترین کاربردهای آن عبارتند از:
+    * درگاه‌های پرداخت و سیستم‌های مالی (Payment Gateways):وقتی یک فروشگاه می‌خواهد از چندین درگاه پرداخت (زرین‌پال، پی‌پال، استرایپ و...) استفاده کند، به جای اینکه کد کلاینت را با APIهای متفاوت هر کدام درگیر کند، یک PaymentFacade می‌نویسد که یک متد pay() واحد دارد و در داخل، درخواست را به درگاه مناسب مسیریابی می‌کند.
+    * لایه سرویس در معماری چندلایه (Service Layer in Layered Architecture): در بک‌اند (مثل Spring Boot یا Django)، کلاس‌های Service دقیقاً نقش Facade را برای لایه Repository/DAO بازی می‌کنند. آن‌ها کوئری‌های پیچیده دیتابیس، کش کردن (Redis) و اعتبارسنجی را پشت یک متد ساده مثل getUserProfile() پنهان می‌کنند تا Controllerها تمیز بمانند.
+    * سیستم‌های هوشمند ساختمان و IoT (Smart Home / IoT): اپلیکیشن‌های موبایلی که خانه هوشمند را کنترل می‌کنند، از Facade استفاده می‌کنند. وقتی کاربر دکمه "حالت خواب" (Sleep Mode) را می‌زند، Facade به صورت همزمان قفل‌ها را چک می‌کند، ترموستات را تنظیم می‌کند و چراغ‌ها را خاموش می‌کند.
+    * کتابخانه‌های ارتباط با سرویس‌های ابری (Cloud SDKs): SDKهای مربوط به AWS یا Azure بسیار پیچیده هستند. فریم‌ورک‌هایی مثل Terraform یا Serverless Framework از الگوی Facade استفاده می‌کنند تا APIهای پیچیده و تو در تو (Nested) این سرویس‌ها را به دستورات ساده‌ای مثل deploy() یا provision() تبدیل کنند.
+    * یکپارچه‌سازی APIهای شخص ثالث (Third-Party API Wrappers): وقتی سیستم شما نیاز به دریافت اطلاعات از APIهای خارجی (مثل APIهای هواشناسی، نقشه‌ها یا شبکه‌های اجتماعی) دارد، به جای پراکنده کردن کدهای HTTP Request و مدیریت Tokenها در کل پروژه، یک WeatherFacade یا SocialMediaFacade می‌سازید که متدهایی مثل get_current_weather() دارد و تمام پیچیدگی‌های REST/GraphQL را در داخل خود مدیریت می‌کند.
+
+  ![DesignPattern.Structural.Facade.png](_srcFiles/Images/DesignPattern.Structural.Facade.png "DesignPattern.Structural.Facade.png")
 
 ## 19.1. 🅱️ Examples1:
 
+کاربر تنها کافی‌ست یک متد (place_order) را صدا بزند، بدون اینکه نیاز به تعامل مستقیم با سیستم‌های زیرساختی داشته باشد،درحالی‌که پشت‌صحنه چهار سیستم مختلف (موجودی، پرداخت، حمل‌ونقل، اطلاع‌رسانی) کار می‌کنند.
+
+| مرحله | نام سیستم          | کار انجام‌شده      |
+|-------|--------------------|--------------------|
+| 1️⃣   | InventorySystem    | بررسی موجودی محصول |
+| 2️⃣   | PaymentSystem      | پردخت هزینه        |
+| 3️⃣   | ShippingSystem     | برنامه‌ریزی تحویل  |
+| 4️⃣   | NotificationSystem | ارسال ایمیل تأیید  |
+
+```python
+"""
+سیستم سفارش با استفاده از Facade Pattern
+این ماژول چندین سیستم را در یک رابط ساده یکپارچه می‌کند
+"""
+
+from typing import Dict, Any, Optional
+
+
+class InventorySystem:
+    """
+    سیستم مدیریت موجودی - بررسی در دسترس بودن محصولات
+    
+    مسئولیت‌ها:
+        - تأیید موجودی محصول
+        - بررسی کمیت درخواستی
+    """
+
+    def check_availability(self, product_id: int, quantity: int) -> bool:
+        """
+        موجودی محصول را بررسی می‌کند
+        
+        Args:
+            product_id (int): شناسه محصول
+            quantity (int): تعداد درخواستی
+            
+        Returns:
+            bool: True اگر موجود باشد، False در غیر این صورت
+        """
+        print(f"Checking availability for product {product_id}, quantity {quantity}")
+        return True
+
+
+class PaymentSystem:
+    """
+    سیستم پردخت - پردخت هزینه سفارش
+    
+    مسئولیت‌ها:
+        - پردخت رقم سفارش
+        - اعتبارسنجی اطلاعات کارت
+    """
+
+    def process_payment(
+            self,
+            payment_details: Dict[str, Any],
+            amount: float
+    ) -> bool:
+        """
+        پردخت را انجام می‌دهد
+        
+        Args:
+            payment_details (Dict[str, Any]): جزئیات پرداخت (مثلاً اطلاعات کارت)
+            amount (float): مبلغ سفارش
+            
+        Returns:
+            bool: True اگر پردخت موفق باشد
+        """
+        print(f'Processing payment of ${amount:.2f}')
+        return True
+
+
+class ShippingSystem:
+    """
+    سیستم حمل‌ونقل - برنامه‌ریزی تحویل
+    
+    مسئولیت‌ها:
+        - تعیین زمان و مسیر تحویل
+        - ایجاد شماره پیگیری
+    """
+
+    def schedule_delivery(
+            self,
+            product_id: int,
+            quantity: int,
+            address: str
+    ) -> str:
+        """
+        تحویل محصول را برنامه‌ریزی می‌کند
+        
+        Args:
+            product_id (int): شناسه محصول
+            quantity (int): تعداد
+            address (str): آدرس تحویل
+            
+        Returns:
+            str: شماره پیگیری
+        """
+        print(f'Scheduling delivery for product {product_id}, quantity {quantity}, address: {address}')
+        return 'TRACK_123456'
+
+
+class NotificationSystem:
+    """
+    سیستم اطلاع‌رسانی - ارسال تأیید سفارش
+    
+    مسئولیت‌ها:
+        - ارسال ایمیل تأیید
+        - اطلاع‌رسانی به مشتری
+    """
+
+    def send_confirmation(
+            self,
+            email: str,
+            order_details: Dict[str, Any]
+    ) -> None:
+        """
+        ایمیل تأیید سفارش را ارسال می‌کند
+        
+        Args:
+            email (str): آدرس ایمیل مشتری
+            order_details (Dict[str, Any]): جزئیات سفارش
+            
+        Returns:
+            None
+        """
+        print(f'Sending confirmation to {email}')
+        print(f'Order details: {order_details}')
+
+
+class OrderFacade:
+    """
+    Facade - واسط یکپارچه برای سفارش‌دهی
+    
+    این کلاس تمام سیستم‌ها را مدیریت می‌کند و رابط ساده‌ای را برای کاربر فراهم می‌کند.
+    کاربر فقط با یک متد (place_order) تعامل دارد.
+    
+    مسئولیت‌ها:
+        - ایجاد و ذخیره نمونه‌های سیستم‌های مختلف
+        - هماهنگ‌سازی فرآیند سفارش‌دهی
+        - مدیریت خطاها
+    """
+
+    def __init__(self) -> None:
+        """
+        سیستم‌های مختلف را مقدار‌دهی می‌کند
+        """
+        self.inventory_system: InventorySystem = InventorySystem()
+        self.payment_system: PaymentSystem = PaymentSystem()
+        self.shipping_system: ShippingSystem = ShippingSystem()
+        self.notification_system: NotificationSystem = NotificationSystem()
+
+    def place_order(
+            self,
+            product_id: int,
+            quantity: int,
+            payment_details: Dict[str, Any],
+            email: str,
+            shipping_address: str
+    ) -> str:
+        """
+        سفارش را از ابتدا تا انتها انجام می‌دهد
+        
+        مراحل:
+            1. بررسی موجودی محصول
+            2. پردخت هزینه سفارش
+            3. برنامه‌ریزی تحویل
+            4. ارسال ایمیل تأیید
+        
+        Args:
+            product_id (int): شناسه محصول
+            quantity (int): تعداد درخواستی
+            payment_details (Dict[str, Any]): جزئیات پرداخت
+            email (str): ایمیل مشتری
+            shipping_address (str): آدرس تحویل
+            
+        Returns:
+            str: شماره پیگیری سفارش
+            
+        Raises:
+            Exception: اگر موجودی یا پردخت ناموفق باشد
+        """
+        print('=== starting order processing ===')
+
+        # مرحله 1: بررسی موجودی
+        if not self.inventory_system.check_availability(product_id, quantity):
+            raise Exception('Product not available')
+
+        # مرحله 2: محاسبه و پردخت (قیمت: 20 برای هر واحد)
+        amount: float = quantity * 20
+        if not self.payment_system.process_payment(payment_details, amount):
+            raise Exception('Payment failed')
+
+        # مرحله 3: برنامه‌ریزی تحویل
+        tracking_number: str = self.shipping_system.schedule_delivery(
+            product_id,
+            quantity,
+            shipping_address
+        )
+
+        # مرحله 4: ارسال تأیید
+        order_details: Dict[str, Any] = {
+            'product_id': product_id,
+            'quantity': quantity,
+            'amount': amount,
+            'tracking_number': tracking_number
+        }
+        self.notification_system.send_confirmation(email, order_details)
+
+        print('\n=== order processed successfully ===')
+        return tracking_number
+
+
+if __name__ == '__main__':
+    # ایجاد نمونه از Facade
+    order_facade: OrderFacade = OrderFacade()
+
+    try:
+        # سفارش را ثبت می‌کنیم
+        tracking_num: str = order_facade.place_order(
+            product_id='product-12345',
+            quantity=10,
+            payment_details={
+                'card': '1111-1111-1111-1111'
+            },
+            email='test@gmail.com',
+            shipping_address='Tehran - Shariati'
+        )
+        print(f'Your tracking number is {tracking_num}')
+
+    except Exception as e:
+        # خطاهای احتمالی را مدیریت می‌کنیم
+        print(f'Order failed: {str(e)}')
+
+```
+
 ## 19.2. 🅱️ Examples2:
 
-## 19.3. 🅱️ Examples3:
+```python
+import uuid
+from typing import bool
+
+
+class UserService:
+    """
+    سرویس مدیریت کاربران.
+    
+    این کلاس مسئول انجام عملیات مرتبط با کاربران مانند بررسی منحصربه‌فرد بودن
+    و ایجاد کاربر جدید است.
+    """
+
+    def check_user_is_unique(self, email: str) -> bool:
+        """
+        بررسی می‌کند که آیا ایمیل وارد شده در سیستم منحصربه‌فرد است یا خیر.
+        
+        Args:
+            email (str): ایمیل کاربری که باید بررسی شود
+            
+        Returns:
+            bool: True اگر ایمیل منحصربه‌فرد باشد، False در غیر این صورت
+        """
+        print(f'checking that user is unique with email: {email}')
+        return True
+
+    def create_user(self, email: str, hashed_password: str) -> bool:
+        """
+        یک کاربر جدید در سیستم ایجاد می‌کند.
+        
+        Args:
+            email (str): ایمیل کاربر جدید
+            hashed_password (str): رمز عبور هش‌شده کاربر
+            
+        Returns:
+            bool: True اگر کاربر با موفقیت ایجاد شود، False در غیر این صورت
+        """
+        print(f'creating user with email: {email} and hashed password: {hashed_password}')
+        return True
+
+
+class PasswordHasherService:
+    """
+    سرویس رمزگذاری و تایید رمز عبور.
+    
+    این کلاس مسئول تبدیل رمز عبور به فرم هش‌شده و تایید صحت رمز عبور است.
+    """
+
+    def encrypt_password(self, password: str) -> str:
+        """
+        رمز عبور را هش می‌کند و یک رشته هش‌شده برمی‌گرداند.
+        
+        Args:
+            password (str): رمز عبور اصلی (بدون هش)
+            
+        Returns:
+            str: رمز عبور هش‌شده
+        """
+        print(f'hashing password: {password}')
+        return str(uuid.uuid4())
+
+    def verify_password(self, password: str, hashed_password: str) -> bool:
+        """
+        تایید می‌کند که رمز عبور وارد شده با رمز هش‌شده ذخیره‌شده برابر است یا خیر.
+        
+        Args:
+            password (str): رمز عبور وارد شده توسط کاربر
+            hashed_password (str): رمز عبور هش‌شده ذخیره‌شده در پایگاه داده
+            
+        Returns:
+            bool: True اگر رمز عبور صحیح باشد، False در غیر این صورت
+        """
+        print(f'verifying password: {password}')
+        return True
+
+
+class EmailService:
+    """
+    سرویس ارسال ایمیل.
+    
+    این کلاس مسئول ارسال ایمیل‌های مختلف (مثل فعال‌سازی حساب) است.
+    """
+
+    def send_activation_email(self, email: str) -> bool:
+        """
+        ایمیل فعال‌سازی حساب را برای کاربر می‌فرستد.
+        
+        Args:
+            email (str): آدرس ایمیل کاربری که ایمیل فعال‌سازی برای آن ارسال شود
+            
+        Returns:
+            bool: True اگر ایمیل با موفقیت ارسال شود، False در غیر این صورت
+        """
+        print(f'sending activation email: {email}')
+        return True
+
+
+class AuthService:
+    """
+    سرویس احراز هویت.
+    
+    این کلاس کامل‌ترین سرویس است که فرآیند ثبت‌نام را مدیریت می‌کند.
+    از سه سرویس دیگر (UserService, PasswordHasherService, EmailService) استفاده می‌کند.
+    """
+
+    def __init__(self):
+        """
+        AuthService را مقداردهی اولیه می‌کند و تمام سرویس‌های مورد نیاز را ایجاد می‌کند.
+        """
+        self.user_service = UserService()
+        self.password_hasher = PasswordHasherService()
+        self.email_service = EmailService()
+
+    def register_user(self, email: str, password: str) -> bool:
+        """
+        یک کاربر جدید را در سیستم ثبت‌نام می‌کند.
+        
+        مراحل ثبت‌نام:
+        1. بررسی منحصربه‌فرد بودن ایمیل
+        2. هش کردن رمز عبور
+        3. ایجاد کاربر در پایگاه داده
+        4. ارسال ایمیل فعال‌سازی
+        
+        Args:
+            email (str): ایمیل کاربر جدید
+            password (str): رمز عبور کاربر جدید (بدون هش)
+            
+        Returns:
+            bool: True اگر ثبت‌نام موفق باشد، False اگر ایمیل تکراری باشد
+        """
+        # بررسی منحصربه‌فرد بودن ایمیل
+        if self.user_service.check_user_is_unique(email):
+            # هش کردن رمز عبور برای ذخیره‌سازی امن
+            hashed_password = self.password_hasher.encrypt_password(password)
+
+            # ایجاد کاربر جدید در پایگاه داده
+            user_created = self.user_service.create_user(email, hashed_password)
+
+            # ارسال ایمیل فعال‌سازی
+            self.email_service.send_activation_email(email)
+
+            return True
+
+        # اگر ایمیل تکراری باشد، False برمی‌گرداند
+        return False
+
+
+if __name__ == '__main__':
+    # ایجاد نمونه‌ای از AuthService
+    auth = AuthService()
+
+    # تست ثبت‌نام کاربر جدید
+    auth.register_user('test@test.com', '123456')
+
+```
+
+## 19.3. 🅱️ Examples3: Home Theater
+
+سیستم سینمای خانگی: در این مثال، روشن کردن یک فیلم شامل روشن کردن پروژکتور، تنظیم صدا، کم کردن نور و روشن کردن دستگاه DVD است. به جای اینکه کاربر درگیر این مراحل شود، از یک Facade استفاده می‌کنیم.
+
+```python
+# ==========================================
+# زیرسیستم‌ها (Subsystem Classes)
+# ==========================================
+
+class Projector:
+    """کلاس زیرسیستم: پروژکتور"""
+
+    def on(self) -> None:
+        print("  [پروژکتور] روشن شد.")
+
+    def off(self) -> None:
+        print("  [پروژکتور] خاموش شد.")
+
+
+class SoundSystem:
+    """کلاس زیرسیستم: سیستم صوتی"""
+
+    def set_volume(self, level: int) -> None:
+        print(f"  [سیستم صوتی] ولوم روی {level} تنظیم شد.")
+
+
+class Lights:
+    """کلاس زیرسیستم: نورپردازی"""
+
+    def dim(self, level: int) -> None:
+        print(f"  [نورپردازی] شدت نور به {level} درصد کاهش یافت.")
+
+
+class DvdPlayer:
+    """کلاس زیرسیستم: پخش‌کننده DVD"""
+
+    def play(self, movie: str) -> None:
+        print(f"  [DVD] در حال پخش فیلم: {movie}")
+
+
+# ==========================================
+# کلاس نما (Facade)
+# ==========================================
+
+class HomeTheaterFacade:
+    """
+    کلاس Facade که یک رابط ساده برای تماشای فیلم فراهم می‌کند.
+    این کلاس منطق تجاری ندارد و فقط زیرسیستم‌ها را هماهنگ می‌کند.
+    """
+
+    def __init__(self, projector: Projector, sound: SoundSystem, lights: Lights, dvd: DvdPlayer) -> None:
+        # تزریق وابستگی‌ها از طریق Constructor
+        self._projector = projector
+        self._sound = sound
+        self._lights = lights
+        self._dvd = dvd
+
+    def watch_movie(self, movie: str) -> None:
+        """هماهنگی زیرسیستم‌ها برای شروع تماشای فیلم"""
+        print("\n🎬 آماده‌سازی برای تماشای فیلم...")
+        self._lights.dim(20)  # کم کردن نور
+        self._projector.on()  # روشن کردن پروژکتور
+        self._sound.set_volume(15)  # تنظیم ولوم
+        self._dvd.play(movie)  # پخش فیلم
+        print("🎬 لذت ببرید!\n")
+
+    def end_movie(self) -> None:
+        """هماهنگی زیرسیستم‌ها برای پایان تماشای فیلم"""
+        print("\n🛑 در حال پایان دادن به تماشای فیلم...")
+        self._lights.dim(100)  # روشن کردن کامل نور
+        self._projector.off()  # خاموش کردن پروژکتور
+        print("🛑 سیستم خاموش شد.\n")
+
+
+# ==========================================
+# بخش کلاینت (Client)
+# ==========================================
+
+if __name__ == "__main__":
+    # ۱. ایجاد اشیاء زیرسیستم
+    my_projector = Projector()
+    my_sound = SoundSystem()
+    my_lights = Lights()
+    my_dvd = DvdPlayer()
+
+    # ۲. ایجاد شیء Facade و تزریق زیرسیستم‌ها به آن
+    home_theater = HomeTheaterFacade(my_projector, my_sound, my_lights, my_dvd)
+
+    # ۳. کلاینت فقط با Facade کار می‌کند و از پیچیدگی زیرسیستم‌ها بی‌خبر است
+    home_theater.watch_movie("Inception")
+    home_theater.end_movie()
+```
+
+## 19.3. 🅱️ Examples4: E-commerce Order
+
+پردازش سفارش در فروشگاه اینترنتی: ثبت یک سفارش شامل بررسی موجودی انبار، پردازش پرداخت، هماهنگی ارسال و ارسال نوتیفیکیشن است.
+
+```python
+from typing import Dict
+
+
+# ==========================================
+# زیرسیستم‌ها (Subsystem Classes)
+# ==========================================
+
+class InventorySystem:
+    """زیرسیستم: بررسی و رزرو موجودی انبار"""
+
+    def check_stock(self, product_id: str, quantity: int) -> bool:
+        print(f"  [انبار] بررسی موجودی برای {quantity} عدد از محصول {product_id}...")
+        return True  # فرض می‌کنیم موجود است
+
+    def reserve(self, product_id: str, quantity: int) -> None:
+        print(f"  [انبار] {quantity} عدد از محصول {product_id} رزرو شد.")
+
+
+class PaymentGateway:
+    """زیرسیستم: درگاه پرداخت"""
+
+    def process_payment(self, amount: float, card_number: str) -> bool:
+        print(f"  [پرداخت] پردازش مبلغ {amount} تومان با کارت {card_number}...")
+        return True  # فرض می‌کنیم پرداخت موفق بوده
+
+
+class ShippingService:
+    """زیرسیستم: سرویس ارسال و لجستیک"""
+
+    def arrange_shipping(self, address: str, product_id: str) -> None:
+        print(f"  [ارسال] هماهنگی ارسال محصول {product_id} به آدرس: {address}")
+
+
+class NotificationService:
+    """زیرسیستم: ارسال پیامک/ایمیل به کاربر"""
+
+    def send_confirmation(self, user_email: str, order_id: str) -> None:
+        print(f"  [نوتیفیکیشن] ایمیل تایید سفارش {order_id} به {user_email} ارسال شد.")
+
+
+# ==========================================
+# کلاس نما (Facade)
+# ==========================================
+
+class OrderFacade:
+    """
+    کلاس Facade برای مدیریت فرآیند پیچیده ثبت سفارش.
+    """
+
+    def __init__(self, inventory: InventorySystem, payment: PaymentGateway,
+                 shipping: ShippingService, notification: NotificationService) -> None:
+        self._inventory = inventory
+        self._payment = payment
+        self._shipping = shipping
+        self._notification = notification
+
+    def place_order(self, product_id: str, quantity: int, price: float,
+                    card_number: str, address: str, user_email: str) -> str:
+        """
+        یک متد واحد برای ثبت سفارش که تمام مراحل پیچیده پشت صحنه را مدیریت می‌کند.
+        """
+        print("\n🛒 شروع پردازش سفارش...")
+
+        # ۱. بررسی و رزرو انبار
+        if not self._inventory.check_stock(product_id, quantity):
+            raise ValueError("موجودی کافی نیست!")
+        self._inventory.reserve(product_id, quantity)
+
+        # ۲. پردازش پرداخت
+        if not self._payment.process_payment(price * quantity, card_number):
+            raise ValueError("پرداخت ناموفق بود!")
+
+        # ۳. هماهنگی ارسال
+        self._shipping.arrange_shipping(address, product_id)
+
+        # ۴. تولید شناسه سفارش (یک منطق ساده برای تولید ID)
+        order_id = f"ORD-{product_id}-1024"
+
+        # ۵. ارسال نوتیفیکیشن
+        self._notification.send_confirmation(user_email, order_id)
+
+        print(f"✅ سفارش {order_id} با موفقیت ثبت شد.\n")
+        return order_id
+
+
+# ==========================================
+# بخش کلاینت (Client)
+# ==========================================
+
+if __name__ == "__main__":
+    # ۱. ایجاد اشیاء زیرسیستم
+    inv = InventorySystem()
+    pay = PaymentGateway()
+    ship = ShippingService()
+    notif = NotificationService()
+
+    # ۲. ایجاد Facade
+    order_system = OrderFacade(inv, pay, ship, notif)
+
+    # ۳. کلاینت فقط یک متد را با پارامترهای مشخص صدا می‌زند
+    order_system.place_order(
+        product_id="LAPTOP-01",
+        quantity=1,
+        price=45000000,
+        card_number="6037-****-****-1234",
+        address="تهران، خیابان آزادی، پلاک ۱۰",
+        user_email="user@example.com"
+    )
+```
 
 # 20. 🅰️ Structural.Decorator()
 
