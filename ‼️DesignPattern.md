@@ -9792,12 +9792,12 @@ class CharacterFactory:
     def get_character_type(self, symbol: str, font: str, size: int) -> CharacterType:
         # ساخت کلید یکتا بر اساس حالت ذاتی
         key = f"{symbol}_{font}_{size}"
-        
+
         if key not in self._types_cache:
             # اگر از قبل ساخته نشده، بساز و در کش ذخیره کن
             self._types_cache[key] = CharacterType(symbol, font, size)
             print(f"[Factory] ساخت کاراکتر جدید برای '{symbol}' و ذخیره در کش.")
-            
+
         return self._types_cache[key]
 
 
@@ -9828,13 +9828,13 @@ class Document:
 # ─── استفاده ───
 if __name__ == "__main__":
     doc = Document()
-    
+
     # اضافه کردن حروف. حرف 'A' سه بار استفاده شده اما فقط یک بار در حافظه ساخته می‌شود.
     doc.add_character('A', 'Arial', 12, 10, 20)
     doc.add_character('B', 'Arial', 12, 30, 20)
     doc.add_character('A', 'Arial', 12, 50, 20)  # از کش خوانده می‌شود
     doc.add_character('A', 'Times', 14, 70, 20)  # فونت متفاوت، پس جدید ساخته می‌شود
-    
+
     doc.render_document()
 ```
 
