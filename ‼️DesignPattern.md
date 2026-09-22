@@ -8677,14 +8677,16 @@ if __name__ == "__main__":
 ┌──────────────────────────────────────────────┐
 │  ConcreteDecoratorA                          │
 │  ┌───────────────────────────────────────┐   │
-│  │  ConcreteDecoratorB                   │   │
+│  │     ConcreteDecoratorB                │   │
 │  │  ┌─────────────────────────────────┐  │   │
-│  │  │  ConcreteComponent              │  │   │
-│   │  │   (رفتار پایه)                  │  │  │
+│  │  │       ConcreteComponent ────┐   │  │   │
+│  │  │                             │   │  │   │
+│  │  │          behaviorC ◀────────┘   │  │   │
+│  │  │                                 │  │   │
 │  │  └─────────────────────────────────┘  │   │
-│   │   رفتار B بعد از رفتار پایه           │  │
+│  │     behaviorB ◀═════════════════      │   │
 │  └───────────────────────────────────────┘   │
-│   رفتار A بعد از رفتار B                     │
+│  behaviorA  ◀≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡          │
 └──────────────────────────────────────────────┘
 ```
 
@@ -9840,13 +9842,436 @@ if __name__ == "__main__":
 
 # 22. 🅰️ Structural.Proxy()
 
-## 22.1. 🅱️ Examples1:
+![DesignPattern.Structural.Proxy.png](_srcFiles/Images/DesignPattern.Structural.Proxy.png "DesignPattern.Structural.Proxy.png")
 
-## 22.2. 🅱️ Examples2:
+* کنترل دسترسی به شیء اصلی و افزودن لایه‌های میانی برای عملیات‌هایی مانند:
+    * تأخیر در ساخت شیء سنگین (Lazy Initialization)
+    * کنترل دسترسی (Access Control)
+    * لاگ‌گذاری (Logging)
+    * کش کردن (Caching)
+    * ارتباط از راه دور (Remote Communication)
+*
 
-## 22.3. 🅱️ Examples3:
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    main Proxy structure                     │
+└─────────────────────────────────────────────────────────────┘
 
-## 22.4. 🅱️ Examples4:
+          ┌─────────────────┐
+          │    Subject      │  ← Common interface (Interface/ABC)
+          │  + request()    │
+          └────────┬────────┘
+                   │
+         ┌─────────┴─────────┐
+         │                   │
+         │                   │
+┌────────┴────────┐ ┌────────┴────────┐
+│  RealSubject    │ │     Proxy       │
+│                 │ │ - _real_subject │
+│  + request()    │ │  + request()    │
+└─────────────────┘ └────────┬────────┘
+                             │
+             (Reference)     │
+                             │
+                    ┌────────┴────────┐
+                    │   RealSubject   │
+                    └─────────────────┘
+
+
+┌─────────────────────────────────────────────┐
+│                   (Flow)                    │
+└─────────────────────────────────────────────┘
+
+    Client
+       │
+       ▼
+    ┌──┴───┐            request()          ┌──────────┐
+    │Proxy ├──────────────────────────────►│ RealSubj │
+    └──┬───┘                               └────┬─────┘
+       ▲                                        │
+       │   (Access control،log، cache، ...)     │
+       │                                        ▼
+       │            main process                │
+       │                                        │
+       └────────────── result ──────────────────┘
+```
+
+## 22.1. 🅱️ مثال یک مشکل و حل مسئله
+
+مشکل: کوئر در دیتابیس عظیم می‌تواند هزینه‌بر باشد و مقدار زیادی از منابع سیستم را مصرف می‌کند درحالی که ممکن است شماهر از گاهی به آن نیاز داشته باشید. بعنون راه حل ابتدایی و غیر استاندارد شما می‌توانید مقداردهی اولیه‌ی تنبل را پیاده‌سازی کنید: این شیء را فقط زمانی که واقعاً مورد نیاز است ایجاد کنید. همه کلاینت‌های شیء باید مقداری کد مقداردهی
+اولیه‌ی معوق را اجرا کنند. متأسفانه، این احتمالاً باعث تکرار زیاد کد می‌شود.
+
+![DesignPattern.Structural.Proxy-problem.png](_srcFiles/Images/DesignPattern.Structural.Proxy-problem.png "DesignPattern.Structural.Proxy-problem.png")
+
+حل مشکل:الگوی Proxy پیشنهاد می‌کند که یک کلاس پروکسی جدید با رابط کاربری مشابه با یک شیء سرویس اصلی ایجاد کنید. سپس برنامه خود را به‌روزرسانی کنید تا شیء پروکسی را به تمام کلاینت‌های شیء اصلی ارسال کند. پروکسی پس از دریافت درخواست از یک کلاینت، یک شیء سرویس واقعی ایجاد می‌کند و تمام کارها را به آن محول می‌کند.
+
+پروکسی خود را به عنوان یک شیء پایگاه داده پنهان می‌کند. می‌تواند مقداردهی اولیه کند و ذخیره‌سازی نتایج را بدون اینکه کلاینت یا شیء پایگاه داده واقعی حتی بدانند، انجام دهد.
+
+اما فایده آن چیست؟ اگر نیاز به اجرای چیزی قبل یا بعد از منطق اولیه کلاس دارید، پروکسی به شما امکان می‌دهد این کار را بدون تغییر آن کلاس انجام دهید. از آنجایی که پروکسی همان رابط کاربری کلاس اصلی را پیاده‌سازی می‌کند، می‌توان آن را به هر کلاینتی که انتظار یک شیء سرویس واقعی را دارد، ارسال کرد.
+
+![DesignPattern.Structural.Proxy-Solution.png](_srcFiles/Images/DesignPattern.Structural.Proxy-Solution.png "DesignPattern.Structural.Proxy-Solution.png")
+
+## 22.2. 🅱️ توضیحات تکمیلی
+
+* ملاحظات و اصول طراحی
+    * اصل جایگزینی لیسکوف (Liskov Substitution Principle - LSP)
+        * پراکسی باید بتواند به‌جای شیء واقعی استفاده شود.
+        * پراکسی دقیقاً همان رابط (Interface) شیء واقعی را پیاده‌سازی می‌کند. کلاینت نباید متوجه تفاوت شود.
+    * اصل باز/بسته (Open/Closed Principle - OCP)
+        * می‌توانید رفتار جدید (مثل لاگ یا کش) اضافه کنید بدون آنکه کد RealSubject یا Client را تغییر دهید.
+    * اصل تک‌وظیفه‌ای (Single Responsibility Principle - SRP)
+        * پراکسی مسئول کنترل دسترسی است، نه منطق کسب‌وکار.
+        * هر نوع پراکسی یک مسئولیت مشخص دارد (مثلاً فقط کش، فقط احراز هویت).
+    * اصل تفکیک رابط (Interface Segregation Principle - ISP)
+        * رابط Subject باید مینیمال باشد.
+        * اگر رابط بزرگ باشد، پراکسی مجبور است متدهای بی‌ربط را هم پیاده‌سازی کند.
+    * اصل وارونگی وابستگی (Dependency Inversion Principle - DIP)
+        * کلاینت به انتزاع (Subject) وابسته است، نه به پیاده‌سازی واقعی.
+    * شفافیت (Transparency)
+        * کلاینت نباید بداند با Proxy کار می‌کند یا RealSubject.
+        * این شفافیت امکان تست آسان‌تر (Mocking) را فراهم می‌کند.
+    * سربار عملکردی (Performance Overhead)
+        * پراکسی یک لایه اضافی است و سربار (Overhead) دارد.
+        * این سربار باید در برابر مزایا (کش، امنیت، Lazy Loading) توجیه‌پذیر باشد.
+    * چه زمانی استفاده نکنیم؟
+        * وقتی شیء سبک است و ساخت آن سریع انجام می‌شود.
+        * وقتی نیاز به کنترل دسترسی یا کش ندارید.
+        * وقتی سربار لایه اضافی قابل قبول نیست.
+        * وقتی یچیدگی کد بیشتر از فایده آن است.
+* انواع Proxy
+    * Virtual Proxy (پراکسی مجازی): تأخیر در ساخت شیء سنگین (Lazy Loading)
+        * مثال: لود تصویر فقط زمانی که کاربر آن را می‌بیند
+    * Protection Proxy (پراکسی حفاظتی): کنترل دسترسی بر اساس نقش کاربر
+        * مثال: فقط ادمین می‌تواند داده‌ها را حذف کند
+    * Remote Proxy (پراکسی راه دور):نماینده شیء در فضای آدرس دیگر (شبکه)
+        * مثال: RPC، Web Service، gRPC
+    * Caching Proxy (پراکسی کش): ذخیره نتایج گران‌قیمت برای استفاده مجدد
+        * مثال: کش نتایج دیتابیس یا API
+    * Logging Proxy (پراکسی لاگ): ثبت فراخوانی‌ها برای دیباگ یا Audit
+        * مثال: لاگ تمام درخواست‌های API
+* موارد کاربردی از استفاده در صنعت
+    * ORM و دسترسی به داده‌ها: در فریمورک‌هایی مثل Django و SQLAlchemy برای Lazy Loading روابط (Relations). وقتی یک شیء User را لود می‌کنید، لیست سفارشات او تا زمانی که دسترسی پیدا نکنید لود نمی‌شود.
+    * RPC و ارتباطات شبکه: در سیستم‌های توزیع‌شده مثل gRPC، SOAP و RMI. پراکسی سمت کلاینت (Stub) درخواست‌ها را Serialize کرده و به سرور می‌فرستد و پاسخ را دریافت می‌کند.
+    * Caching و CDN: در سیستم‌هایی مثل Redis یا Varnish به عنوان Reverse Proxy. پاسخ‌های HTTP یا نتایج کوئری‌های گران‌قیمت کش می‌شوند تا از اجرای مجدد جلوگیری شود.
+    * امنیت و API Gateway: در API Gatewayها (مثل Kong، Apigee) برای Authentication، Rate Limiting، SSL Termination و Logging قبل از رسیدن درخواست به سرویس اصلی.
+    * تست و Mocking: در فریمورک‌های تست مثل unittest.mock و pytest. پراکسی‌ها (Mocks/Stubs) به جای سرویس‌های واقعی (دیتابیس، API خارجی) استفاده می‌شوند تا تست‌ها سریع و ایزوله باشند.
+* مزایا
+    * کنترل دسترسی به شیء اصلی
+    * بهینه‌سازی عملکرد (Lazy Loading، Caching)
+    * افزودن قابلیت‌ها بدون تغییر کد اصلی (OCP)
+    * شفافیت برای کلاینت
+    * امکان تست آسان‌تر (Mocking)
+* معایب:
+    * سربار عملکردی (لایه اضافی)
+    * پیچیدگی کد بیشتر
+    * تأخیر در تشخیص باگ‌ها (چون لایه میانی وجود دارد)
+    * ممکن است پاسخ‌دهی را بسیار کند (اگر کش نباشد)
+* الگوی Proxy یک ابزار قدرتمند برای کنترل غیرمستقیم دسترسی به اشیاء است. این الگو به‌ویژه در شرایط زیر حیاتی است:
+    * منابع سنگین: وقتی ساخت شیء هزینه‌بر است (Virtual Proxy)
+    * امنیت: وقتی نیاز به کنترل دسترسی دارید (Protection Proxy)
+    * شبکه: وقتی شیء در فضای آدرس دیگری است (Remote Proxy)
+    * عملکرد: وقتی نیاز به کش دارید (Caching Proxy)
+
+## 22.3. 🅱️ Examples1: Virtual Proxy - لود تنبل تصاویر
+
+این مثال نشان می‌دهد چگونه یک تصویر سنگین فقط زمانی لود می‌شود که واقعاً نیاز به نمایش آن باشد.
+
+```python
+from abc import ABC, abstractmethod
+from typing import Optional
+import time
+
+
+# ─── رابط مشترک (Subject) ───
+class Image(ABC):
+    """رابط مشترک برای تصاویر."""
+
+    @abstractmethod
+    def display(self) -> None:
+        """تصویر را نمایش می‌دهد."""
+        pass
+
+
+# ─── شیء واقعی (RealSubject) ───
+class RealImage(Image):
+    """
+    کلاس تصویر واقعی که فایل را از دیسک لود می‌کند.
+    این عملیات سنگین و زمان‌بر است.
+    """
+
+    def __init__(self, filename: str) -> None:
+        self._filename = filename
+        print(f"[RealImage] شروع لود فایل: {filename}")
+        self._load_from_disk()
+        print(f"[RealImage] فایل {filename} با موفقیت لود شد.")
+
+    def _load_from_disk(self) -> None:
+        """
+        شبیه‌سازی لود فایل سنگین از دیسک.
+        در واقعیت این عملیات I/O زمان‌بر است.
+        """
+        # شبیه‌سازی تأخیر شبکه/دیسک
+        time.sleep(2)
+        self._data = f"داده‌های تصویر {self._filename}"
+
+    def display(self) -> None:
+        print(f"نمایش تصویر: {self._filename}")
+        print(f"داده‌ها: {self._data[:30]}...")
+
+
+# ─── پراکسی (Proxy) ───
+class ImageProxy(Image):
+    """
+    پراکسی مجازی برای لود تنبل (Lazy Loading) تصویر.
+    تا زمانی که display() صدا زده نشود، تصویر لود نمی‌شود.
+    """
+
+    def __init__(self, filename: str) -> None:
+        self._filename = filename
+        # در ابتدا تصویر واقعی ساخته نمی‌شود
+        self._real_image: Optional[RealImage] = None
+
+    def display(self) -> None:
+        """
+        اولین بار که display صدا زده شود، تصویر واقعی ساخته می‌شود.
+        دفعات بعدی از همان شیء استفاده می‌شود.
+        """
+        if self._real_image is None:
+            print(f"[Proxy] تصویر {self._filename} هنوز لود نشده. در حال لود...")
+            self._real_image = RealImage(self._filename)
+
+        # ارجاع به شیء واقعی برای نمایش
+        self._real_image.display()
+
+
+# ─── استفاده ───
+if __name__ == "__main__":
+    print("=" * 60)
+    print("مثال Virtual Proxy - لود تنبل تصاویر")
+    print("=" * 60)
+
+    # ساخت پراکسی (سریع - بدون لود واقعی)
+    image1 = ImageProxy("photo_1.jpg")
+    image2 = ImageProxy("photo_2.jpg")
+
+    print("\n[Client] اشیاء ساخته شدند اما هنوز لود نشده‌اند.")
+    print("(اینجا هیچ لودی اتفاق نیفتاده)")
+
+    print("\n--- درخواست نمایش تصویر اول ---")
+    image1.display()  # اینجا لود اتفاق می‌افتد (2 ثانیه)
+
+    print("\n--- درخواست نمایش تصویر اول (دوباره) ---")
+    image1.display()  # اینجا لود اتفاق نمی‌افتد (از کش استفاده می‌کند)
+
+    print("\n--- درخواست نمایش تصویر دوم ---")
+    image2.display()  # اینجا لود اتفاق می‌افتد (2 ثانیه)
+
+    print("\n" + "=" * 60)
+    print("نتیجه: بدون Proxy، هر دو تصویر در شروع لود می‌شدند.")
+    print("با Proxy، فقط تصاویر مورد نیاز لود شدند.")
+    print("=" * 60)
+```
+
+## 22.4. 🅱️ Examples2: Protection Proxy - کنترل دسترسی
+
+این مثال نشان می‌دهد چگونه پراکسی می‌تواند دسترسی به عملیات حساس را بر اساس نقش کاربر کنترل کند.
+
+```python
+from abc import ABC, abstractmethod
+from typing import Optional
+from datetime import datetime
+
+
+# ─── رابط مشترک (Subject) ───
+class Document(ABC):
+    """رابط مشترک برای اسناد."""
+
+    @abstractmethod
+    def read(self) -> str:
+        """محتوای سند را می‌خواند."""
+        pass
+
+    @abstractmethod
+    def delete(self) -> bool:
+        """سند را حذف می‌کند."""
+        pass
+
+
+# ─── شیء واقعی (RealSubject) ───
+class ConfidentialDocument(Document):
+    """
+    سند محرمانه که عملیات واقعی خواندن و حذف را انجام می‌دهد.
+    """
+
+    def __init__(self, filename: str, content: str) -> None:
+        self._filename = filename
+        self._content = content
+        print(f"[Document] سند '{filename}' ساخته شد.")
+
+    def read(self) -> str:
+        """بازگرداندن محتوای سند."""
+        return f"محتوای سند '{self._filename}': {self._content}"
+
+    def delete(self) -> bool:
+        """حذف واقعی سند."""
+        print(f"[Document] سند '{self._filename}' حذف شد.")
+        return True
+
+
+# ─── پراکسی حفاظتی (Protection Proxy) ───
+class ProtectedDocumentProxy(Document):
+    """
+    پراکسی که دسترسی به سند را بر اساس نقش کاربر کنترل می‌کند.
+    
+    قوانین:
+    - همه کاربران می‌توانند بخوانند (به جز مهمان)
+    - فقط ادمین می‌تواند حذف کند
+    """
+
+    def __init__(self, document: Document, user_role: str) -> None:
+        """
+        Args:
+            document: شیء سند واقعی
+            user_role: نقش کاربر ('admin', 'user', 'guest')
+        """
+        self._document = document
+        self._user_role = user_role
+        self._access_log: list = []
+
+    def _log_access(self, operation: str, allowed: bool) -> None:
+        """ثبت لاگ دسترسی برای Audit."""
+        timestamp = datetime.now().strftime("%H:%M:%S")
+        status = "مجاز" if allowed else "غیرمجاز"
+        log_entry = f"[{timestamp}] کاربر '{self._user_role}' - عملیات {operation}: {status}"
+        self._access_log.append(log_entry)
+        print(log_entry)
+
+    def read(self) -> str:
+        """
+        بررسی مجوز خواندن قبل از دسترسی به سند.
+        """
+        # کاربر مهمان نمی‌تواند بخواند
+        if self._user_role == "guest":
+            self._log_access("read", False)
+            return "خطا: دسترسی غیرمجاز! کاربران مهمان نمی‌توانند اسناد را بخوانند."
+
+        self._log_access("read", True)
+        return self._document.read()
+
+    def delete(self) -> bool:
+        """
+        بررسی مجوز حذف قبل از دسترسی به سند.
+        فقط ادمین می‌تواند حذف کند.
+        """
+        if self._user_role != "admin":
+            self._log_access("delete", False)
+            return False
+
+        self._log_access("delete", True)
+        return self._document.delete()
+
+    def get_access_log(self) -> list:
+        """بازگرداندن لاگ دسترسی‌ها."""
+        return self._access_log
+
+
+# ─── استفاده ───
+if __name__ == "__main__":
+    print("=" * 70)
+    print("مثال Protection Proxy - کنترل دسترسی به اسناد محرمانه")
+    print("=" * 70)
+
+    # ساخت سند واقعی
+    real_doc = ConfidentialDocument(filename="secret_report.pdf", content="این یک سند بسیار محرمانه است!")
+
+    print("\n" + "-" * 70)
+    print("کاربر ادمین:")
+    print("-" * 70)
+    admin_proxy = ProtectedDocumentProxy(real_doc, user_role="admin")
+    print(admin_proxy.read())
+    print(f"حذف موفق: {admin_proxy.delete()}")
+
+    print("\n" + "-" * 70)
+    print("کاربر عادی:")
+    print("-" * 70)
+    user_proxy = ProtectedDocumentProxy(real_doc, user_role="user")
+    print(user_proxy.read())
+    print(f"حذف موفق: {user_proxy.delete()}")  # نباید موفق شود
+
+    print("\n" + "-" * 70)
+    print("کاربر مهمان:")
+    print("-" * 70)
+    guest_proxy = ProtectedDocumentProxy(real_doc, user_role="guest")
+    print(guest_proxy.read())  # نباید موفق شود
+    print(f"حذف موفق: {guest_proxy.delete()}")  # نباید موفق شود
+
+    print("\n" + "=" * 70)
+    print("لاگ دسترسی‌ها (Audit Log):")
+    print("=" * 70)
+    for log in admin_proxy.get_access_log():
+        print(log)
+```
+
+## 22.4. 🅱️ Examples3:
+
+```python
+from abc import ABC, abstractmethod
+from typing import Optional
+
+
+# region subject interface
+
+class Image(ABC):
+    @abstractmethod
+    def display(self):
+        raise NotImplementedError
+
+
+# endregion
+
+# region real subject
+
+class RealImage(Image):
+    def __init__(self, filename: str):
+        self.filename = filename
+        self.load_image()
+
+    def display(self):
+        print(f'displaying image with filename: {self.filename}')
+
+    def load_image(self):
+        print(f'loading image with filename: {self.filename}')
+
+
+# endregion
+
+# region proxy
+
+class ProxyImage(Image):
+    def __init__(self, filename: str):
+        self.filename = filename
+        self.real_image: Optional[RealImage] = None
+
+    def display(self):
+        if self.real_image is None:
+            self.real_image = RealImage(self.filename)
+
+        self.real_image.display()
+
+
+# endregion
+
+# region client
+
+if __name__ == '__main__':
+    img = ProxyImage('test.jpg')
+    if input(f'would you like to see the real image? ') == 'y':
+        img.display()
+
+# endregion
+
+```
+
 
 # 23. 🅰️ Structural.Bridge()
 
