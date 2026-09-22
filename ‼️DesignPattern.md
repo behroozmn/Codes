@@ -7672,7 +7672,7 @@ if __name__ == "__main__":
     checkout(adapted_processor, 150000.0)
 ```
 
-## 17.3. 🅱️ Examples4: Notification Service
+## 17.4. 🅱️ Examples4: Notification Service
 
 سناریو: سیستم ما برای ارسال پیام از متد send_notification(user_email, message) استفاده می‌کند. اما سرویس دهنده پیامکی (SMS) ما فقط شماره موبایل می‌پذیرد و متد آن dispatch_sms(phone, text) است.
 
@@ -7754,6 +7754,9 @@ if __name__ == "__main__":
     * مرتب‌سازی فرزندان: اگر ترتیب قرارگیری فرزندان اهمیت دارد، باید از ساختارهای داده‌ای مرتب (مثل List) به جای مجموعه‌های نامرتب (مثل Set) استفاده کنید.
 * مزایا: رعایت اصل Single Responsibility (منطق درخت در یک جا قرار می‌گیرد)، رعایت اصل Open/Closed (بدون تغییر کد کلاینت می‌توان کامپوزیت‌های جدید ساخت)، و ساده‌سازی کد کلاینت با استفاده از پلی‌مورفیسم.
 * معایب: محدود کردن نوع کامپوننت‌ها دشوار می‌شود (مثلاً اگر بخواهید کامپوزیت فقط اشیاء خاصی را بپذیرد، طراحی پیچیده می‌شود).
+
+![DesignPattern.Structural.Composite2.png](_srcFiles/Images/DesignPattern.Structural.Composite2.png "DesignPattern.Structural.Composite2.png")
+
 * ۵ مورد از مهم‌ترین کاربردهای آن عبارتند از:
     * فریم‌ورک‌های رابط کاربری گرافیکی (GUI Frameworks):در کتابخانه‌هایی مثل React، Angular، یا فریم‌ورک‌های دسکتاپ مثل JavaFX و WPF، کامپوننت‌های UI (مثل دکمه، تکست‌باکس) برگ‌ها هستند و کانتینرها (مثل Div، Panel، Window) کامپوزیت‌ها هستند. رندر کردن صفحه با یک الگوریتم یکسان (بازگشتی) روی کل درخت DOM انجام می‌شود.
     * سیستم‌های گرافیکی و طراحی (Graphics & Drawing Applications): در نرم‌افزارهایی مثل Photoshop یا فرمت‌های برداری مثل SVG، اشکال ساده (خط، دایره) برگ‌ها هستند و گروه‌بندی اشکال (Group/Layers) کامپوزیت‌ها هستند. اعمال یک فیلتر یا تغییر مقیاس (Scale) روی یک گروه، به صورت خودکار روی تمام اعضای آن گروه اعمال می‌شود.
@@ -8282,7 +8285,7 @@ if __name__ == '__main__':
 
 ```python
 import uuid
-from typing import bool
+from typing import Any
 
 
 class UserService:
@@ -8529,7 +8532,7 @@ if __name__ == "__main__":
     home_theater.end_movie()
 ```
 
-## 19.3. 🅱️ Examples4: E-commerce Order
+## 19.4. 🅱️ Examples4: E-commerce Order
 
 پردازش سفارش در فروشگاه اینترنتی: ثبت یک سفارش شامل بررسی موجودی انبار، پردازش پرداخت، هماهنگی ارسال و ارسال نوتیفیکیشن است.
 
@@ -8644,15 +8647,634 @@ if __name__ == "__main__":
     )
 ```
 
-# 20. 🅰️ Structural.Decorator()
+# 20. 🅰️ Structural.Decorator(افزودن قابلیت به آبجکت‌های خود در خارج از بدنه کلاس)
 
-## 20.1. 🅱️ Examples1:
+* افزودن قابلیت به آبجکت‌های خود در خارج از بدنه کلاس
+* الحاق پویا و شفافِ مسئولیت‌های اضافی به یک شیء، بدون تغییر ساختار کلاس اصلی و بدون نیاز به زیرکلاس‌سازی (Subclassing). Decorator انعطاف‌پذیری بیشتری نسبت به وراثت ایستا (Static Inheritance) برای افزودن رفتار فراهم می‌کند.
+* الگوی Decorator یک الگوی ساختاری (Structural) است که به شما اجازه می‌دهد رفتارهای جدید را به‌صورت پویا (Dynamic) و در زمان اجرا (Runtime) به یک شیء اضافه کنید، بدون آنکه ساختار کلاس اصلی تغییر کند.
+* به بیان ساده‌تر: به‌جای اینکه برای هر ترکیب از قابلیت‌ها یک زیرکلاس جدید بسازید، قابلیت‌ها را مثل لایه‌های پیاز دور شیء اصلی می‌پیچید.
 
-## 20.2. 🅱️ Examples2:
+![DesignPattern.Structural.Decorator.png](_srcFiles/Images/DesignPattern.Structural.Decorator.png "DesignPattern.Structural.Decorator.png")
 
-## 20.3. 🅱️ Examples3:
+## 20.1. 🅱️ اجزای ساختار
 
-## 20.4. 🅱️ Examples4:
+* Component
+    * رابط مشترک (Abstract Base Class یا Protocol)
+    * رابط مشترک (Interface یا Abstract Class) که هم برای شیء اصلی و هم برای Decoratorها تعریف می‌شود. تضمین می‌کند که Decoratorها قابل تعویض با شیء اصلی باشند (اصل Liskov Substitution).
+* ConcreteComponent
+    * پیاده‌سازی پایه و اصلی
+    * پیاده‌سازی پایه‌ای از Component. شیئی که قرار است رفتارهای اضافی به آن الحاق شود.
+* Decorator
+    * کلاس پایه دکوریتورها؛ مرجع Component را نگه می‌دارد و فراخوانی را به آن ارجاع می‌دهد
+    * کلاس انتزاعی که رابط Component را پیاده‌سازی می‌کند و یک مرجع (Reference) به یک شیء از نوع Component نگه می‌دارد. رفتار پیش‌فرض را به شیء داخلی واگذار (Delegate) می‌کند.
+* ConcreteDecorator
+    * رفتار جدید را قبل/بعد از فراخوانی مرجع اضافه می‌کند
+    * پیاده‌سازی‌های مشخص Decorator که مسئولیت‌های اضافی را قبل یا بعد از فراخوانی component.operation() اضافه می‌کنند.
+
+## 20.2. 🅱️ نحوه تعامل اجزا
+
+```
+┌──────────────────────────────────────────────┐
+│  ConcreteDecoratorA                          │
+│  ┌───────────────────────────────────────┐   │
+│  │  ConcreteDecoratorB                   │   │
+│  │  ┌─────────────────────────────────┐  │   │
+│  │  │  ConcreteComponent              │  │   │
+│   │  │   (رفتار پایه)                  │  │  │
+│  │  └─────────────────────────────────┘  │   │
+│   │   رفتار B بعد از رفتار پایه           │  │
+│  └───────────────────────────────────────┘   │
+│   رفتار A بعد از رفتار B                     │
+└──────────────────────────────────────────────┘
+```
+
+* Decorator درخواست‌ها را به شیء Component داخلی خود هدایت (Forward) می‌کند.
+* ConcreteDecorator می‌تواند قبل یا بعد از هدایت درخواست، رفتار اضافی اجرا کند.
+* کلاینت فقط با رابط Component کار می‌کند و از وجود Decoratorها بی‌خبر است.
+* Decoratorها می‌توانند به‌صورت تو در تو (Nested) یکدیگر را بپیچند:
+* `DecoratorA(DecoratorB(ConcreteComponent))`
+
+```
+┌──────────────────────┐
+│    <<interface>>     │
+│      Component       │
+├──────────────────────┤
+│ + operation()        │
+└──────┬───────┬───────┘
+       │       │
+       │       │  implements
+       │       ▼
+       │  ┌──────────────────────┐         ┌──────────────────────┐
+       │  │      Decorator       │────────▶│    <<interface>>     │
+       │  ├──────────────────────┤  wraps  │      Component       │
+       │  │ - component: Comp.   │         └──────────────────────┘
+       │  ├──────────────────────┤
+       │  │ + operation()        │
+       │  └──────┬───────────────┘
+       │         │  extends
+  implements     ▼
+       │  ┌──────────────┐  ┌──────────────┐
+       │  │ ConcreteDecA │  │ ConcreteDecB │
+       │  ├──────────────┤  ├──────────────┤
+       │  │ + operation()│  │ + operation()│
+       │  └──────────────┘  └──────────────┘
+       ▼
+┌──────────────────────┐
+│  ConcreteComponent   │
+├──────────────────────┤
+│ + operation()        │
+└──────────────────────┘
+```
+
+```
+┌──────────────────────┐
+│   Component (رابط)   │  ← انتزاع مشترک
+│  + operation()       │
+└──────┬───────┬───────┘
+       │       │
+       │       │
+┌──────┴──┐ ┌──┴───────────────┐
+│Concrete │ │    Decorator     │  ← پیاده‌سازی پایه + نگه‌داشتن مرجع
+│Component│ │  - _component    │
+│         │ │  + operation()   │
+└─────────┘ └──┬───────────────┘
+               │
+       ┌───────┴───────┐
+       │               │
+┌──────┴──────┐ ┌──────┴──────┐
+│ConcreteDecA │ │ConcreteDecB │  ← هر کدام یک رفتار جدید
+└─────────────┘ └─────────────┘
+```
+
+## 20.3. 🅱️ موارد استفاده از این الگوی طراحی
+
+* از Decorator استفاده کنید وقتی:
+    * افزودن مسئولیت به شیء به‌صورت پویا و شفاف نیاز است؛ یعنی کلاینت نباید بداند که شیء تزئین شده است یا خیر (رابط یکسان حفظ شود).
+    * مسئولیت‌ها باید قابل بازپس‌گیری (Revocable) باشند؛ یعنی بتوان تزئین را در زمان اجرا حذف کرد.
+    * توسعه از طریق وراثت عملی نیست: یا به دلیل انفجار کلاس‌ها، یا به این دلیل که تعریف کلاس پنهان است (مثلاً در یک کتابخانه شخص ثالث) و نمی‌توانید آن را زیرکلاس کنید.
+    * ترکیب رفتارها در زمان اجرا مورد نیاز است، نه زمان کامپایل.
+* موارد کاربردی در صنعت
+    * جریان‌های ورودی/خروجی (I/O Streams): در Java، کلاس‌هایی مثل BufferedInputStream، GZIPInputStream و DataInputStream همگی Decoratorهایی هستند که روی InputStream پیچیده می‌شوند: new DataInputStream(new BufferedInputStream(new FileInputStream("file"))).
+        * پیچیدن لایه‌های Buffering، Compression و Encryption روی استریم‌های ورودی/خروجی (مثلاً java.io در جاوا: BufferedInputStream(new GZIPInputStream(new FileInputStream(...)))).
+    * فریم‌ورک‌های وب و Middleware:در ASP.NET Core، Django Middleware و Express.js، هر لایه Middleware یک Decorator است که درخواست/پاسخ HTTP را قبل و بعد از Handler اصلی پردازش می‌کند (احراز هویت، لاگینگ، فشرده‌سازی و...).
+    * سیستم‌های لاگینگ و مانیتورینگ:ابزارهایی مثل OpenTelemetry از Decorator برای افزودن Tracing، Metrics و Logging به سرویس‌ها بدون تغییر کد اصلی استفاده می‌کنند.
+        * افزودن لایه‌های ثبت زمان اجرا (Timing)، شمارش فراخوانی (Metrics) و ردیابی توزیع‌شده (Tracing) به سرویس‌های میکروسرویس بدون دست‌زدن به منطق تجاری.
+    * رابط‌های گرافیکی (GUI):در Java Swing و Qt، قابلیت‌هایی مثل اسکرول (JScrollPane)، حاشیه (Border) و Tooltip به کامپوننت‌ها از طریق Decorator اضافه می‌شوند.
+        * افزودن حاشیه (Border)، اسکرول (Scroll)، سایه (Shadow) و انیمیشن به ویجت‌ها به‌صورت ترکیبی (مثلاً در فریمورک‌های Flutter و Qt).
+    * رمزنگاری و امنیت داده:لایه‌های رمزنگاری مثل TLS/SSL روی سوکت‌های شبکه به‌صورت Decorator پیاده‌سازی می‌شوند: SSLSocket یک Socket را می‌پیچد و رمزنگاری/رمزگشایی شفاف اضافه می‌کند.
+    * وب و API: افزودن لایه‌های احراز هویت (Auth)، محدودیت نرخ (Rate Limiting)، فشرده‌سازی (GZip) و CORS به هندلرهای HTTP بدون تغییر کد اصلی (مثلاً Middleware در Django/FastAPI).
+    * بازی‌سازی (Game Dev): اعمال افکت‌های موقت روی شخصیت بازی مثل سرعت بیشتر، سپر دفاعی، سم و نامرئی بودن که هر کدام یک دکوریتور مستقل هستند و در زمان اجرا اضافه/حذف می‌شوند.
+
+## 20.4. 🅱️ توضیحات تکمیلی
+
+* مزایا
+    * انعطاف‌پذیری بیشتر از وراثت:رفتارها در زمان اجرا اضافه/حذف می‌شوند.
+    * جلوگیری از انفجار کلاس‌ها:n کلاس، n+1n+1n+1 کلاس کافی است.
+    * رعایت اصل OCP: کلاس‌ها برای توسعه باز و برای تغییر بسته هستند.
+    * رعایت اصل SRP:هر Decorator یک مسئولیت مشخص دارد.
+    * شفافیت برای کلاینت:کلاینت با رابط یکسان کار می‌کند.
+    * ترکیب‌پذیری:Decoratorها آزادانه ترکیب می‌شوند.
+* معایب
+    * اشیاء کوچک زیاد:هر Decorator یک شیء مجزاست؛ دیباگ سخت‌تر می‌شود.
+    * وابستگی به ترتیب:گاهی ترتیب پیچیدن Decoratorها مهم است (مثلاً فشرده‌سازی باید قبل از رمزنگاری باشد).
+    * پیچیدگی پیکربندی:ساختن شیء نهایی با چندین لایه Decorator می‌تواند کد راه‌اندازی را شلوغ کند (راه‌حل: استفاده از Factory یا Builder).
+    * هویت شیء تغییر می‌کند:decorator != component؛ اگر کلاینت به هویت شیء وابسته باشد، مشکل‌ساز می‌شود.
+* قاعده طلایی: Decorator زمانی درست استفاده شده که کلاینت نتواند تفاوت بین Component ساده و Component تزئین‌شده را تشخیص دهد — همه چیز از طریق یک رابط یکسان اتفاق می‌افتد.
+
+## 20.5. 🅱️ سناریو مشکل و حل مسئله
+
+فرض کنید یک کلاس Window دارید که عملیات پایه‌ای مثل draw() و getDescription() را ارائه می‌دهد. حالا می‌خواهید قابلیت‌هایی مثل اسکرول‌بار، حاشیه و سایه را به آن اضافه کنید.
+
+* رویکرد نادرست: وراثت انفجاری که سبب بروز مشکلات زیر میشود:
+    *     انفجار کلاس‌ها: ترکیب nnn ویژگی، 2n2^n2n کلاس تولید می‌کند.
+    * عدم انعطاف: ترکیب‌ها در زمان کامپایل ثابت هستند.
+    * تکرار کد: منطق اسکرول‌بار در چندین کلاس تکرار می‌شود.
+    * نقض اصل OCP: برای هر ترکیب جدید باید کلاس جدید بسازید.
+* راه‌حل Decorator: به جای وراثت، از ترکیب (Composition) استفاده می‌کنیم. هر قابلیت یک Decorator مستقل است که شیء اصلی را در خود می‌پیچد (Wraps) و رفتار جدید را قبل یا بعد از فراخوانی متد اصلی اضافه می‌کند.
+
+```
+Window
+├── WindowWithScrollbar
+├── WindowWithBorder
+├── WindowWithShadow
+├── WindowWithScrollbarAndBorder
+├── WindowWithScrollbarAndShadow
+├── WindowWithBorderAndShadow
+└── WindowWithScrollbarAndBorderAndShadow  ← ۲^n کلاس!
+```
+
+## 20.6. 🅱️ Examples
+
+### 20.6.1. ✅️ Examples1: فرمت‌دهی متن 📝
+
+سناریو: یک ویرایشگر متن که می‌خواهد قالب‌بندی‌هایی مثل پررنگ (Bold)، کج (Italic) و زیرخط (Underline) را به‌صورت ترکیبی روی متن اعمال کند.
+
+```python
+class WrittenText:
+    def __init__(self, text: str):
+        self._text = text
+
+    def render(self):
+        return self._text
+
+
+class ItalicWrapper(WrittenText):
+    def __init__(self, wrapped: WrittenText):
+        self._wrapped = wrapped
+
+    def render(self):
+        return f'<i>{self._wrapped.render()}</i>'
+
+
+class BoldWrapper(WrittenText):
+    def __init__(self, wrapped: WrittenText):
+        self._wrapped = wrapped
+
+    def render(self):
+        return f'<b>{self._wrapped.render()}</b>'
+
+
+class UnderlineWrapper(WrittenText):
+    def __init__(self, wrapped: WrittenText):
+        self._wrapped = wrapped
+
+    def render(self):
+        return f'<u>{self._wrapped.render()}</u>'
+
+
+if __name__ == '__main__':
+    my_text = WrittenText('Toplearn')
+    print(my_text.render())
+
+    italic_version = ItalicWrapper(my_text)
+    print(italic_version.render())
+
+    bold_italic_version = BoldWrapper(ItalicWrapper(WrittenText('Toplearn')))
+    print(bold_italic_version.render())
+
+    underline_bold_italic_version = UnderlineWrapper(BoldWrapper(ItalicWrapper(WrittenText('Toplearn'))))
+    print(underline_bold_italic_version.render())
+```
+
+### 20.6.2. ✅️ Examples1: شکل دیگر پیاده‌سازی
+
+```python
+from abc import ABC, abstractmethod
+
+
+# ──────────────────────────────────────────────
+# ۱. رابط مشترک (Component)
+# ──────────────────────────────────────────────
+class Text(ABC):
+    """رابط مشترک برای متن ساده و قالب‌بندی‌شده."""
+
+    @abstractmethod
+    def render(self) -> str:
+        """متن نهایی قالب‌بندی‌شده را برمی‌گرداند."""
+        ...
+
+
+# ──────────────────────────────────────────────
+# ۲. پیاده‌سازی پایه (ConcreteComponent)
+# ──────────────────────────────────────────────
+class PlainText(Text):
+    """متن ساده بدون هیچ قالب‌بندی."""
+
+    def __init__(self, content: str) -> None:
+        """
+        Args:
+            content: محتوای متنی ساده.
+        """
+        self._content = content
+
+    def render(self) -> str:
+        return self._content
+
+
+# ──────────────────────────────────────────────
+# ۳. کلاس پایه تزئین‌کننده (Decorator)
+# ──────────────────────────────────────────────
+class TextDecorator(Text):
+    """
+    کلاس پایه برای تمام قالب‌بندی‌ها.
+    متن داخلی را نگه می‌دارد و render را به آن واگذار می‌کند.
+    """
+
+    def __init__(self, text: Text) -> None:
+        """
+        Args:
+            text: شیء متنی که قرار است قالب‌بندی شود.
+        """
+        self._text = text
+
+    def render(self) -> str:
+        return self._text.render()
+
+
+# ──────────────────────────────────────────────
+# ۴. تزئین‌کننده‌های مشخص (ConcreteDecorators)
+# ──────────────────────────────────────────────
+class Bold(TextDecorator):
+    """قالب‌بندی پررنگ با استفاده از تگ HTML."""
+
+    def render(self) -> str:
+        # متن داخلی را render کرده و در تگ <b> می‌پیچیم
+        return f"<b>{self._text.render()}</b>"
+
+
+class Italic(TextDecorator):
+    """قالب‌بندی کج با استفاده از تگ HTML."""
+
+    def render(self) -> str:
+        return f"<i>{self._text.render()}</i>"
+
+
+class Underline(TextDecorator):
+    """قالب‌بندی زیرخط با استفاده از تگ HTML."""
+
+    def render(self) -> str:
+        return f"<u>{self._text.render()}</u>"
+
+
+# ──────────────────────────────────────────────
+# ۵. استفاده (Client)
+# ──────────────────────────────────────────────
+if __name__ == "__main__":
+    # متن ساده
+    simple: Text = PlainText("سلام دنیا")
+    print(f"ساده:   {simple.render()}")
+
+    # متن پررنگ
+    bold_text: Text = Bold(PlainText("سلام دنیا"))
+    print(f"پررنگ:   {bold_text.render()}")
+
+    # متن پررنگ + کج + زیرخط (ترکیب سه Decorator)
+    fancy: Text = Underline(Italic(Bold(PlainText("سلام دنیا"))))
+    print(f"ترکیبی:  {fancy.render()}")
+```
+
+```
+خروجی
+ساده:   سلام دنیا
+پررنگ:   <b>سلام دنیا</b>
+ترکیبی:  <u><i><b>سلام دنیا</b></i></u>
+```
+
+### 20.6.3. ✅️ Examples2: سیستم سفارش قهوه ☕
+
+```python
+# region Base component
+
+class Coffee:
+    def cost(self):
+        return 5
+
+    def description(self):
+        return "Simple coffee"
+
+
+# endregion
+
+# region decorator
+
+class CoffeeDecorator(Coffee):
+    def __init__(self, coffe: Coffee):
+        self._coffee = coffe
+
+    def cost(self):
+        return self._coffee.cost()
+
+    def description(self):
+        return self._coffee.description()
+
+
+# endregion
+
+
+# region concrete decorators
+
+class Milk(CoffeeDecorator):
+    def cost(self):
+        return self._coffee.cost() + 2
+
+    def description(self):
+        return self._coffee.description() + ' , milk'
+
+
+class Sugar(CoffeeDecorator):
+    def cost(self):
+        return self._coffee.cost() + 3
+
+    def description(self):
+        return self._coffee.description() + ' , sugar'
+
+
+class WhippedCream(CoffeeDecorator):
+    def cost(self):
+        return self._coffee.cost() + 4
+
+    def description(self):
+        return self._coffee.description() + ' , whipped cream'
+
+
+# endregion
+
+# region client
+
+if __name__ == '__main__':
+    simple_coffee = Coffee()
+    print(f'{simple_coffee.description()}: ${simple_coffee.cost()}')
+
+    coffee_with_milk = Milk(simple_coffee)
+    print(f'{coffee_with_milk.description()}: ${coffee_with_milk.cost()}')
+
+    coffee_with_milk_and_sugar = Sugar(coffee_with_milk)
+    print(f'{coffee_with_milk_and_sugar.description()}: ${coffee_with_milk_and_sugar.cost()}')
+
+# endregion
+```
+
+### 20.6.4. ✅️ Examples2: سیستم سفارش قهوه به روش دوم
+
+سناریو: یک کافی‌شاپ که قهوه پایه دارد و مشتری می‌تواند افزودنی‌هایی مثل شیر، شکر و وانیل اضافه کند. هر افزودنی قیمت و توضیحات را تغییر می‌دهد.
+
+```python
+from abc import ABC, abstractmethod
+
+
+# ──────────────────────────────────────────────
+# ۱. رابط مشترک (Component)
+# ──────────────────────────────────────────────
+class Beverage(ABC):
+    """رابط مشترک برای تمام نوشیدنی‌ها و افزودنی‌ها."""
+
+    @abstractmethod
+    def get_description(self) -> str:
+        """توضیحات نوشیدنی را برمی‌گرداند."""
+        ...
+
+    @abstractmethod
+    def get_cost(self) -> float:
+        """هزینه نوشیدنی را برمی‌گرداند."""
+        ...
+
+
+# ──────────────────────────────────────────────
+# ۲. پیاده‌سازی پایه (ConcreteComponent)
+# ──────────────────────────────────────────────
+class Espresso(Beverage):
+    """اسپرسو به‌عنوان نوشیدنی پایه."""
+
+    def get_description(self) -> str:
+        return "اسپرسو"
+
+    def get_cost(self) -> float:
+        return 30.0  # هزار تومان
+
+
+# ──────────────────────────────────────────────
+# ۳. کلاس پایه تزئین‌کننده (Decorator)
+# ──────────────────────────────────────────────
+class BeverageDecorator(Beverage):
+    """
+    کلاس پایه برای تمام افزودنی‌ها.
+    یک مرجع به نوشیدنی داخلی نگه می‌دارد
+    و فراخوانی‌ها را به آن واگذار می‌کند.
+    """
+
+    def __init__(self, beverage: Beverage) -> None:
+        """
+        Args:
+            beverage: نوشیدنی‌ای که قرار است تزئین شود.
+        """
+        self._beverage = beverage
+
+    def get_description(self) -> str:
+        return self._beverage.get_description()
+
+    def get_cost(self) -> float:
+        return self._beverage.get_cost()
+
+
+# ──────────────────────────────────────────────
+# ۴. تزئین‌کننده‌های مشخص (ConcreteDecorators)
+# ──────────────────────────────────────────────
+class Milk(BeverageDecorator):
+    """افزودنی شیر."""
+
+    def get_description(self) -> str:
+        # توضیحات شیر را به توضیحات نوشیدنی داخلی اضافه می‌کنیم
+        return self._beverage.get_description() + " + شیر"
+
+    def get_cost(self) -> float:
+        # هزینه شیر را به هزینه نوشیدنی داخلی اضافه می‌کنیم
+        return self._beverage.get_cost() + 5.0
+
+
+class Sugar(BeverageDecorator):
+    """افزودنی شکر."""
+
+    def get_description(self) -> str:
+        return self._beverage.get_description() + " + شکر"
+
+    def get_cost(self) -> float:
+        return self._beverage.get_cost() + 2.0
+
+
+class Vanilla(BeverageDecorator):
+    """افزودنی وانیل."""
+
+    def get_description(self) -> str:
+        return self._beverage.get_description() + " + وانیل"
+
+    def get_cost(self) -> float:
+        return self._beverage.get_cost() + 7.0
+
+
+# ──────────────────────────────────────────────
+# ۵. استفاده (Client)
+# ──────────────────────────────────────────────
+if __name__ == "__main__":
+    # سفارش ساده: فقط اسپرسو
+    order1: Beverage = Espresso()
+    print(f"سفارش: {order1.get_description()}")
+    print(f"قیمت: {order1.get_cost()} هزار تومان\n")
+
+    # سفارش پیچیده: اسپرسو + شیر + وانیل
+    order2: Beverage = Vanilla(Milk(Espresso()))
+    print(f"سفارش: {order2.get_description()}")
+    print(f"قیمت: {order2.get_cost()} هزار تومان\n")
+
+    # سفارش با دو بار شکر
+    order3: Beverage = Sugar(Sugar(Espresso()))
+    print(f"سفارش: {order3.get_description()}")
+    print(f"قیمت: {order3.get_cost()} هزار تومان")
+```
+
+```
+خروجی
+سفارش: اسپرسو
+قیمت: 30.0 هزار تومان
+
+سفارش: اسپرسو + شیر + وانیل
+قیمت: 42.0 هزار تومان
+
+سفارش: اسپرسو + شکر + شکر
+قیمت: 34.0 هزار تومان
+```
+
+### 20.6.5. ✅️ Examples3
+
+```python
+class Component():
+    """
+    The base Component interface defines operations that can be altered by
+    decorators.
+    """
+
+    def operation(self) -> str:
+        pass
+
+
+class ConcreteComponent(Component):
+    """
+    Concrete Components provide default implementations of the operations. There
+    might be several variations of these classes.
+    """
+
+    def operation(self) -> str:
+        return "ConcreteComponent"
+
+
+class Decorator(Component):
+    """
+    The base Decorator class follows the same interface as the other components.
+    The primary purpose of this class is to define the wrapping interface for
+    all concrete decorators. The default implementation of the wrapping code
+    might include a field for storing a wrapped component and the means to
+    initialize it.
+    """
+
+    _component: Component = None
+
+    def __init__(self, component: Component) -> None:
+        self._component = component
+
+    @property
+    def component(self) -> Component:
+        """
+        The Decorator delegates all work to the wrapped component.
+        """
+
+        return self._component
+
+    def operation(self) -> str:
+        return self._component.operation()
+
+
+class ConcreteDecoratorA(Decorator):
+    """
+    Concrete Decorators call the wrapped object and alter its result in some
+    way.
+    """
+
+    def operation(self) -> str:
+        """
+        Decorators may call parent implementation of the operation, instead of
+        calling the wrapped object directly. This approach simplifies extension
+        of decorator classes.
+        """
+        return f"ConcreteDecoratorA({self.component.operation()})"
+
+
+class ConcreteDecoratorB(Decorator):
+    """
+    Decorators can execute their behavior either before or after the call to a
+    wrapped object.
+    """
+
+    def operation(self) -> str:
+        return f"ConcreteDecoratorB({self.component.operation()})"
+
+
+def client_code(component: Component) -> None:
+    """
+    The client code works with all objects using the Component interface. This
+    way it can stay independent of the concrete classes of components it works
+    with.
+    """
+
+    # ...
+
+    print(f"RESULT: {component.operation()}", end="")
+
+    # ...
+
+
+if __name__ == "__main__":
+    # This way the client code can support both simple components...
+    simple = ConcreteComponent()
+    print("Client: I've got a simple component:")
+    client_code(simple)
+    print("\n")
+
+    # ...as well as decorated ones.
+    #
+    # Note how decorators can wrap not only simple components but the other
+    # decorators as well.
+    decorator1 = ConcreteDecoratorA(simple)
+    decorator2 = ConcreteDecoratorB(decorator1)
+    print("Client: Now I've got a decorated component:")
+    client_code(decorator2)
+
+# Output:
+# Client: I've got a simple component:
+# RESULT: ConcreteComponent
+# 
+# Client: Now I've got a decorated component:
+# RESULT: ConcreteDecoratorB(ConcreteDecoratorA(ConcreteComponent))    
+
+```
 
 # 21. 🅰️ Structural.Flyweight()
 
