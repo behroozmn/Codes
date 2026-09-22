@@ -9276,15 +9276,567 @@ if __name__ == "__main__":
 
 ```
 
-# 21. 🅰️ Structural.Flyweight()
+# 21. 🅰️ Structural.Flyweight(هدف مدیریت منابع)
 
-## 21.1. 🅱️ Examples1:
+* برای مدیریت منابع حافظه هنگامی که هزاران آبجکت و ملاحظات ریسورس وجود دارد که برخی اطلاعات بین این آبجکت ها و منابع مشترک هستند
+* الگوی Flyweight یک الگوی ساختاری (Structural) است که با اشتراک‌گذاری (Sharing) اشیاء تا حد امکان، مصرف حافظه را به شدت کاهش می‌دهد. این الگو برای شرایطی طراحی شده که سیستم نیاز دارد تعداد بسیار زیادی (گاهی میلیون‌ها) شیء ریزدانه (Fine-grained) ایجاد کند که ایجاد تک‌تک آن‌ها باعث پر شدن حافظه (OutOfMemory) می‌شود.
+* ایده اصلی این است که به‌جای ساخت یک شیء جدید برای هر درخواست، حالت (State) شیء را به دو بخش تقسیم می‌کنیم:
+    * حالت ذاتی/درونی (Intrinsic State): داده‌های مشترک و تغییرناپذیر (Immutable) که در خود شیء Flyweight ذخیره و بین اشیاء مشابه اشتراک‌گذاری می‌شوند.
+    * حالت بیرونی/زمینه‌ای (Extrinsic State): داده‌های منحصر‌به‌فرد و تغییرپذیر که از شیء Flyweight خارج شده و در زمان اجرا توسط کلاینت (Context) به آن تزریق می‌شوند.
+* هدف اصلی این الگو، کاهش مصرف حافظه در سیستم‌هایی است که نیاز دارند تعداد بسیار زیادی شیء مشابه ایجاد کنند.
+* اجزای اصلی
+    * flyweight: قسمتی از آبحکت که مشترک هستند بین تمام آبحکت‌ها
+    * context(Client): اجزای غیر مشترک
+        * حالت بیرونی را محاسبه/نگه‌داری می‌کند و هنگام فراخوانی متد Flyweight، آن را به عنوان آرگومان پاس می‌دهد.
+    * flyweightFactory: مدیریت ایجاد آبجکت‌ها
+        * مدیریت استخر (Pool) اشیاء. بررسی می‌کند آیا شیء مورد نیاز قبلاً ساخته شده یا خیر؛ اگر بله، همان را برمی‌گرداند و اگر نه، می‌سازد.
+* ملاحظات و اصول طراحی (Design Considerations)
+    1. تفکیک دقیق حالت‌ها (State Separation): مهم‌ترین ملاحظه، تشخیص مرز بین حالت ذاتی و بیرونی است. حالت ذاتی هرگز نباید تغییر کند، زیرا اگر تغییر کند، تمام اشیایی که آن را به اشتراک گذاشته‌اند خراب می‌شوند.
+    2. تغییرناپذیری (Immutability): اشیاء Flyweight (حالت ذاتی) باید Immutable باشند. این موضوع نه تنها از خراب شدن داده‌های مشترک جلوگیری می‌کند، بلکه در محیط‌های چند‌نخی (Multi-threaded) نیز ایمنی (Thread-Safety) را تضمین می‌کند.
+    3. معامله حافظه در برابر پردازنده (Memory vs CPU Trade-off): این الگو مصرف RAM را به شدت کاهش می‌دهد، اما مصرف CPU را کمی افزایش می‌دهد (به دلیل هزینه جستجو در Factory برای یافتن شیء مشترک یا محاسبه مجدد حالت بیرونی). این الگو فقط زمانی توجیه دارد که گلوگاه (Bottleneck) سیستم، حافظه باشد نه پردازنده.
+    4. اصل باز/بسته (Open/Closed Principle - OCP): می‌توانید Flyweightهای جدیدی اضافه کنید بدون اینکه کد کلاینت یا Factory را تغییر دهید (اگر Factory به‌درستی بر اساس رابط کار کند).
+    5. اصل تفکیک رابط (Interface Segregation Principle - ISP):رابط Flyweight باید فقط متدهایی را تعریف کند که برای رفتار مشترک نیاز است. متدهای مربوط به حالت بیرونی نباید در این رابط باشند.
+    6. مدیریت چرخه حیات (Lifecycle Management): Factory مسئول ساخت، نگهداری (Cache/Pool) و در نهایت نابودی اشیاء Flyweight است. کلاینت هرگز نباید مستقیماً Flyweight را با new یا __init__ بسازد.
 
-## 21.2. 🅱️ Examples2:
+![DesignPattern.Structural.flyweight.png](_srcFiles/Images/DesignPattern.Structural.flyweight.png "DesignPattern.Structural.flyweight.png")
 
-## 21.3. 🅱️ Examples3:
+## 21.1. 🅱️ توضیحات تکمیلی
 
-## 21.4. 🅱️ Examples4:
+* نکته فنی: مکانیزم String Interning در پایتون و جاوا، یک پیاده‌سازی داخلی و سطح زبان از الگوی Flyweight است
+* موارد مهم از کاربردهای این الگوی طراحی
+    * موتورهای بازی‌سازی (Game Engines):رندر کردن انبوه اشیاء مشابه مثل ذرات (Particles)، گلوله‌ها، درختان و چمن‌ها در Unity یا Unreal Engine. تکسچر و مدل مشترک است، فقط ترنسفورم (مکان/چرخش) متفاوت است.
+    * ویرایشگرهای متن و IDEها: نرم‌افزارهایی مثل VS Code یا MS Word برای رندر میلیون‌ها کاراکتر، آیکون‌های تکراری در منوها، و استایل‌های CSS مشترک در DOM مرورگرها.
+    * مرورگرهای وب (Web Browsers):موتورهای رندر (مثل Blink در کروم) برای مدیریت گره‌های DOM و استایل‌های CSS. استایل‌های مشترک بین هزاران المنت HTML به اشتراک گذاشته می‌شوند.
+    * سیستم‌های اطلاعات جغرافیایی (GIS): نرم‌افزارهای نقشه‌کشی (مثل ArcGIS) برای رندر میلیون‌ها پیکسل، نقاطinterest (POI) یا کاشی‌های نقشه (Map Tiles) که داده‌های پایه آن‌ها یکسان است.
+    * پردازش داده‌های کلان (Big Data / Finance): در سیستم‌های معاملاتی (Trading) یا تحلیل داده، برای مدیریت میلیون‌ها رکورد که فیلدهای دسته‌بندی شده (Categorical Fields) تکراری دارند (مثلاً نماد سهام، نوع ارز). به جای ذخیره رشته تکراری، به یک آبجکت مشترک اشاره می‌شود (مشابه String Interning).
+* چه زمانی استفاده نکنیم؟
+    * زمانی که تعداد اشیاء کم است (سربار Factory بی‌دلیل است).
+    * زمانی که حافظه مشکل سیستم نیست.
+    * زمانی که نمی‌توانید بخش‌های مشترک (Intrinsic) و غیرمشترک (Extrinsic) را به‌درستی از هم تفکیک کنید.
+    * زمانی که اشیاء مدام در حال تغییر حالت ذاتی خود هستند (نقض Immutability).
+
+## 21.2. 🅱️ Examples1: ایجاد درخت و استفاده از ویژگی‌های مشترک برای همه درختان
+
+در این مثال، ما می‌خواهیم یک جنگل با هزاران درخت بسازیم. اگر برای هر درخت یک شیء کامل (شامل تکسچر، مدل سه‌بعدی و صدا) بسازیم، حافظه RAM به سرعت پر می‌شود.
+
+* برای حل این مشکل، کد داده‌های هر درخت را به دو بخش تقسیم می‌کند:
+    * حالت ذاتی / مشترک (Intrinsic State): ویژگی‌هایی که بین درختان هم‌نوع یکسان است (مثل name, texture, model, wind_sound). این بخش در کلاس TreeType قرار دارد و توسط TreeTypeFactory کش (Cache) می‌شود تا فقط یک بار در حافظه ساخته شود و بین تمام درختان هم‌نوع به اشتراک گذاشته شود.
+    * حالت بیرونی / منحصر‌به‌فرد (Extrinsic State): ویژگی‌هایی که برای هر درخت متفاوت است (مثل مختصات x, y و میزان health). این بخش در کلاس Tree قرار دارد.
+
+در نهایت، در بخش `__main__`، کد ۳۰۰۰ درخت می‌کارد و با یک محاسبه ریاضی ساده نشان می‌دهد که استفاده از این الگو چقدر در مصرف حافظه صرفه‌جویی کرده است (چون به جای ساخت ۳۰۰۰ مدل و تکسچر، فقط ۶ مدل و تکسچر در حافظه نگه داشته شده است).
+
+```python
+from typing import Dict, Tuple, List
+import random
+from dataclasses import dataclass
+
+
+@dataclass
+class TreeType:
+    """
+    کلاس Flyweight که حالت ذاتی (مشترک) درخت را نگهداری می‌کند.
+    ویژگی‌هایی مثل تکسچر و مدل که برای تمام درختان یک نوع، یکسان هستند.
+    """
+    name: str
+    texture: str
+    model: str
+    wind_sound: str
+
+    def display(self, x: int, y: int, health: int) -> None:
+        """
+        نمایش درخت با ترکیب حالت ذاتی (مشترک) و حالت بیرونی (مختصات و سلامتی).
+        
+        :param x: مختصات افقی درخت (حالت بیرونی)
+        :param y: مختصات عمودی درخت (حالت بیرونی)
+        :param health: میزان سلامتی درخت (حالت بیرونی)
+        """
+        print(f'Rendering {self.name} tree at ({x}, {y}) with {health}% health')
+        print(f' - Texture: {self.texture}')
+        print(f' - Model: {self.model}')
+
+        # پخش صدای باد فقط در صورتی که سلامت درخت بالا باشد (منطق خاص رندر)
+        if health > 70:
+            print(f' - Sound: {self.wind_sound}')
+
+
+class TreeTypeFactory:
+    """
+    کارخانه Flyweight: مسئول ساخت، مدیریت و کش کردن اشیاء TreeType.
+    این کلاس تضمین می‌کند که برای هر ترکیب از ویژگی‌های ذاتی، فقط یک شیء ساخته شود.
+    """
+    # دیکشنری برای نگهداری (کش کردن) اشیاء ساخته شده
+    _tree_types: Dict[str, TreeType] = {}
+
+    @classmethod
+    def get_tree_type(cls, name: str, texture: str, model: str, wind_sound: str) -> TreeType:
+        """
+        دریافت نوع درخت. اگر از قبل در کش وجود داشته باشد، همان را برمی‌گرداند
+        در غیر این صورت، یک نمونه جدید ساخته و در کش ذخیره می‌کند.
+        
+        :return: شیء TreeType مشترک
+        """
+        # ساخت کلید یکتا بر اساس ویژگی‌های ذاتی (بدون در نظر گرفتن wind_sound برای کلید)
+        key = f'{name}_{texture}_{model}'
+
+        if key not in cls._tree_types:
+            # اگر در کش نبود، نمونه جدید بساز و ذخیره کن
+            cls._tree_types[key] = TreeType(name, texture, model, wind_sound)
+            print(f'Created new tree type {key}')
+        else:
+            # اگر در کش بود، فقط پیام بازیافت نمایش داده شود
+            print(f'Reusing existing tree type {key}')
+
+        return cls._tree_types[key]
+
+    @classmethod
+    def total_types_created(cls) -> int:
+        """
+        تعداد کل انواع درخت‌های ساخته شده (اشیاء یکتا در کش) را برمی‌گرداند.
+        
+        :return: تعداد اشیاء یکتای TreeType
+        """
+        return len(cls._tree_types)
+
+
+@dataclass
+class Tree:
+    """
+    کلاس Context که حالت بیرونی (منحصر‌به‌فرد) هر درخت را نگهداری می‌کند.
+    """
+    x: int
+    y: int
+    health: int
+    tree_type: TreeType  # ارجاع به شیء مشترک Flyweight (به جای کپی کردن داده‌ها)
+
+    def display(self) -> None:
+        """نمایش درخت با پاس دادن مختصات و سلامتی به شیء مشترک."""
+        self.tree_type.display(self.x, self.y, self.health)
+
+
+class Forest:
+    """
+    کلاس کلاینت که جنگل را مدیریت می‌کند و درختان را می‌کارد.
+    """
+
+    def __init__(self) -> None:
+        # لیستی از تمام درختان کاشته شده (شامل حالت بیرونی و ارجاع به Flyweight)
+        self.trees: List[Tree] = []
+
+    def plant_tree(self, x: int, y: int, health: int, name: str, texture: str, model: str, wind_sound: str) -> None:
+        """
+        کاشت یک درخت جدید با استفاده از کارخانه برای دریافت نوع مشترک.
+        
+        :param x: مختصات افقی
+        :param y: مختصات عمودی
+        :param health: میزان سلامتی
+        :param name: نام درخت
+        :param texture: نام فایل تکسچر
+        :param model: نام فایل مدل
+        :param wind_sound: نام فایل صدا
+        """
+        # دریافت شیء مشترک از کارخانه
+        tree_type = TreeTypeFactory.get_tree_type(name, texture, model, wind_sound)
+        # ساخت شیء درخت با حالت بیرونی و ارجاع به شیء مشترک
+        self.trees.append(Tree(x, y, health, tree_type))
+
+    def plant_random_trees(self, count: int) -> None:
+        """
+        کاشت تعداد مشخصی درخت با مشخصات تصادفی.
+        
+        :param count: تعداد درختانی که باید کاشته شوند
+        """
+        # لیست مشخصات از پیش تعریف شده برای درختان
+        tree_specs = [
+            ('Tree 1', 'tree_1_texture.jpg', 'tree_1_model.obj', 'tree_1_wind.mp3'),
+            ('Tree 2', 'tree_2_texture.jpg', 'tree_2_model.obj', 'tree_2_wind.mp3'),
+            ('Tree 3', 'tree_3_texture.jpg', 'tree_3_model.obj', 'tree_3_wind.mp3'),
+            ('Tree 4', 'tree_4_texture.jpg', 'tree_4_model.obj', 'tree_4_wind.mp3'),
+            ('Tree 5', 'tree_5_texture.jpg', 'tree_5_model.obj', 'tree_5_wind.mp3'),
+            ('Tree 6', 'tree_6_texture.jpg', 'tree_6_model.obj', 'tree_6_wind.mp3'),
+        ]
+
+        for _ in range(count):
+            # تولید مختصات و سلامتی تصادفی (حالت بیرونی)
+            x, y = random.randint(0, 1000), random.randint(0, 1000)
+            health = random.randint(10, 100)
+            # انتخاب تصادفی یکی از مشخصات از پیش تعریف شده (حالت ذاتی)
+            spec = random.choice(tree_specs)
+            self.plant_tree(x, y, health, *spec)
+
+    def display_forest(self) -> None:
+        """نمایش ۵ درخت اول جنگل برای تست خروجی."""
+        for tree in self.trees[:5]:
+            tree.display()
+
+        print('... and many more trees ...')
+
+
+if __name__ == '__main__':
+    print('Creating a forest with flyweight pattern')
+    forest = Forest()
+
+    # کاشت ۳۰۰۰ درخت تصادفی
+    forest.plant_random_trees(3000)
+
+    print(f'\nTotal trees planted: {len(forest.trees)}')
+    print(f'Unique tree types created: {TreeTypeFactory.total_types_created()}')
+
+    # محاسبه تخمینی مصرف حافظه بدون استفاده از الگوی Flyweight
+    # (فرض: هر درخت ۴ ویژگی ۵۰ بایتی + ۳ ویژگی مختصات/سلامتی ۴ بایتی دارد)
+    without_flyweight = len(forest.trees) * 4 * 50 + len(forest.trees) * 3 * 4
+
+    # محاسبه تخمینی مصرف حافظه با استفاده از الگوی Flyweight
+    # (فقط اشیاء یکتا ۲۰۰ بایت فضا می‌گیرند + ۳۰۰۰ درخت هر کدام ۱۲ بایت برای مختصات)
+    with_flyweight = TreeTypeFactory.total_types_created() * 200 + len(forest.trees) * 3 * 4
+
+    print(f'\n Estimated memory without flyweight: ~{without_flyweight} bytes')
+    print(f'Estimated memory with flyweight: ~{with_flyweight} bytes')
+
+    # محاسبه و نمایش درصد صرفه‌جویی در حافظه
+    print(f'Memory saved: {(without_flyweight - with_flyweight) / without_flyweight * 100:.2f}%')
+```
+
+## 21.3. 🅱️ Examples1: پیاده سازی جنگل به روش دیگر
+
+در یک بازی، ممکن است ۱۰۰,۰۰۰ درخت در یک جنگل وجود داشته باشد. مدل سه‌بعدی و تکسچر درختان بلوط مشترک است، اما مکان آن‌ها در نقشه متفاوت است.
+
+```python
+from typing import Dict, List, Tuple
+
+
+# ─── رابط فلای‌ویت ───
+class Tree:
+    """رابط درخت."""
+
+    def draw(self, x: int, y: int, z: int) -> None:
+        pass
+
+
+# ─── فلای‌ویت مشخص (حالت ذاتی) ───
+class TreeType(Tree):
+    """
+    نوع درخت (مثلاً بلوط، کاج). 
+    تکسچر و مدل سه‌بعدی در اینجا قرار می‌گیرند (حالت ذاتی و سنگین).
+    """
+
+    def __init__(self, name: str, texture_data: str) -> None:
+        self._name: str = name
+        # شبیه‌سازی داده‌های سنگین گرافیکی (تکسچر و مش سه‌بعدی)
+        self._texture_data: str = texture_data
+
+    def draw(self, x: int, y: int, z: int) -> None:
+        print(f"کشیدن درخت [{self._name}] با تکسچر [{self._texture_data[:10]}...] در موقعیت ({x}, {y}, {z})")
+
+
+# ─── کارخانه فلای‌ویت ───
+class TreeFactory:
+    """مدیریت انواع درختان."""
+
+    _tree_types: Dict[str, TreeType] = {}
+
+    @classmethod
+    def get_tree_type(cls, name: str, texture: str) -> TreeType:
+        if name not in cls._tree_types:
+            cls._tree_types[name] = TreeType(name, texture)
+        return cls._tree_types[name]
+
+
+# ─── کلاینت / زمینه (Context) ───
+class Forest:
+    """
+    جنگل. فقط مختصات درختان را نگه می‌دارد.
+    """
+
+    def __init__(self) -> None:
+        # ذخیره مختصات (حالت بیرونی) برای هر درخت
+        self._trees: List[Tuple[Tree, int, int, int]] = []
+
+    def plant_tree(self, name: str, texture: str, x: int, y: int, z: int) -> None:
+        tree_type = TreeFactory.get_tree_type(name, texture)
+        self._trees.append((tree_type, x, y, z))
+
+    def draw_forest(self) -> None:
+        print("\n--- رندر جنگل ---")
+        for tree_obj, x, y, z in self._trees:
+            tree_obj.draw(x, y, z)
+
+
+# ─── استفاده ───
+if __name__ == "__main__":
+    forest = Forest()
+
+    # کاشت ۵ درخت. فقط ۲ نوع درخت (Oak و Pine) در حافظه ساخته می‌شود.
+    forest.plant_tree("Oak", "oak_texture_high_res_data...", 10, 20, 0)
+    forest.plant_tree("Pine", "pine_texture_high_res_data...", 15, 25, 0)
+    forest.plant_tree("Oak", "oak_texture_high_res_data...", 30, 40, 0)
+    forest.plant_tree("Oak", "oak_texture_high_res_data...", 50, 60, 0)
+    forest.plant_tree("Pine", "pine_texture_high_res_data...", 70, 80, 0)
+
+    forest.draw_forest()
+```
+
+## 21.4. 🅱️ Examples2: شبیه‌سازی عملکرد داخلی یک ویرایشگر متن یا همان Text Editor
+
+وقتی شما در یک ویرایشگر متن (مثل Word) تایپ می‌کنید، هر کاراکتر دارای ویژگی‌های ظاهری (فونت، سایز، رنگ، بولد بودن و...) و همچنین موقعیت مکانی در صفحه است. اگر قرار باشد برای تک‌تک حروف یک فایل متنی بزرگ، تمام این ویژگی‌های ظاهری را در حافظه ذخیره کنیم، حجم عظیمی از RAM اشغال می‌شود.
+
+* راه‌حل این کد (الگوی Flyweight) به این صورت است که کد داده‌های هر کاراکتر را به دو بخش تقسیم می‌کند:
+    * حالت ذاتی / مشترک (Intrinsic State): ویژگی‌های ظاهری مثل نام فونت، سایز، رنگ و... که بین حروف مشابه کاملاً یکسان است. این بخش در کلاس CharacterStyle قرار دارد و توسط StyleFactory کش (Cache) می‌شود. یعنی اگر ۱۰۰۰ حرف با فونت "Arial 12" داشته باشیم، فقط یک شیء CharacterStyle در حافظه ساخته می‌شود و هر ۱۰۰۰ حرف به همان یک شیء اشاره می‌کنند.
+    * حالت بیرونی / منحصر‌به‌فرد (Extrinsic State): خودِ حرف (مثل 'H' یا 'e') و موقعیت آن (position) که برای هر کاراکتر متفاوت است. این بخش در کلاس FormattedCharacter نگهداری می‌شود که بسیار سبک است.
+
+در نهایت، کلاس Document به عنوان کلاینت عمل کرده، کاراکترها را مدیریت می‌کند و آن‌ها را بر اساس موقعیت مرتب و رندر می‌کند. در انتهای کد، با چاپ total_types_created مشخص می‌شود که با وجود ۱۱ کاراکتر، فقط ۲ استایل یکتا در حافظه ساخته شده است!
+
+```python
+from typing import Dict, List
+from dataclasses import dataclass
+
+
+@dataclass
+class CharacterStyle:
+    """
+    کلاس Flyweight (وزن‌سبک) که حالت ذاتی و مشترک کاراکترها را نگهداری می‌کند.
+    ویژگی‌هایی مثل فونت، سایز و رنگ که بین کاراکترهای هم‌استایل، یکسان هستند
+    و فقط یک بار در حافظه ساخته می‌شوند.
+    """
+    font_name: str
+    font_size: int
+    is_bold: bool
+    is_italic: bool
+    color: str
+
+    def apply_style(self, char: str) -> str:
+        """
+        استایل‌های ذاتی را روی یک کاراکتر خاص اعمال کرده و خروجی متنی برمی‌گرداند.
+        
+        :param char: کاراکتر مورد نظر برای استایل‌دهی
+        :return: رشته متنی شامل کاراکتر و استایل‌های آن
+        """
+        weight = 'bold' if self.is_bold else 'normal'
+        style = 'italic' if self.is_italic else 'normal'
+
+        return f'[{char}: {self.font_name} {self.font_size}px, {weight} {style}, {self.color}]'
+
+
+class StyleFactory:
+    """
+    کارخانه Flyweight: مسئول ساخت، مدیریت و کش کردن اشیاء CharacterStyle.
+    این کلاس تضمین می‌کند که برای هر ترکیب از ویژگی‌های ظاهری، فقط یک شیء ساخته شود
+    و در درخواست‌های بعدی، همان شیء قبلی از حافظه بازگردانده شود.
+    """
+    # دیکشنری برای نگهداری (کش کردن) استایل‌های ساخته شده
+    _styles: Dict[str, CharacterStyle] = {}
+
+    @classmethod
+    def get_style(cls, font_name: str, font_size: int, is_bold: bool, is_italic: bool, color: str) -> CharacterStyle:
+        """
+        دریافت استایل کاراکتر. اگر از قبل در کش وجود داشته باشد، همان را برمی‌گرداند
+        در غیر این صورت، یک نمونه جدید ساخته و در کش ذخیره می‌کند.
+        
+        :return: شیء CharacterStyle مشترک
+        """
+        # ساخت کلید یکتا بر اساس تمام ویژگی‌های ذاتی
+        key = f'{font_name}-{font_size}-{is_bold}-{is_italic}-{color}'
+
+        if key not in cls._styles:
+            # اگر در کش نبود، نمونه جدید بساز و ذخیره کن
+            cls._styles[key] = CharacterStyle(font_name, font_size, is_bold, is_italic, color)
+
+        # چه جدید ساخته شده باشد چه از قبل بوده، شیء کش شده را برمی‌گردان
+        return cls._styles[key]
+
+    @classmethod
+    def total_types_created(cls) -> int:
+        """
+        تعداد کل استایل‌های یکتای ساخته شده در حافظه را برمی‌گرداند.
+        
+        :return: تعداد اشیاء یکتای CharacterStyle
+        """
+        return len(cls._styles)
+
+
+@dataclass
+class FormattedCharacter:
+    """
+    کلاس Context که حالت بیرونی (منحصر‌به‌فرد) هر کاراکتر را نگهداری می‌کند.
+    این کلاس بسیار سبک است و فقط خود حرف، موقعیت آن و یک ارجاع (Reference) 
+    به شیء سنگین CharacterStyle را در خود دارد.
+    """
+    char: str
+    style: CharacterStyle  # ارجاع به شیء مشترک Flyweight (به جای کپی کردن داده‌های استایل)
+    position: int
+
+    def render(self) -> str:
+        """
+        رندر کاراکتر با استفاده از استایل مشترک.
+        
+        :return: رشته متنی رندر شده
+        """
+        return self.style.apply_style(self.char)
+
+
+class Document:
+    """
+    کلاس کلاینت که سند متنی را مدیریت می‌کند، کاراکترها را اضافه کرده و آن‌ها را رندر می‌کند.
+    """
+
+    def __init__(self) -> None:
+        # لیستی از تمام کاراکترهای سند (شامل حالت بیرونی و ارجاع به Flyweight)
+        self.characters: List[FormattedCharacter] = []
+
+    def add_character(self, char: str, font_name: str, font_size: int, is_bold: bool, is_italic: bool, color: str, position: int) -> None:
+        """
+        اضافه کردن یک کاراکتر جدید به سند با استفاده از کارخانه برای دریافت استایل مشترک.
+        """
+        # دریافت شیء استایل مشترک از کارخانه (اگر قبلاً ساخته شده باشد، از کش می‌آید)
+        style = StyleFactory.get_style(font_name, font_size, is_bold, is_italic, color)
+
+        # ساخت شیء سبک کاراکتر و افزودن به لیست
+        self.characters.append(FormattedCharacter(char, style, position))
+
+    def render(self) -> str:
+        """
+        رندر کل سند. کاراکترها ابتدا بر اساس موقعیت (position) مرتب می‌شوند و سپس نمایش داده می‌شوند.
+        
+        :return: رشته متنی شامل کل سند رندر شده
+        """
+        # مرتب‌سازی کاراکترها بر اساس موقعیت آن‌ها در متن
+        sorted_characters: List[FormattedCharacter] = sorted(self.characters, key=lambda char: char.position)
+
+        # رندر کردن هر کاراکتر و joining آن‌ها با خط جدید
+        return '\n'.join(char.render() for char in sorted_characters)
+
+
+if __name__ == '__main__':
+    # ساخت یک سند جدید
+    document = Document()
+
+    # اضافه کردن کلمه "Hello " با استایل یکسان (Arial, 12, Bold, Black)
+    # نکته: چون استایل یکسان است، کارخانه فقط بار اول شیء را می‌سازد و 5 بار بعدی از کش استفاده می‌کند.
+    document.add_character('H', 'Arial', 12, True, False, 'black', 0)
+    document.add_character('e', 'Arial', 12, True, False, 'black', 1)
+    document.add_character('l', 'Arial', 12, True, False, 'black', 2)
+    document.add_character('l', 'Arial', 12, True, False, 'black', 3)
+    document.add_character('o', 'Arial', 12, True, False, 'black', 4)
+    document.add_character(' ', 'Arial', 12, True, False, 'black', 5)
+
+    # اضافه کردن کلمه "World" با تغییر استایل برای حرف اول (W)
+    # حرف 'W' استایل جدیدی دارد (سایز 16 و رنگ white)، پس کارخانه یک شیء جدید در کش می‌سازد.
+    document.add_character('W', 'Arial', 16, True, False, 'white', 6)
+
+    # حروف بعدی دوباره به استایل قبلی (سایز 16 اما رنگ black) برمی‌گردند.
+    # چون ترکیب ویژگی‌ها با 'W' متفاوت است (رنگ black است)، کارخانه یک شیء جدید سوم می‌سازد.
+    # (در واقع در اینجا 2 استایل جدید ساخته می‌شود: یکی برای W و یکی برای orld)
+    document.add_character('o', 'Arial', 16, True, False, 'black', 7)
+    document.add_character('r', 'Arial', 16, True, False, 'black', 8)
+    document.add_character('l', 'Arial', 16, True, False, 'black', 9)
+    document.add_character('d', 'Arial', 16, True, False, 'black', 10)
+
+    # رندر و چاپ کل سند
+    print(document.render())
+
+    # چاپ تعداد استایل‌های یکتای ساخته شده در حافظه
+    # با وجود 11 کاراکتر، فقط 2 استایل یکتا در حافظه ساخته شده است (یکی برای Hello و یکی برای World)
+    print(f"Total unique styles created in memory: {StyleFactory.total_types_created()}")
+```
+
+## 21.5. 🅱️ Examples2: پیاده‌سازی ویرایشگر متن به روش دوم
+
+فرض کنید یک ویرایشگر متن دارید که یک فایل ۱۰ مگابایتی (شامل میلیون‌ها کاراکتر) را باز می‌کند. اگر برای هر حرف یک شیء بسازید، رم پر می‌شود.
+
+* حالت ذاتی (مشترک): نام کاراکتر، فونت، سایز.
+* حالت بیرونی (منحصر‌به‌فرد): مختصات X و Y روی صفحه نمایش.
+
+```python
+from typing import Dict, Tuple, Any
+
+
+# ─── رابط فلای‌ویت ───
+class Character:
+    """رابط مشترک برای کاراکترها."""
+
+    def render(self, x: int, y: int) -> None:
+        """
+        متد رندر که مختصات (حالت بیرونی) را از کلاینت دریافت می‌کند.
+        """
+        pass
+
+
+# ─── فلای‌ویت مشخص (حالت ذاتی) ───
+class CharacterType(Character):
+    """
+    این کلاس حالت ذاتی (فونت و نام کاراکتر) را نگه می‌دارد.
+    چون بین میلیون‌ها حرف 'A' مشترک است، باید تغییرناپذیر (Immutable) باشد.
+    """
+
+    def __init__(self, symbol: str, font_family: str, font_size: int) -> None:
+        # حالت ذاتی (درونی و مشترک)
+        self._symbol: str = symbol
+        self._font_family: str = font_family
+        self._font_size: int = font_size
+
+    def render(self, x: int, y: int) -> None:
+        # ترکیب حالت ذاتی و بیرونی برای نمایش
+        print(f"رندر حرف '{self._symbol}' | فونت: {self._font_family} | "
+              f"سایز: {self._font_size} | در مختصات ({x}, {y})")
+
+
+# ─── کارخانه فلای‌ویت ───
+class CharacterFactory:
+    """
+    مدیریت استخر اشیاء. جلوگیری از ساخت اشیاء تکراری.
+    """
+
+    def __init__(self) -> None:
+        # دیکشنری برای کش کردن کاراکترهای ساخته شده
+        self._types_cache: Dict[str, CharacterType] = {}
+
+    def get_character_type(self, symbol: str, font: str, size: int) -> CharacterType:
+        # ساخت کلید یکتا بر اساس حالت ذاتی
+        key = f"{symbol}_{font}_{size}"
+        
+        if key not in self._types_cache:
+            # اگر از قبل ساخته نشده، بساز و در کش ذخیره کن
+            self._types_cache[key] = CharacterType(symbol, font, size)
+            print(f"[Factory] ساخت کاراکتر جدید برای '{symbol}' و ذخیره در کش.")
+            
+        return self._types_cache[key]
+
+
+# ─── کلاینت / زمینه (Context) ───
+class Document:
+    """
+    سند متنی. مختصات (حالت بیرونی) را نگه می‌دارد و از Factory استفاده می‌کند.
+    """
+
+    def __init__(self) -> None:
+        # لیستی از tuples: (شیء فلای‌ویت, مختصات x, مختصات y)
+        self._characters: list[Tuple[Character, int, int]] = []
+        self._factory = CharacterFactory()
+
+    def add_character(self, symbol: str, font: str, size: int, x: int, y: int) -> None:
+        # دریافت شیء مشترک از Factory
+        char_type = self._factory.get_character_type(symbol, font, size)
+        # ذخیره شیء مشترک به همراه مختصات منحصر‌به‌فرد (حالت بیرونی)
+        self._characters.append((char_type, x, y))
+
+    def render_document(self) -> None:
+        print("\n--- شروع رندر سند ---")
+        for char_obj, x, y in self._characters:
+            # پاس دادن حالت بیرونی (x, y) به شیء مشترک
+            char_obj.render(x, y)
+
+
+# ─── استفاده ───
+if __name__ == "__main__":
+    doc = Document()
+    
+    # اضافه کردن حروف. حرف 'A' سه بار استفاده شده اما فقط یک بار در حافظه ساخته می‌شود.
+    doc.add_character('A', 'Arial', 12, 10, 20)
+    doc.add_character('B', 'Arial', 12, 30, 20)
+    doc.add_character('A', 'Arial', 12, 50, 20)  # از کش خوانده می‌شود
+    doc.add_character('A', 'Times', 14, 70, 20)  # فونت متفاوت، پس جدید ساخته می‌شود
+    
+    doc.render_document()
+```
 
 # 22. 🅰️ Structural.Proxy()
 
