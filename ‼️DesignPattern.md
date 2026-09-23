@@ -9840,7 +9840,7 @@ if __name__ == "__main__":
     doc.render_document()
 ```
 
-# 22. 🅰️ Structural.Proxy()
+# 22. 🅰️ Structural.Proxy(کنترل دسترسی به شیء اصلی و افزودن لایه‌های میانی برای عملیات‌ها)
 
 ![DesignPattern.Structural.Proxy.png](_srcFiles/Images/DesignPattern.Structural.Proxy.png "DesignPattern.Structural.Proxy.png")
 
@@ -10272,16 +10272,686 @@ if __name__ == '__main__':
 
 ```
 
+# 23. 🅰️ Structural.Bridge(جداسازی انتزاع از پیاده‌سازی جهت استقلال تغییر)
 
-# 23. 🅰️ Structural.Bridge()
+جداسازی انتزاع (Abstraction) از پیاده‌سازی (Implementation) تا هر دو بتوانند مستقل از هم تغییر کنند. این الگو به جای استفاده از وراثت چندلایه، از ترکیب (Composition) استفاده می‌کند.
 
-## 23.1. 🅱️ Examples1:
+![DesignPattern.Structural.Bridge.png](_srcFiles/Images/DesignPattern.Structural.Bridge.png "DesignPattern.Structural.Bridge.png")
 
-## 23.2. 🅱️ Examples2:
+* یک ابزار قدرتمند برای مدیریت پیچیدگی در سیستم‌هایی است که چندین بعد تغییر دارند. این الگو با جداسازی انتزاع از پیاده‌سازی، امکان ترکیب‌پذیری بالا را فراهم می‌کند و از انفجار کلاس‌ها جلوگیری می‌کند.
+* این الگو به‌ویژه در سیستم‌های Enterprise که نیاز به انعطاف‌پذیری و توسعه‌پذیری دارند، جایگاه ویژه‌ای دارد و با رعایت اصول SOLID، کدی تمیز، قابل نگهداری و قابل توسعه ایجاد می‌کند.
 
-## 23.3. 🅱️ Examples3:
+## 23.1. 🅱️ مشکل و حل مسئله انفجار کلاس‌ها
+
+تی سیستم شما چندین بعد تغییر دارد، استفاده از وراثت منجر به انفجار کلاس‌ها (Class Explosion) می‌شود. فرض کنید می‌خواهید شکل‌های مختلف را با رنگ‌های مختلف رندر کنید:
+
+![DesignPattern.Structural.Bridge-Problem.png](_srcFiles/Images/DesignPattern.Structural.Bridge-Problem.png "DesignPattern.Structural.Bridge-Problem.png")
+
+
+```
+by Inheritance (without Bridge):
+─────────────────────────────────
+Shape
+├── RedCircle
+├── BlueCircle
+├── GreenCircle
+├── RedSquare
+├── BlueSquare
+├── GreenSquare
+├── RedTriangle
+├── BlueTriangle
+└── GreenTriangle
+```
+
+اگر یک شکل یا یک رنگ اضافه شود، تحت هرکدام باید ۳ کلاس اضافه شود. درحالی که تحت رویکرد bridge تنها یک کلاس یا رنگ اضافه می‌شود
+
+```
+With Bridge:
+──────────────────
+Shape (ABstract)
+├── Circle
+├── Square
+└── Triangle
+
+Color (Implement)
+├── Red
+├── Blue
+└── Green
+```
+
+در حالت استفاده از رویکرد bridge بصورت خطی کلاس‌ها استفاده می‌شود: `Circle + Red` یا `Circle + Blue` یا موارد دیگر
+
+![DesignPattern.Structural.Bridge-Solution.png](_srcFiles/Images/DesignPattern.Structural.Bridge-Solution.png "DesignPattern.Structural.Bridge-Solution.png")
+
+## 23.2. 🅱️ توضیحات تکمیلی:
+
+* مقایسه با سایر الگوها
+    * Bridge vs Adapter:
+        * Bridge: قبل از طراحی، برای جداسازی ابعاد تغییر
+        * Adapter: بعد از طراحی، برای سازگاری رابط‌های ناسازگار
+    * Bridge vs Strategy:
+        * Bridge: دو سلسله‌مراتب موازی (انتزاع و پیاده‌سازی)
+        * Strategy: یک سلسله‌مراتب با الگوریتم‌های قابل تعویض
+    * Bridge vs Decorator:
+        * Bridge: جداسازی ابعاد تغییر
+        * Decorator: افزودن رفتار به شیء موجود
+* موارد پرکاربرد در صنعت
+    * JDBC در جاوا (Java Database Connectivity): جدا کردن API JDBC (انتزاع) از درایورهای دیتابیس (پیاده‌سازی). شما با java.sql.Connection کار می‌کنید، اما در پس‌زمینه درایور MySQL، PostgreSQL یا Oracle اجرا می‌شود. این اجازه می‌دهد بدون تغییر کد، دیتابیس را عوض کنید.
+    * درایورهای گرافیکی (Graphics Drivers): جدا کردن API گرافیکی (مثل OpenGL یا DirectX) از درایورهای سخت‌افزاری. بازی‌ها با API کار می‌کند، اما در پس‌زمینه درایور NVIDIA، AMD یا Intel اجرا می‌شود.
+    * فریمورک‌های UI (User Interface): جدا کردن ویجت‌ها (انتزاع) از پیاده‌سازی‌های پلتفرم (پیاده‌سازی). مثلاً در AWT/Swing جاوا، کامپوننت‌های UI (Button، TextField) انتزاع هستند و Peer classes پیاده‌سازی‌های خاص ویندوز/لینوکس/مک هستند.
+    * سیستم‌های لاگ (Logging Frameworks):جدا کردن API لاگ (انتزاع) از مقصدهای مختلف (پیاده‌سازی). شما با Logger.info() کار می‌کنید، اما لاگ می‌تواند به فایل، کنسول، دیتابیس یا سرویس ابری (مثل ELK Stack) ارسال شود.
+    * سیستم‌های پرداخت (Payment Gateways): جدا کردن منطق پرداخت (انتزاع) از درگاه‌های مختلف (پیاده‌سازی). شما با PaymentProcessor.charge() کار می‌کنید، اما در پس‌زمینه Stripe، PayPal یا درگاه محلی اجرا می‌شود.
+* مزایا:
+    * جداسازی ابعاد تغییر (Separation of Concerns)
+    * جلوگیری از انفجار کلاس‌ها
+    * رعایت اصل باز/بسته (OCP)
+    * رعایت اصل مسئولیت یگانه (SRP)
+    * انعطاف‌پذیری بالا در ترکیب انتزاع و پیاده‌سازی
+    * شفافیت برای کلاینت
+* معایب:
+    * پیچیدگی کد بیشتر (دو سلسله‌مراتب موازی)
+    * سربار عملکردی (ترکیب به جای وراثت)
+    * نیاز به طراحی دقیق قبل از پیاده‌سازی
+    * ممکن است برای سیستم‌های ساده، بیش‌ازحد پیچیده باشد
+* چه زمانی از Bridge استفاده کنیم؟
+    * دو یا چند بعد تغییر مستقل دارید
+    * می‌خواهید از انفجار کلاس‌ها جلوگیری کنید
+    * نیاز دارید انتزاع و پیاده‌سازی مستقل از هم تغییر کنند
+    * می‌خواهید کد را در زمان اجرا قابل پیکربندی کنید
+* چه زمانی از Bridge استفاده نکنیم؟
+    * فقط یک بعد تغییر دارید
+    * تغییرات پیاده‌سازی نادر است
+    * سیستم ساده است و پیچیدگی اضافی توجیه ندارد
+    * عملکرد حیاتی است و سربار ترکیب قابل قبول نیست
+
+## 23.3. 🅱️ Examples1: دستگاه‌های الکترونیکی با کنترل‌های مختلف
+
+فرض کنید دستگاه‌های مختلف (رادیو، تلویزیون) دارید که با کنترل‌های مختلف (قدیمی، پیشرفته) کار می‌کنند.
+
+```python
+from abc import ABC, abstractmethod
+
+
+# ─── لایه پیاده‌سازی (Implementor) ───
+class Device(ABC):
+    """
+    رابط پیاده‌سازی برای دستگاه‌های الکترونیکی.
+    این لایه جزئیات پیاده‌سازی خاص هر دستگاه را مدیریت می‌کند.
+    """
+
+    @abstractmethod
+    def turn_on(self) -> None:
+        """دستگاه را روشن می‌کند."""
+        pass
+
+    @abstractmethod
+    def turn_off(self) -> None:
+        """دستگاه را خاموش می‌کند."""
+        pass
+
+    @abstractmethod
+    def set_channel(self, channel: int) -> None:
+        """کانال را تنظیم می‌کند."""
+        pass
+
+    @abstractmethod
+    def get_channel(self) -> int:
+        """کانال فعلی را برمی‌گرداند."""
+        pass
+
+
+# ─── پیاده‌سازی مشخص: رادیو ───
+class Radio(Device):
+    """پیاده‌سازی خاص برای رادیو."""
+
+    def __init__(self) -> None:
+        self._is_on: bool = False
+        self._channel: int = 1
+
+    def turn_on(self) -> None:
+        self._is_on = True
+        print(f"رادیو روشن شد. کانال فعلی: {self._channel}")
+
+    def turn_off(self) -> None:
+        self._is_on = False
+        print("رادیو خاموش شد.")
+
+    def set_channel(self, channel: int) -> None:
+        if self._is_on:
+            self._channel = channel
+            print(f"کانال رادیو به {channel} تغییر کرد.")
+        else:
+            print("لطفاً ابتدا رادیو را روشن کنید.")
+
+    def get_channel(self) -> int:
+        return self._channel
+
+
+# ─── پیاده‌سازی مشخص: تلویزیون ───
+class TV(Device):
+    """پیاده‌سازی خاص برای تلویزیون."""
+
+    def __init__(self) -> None:
+        self._is_on: bool = False
+        self._channel: int = 1
+
+    def turn_on(self) -> None:
+        self._is_on = True
+        print(f"تلویزیون روشن شد. کانال فعلی: {self._channel}")
+
+    def turn_off(self) -> None:
+        self._is_on = False
+        print("تلویزیون خاموش شد.")
+
+    def set_channel(self, channel: int) -> None:
+        if self._is_on:
+            self._channel = channel
+            print(f"کانال تلویزیون به {channel} تغییر کرد.")
+        else:
+            print("لطفاً ابتدا تلویزیون را روشن کنید.")
+
+    def get_channel(self) -> int:
+        return self._channel
+
+
+# ─── لایه انتزاع (Abstraction) ───
+class RemoteControl(ABC):
+    """
+    رابط انتزاعی برای کنترل‌های از راه دور.
+    این لایه منطق کسب‌وکار (کنترل دستگاه) را مدیریت می‌کند.
+    """
+
+    def __init__(self, device: Device) -> None:
+        # ترکیب: کنترل به یک دستگاه وابسته است
+        self._device = device
+
+    @abstractmethod
+    def press_power(self) -> None:
+        """دکمه پاور را فشار می‌دهد."""
+        pass
+
+    @abstractmethod
+    def press_channel_up(self) -> None:
+        """کانال را افزایش می‌دهد."""
+        pass
+
+    @abstractmethod
+    def press_channel_down(self) -> None:
+        """کانال را کاهش می‌دهد."""
+        pass
+
+
+# ─── انتزاع مشخص: کنترل قدیمی ───
+class BasicRemoteControl(RemoteControl):
+    """کنترل از راه دور قدیمی با قابلیت‌های پایه."""
+
+    def press_power(self) -> None:
+        print("[کنترل قدیمی] دکمه پاور فشار داده شد.")
+        # بررسی وضعیت دستگاه و تغییر آن
+        if self._device.get_channel() > 0:
+            # فرض می‌کنیم اگر کانال > 0 است، دستگاه روشن است
+            self._device.turn_off()
+        else:
+            self._device.turn_on()
+
+    def press_channel_up(self) -> None:
+        print("[کنترل قدیمی] دکمه کانال بالا فشار داده شد.")
+        current = self._device.get_channel()
+        self._device.set_channel(current + 1)
+
+    def press_channel_down(self) -> None:
+        print("[کنترل قدیمی] دکمه کانال پایین فشار داده شد.")
+        current = self._device.get_channel()
+        if current > 1:
+            self._device.set_channel(current - 1)
+
+
+# ─── انتزاع مشخص: کنترل پیشرفته ───
+class AdvancedRemoteControl(RemoteControl):
+    """کنترل از راه دور پیشرفته با قابلیت‌های اضافی."""
+
+    def press_power(self) -> None:
+        print("[کنترل پیشرفته] دکمه پاور فشار داده شد.")
+        # منطق پیشرفته‌تر برای روشن/خاموش کردن
+        self._device.turn_on()
+
+    def press_channel_up(self) -> None:
+        print("[کنترل پیشرفته] دکمه کانال بالا فشار داده شد.")
+        current = self._device.get_channel()
+        self._device.set_channel(current + 1)
+
+    def press_channel_down(self) -> None:
+        print("[کنترل پیشرفته] دکمه کانال پایین فشار داده شد.")
+        current = self._device.get_channel()
+        if current > 1:
+            self._device.set_channel(current - 1)
+
+    def mute(self) -> None:
+        """قابلیت اضافی: بی‌صدا کردن."""
+        print("[کنترل پیشرفته] دکمه Mute فشار داده شد.")
+        print("دستگاه بی‌صدا شد.")
+
+
+# ─── استفاده ───
+if __name__ == "__main__":
+    print("=" * 70)
+    print("مثال Bridge: دستگاه‌های الکترونیکی با کنترل‌های مختلف")
+    print("=" * 70)
+
+    # ساخت دستگاه‌ها
+    radio = Radio()
+    tv = TV()
+
+    print("\n" + "-" * 70)
+    print("ترکیب ۱: رادیو + کنترل قدیمی")
+    print("-" * 70)
+    basic_radio_remote = BasicRemoteControl(radio)
+    basic_radio_remote.press_power()
+    basic_radio_remote.press_channel_up()
+    basic_radio_remote.press_channel_up()
+
+    print("\n" + "-" * 70)
+    print("ترکیب ۲: تلویزیون + کنترل پیشرفته")
+    print("-" * 70)
+    advanced_tv_remote = AdvancedRemoteControl(tv)
+    advanced_tv_remote.press_power()
+    advanced_tv_remote.press_channel_up()
+    advanced_tv_remote.mute()  # قابلیت اضافی
+
+    print("\n" + "-" * 70)
+    print("ترکیب ۳: تلویزیون + کنترل قدیمی")
+    print("-" * 70)
+    basic_tv_remote = BasicRemoteControl(tv)
+    basic_tv_remote.press_power()
+    basic_tv_remote.press_channel_down()
+
+    print("\n" + "=" * 70)
+    print("نتیجه: هر دستگاهی با هر کنترلی قابل ترکیب است!")
+    print("بدون Bridge: 2 دستگاه × 2 کنترل = 4 کلاس")
+    print("با Bridge: 2 دستگاه + 2 کنترل = 4 کلاس (اما قابل ترکیب!)")
+    print("=" * 70)
+```
+
+## 23.4. 🅱️ Examples2:فرمت‌های خروجی با رندررهای مختلف
+
+فرض کنید می‌خواهید مستندات را در فرمت‌های مختلف (PDF، HTML) رندر کنید، اما رندررهای مختلفی برای سیستم‌عامل‌های مختلف (ویندوز، لینوکس) دارید.
+
+```python
+from abc import ABC, abstractmethod
+
+
+# ─── لایه پیاده‌سازی (Implementor) ───
+class Renderer(ABC):
+    """
+    رابط پیاده‌سازی برای رندررها.
+    این لایه جزئیات رندر در پلتفرم‌های مختلف را مدیریت می‌کند.
+    """
+
+    @abstractmethod
+    def render_circle(self, x: float, y: float, radius: float) -> None:
+        """دایره را رندر می‌کند."""
+        pass
+
+    @abstractmethod
+    def render_rectangle(self, x: float, y: float, width: float, height: float) -> None:
+        """مستطیل را رندر می‌کند."""
+        pass
+
+
+# ─── پیاده‌سازی مشخص: رندرر ویندوز ───
+class WindowsRenderer(Renderer):
+    """رندرر مخصوص ویندوز."""
+
+    def render_circle(self, x: float, y: float, radius: float) -> None:
+        print(f"[ویندوز] رندر دایره در ({x}, {y}) با شعاع {radius}")
+
+    def render_rectangle(self, x: float, y: float, width: float, height: float) -> None:
+        print(f"[ویندوز] رندر مستطیل در ({x}, {y}) با ابعاد {width}×{height}")
+
+
+# ─── پیاده‌سازی مشخص: رندرر لینوکس ───
+class LinuxRenderer(Renderer):
+    """رندرر مخصوص لینوکس."""
+
+    def render_circle(self, x: float, y: float, radius: float) -> None:
+        print(f"[لینوکس] رندر دایره در ({x}, {y}) با شعاع {radius}")
+
+    def render_rectangle(self, x: float, y: float, width: float, height: float) -> None:
+        print(f"[لینوکس] رندر مستطیل در ({x}, {y}) با ابعاد {width}×{height}")
+
+
+# ─── لایه انتزاع (Abstraction) ───
+class Shape(ABC):
+    """
+    رابط انتزاعی برای اشکال هندسی.
+    این لایه منطق کسب‌وکار (تعریف اشکال) را مدیریت می‌کند.
+    """
+
+    def __init__(self, renderer: Renderer) -> None:
+        # ترکیب: شکل به یک رندرر وابسته است
+        self._renderer = renderer
+
+    @abstractmethod
+    def draw(self) -> None:
+        """شکل را رسم می‌کند."""
+        pass
+
+    @abstractmethod
+    def resize(self, factor: float) -> None:
+        """شکل را تغییر اندازه می‌دهد."""
+        pass
+
+
+# ─── انتزاع مشخص: دایره ───
+class Circle(Shape):
+    """شکل دایره."""
+
+    def __init__(self, renderer: Renderer, x: float, y: float, radius: float) -> None:
+        super().__init__(renderer)
+        self._x = x
+        self._y = y
+        self._radius = radius
+
+    def draw(self) -> None:
+        print(f"رسم دایره:")
+        self._renderer.render_circle(self._x, self._y, self._radius)
+
+    def resize(self, factor: float) -> None:
+        self._radius *= factor
+        print(f"اندازه دایره تغییر کرد. شعاع جدید: {self._radius}")
+
+
+# ─── انتزاع مشخص: مستطیل ───
+class Rectangle(Shape):
+    """شکل مستطیل."""
+
+    def __init__(self, renderer: Renderer, x: float, y: float, width: float, height: float) -> None:
+        super().__init__(renderer)
+        self._x = x
+        self._y = y
+        self._width = width
+        self._height = height
+
+    def draw(self) -> None:
+        print(f"رسم مستطیل:")
+        self._renderer.render_rectangle(self._x, self._y, self._width, self._height)
+
+    def resize(self, factor: float) -> None:
+        self._width *= factor
+        self._height *= factor
+        print(f"اندازه مستطیل تغییر کرد. ابعاد جدید: {self._width}×{self._height}")
+
+
+# ─── استفاده ───
+if __name__ == "__main__":
+    print("=" * 70)
+    print("مثال Bridge: فرمت‌های خروجی با رندررهای مختلف")
+    print("=" * 70)
+
+    # ساخت رندررها
+    windows_renderer = WindowsRenderer()
+    linux_renderer = LinuxRenderer()
+
+    print("\n" + "-" * 70)
+    print("ترکیب ۱: دایره + رندرر ویندوز")
+    print("-" * 70)
+    circle_win = Circle(windows_renderer, x=10.0, y=20.0, radius=5.0)
+    circle_win.draw()
+    circle_win.resize(2.0)
+    circle_win.draw()
+
+    print("\n" + "-" * 70)
+    print("ترکیب ۲: مستطیل + رندرر لینوکس")
+    print("-" * 70)
+    rect_linux = Rectangle(linux_renderer, x=5.0, y=15.0, width=10.0, height=20.0)
+    rect_linux.draw()
+    rect_linux.resize(0.5)
+    rect_linux.draw()
+
+    print("\n" + "-" * 70)
+    print("ترکیب ۳: دایره + رندرر لینوکس")
+    print("-" * 70)
+    circle_linux = Circle(linux_renderer, x=30.0, y=40.0, radius=8.0)
+    circle_linux.draw()
+
+    print("\n" + "=" * 70)
+    print("نتیجه: هر شکلی با هر رندرری قابل ترکیب است!")
+    print("بدون Bridge: 2 شکل × 2 رندرر = 4 کلاس")
+    print("با Bridge: 2 شکل + 2 رندرر = 4 کلاس (اما قابل ترکیب!)")
+    print("=" * 70)
+```
+
+## 23.4. 🅱️ Examples3:
+
+حل مشکل "انفجار کلاس‌ها" (Class Explosion) ناشی از وراثت چندگانه یا سلسله‌مراتب‌های عمیق، با استفاده از اصل "ترکیب به جای وراثت" (Composition over Inheritance). این کد به شما اجازه می‌دهد که ابعاد مختلف یک سیستم (مثلاً "نوع دستگاه" و "نوع سیستم‌عامل" یا "شکل هندسی" و "رنگ") را کاملاً مستقل از هم توسعه دهید و در زمان اجرا هر ترکیبی از آن‌ها را بدون
+تغییر در کدهای موجود، به یکدیگر متصل کنید.
+
+* جداسازی دو بعد تغییر: کد، منطق برنامه را به دو بخش مجزا تقسیم می‌کند:
+    * لایه انتزاع (Abstraction): شامل کلاس‌های Abstraction و RefinedAbstraction است که منطق سطح بالا و رابط کاربری (کلاینت) را مدیریت می‌کنند.
+    * لایه پیاده‌سازی (Implementation): شامل کلاس‌های Implementation، ConcreteImplementationA و ConcreteImplementationB است که جزئیات اجرایی و منطق سطح پایین را بر عهده دارند.
+* ایجاد پل (Bridge): کلاس Abstraction به جای اینکه از کلاس‌های پیاده‌سازی ارث‌بری کند، یک مرجع (Reference) از نوع Implementation را درون خود نگه می‌دارد (در متد __init__). این مرجع همان "پل" ارتباطی بین دو لایه است.
+* واگذاری (Delegation): وقتی کلاینت متد perform_action را روی RefinedAbstraction صدا می‌زند، این کلاس مستقیماً کار را انجام نمی‌دهد، بلکه آن را به متد action_implementation در شیء implementation واگذار می‌کند.
+* انعطاف‌پذیری در زمان اجرا: در بخش __main__ (کلاینت)، می‌بینیم که می‌توانیم در زمان اجرا (Runtime) تصمیم بگیریم کدام انتزاع با کدام پیاده‌سازی ترکیب شود. بدون نیاز به ساخت کلاس‌های جدید (مثل RefinedAbstractionWithImplA)، فقط با پاس دادن آبجکت‌ها به یکدیگر، رفتار نهایی تغییر می‌کند.
+
+```python
+from abc import ABC, abstractmethod
+
+
+# region define abstraction ( abstract class )
+
+class Abstraction(ABC):
+    """
+    کلاس پایه انتزاع (Abstraction) در الگوی طراحی پل (Bridge).
+    این کلاس رابط سطح بالا (High-level interface) را تعریف می‌کند و 
+    به جای پیاده‌سازی مستقیم منطق، آن را به لایه پیاده‌سازی واگذار می‌کند.
+    """
+
+    def __init__(self, implementation: 'Implementation'):
+        # دریافت شیء پیاده‌سازی از طریق ترکیب (Composition) به جای وراثت
+        self.implementation = implementation
+
+    @abstractmethod
+    def perform_action(self):
+        # متد انتزاعی که باید در کلاس‌های مشتق‌شده (Refined Abstraction) پیاده‌سازی شود
+        raise NotImplementedError
+
+
+# endregion
+
+# region define implementation ( abstract class )
+
+class Implementation(ABC):
+    """
+    کلاس پایه پیاده‌سازی (Implementor) در الگوی طراحی پل.
+    این کلاس رابط سطح پایین (Low-level interface) را تعریف می‌کند که 
+    توسط کلاس‌های Concrete Implementation پیاده‌سازی خواهد شد.
+    """
+
+    @abstractmethod
+    def action_implementation(self):
+        # متد انتزاعی برای تعریف عملیات پایه‌ای که باید توسط پیاده‌سازی‌های مشخص انجام شود
+        raise NotImplementedError
+
+
+# endregion
+
+# region concrete implementations
+
+class ConcreteImplementationA(Implementation):
+    """
+    پیاده‌سازی مشخص A.
+    این کلاس یکی از حالت‌های خاص پیاده‌سازی لایه پایین را ارائه می‌دهد.
+    """
+
+    def action_implementation(self):
+        # منطق خاص مربوط به پیاده‌سازی A در اینجا قرار می‌گیرد
+        return 'Action performed by Implementation A'
+
+
+class ConcreteImplementationB(Implementation):
+    """
+    پیاده‌سازی مشخص B.
+    این کلاس حالت دیگری از پیاده‌سازی لایه پایین را ارائه می‌دهد.
+    """
+
+    def action_implementation(self):
+        # منطق خاص مربوط به پیاده‌سازی B در اینجا قرار می‌گیرد
+        return 'Action performed by Implementation B'
+
+
+# endregion
+
+# region refined abstraction
+
+
+class RefinedAbstraction(Abstraction):
+    """
+    انتزاع پالایش‌شده (Refined Abstraction).
+    این کلاس متدهای سطح بالای تعریف‌شده در کلاس Abstraction را پیاده‌سازی می‌کند
+    و فراخوانی‌ها را به شیء implementation (لایه پایین) ارجاع می‌دهد.
+    """
+
+    def perform_action(self):
+        # واگذاری (Delegate) اجرای عملیات به لایه پیاده‌سازی
+        return self.implementation.action_implementation()
+
+
+# endregion
+
+# region client
+
+if __name__ == '__main__':
+    # --- بخش کلاینت ---
+    # ایجاد ترکیب‌های مختلف از انتزاع و پیاده‌سازی در زمان اجرا (Runtime)
+
+    # ترکیب انتزاع پالایش‌شده با پیاده‌سازی A
+    refined_abstraction_a = RefinedAbstraction(ConcreteImplementationA())
+
+    # ترکیب انتزاع پالایش‌شده با پیاده‌سازی B
+    refined_abstraction_b = RefinedAbstraction(ConcreteImplementationB())
+
+    # اجرای عملیات و چاپ خروجی‌ها
+    print(refined_abstraction_a.perform_action())
+    print(refined_abstraction_b.perform_action())
+
+# endregion
+```
 
 ## 23.4. 🅱️ Examples4:
+
+حل مشکل "انفجار کلاس‌ها" (Class Explosion) که در اثر استفاده از وراثت چندگانه یا سلسله‌مراتب‌های عمیق ایجاد می‌شود. این الگو با استفاده از اصل "ترکیب به جای وراثت" (Composition over Inheritance)، انتزاع (Abstraction) را از پیاده‌سازی (Implementation) جدا می‌کند تا هر دو بتوانند مستقل از هم تغییر کنند. اگر در دنیای واقعی بخواهیم مثال بزنیم، این کد
+مثل این است که شما یک "رابط کاربری ریموت کنترل" (انتزاع) داشته باشید که می‌تواند به "تلویزیون" یا "سیستم صوتی" (پیاده‌سازی) متصل شود. شما نیازی ندارید برای هر تلویزیون یک ریموت کنترل اختصاصی بسازید؛ بلکه ریموت کنترل (انتزاع) و دستگاه (پیاده‌سازی) هر کدام مستقل از هم توسعه می‌یابند و در زمان استفاده به هم متصل می‌شوند.
+
+* جداسازی دو بعد تغییر: کد، منطق برنامه را به دو سلسله‌مراتب مجزا تقسیم می‌کند:
+    * لایه انتزاع (Abstraction و RefinedAbstraction): منطق سطح بالا را مدیریت می‌کند و رابط ارتباطی با کلاینت است.
+* لایه پیاده‌سازی (Implementation و کلاس‌های Concrete...): جزئیات اجرایی و منطق سطح پایین را بر عهده دارد.
+* ایجاد پل (Bridge): کلاس Abstraction به جای اینکه از کلاس‌های پیاده‌سازی ارث‌بری کند، یک مرجع (Reference) از نوع Implementation را درون خود نگه می‌دارد (در متد __init__). این مرجع همان "پل" ارتباطی بین دو لایه است.
+* واگذاری (Delegation): وقتی کلاینت متد perform_action را روی RefinedAbstraction صدا می‌زند، این کلاس مستقیماً کار را انجام نمی‌دهد، بلکه آن را به متد action_implementation در شیء implementation واگذار (Delegate) می‌کند.
+* انعطاف‌پذیری در زمان اجرا: در بخش __main__ (کلاینت)، می‌بینیم که می‌توانیم در زمان اجرا (Runtime) تصمیم بگیریم کدام انتزاع با کدام پیاده‌سازی ترکیب شود. بدون نیاز به ساخت کلاس‌های جدید و تو در تو، فقط با پاس دادن آبجکت‌ها به یکدیگر، رفتار نهایی برنامه تغییر می‌کند.
+
+```python
+from abc import ABC, abstractmethod
+
+
+# region define abstraction ( abstract class )
+
+class Abstraction(ABC):
+    """
+    کلاس پایه انتزاع (Abstraction) در الگوی طراحی پل (Bridge).
+    این کلاس رابط سطح بالا (High-level interface) را تعریف می‌کند و 
+    به جای پیاده‌سازی مستقیم منطق، آن را به لایه پیاده‌سازی واگذار می‌کند.
+    """
+
+    def __init__(self, implementation: 'Implementation'):
+        # دریافت شیء پیاده‌سازی از طریق ترکیب (Composition) به جای وراثت
+        self.implementation = implementation
+
+    @abstractmethod
+    def perform_action(self):
+        # متد انتزاعی که باید در کلاس‌های مشتق‌شده (Refined Abstraction) پیاده‌سازی شود
+        raise NotImplementedError
+
+
+# endregion
+
+# region define implementation ( abstract class )
+
+class Implementation(ABC):
+    """
+    کلاس پایه پیاده‌سازی (Implementor) در الگوی طراحی پل.
+    این کلاس رابط سطح پایین (Low-level interface) را تعریف می‌کند که 
+    توسط کلاس‌های Concrete Implementation پیاده‌سازی خواهد شد.
+    """
+
+    @abstractmethod
+    def action_implementation(self):
+        # متد انتزاعی برای تعریف عملیات پایه‌ای که باید توسط پیاده‌سازی‌های مشخص انجام شود
+        raise NotImplementedError
+
+
+# endregion
+
+# region concrete implementations
+
+class ConcreteImplementationA(Implementation):
+    """
+    پیاده‌سازی مشخص A.
+    این کلاس یکی از حالت‌های خاص پیاده‌سازی لایه پایین را ارائه می‌دهد.
+    """
+
+    def action_implementation(self):
+        # منطق خاص مربوط به پیاده‌سازی A در اینجا قرار می‌گیرد
+        return 'Action performed by Implementation A'
+
+
+class ConcreteImplementationB(Implementation):
+    """
+    پیاده‌سازی مشخص B.
+    این کلاس حالت دیگری از پیاده‌سازی لایه پایین را ارائه می‌دهد.
+    """
+
+    def action_implementation(self):
+        # منطق خاص مربوط به پیاده‌سازی B در اینجا قرار می‌گیرد
+        return 'Action performed by Implementation B'
+
+
+# endregion
+
+# region refined abstraction
+
+
+class RefinedAbstraction(Abstraction):
+    """
+    انتزاع پالایش‌شده (Refined Abstraction).
+    این کلاس متدهای سطح بالای تعریف‌شده در کلاس Abstraction را پیاده‌سازی می‌کند
+    و فراخوانی‌ها را به شیء implementation (لایه پایین) ارجاع می‌دهد.
+    """
+
+    def perform_action(self):
+        # واگذاری (Delegate) اجرای عملیات به لایه پیاده‌سازی
+        return self.implementation.action_implementation()
+
+
+# endregion
+
+# region client
+
+if __name__ == '__main__':
+    # --- بخش کلاینت ---
+    # ایجاد ترکیب‌های مختلف از انتزاع و پیاده‌سازی در زمان اجرا (Runtime)
+
+    # ترکیب انتزاع پالایش‌شده با پیاده‌سازی A
+    refined_abstraction_a = RefinedAbstraction(ConcreteImplementationA())
+
+    # ترکیب انتزاع پالایش‌شده با پیاده‌سازی B
+    refined_abstraction_b = RefinedAbstraction(ConcreteImplementationB())
+
+    # اجرای عملیات و چاپ خروجی‌ها
+    print(refined_abstraction_a.perform_action())
+    print(refined_abstraction_b.perform_action())
+
+# endregion
+```
 
 </div>
 
