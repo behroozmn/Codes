@@ -51,7 +51,11 @@ The Design Patterns are descriptions of communicating objects and class that are
     * وجود تنها یک پرینتر
     * کانکشن به دیتابیس
 
+<div style="display: flex; flex-direction: column; align-items: center;">
+
 ![️Creational.Singleton.png](_srcFiles/Images/️Creational.Singleton.png "️Creational.Singleton.png")
+
+</div>
 
 ## 1.1. 🅱️Implement
 
@@ -266,7 +270,11 @@ public class DBConnection {
 
 هنگامی که شرایط زیر برقرار باشد می‌توان از این «الگوی‌طراحی» استفاده نمود
 
+<div style="display: flex; flex-direction: column; align-items: center;">
+
 ![️Creational.Builder.png](_srcFiles/Images/️Creational.Builder.png "️Creational.Builder.png")
+
+</div>
 
 * هنگام **تولید آبجکت با تعداد پارامتر زیاد**
 * هنگامی‌که ساخت آبجکت Cost زیاد دارد(مثل کوئری دیتابیس مثلا QuerySet در جنگو)
@@ -546,7 +554,11 @@ public class Main {
 
 این امکان را می‌دهد که یک شیء جدید را از طریق کپی کردن شیء موجود و اعمال تغییرات بر روی نسخه‌های جدید، ایجاد کنید
 
+<div style="display: flex; flex-direction: column; align-items: center;">
+
 ![️Creational.Prototype.png](_srcFiles/Images/️Creational.Prototype.png "️Creational.Prototype.png")
+
+</div>
 
 * اغلب در موقعیت‌هایی استفاده می‌شود که نیاز به ایجاد نسخه‌های مشابه از یک شیء با تنظیمات خاص نیاز باشد
 * **هدف**: جلوگیری از ساختن مکرر اشیاء مشابه است
@@ -613,7 +625,11 @@ print("Memory Address of deep copy data:", id(deep_copy.data))
 
 در این الگوی طراحی مسئولیت انتخاب نوع شیء و چگونگی پیاده‌سازی را به زیرکلاس‌ها واگذار می‌کند، در حالی که کلاس پایه الگوریتم کلی کار را حفظ می‌کند. به عبارتی در کلاس پایه(والد) می‌دانیم که چه کاری قرار است انجام شود ولی چگونگی انجام کار و پیاده‌سازی و اعمال پیچیدگی‌ها در زیرکلاس انجام خواهد شد
 
+<div style="display: flex; flex-direction: column; align-items: center;">
+
 ![️Creational.FactoryMethod.png](_srcFiles/Images/️Creational.FactoryMethod.png "️Creational.FactoryMethod.png")
+
+</div>
 
 * **هدف‌ایجاد**:پنهان‌سازی پیچیدگی‌های ساخت شیء(برنامه‌نویس درگیر پیچیدگی‌های آبجکت‌ها نشود و به سهولت نمونه بسازد)
 * این الگوی طراحی برپایه اصل وراثت بنا نهاده شده(Inheritance).نوع دقیق شیء توسط زیرکلاس‌ها مشخص می‌شود
@@ -1149,7 +1165,11 @@ public class CalculationFactory {
 
 الگوی Abstract Factory یک الگوی طراحی از نوع Creational (سازنده) است که برای ساخت خانواده‌ای از اشیای مرتبط یا وابسته به هم، بدون مشخص کردن کلاس دقیق آن‌ها استفاده می‌شود.به زبان ساده:به‌جای اینکه مستقیماً از کلاس‌ها نمونه بسازیم (new)، یک کارخانه می‌سازیم که خودش اشیای مرتبط را برای ما تولید می‌کند.
 
+<div style="display: flex; flex-direction: column; align-items: center;">
+
 ![Creational.AbstractFactory.png](_srcFiles/Images/Creational.AbstractFactory.png "Creational.AbstractFactory.png")
+
+</div>
 
 * کارخانه‌ای که خودش کارخانه تولید می‌کند. یعنی Factory والد و Factory فرزند
 * کاربرد در سیستم‌های بزرگ و آبجکت‌های سنگین که بخواهند ساخت کلاس فرزند را dynamic کنند.
@@ -1538,7 +1558,11 @@ public class ImageConverterFactory implements MediaConverterFactory {
 
 به زبان ساده: به‌جای اینکه “کلیک روی دکمه” مستقیم برود و “کد روشن‌کردن چراغ” را صدا بزند، یک آبجکت Command می‌سازید که می‌گوید «روشن‌کردن چراغ با این پارامترها»، بعد دکمه فقط execute() را صدا می‌زند.
 
+<div style="display: flex; flex-direction: column; align-items: center;">
+
 ![DesignPattern.Behavioral.Command.png](_srcFiles/Images/DesignPattern.Behavioral.Command.png "DesignPattern.Behavioral.Command.png")
+
+</div>
 
 * معمولا در موارد زیر استفاده می‌شود
     * **کاهش وابستگی(Decoupling)**: فراخوانی کننده(Invoker) نداند دقیقاً چه کسی یا چگونه کار را انجام می‌دهد. فقط بداند «یک کامند قابل اجرا» دارد.
@@ -2067,7 +2091,11 @@ if __name__ == "__main__":
     * اگر میانجی خراب شود، کل سیستم از کار می‌افتد
     * پیچیدگی پنهان: فهم جریان برنامه سخت‌تر می‌شود چون همه‌چیز از یک نقطه رد می‌شود
 
+<div style="display: flex; flex-direction: column; align-items: center;">
+
 ![DesignPattern.Behavioral.Mediator.png](_srcFiles/Images/DesignPattern.Behavioral.Mediator.png "DesignPattern.Behavioral.Mediator.png")
+
+</div>
 
 ## 7.1. 🅱️ Examples1
 
@@ -2633,7 +2661,11 @@ if __name__ == "__main__":
 
 ذخیره و بازیابی حالت داخلی یک شیء بدون نقض انکپسوله‌سازی
 
+<div style="display: flex; flex-direction: column; align-items: center;">
+
 ![DesignPattern.Behavioral.Memento.png](_srcFiles/Images/DesignPattern.Behavioral.Memento.png "DesignPattern.Behavioral.Memento.png")
+
+</div>
 
 * معمولاً برای پیاده‌سازی `undo` بکار می‌رود
 * سه رکن دارد
@@ -3284,7 +3316,11 @@ if __name__ == "__main__":
 
 پیاده‌سازی مکانیزم Publish-Subscribe (انتشار-اشتراک) توسط تعریف یک رابطه "یک به چند" بین اشیاء به طوری که وقتی یک شیء (به نام Subject یا Publisher) وضعیتش تغییر می‌کند، تمام اشیاء وابسته به آن (به نام Observers یا Subscribers) به صورت خودکار مطلع شده و به‌روزرسانی می‌شوند.
 
+<div style="display: flex; flex-direction: column; align-items: center;">
+
 ![DesignPattern.Behavioral.Observer.jpeg](_srcFiles/Images/DesignPattern.Behavioral.Observer.jpeg "DesignPattern.Behavioral.Observer.jpeg")
+
+</div>
 
 * مثال‌ها
     * یک سایت فرشگاهی که وقتی تراکنش پرداخت انجام شد به فرآینده‌های مستقل میگوید که هرکدام کارهای خودش را انجام دهد
@@ -3308,7 +3344,11 @@ if __name__ == "__main__":
 * نشت حافظه (Memory Leaks): اگر یک Observer دیگر نیازی به دریافت نوتیفیکیشن ندارد (مثلاً پنجره‌ای در UI بسته شده است) اما فراموش کنید آن را از لیست Subject حذف (detach) کنید، Subject همچنان یک Reference به آن نگه می‌دارد. این کار باعث می‌شود garbage collector نتواند آن Observer را از حافظه پاک کند و حافظه سیستم پر می‌شود.
 * ترتیب اطلاع‌رسانی و وابستگی متقابل: Observerها هرگز نباید فرض کنند که به ترتیب خاصی صدا زده می‌شوند. همچنین، یک Observer نباید در متد update خود، وضعیت Subject را تغییر دهد، زیرا این کار باعث ایجاد حلقه بی‌نهایت (Infinite Loop) یا رفتارهای پیش‌بینی‌ناپذیر می‌شود.
 
+<div style="display: flex; flex-direction: column; align-items: center;">
+
 ![DesignPattern.Behavioral.Observer.png](_srcFiles/Images/DesignPattern.Behavioral.Observer.png "DesignPattern.Behavioral.Observer.png")
+
+</div>
 
 ## 9.1. 🅱️ Examples1: درک پایه با یک ایستگاه هواشناسی
 
@@ -4024,7 +4064,11 @@ if __name__ == '__main__':
 
 FSM: The State pattern is closely related to the concept of a Finite-State Machine .
 
+<div style="display: flex; flex-direction: column; align-items: center;">
+
 ![DesignPattern.Behavioral.State2.png](_srcFiles/Images/DesignPattern.Behavioral.State2.png "DesignPattern.Behavioral.State2.png")
+
+</div>
 
 * این الگو از سه بخش اصلی تشکیل شده است:
     * Context (کانتکست): کلاسی که مرجع (Reference) به یک شی از نوع State را نگه می‌دارد. این کلاس وضعیت فعلی را مدیریت کرده و درخواست‌های کلاینت را به State فعلی Delegate (ارجاع) می‌کند.
@@ -4041,7 +4085,11 @@ FSM: The State pattern is closely related to the concept of a Finite-State Machi
     * در Strategy، کلاینت الگوریتم (استراتژی) را انتخاب و inject می‌کند. استراتژی‌ها همدیگر را نمی‌شناسند و مستقل هستند.
     * در State، خودِ وضعیت‌ها می‌دانند که وضعیت بعدی چیست و Context را به وضعیت بعدی سوییچ می‌کنند. Stateها به Context و سایر Stateها آگاهند
 
+<div style="display: flex; flex-direction: column; align-items: center;">
+
 ![DesignPattern.Behavioral.State.png](_srcFiles/Images/DesignPattern.Behavioral.State.png "DesignPattern.Behavioral.State.png")
+
+</div>
 
 ## 11.1. 🅱️ کاربردهای این  الگوی طراحی
 
@@ -5158,7 +5206,11 @@ if __name__ == "__main__":
 
 الگوی Template Method یکی از الگوهای طراحی رفتاری (Behavioral) است که اسکلت (Skeleton) یک الگوریتم را در یک کلاس پایه تعریف می‌کند، اما اجازه می‌دهد زیرکلاس‌ها (Subclasses) مراحل خاصی از آن الگوریتم را بدون تغییر در ساختار کلی الگوریتم بازنویسی (Override) کنند.
 
+<div style="display: flex; flex-direction: column; align-items: center;">
+
 ![DesignPattern.Behavioral.TemplateMethod.png](_srcFiles/Images/DesignPattern.Behavioral.TemplateMethod.png "DesignPattern.Behavioral.TemplateMethod.png")
+
+</div>
 
 * اجزای اصلی در این الگوی طراحی
     1. Abstract Class:
@@ -5434,7 +5486,11 @@ if __name__ == "__main__":
     * در Strategy، کلاینت استراتژی را به Context تزریق می‌کند.
     * در Visitor، ساختار اشیاء (Elements) ثابت است و ما الگوریتم‌های مختلف را روی این ساختار "سوار" می‌کنیم.
 
+<div style="display: flex; flex-direction: column; align-items: center;">
+
 ![DesignPattern.Behavioral.Visitor.png](_srcFiles/Images/DesignPattern.Behavioral.Visitor.png "DesignPattern.Behavioral.Visitor.png")
+
+</div>
 
 ## 13.1. 🅱️ Examples1:
 
@@ -6070,7 +6126,11 @@ if __name__ == '__main__':
     * زمانی که نیاز دارید الگوریتم‌ها را در زمان اجرا (Runtime) به صورت داینامیک تغییر دهید.
     * زمانی که می‌خواهید از افشای جزئیات پیچیده الگوریتم‌ها به کلاس‌های دیگر جلوگیری کنید (Encapsulation).
 
+<div style="display: flex; flex-direction: column; align-items: center;">
+
 ![DesignPattern.Behavioral.Strategy.png](_srcFiles/Images/DesignPattern.Behavioral.Strategy.png "DesignPattern.Behavioral.Strategy.png")
+
+</div>
 
 ## 14.1. 🅱️ Examples1: تخفیف در سایت فروشگاهی
 
@@ -6508,7 +6568,11 @@ if __name__ == "__main__":
     * زمانی که می‌خواهید ساختار درونی مجموعه را از دید کلاینت مخفی کنید (Encapsulation).
     * زمانی که نیاز دارید چندین پیمایش مستقل و همزمان روی یک مجموعه واحد داشته باشید.
 
+<div style="display: flex; flex-direction: column; align-items: center;">
+
 ![DesignPattern.Behavioral.Iterator.png](_srcFiles/Images/DesignPattern.Behavioral.Iterator.png "DesignPattern.Behavioral.Iterator.png")
+
+</div>
 
 ## 15.1. 🅱️ Examples1: BookShelf
 
@@ -6798,7 +6862,11 @@ if __name__ == "__main__":
 
 هدف اصلی این الگو، کاهش وابستگی (Decoupling) بین فرستنده (Sender) و گیرنده (Receiver) یک درخواست است. به جای اینکه یک شیء درخواست را مستقیماً به یک شیء خاص ارسال کند، درخواست را در طول یک زنجیره از پردازش‌گرها (Handlers) پاس می‌دهد. هر پردازش‌گر در زنجیره تصمیم می‌گیرد که درخواست را خودش پردازش کند یا آن را به پردازش‌گر بعدی در زنجیره منتقل نماید.
 
+<div style="display: flex; flex-direction: column; align-items: center;">
+
 ![DesignPattern.Behavioral.ChainOfResponsibility.png](_srcFiles/Images/DesignPattern.Behavioral.ChainOfResponsibility.png "DesignPattern.Behavioral.ChainOfResponsibility.png")
+
+</div>
 
 * ساختار و شرکت‌کنندگان (Structure & Participants)
     * Handler (پردازش‌گر پایه): یک رابط (Interface) یا کلاس انتزاعی که روش پردازش درخواست و همچنین مرجعی به پردازش‌گر بعدی در زنجیره را تعریف می‌کند.
@@ -7381,7 +7449,11 @@ if __name__ == "__main__":
 
 هدف اصلی این الگو، تبدیل رابط (Interface) یک کلاس به رابط دیگری است که کلاینت انتظار دارد. این الگو به کلاس‌هایی اجازه می‌دهد که به دلیل داشتن رابط‌های ناسازگار، در کنار یکدیگر کار کنند (در غیر این صورت امکان‌پذیر نبود).
 
+<div style="display: flex; flex-direction: column; align-items: center;">
+
 ![DesignPattern.Structural.Adapter.png](_srcFiles/Images/DesignPattern.Structural.Adapter.png "DesignPattern.Structural.Adapter.png")
+
+</div>
 
 * اجزای اصلی (Components)
     * Target (هدف): رابط یا کلاس انتزاعی که کلاینت از آن استفاده می‌کند.
@@ -7406,7 +7478,11 @@ if __name__ == "__main__":
     * یکپارچه‌سازی ابزارهای لاگ‌برداری و مانیتورینگ (Logging & Telemetry Adapters): در سیستم‌های Enterprise، ممکن است نیاز باشد لاگ‌ها همزمان به چندین مقصد (مثل ElasticSearch, Datadog, یا فایل‌های محلی) فرستاده شوند. یک رابط Logger استاندارد تعریف شده و Adapterهای مختلف، متدهای آن را به فرمت و API اختصاصی هر ابزار مانیتورینگ (مثل Log4j یا Winston)
       تبدیل می‌کنند.
 
+<div style="display: flex; flex-direction: column; align-items: center;">
+
 ![DesignPattern.Structural.Adapter2.png](_srcFiles/Images/DesignPattern.Structural.Adapter2.png "DesignPattern.Structural.Adapter2.png")
+
+</div>
 
 ## 17.1. 🅱️ Examples1:
 
@@ -7738,7 +7814,11 @@ if __name__ == "__main__":
 
 الگوی کامپوزیت برای ساخت سلسله‌مراتب جزء-کل (Part-Whole Hierarchies) به شکل درختی استفاده می‌شود.هدف اصلی این الگو این است که به کلاینت (Client) اجازه دهد تا با اشیاء منفرد (اجزاء) و ترکیب اشیاء (کل‌ها) به صورت یکسان (Uniformly) رفتار کند. به عبارت دیگر، کلاینت نیازی نیست بداند با یک شیء تکی طرف است یا یک گروه از شیءها.
 
+<div style="display: flex; flex-direction: column; align-items: center;">
+
 ![DesignPattern.Structural.Composite.jpg](_srcFiles/Images/DesignPattern.Structural.Composite.jpg "DesignPattern.Structural.Composite.jpg")
+
+</div>
 
 * ساختار (Structure)
     * Component (کامپوننت / رابط): یک اینترفیس یا کلاس انتزاعی که عملیات مشترک بین اشیاء ساده و پیچیده را تعریف می‌کند.
@@ -7755,7 +7835,11 @@ if __name__ == "__main__":
 * مزایا: رعایت اصل Single Responsibility (منطق درخت در یک جا قرار می‌گیرد)، رعایت اصل Open/Closed (بدون تغییر کد کلاینت می‌توان کامپوزیت‌های جدید ساخت)، و ساده‌سازی کد کلاینت با استفاده از پلی‌مورفیسم.
 * معایب: محدود کردن نوع کامپوننت‌ها دشوار می‌شود (مثلاً اگر بخواهید کامپوزیت فقط اشیاء خاصی را بپذیرد، طراحی پیچیده می‌شود).
 
+<div style="display: flex; flex-direction: column; align-items: center;">
+
 ![DesignPattern.Structural.Composite2.png](_srcFiles/Images/DesignPattern.Structural.Composite2.png "DesignPattern.Structural.Composite2.png")
+
+</div>
 
 * ۵ مورد از مهم‌ترین کاربردهای آن عبارتند از:
     * فریم‌ورک‌های رابط کاربری گرافیکی (GUI Frameworks):در کتابخانه‌هایی مثل React، Angular، یا فریم‌ورک‌های دسکتاپ مثل JavaFX و WPF، کامپوننت‌های UI (مثل دکمه، تکست‌باکس) برگ‌ها هستند و کانتینرها (مثل Div، Panel، Window) کامپوزیت‌ها هستند. رندر کردن صفحه با یک الگوریتم یکسان (بازگشتی) روی کل درخت DOM انجام می‌شود.
@@ -8066,7 +8150,11 @@ if __name__ == '__main__':
     * یکپارچه‌سازی APIهای شخص ثالث (Third-Party API Wrappers): وقتی سیستم شما نیاز به دریافت اطلاعات از APIهای خارجی (مثل APIهای هواشناسی، نقشه‌ها یا شبکه‌های اجتماعی) دارد، به جای پراکنده کردن کدهای HTTP Request و مدیریت Tokenها در کل پروژه، یک WeatherFacade یا SocialMediaFacade می‌سازید که متدهایی مثل get_current_weather() دارد و تمام پیچیدگی‌های
       REST/GraphQL را در داخل خود مدیریت می‌کند.
 
-  ![DesignPattern.Structural.Facade.png](_srcFiles/Images/DesignPattern.Structural.Facade.png "DesignPattern.Structural.Facade.png")
+  <div style="display: flex; flex-direction: column; align-items: center;">
+
+![DesignPattern.Structural.Facade.png](_srcFiles/Images/DesignPattern.Structural.Facade.png "DesignPattern.Structural.Facade.png")
+
+</div>
 
 ## 19.1. 🅱️ Examples1:
 
@@ -8654,7 +8742,11 @@ if __name__ == "__main__":
 * الگوی Decorator یک الگوی ساختاری (Structural) است که به شما اجازه می‌دهد رفتارهای جدید را به‌صورت پویا (Dynamic) و در زمان اجرا (Runtime) به یک شیء اضافه کنید، بدون آنکه ساختار کلاس اصلی تغییر کند.
 * به بیان ساده‌تر: به‌جای اینکه برای هر ترکیب از قابلیت‌ها یک زیرکلاس جدید بسازید، قابلیت‌ها را مثل لایه‌های پیاز دور شیء اصلی می‌پیچید.
 
+<div style="display: flex; flex-direction: column; align-items: center;">
+
 ![DesignPattern.Structural.Decorator.png](_srcFiles/Images/DesignPattern.Structural.Decorator.png "DesignPattern.Structural.Decorator.png")
+
+</div>
 
 ## 20.1. 🅱️ اجزای ساختار
 
@@ -9300,7 +9392,11 @@ if __name__ == "__main__":
     5. اصل تفکیک رابط (Interface Segregation Principle - ISP):رابط Flyweight باید فقط متدهایی را تعریف کند که برای رفتار مشترک نیاز است. متدهای مربوط به حالت بیرونی نباید در این رابط باشند.
     6. مدیریت چرخه حیات (Lifecycle Management): Factory مسئول ساخت، نگهداری (Cache/Pool) و در نهایت نابودی اشیاء Flyweight است. کلاینت هرگز نباید مستقیماً Flyweight را با new یا __init__ بسازد.
 
+<div style="display: flex; flex-direction: column; align-items: center;">
+
 ![DesignPattern.Structural.flyweight.png](_srcFiles/Images/DesignPattern.Structural.flyweight.png "DesignPattern.Structural.flyweight.png")
+
+</div>
 
 ## 21.1. 🅱️ توضیحات تکمیلی
 
@@ -9842,7 +9938,11 @@ if __name__ == "__main__":
 
 # 22. 🅰️ Structural.Proxy(کنترل دسترسی به شیء اصلی و افزودن لایه‌های میانی برای عملیات‌ها)
 
+<div style="display: flex; flex-direction: column; align-items: center;">
+
 ![DesignPattern.Structural.Proxy.png](_srcFiles/Images/DesignPattern.Structural.Proxy.png "DesignPattern.Structural.Proxy.png")
+
+</div>
 
 * کنترل دسترسی به شیء اصلی و افزودن لایه‌های میانی برای عملیات‌هایی مانند:
     * تأخیر در ساخت شیء سنگین (Lazy Initialization)
@@ -9901,7 +10001,11 @@ if __name__ == "__main__":
 مشکل: کوئر در دیتابیس عظیم می‌تواند هزینه‌بر باشد و مقدار زیادی از منابع سیستم را مصرف می‌کند درحالی که ممکن است شماهر از گاهی به آن نیاز داشته باشید. بعنون راه حل ابتدایی و غیر استاندارد شما می‌توانید مقداردهی اولیه‌ی تنبل را پیاده‌سازی کنید: این شیء را فقط زمانی که واقعاً مورد نیاز است ایجاد کنید. همه کلاینت‌های شیء باید مقداری کد مقداردهی
 اولیه‌ی معوق را اجرا کنند. متأسفانه، این احتمالاً باعث تکرار زیاد کد می‌شود.
 
+<div style="display: flex; flex-direction: column; align-items: center;">
+
 ![DesignPattern.Structural.Proxy-problem.png](_srcFiles/Images/DesignPattern.Structural.Proxy-problem.png "DesignPattern.Structural.Proxy-problem.png")
+
+</div>
 
 حل مشکل:الگوی Proxy پیشنهاد می‌کند که یک کلاس پروکسی جدید با رابط کاربری مشابه با یک شیء سرویس اصلی ایجاد کنید. سپس برنامه خود را به‌روزرسانی کنید تا شیء پروکسی را به تمام کلاینت‌های شیء اصلی ارسال کند. پروکسی پس از دریافت درخواست از یک کلاینت، یک شیء سرویس واقعی ایجاد می‌کند و تمام کارها را به آن محول می‌کند.
 
@@ -9909,7 +10013,11 @@ if __name__ == "__main__":
 
 اما فایده آن چیست؟ اگر نیاز به اجرای چیزی قبل یا بعد از منطق اولیه کلاس دارید، پروکسی به شما امکان می‌دهد این کار را بدون تغییر آن کلاس انجام دهید. از آنجایی که پروکسی همان رابط کاربری کلاس اصلی را پیاده‌سازی می‌کند، می‌توان آن را به هر کلاینتی که انتظار یک شیء سرویس واقعی را دارد، ارسال کرد.
 
+<div style="display: flex; flex-direction: column; align-items: center;">
+
 ![DesignPattern.Structural.Proxy-Solution.png](_srcFiles/Images/DesignPattern.Structural.Proxy-Solution.png "DesignPattern.Structural.Proxy-Solution.png")
+
+</div>
 
 ## 22.2. 🅱️ توضیحات تکمیلی
 
@@ -10276,7 +10384,11 @@ if __name__ == '__main__':
 
 جداسازی انتزاع (Abstraction) از پیاده‌سازی (Implementation) تا هر دو بتوانند مستقل از هم تغییر کنند. این الگو به جای استفاده از وراثت چندلایه، از ترکیب (Composition) استفاده می‌کند.
 
+<div style="display: flex; flex-direction: column; align-items: center;">
+
 ![DesignPattern.Structural.Bridge.png](_srcFiles/Images/DesignPattern.Structural.Bridge.png "DesignPattern.Structural.Bridge.png")
+
+</div>
 
 * یک ابزار قدرتمند برای مدیریت پیچیدگی در سیستم‌هایی است که چندین بعد تغییر دارند. این الگو با جداسازی انتزاع از پیاده‌سازی، امکان ترکیب‌پذیری بالا را فراهم می‌کند و از انفجار کلاس‌ها جلوگیری می‌کند.
 * این الگو به‌ویژه در سیستم‌های Enterprise که نیاز به انعطاف‌پذیری و توسعه‌پذیری دارند، جایگاه ویژه‌ای دارد و با رعایت اصول SOLID، کدی تمیز، قابل نگهداری و قابل توسعه ایجاد می‌کند.
@@ -10285,8 +10397,11 @@ if __name__ == '__main__':
 
 تی سیستم شما چندین بعد تغییر دارد، استفاده از وراثت منجر به انفجار کلاس‌ها (Class Explosion) می‌شود. فرض کنید می‌خواهید شکل‌های مختلف را با رنگ‌های مختلف رندر کنید:
 
+<div style="display: flex; flex-direction: column; align-items: center;">
+
 ![DesignPattern.Structural.Bridge-Problem.png](_srcFiles/Images/DesignPattern.Structural.Bridge-Problem.png "DesignPattern.Structural.Bridge-Problem.png")
 
+</div>
 
 ```
 by Inheritance (without Bridge):
@@ -10321,7 +10436,11 @@ Color (Implement)
 
 در حالت استفاده از رویکرد bridge بصورت خطی کلاس‌ها استفاده می‌شود: `Circle + Red` یا `Circle + Blue` یا موارد دیگر
 
+<div style="display: flex; flex-direction: column; align-items: center;">
+
 ![DesignPattern.Structural.Bridge-Solution.png](_srcFiles/Images/DesignPattern.Structural.Bridge-Solution.png "DesignPattern.Structural.Bridge-Solution.png")
+
+</div>
 
 ## 23.2. 🅱️ توضیحات تکمیلی:
 
