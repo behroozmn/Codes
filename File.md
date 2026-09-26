@@ -1,6 +1,6 @@
 <div dir="rtl">
 
-# 🅰️Concepts
+# 1. 🅰️Concepts
 
 * فایل: مجموعه‌ای از سری داده که به‌صورت یک واحد ذخیره‌سازی(در حافظه اصلی یا جانبی یا حافظه موقت) شوند
   *RawData:
@@ -49,7 +49,7 @@ rename "s/jpeg$/jpg/" *.jpeg  # convert all jpeg to jpg
 
 </div>
 
-# 🅰️ Accessibility
+# 2. 🅰️ Accessibility
 
 - در نسخه لینوکس‌های کوچک دستور adduser وجود دارد(توزیع لینوکس alpine) و دستور useradd دستور بزرگتری و با ابزارهای بیشتری است.
 
@@ -65,7 +65,7 @@ who -q #تعداد کاربران لاگین و نام آنها
 sudo last reboot #مشاهده ریبوت‌های انجام شده در سیستم در گذشته
 ```
 
-## 🅱️ Sudo
+## 2.1. 🅱️ Sudo
 
 ```shell
 sudo
@@ -87,7 +87,7 @@ sudo cat /etc/sudoers.d/Behrooz
     behrooz ALL=(ALL) NOPASSWD: ALL # Run sudo command without password
 ```
 
-# 🅰️SpecialAttributes
+# 3. 🅰️SpecialAttributes
 
 * a: تنها در حالت اضافه شدن(الحاقی) قابلیت تغییر خواهد داشت.یعنی فایل کم نمی‌شود ولی زیاد می‌شود
 * c: اجازه فشرده‌سازی و بازکردن خودکار یک فایل را به کرنل می‌دهد
@@ -104,7 +104,7 @@ chattr +a file.txt
 chattr -a file.txt
 ```
 
-# 🅰️Permission
+# 4. 🅰️Permission
 
 ```shell
 # r → Read
@@ -116,7 +116,7 @@ chattr -a file.txt
 # a → ALL
 ```
 
-## 🅱️ SUID
+## 4.1. 🅱️ SUID
 
 اگر فایلی این دسترسی را داشته باشد یعنی استفاده از این فایل با دسترسی مشابه روت صورت خواهد گرفت
 
@@ -131,16 +131,23 @@ $ ls -l /usr/bin/passwd
 
 
 ![permissions.webp](_srcFiles/Images/permissions.webp "permissions.webp")
+
 ![permission.jpg](_srcFiles/Images/permission.jpg "permission.jpg")
+
 ![linux-special-permissions-explained.webp](_srcFiles/Images/linux-special-permissions-explained.webp "linux-special-permissions-explained.webp")
+
 ![linux-special-permission-suid-guid-sticky-bit.webp](_srcFiles/Images/linux-special-permission-suid-guid-sticky-bit.webp "linux-special-permission-suid-guid-sticky-bit.webp")
+
 ![perm_special.png](_srcFiles/Images/perm_special.png "perm_special.png")
+
 ![permis-accessmodes.jpg](_srcFiles/Images/permis-accessmodes.jpg "permis-accessmodes.jpg")
+
 ![sgid-linux.webp](_srcFiles/Images/sgid-linux.webp "sgid-linux.webp")
+
 ![sticky-bit-linux.webp](_srcFiles/Images/sticky-bit-linux.webp "sticky-bit-linux.webp")
+
 ![suid-linux.webp](_srcFiles/Images/suid-linux.webp "suid-linux.webp")
-![](_srcFiles/Images/ "")
-![](_srcFiles/Images/ "")
+
 
 </div>
 
@@ -150,7 +157,7 @@ chmode u=rw,g=rwx,o=r file.txt
 chmod u+x file.txt → add EXECUTE to USER group
 ```
 
-# 🅰️Backup
+# 5. 🅰️Backup
 
 * برای بک‌آپ گرفتن مهم است که دیتای خود را دسته‌بندی کرده باشید
 * انواع بک‌آپ گیری
@@ -159,7 +166,7 @@ chmod u+x file.txt → add EXECUTE to USER group
     * Differential: نسبت به یک نسخه خاص هرچی تفاوت دارد را بک‌آپ می‌گیرد
     * snapshot: همانند differential است
 
-## 🅱️ Apps
+## 5.1. 🅱️ Apps
 
 * backula یک برنامه فوق‌العاده قوی برای بک آپ از هر چیزی است که هم کامند و هم دسکتاپ و هم وب ارائه داده است
 
@@ -167,9 +174,9 @@ chmod u+x file.txt → add EXECUTE to USER group
 cp /Path/FileName{,.Backup} #CreateBackup
 ```
 
----
 
-### ✅️rsync
+
+### 5.1.1. ✅️rsync
 
 سوییج‌های دستور آرسینک
 
@@ -183,7 +190,7 @@ rsync -avh /home/behrooz/dire /tmp
 rsync -avh /home/behrooz/dire behrooz@192.168.10.88:/home/SecondCopy
 ```
 
-## 🅱️ Archive and Compressing
+## 5.2. 🅱️ Archive and Compressing
 
 ```shell
 tar -czvf Directory.tar.gz Directory --remove-files
@@ -193,7 +200,7 @@ tar Uf File.tar Dir #آپدیت کن از فایل‌های جدید
 
 ```
 
-# 🅰️Tape
+# 6. 🅰️Tape
 
 * برای ذخیره‌سازی بک‌آپ از نوار استفاده می‌شود
 * opration در دستور mt موارد زیر را شامل می‌شود:
@@ -237,7 +244,7 @@ tar xf /dev/st0 /home/restorMyData #بازیابی بک‌آپ از نوار
 
 </div>
 
-# 🅰️ExtensionType OR FileType
+# 7. 🅰️ExtensionType OR FileType
 
 * [*.so]: فایل‌های کتابخانه‌ای داینامیک در لینوکس
     * فایل‌های SharedObject در لینوکس dynamic library می‌باشند که معادل DLL در ویندوز هستند
@@ -252,15 +259,44 @@ tar xf /dev/st0 /home/restorMyData #بازیابی بک‌آپ از نوار
 
 </div>
 
-# 🅰️ FileNames
+# 8. 🅰️ FileNames
 
-## 📁️ /sbin/init
+## 8.1. 🅱️ Named Pipe
+
+فایل با پسوند p در لینوکس، یک فایل توخالی و بدون حجم روی دیسک است که صرفاً به عنوان یک پل ارتباطی (لوله) بین دو برنامه عمل می‌کند. این فایل به شما اجازه می‌دهد داده‌ها را به صورت زنده، بدون اشغال فضای هارد دیسک و بین برنامه‌هایی که هیچ ارتباطی با هم ندارند، جابه‌جا کنید.
+
+* تفاوت فایل معمولی و پایت
+    *     فایل معمولی (Regular File - با حرف - شروع می‌شود): مثل یک سطل یا انبار است. داده‌ها را روی هارد دیسک ذخیره می‌کند، حجم دارد و هر زمان بخواهید می‌توانید آن را باز کرده و بخوانید.
+    * پایپ معمولی (Anonymous Pipe - همان علامت | در ترمینال): مثل یک لوله آب موقت است که فقط وقتی دو دستور را در یک خط به هم وصل می‌کنید (مثلاً cat file | grep text) در حافظه RAM ایجاد می‌شود و به محض تمام شدن دستور، از بین می‌رود. نام و مسیری در فایل‌سیستم ندارد.
+    * پایپ نام‌دار (Named Pipe - با حرف p شروع می‌شود): مثل یک لوله آب ثابت و لوله‌کشی شده در ساختمان است. این فایل داده‌ای را روی هارد دیسک ذخیره نمی‌کند (به همین دلیل در ls -l حجم آن 0 بایت است). این فایل فقط یک "مسیر" یا "نقطه اتصال" در فایل‌سیستم است که دو برنامه کاملاً مجزا و مستقل می‌توانند از طریق آن با هم ارتباط برقرار کنند.
+* ویژگی‌های کلیدی Named Pipe:
+    * عدم ذخیره‌سازی داده: داده‌ها فقط از درون آن "عبور" می‌کنند. اگر برنامه‌ای داده‌ای را به آن بنویسد، داده بلافاصله باید توسط برنامه خواننده خوانده شود، وگرنه در حافظه بافر می‌شود (که حجم بسیار کمی دارد).
+    * رفتار مسدودکننده (Blocking Behavior): این مهم‌ترین ویژگی است.
+        * اگر برنامه‌ای بخواهد در لوله بنویسد، اما برنامه‌ای برای خواندن از آن باز نباشد، برنامه نویسنده متوقف (Freeze/Block) می‌شود و منتظر می‌ماند تا کسی لوله را باز کند.
+        * برعکس، اگر برنامه‌ای بخواهد از لوله بخواند، اما کسی داده‌ای به آن نفرستاده باشد، برنامه خواننده متوقف می‌شود تا داده برسد.
+    * قانون FIFO: داده‌ها دقیقاً به همان ترتیبی که وارد لوله شده‌اند، از آن خارج می‌شوند.
+* کاربردها
+    * ارتباط بین پردازش‌های کاملاً مجزا (IPC): فرض کنید دو اسکریپت یا برنامه کاملاً مستقل دارید (مثلاً یکی با پایتون نوشته شده و دیگری با Bash) و می‌خواهید به صورت زنده با هم داده رد و بدل کنند. شما یک Named Pipe می‌سازید. اسکریپت A داده‌ها را در آن می‌نویسد و اسکریپت B آن را می‌خواند. چون این فایل در فایل‌سیستم وجود دارد، هر دو برنامه می‌توانند با
+      استفاده از مسیر آن (مثلاً /tmp/my_pipe) به آن دسترسی پیدا کنند.
+    * دور زدن محدودیت برنامه‌ها (مثل مثال lnav):بسیاری از برنامه‌های قدیمی یا خاص، فقط می‌توانند فایل را به عنوان ورودی بخوانند و نمی‌توانند ورودی را از Standard Input (stdin) یا پایپ (|) دریافت کنند. با ساختن یک Named Pipe، شما یک "فایل" جعلی ایجاد می‌کنید. برنامه فکر می‌کند دارد یک فایل معمولی را می‌خواند، اما در باطن، یک برنامه دیگر در حال ریختن
+      داده‌های زنده (Stream) داخل آن است.
+    * انتقال و ایمپورت دیتابیس‌های حجیم: وقتی می‌خواهید یک دیتابیس چند ده گیگابایتی را از سرور A به سرور B منتقل کنید، اگر از فایل معمولی استفاده کنید، باید ابتدا یک فایل ۵۰ گیگابایتی روی دیسک بسازید (که هم زمان‌بر است و هم فضای دیسک را پر می‌کند). با استفاده از Named Pipe (یا پایپ معمولی در شبکه)، خروجی mysqldump یا pg_dump مستقیماً مثل آب در لوله
+      به سرور مقصد هدایت شده و همان لحظه در دیتابیس مقصد ایمپورت می‌شود. هیچ فایل موقتی روی دیسک ساخته نمی‌شود.
+    * تست و شبیه‌سازی ورودی‌های شبکه یا دستگاه‌ها:توسعه‌دهندگانی که روی برنامه‌هایی کار می‌کنند که قرار است از روی یک پورت شبکه، یک فایل لاگ زنده، یا یک دستگاه سخت‌افزاری (مثل اسکنر یا سنسور) داده بخوانند، می‌توانند یک Named Pipe بسازند. آن‌ها می‌توانند داده‌های از پیش ضبط شده را داخل این لوله بریزند تا برنامه‌شان فکر کند در حال دریافت داده زنده از
+      یک منبع خارجی است.
+    * ه) ایجاد تانل‌های شبکه و پروکسی‌های ساده:در ترکیب با ابزارهایی مثل socat یا netcat، از Named Pipeها برای ساخت تانل‌های امنیتی، پورت فورواردینگ‌های پیچیده SSH، یا ایجاد پروکسی‌های سبک برای عبور دادن ترافیک شبکه استفاده می‌شود.
+* رعایت ملاحظات زیر در حین استفاده از این نوع فایل‌ها
+    * حتماً آن‌ها را پاک کنید: چون این فایل‌ها در فایل‌سیستم (مثلاً /tmp) ساخته می‌شوند، بعد از اتمام کار باید با دستور rm /tmp/live_journal آن‌ها را پاک کنید. اگر سیستم ریستارت شود معمولاً /tmp پاک می‌شود، اما در سرورهای آپتایم بالا، فایل‌های اضافی باقی می‌مانند.
+    * مراقب قفل شدن (Hang) ترمینال باشید: به دلیل همان "رفتار مسدودکننده"، اگر شما در ترمینال دستور cat /tmp/my_pipe را بزنید، ترمینال قفل می‌شود و منتظر می‌ماند. اگر فراموش کنید که یک برنامه دیگر باید داده را به آن بفرستد، ترمینال شما برای همیشه فریز می‌شود! (برای خروج از این حالت Ctrl+C را بزنید).
+    * معمولاً یک‌بار مصرف هستند: در بسیاری از پیاده‌سازی‌ها، به محض اینکه برنامه نویسنده فایل را ببندد، برنامه خواننده نیز به محض خواندن آخرین داده، فایل را می‌بندد (EOF دریافت می‌کند). برای استفاده مداوم و زنده (مثل مثال journalctl -f)، باید از ابزارهایی استفاده کنید که مدام فایل را باز نگه می‌دارند یا ساختار حلقه (Loop) بسازید.
+
+## 8.2. 📁️ /sbin/init
 
 * اولین برنامه ایکه برای اجرای دیگر پردازه‌ها به اجرا درمی‌آید
 * اول می‌رود سراغ /sbin/init اگرنبود می‌رود سراغ /etc/init و اگر نبود میرود سراغ /bin/sh
 * سه برنامه برای initiate کردن پردزه ‌ها وجود دارد:۱-sysV که سیستم۵ هم نامیده می‌شود ۲-systemdجدید است۳-upstart برای اوبونتو بود که استفبال نشد
 
-## 📁️ /proc
+## 8.3. 📁️ /proc
 
 تمام محتویات مسیر آن توسط کرنل[kernel] پر می‌شود
 
@@ -286,15 +322,15 @@ tar xf /dev/st0 /home/restorMyData #بازیابی بک‌آپ از نوار
 * /proc/<PID>/limits: مشاهده محدودیت‌های یک پردازه
 * /proc/sys/fs/file-max: # مشاهده محدودیت مجموع فایل‌های باز در سیستم یعنی حداکثر تعداد فایل‌هایی است که می‌توانند به طور همزمان در سیستم باز باشند
 
-# 🅰️Command
+# 9. 🅰️Command
 
-## 🅱️ fio
+## 9.1. 🅱️ fio
 
 ```shell
 fio --name=Rand_RW_100_8K --rw=randrw --direct=1 --rwmixwrite=100  --ioengine=windowsaio --time_based  --runtime=1800  --size=30tib --blocksize=8k  --numjobs=8 --filesize=4tib --thread --group_reporting --filename="\\.\PhysicalDrive2"  --output="c:\1403-08-29-TestRand100Write-T2.txt"
 ```
 
-## 🅱️ tree
+## 9.2. 🅱️ tree
 
 نمایش فایل‌های بصورت درختی
 
@@ -302,7 +338,7 @@ fio --name=Rand_RW_100_8K --rw=randrw --direct=1 --rwmixwrite=100  --ioengine=wi
 tree -fi #نمایش تنها لیست فایل‌ها بصورت نام کامل
 ```
 
-## 🅱️ ulimit
+## 9.3. 🅱️ ulimit
 
 get and set user limits
 
@@ -313,18 +349,18 @@ ulimit -n <new_limit> #Temprory #the maximum number of open file
 vim /etc/security/limits.conf # اگر بخواهیم بصورت دائمی باشد
 ```
 
-# 🅰️ Hash
+# 10. 🅰️ Hash
 
 * هش همواره یک طرفه است و مانند کدینگ نیست که امکان دیکد داشته باشد
 
 ```shell
 echo -n <STRING>|md5sum # linux
 certutil -hashfile <file> MD5 # MicrosoftWindows
-# [Server1: find ./backup -type f -print0 | xargs -0 md5sum > /checksums_backup.md5] && [Server2: md5sum -c checksums_backup.md5] → checksum
+# 6. [Server1: find ./backup -type f -print0 | xargs -0 md5sum > /checksums_backup.md5] && [Server2: md5sum -c checksums_backup.md5] → checksum
 ```
 
-## 🅱️
+## 10.1. 🅱️
 
-## 🅱️
+## 10.2. 🅱️
 
-## 🅱️ 
+## 10.3. 🅱️
