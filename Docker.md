@@ -1,6 +1,6 @@
 <div dir="rtl">
 
-# 1. Concept
+# 1. 🅰️ Concept
 
 **ایمیج**:
 
@@ -33,13 +33,13 @@
 * برنامه kitematics رابط گرافیکی داکر است که در ویندوز نصب می‌شود
 * نام hostname های کانتینرهای داکر همان DockerId است
 * داکر با زبان go نوشته شده است
-* داکر نصب شده در سیستم عامل ویندوز به‌خوبی با کانتینر لینوکس  compatible هست ولی داکر نصب شده در سیستم‌عامل لینوکس(بخاطر close بودن ویندوز) خیلی خیلی خوب نمیتونه با کانتینر ویندوز compatible باشد
+* داکر نصب شده در سیستم عامل ویندوز به‌خوبی با کانتینر لینوکس compatible هست ولی داکر نصب شده در سیستم‌عامل لینوکس(بخاطر close بودن ویندوز) خیلی خیلی خوب نمیتونه با کانتینر ویندوز compatible باشد
 * بک آپ یکی از الزامات داکر است که از کانتینرها حتما باید بک آپ داشت(بک آپی که حتما قبلا ریستور کرده باشی و خیالت راحت باشد)
 * نسخه rancherLinux یک توزیع لینوکسی compatible با داکر و کانتینرها است
 
 ![Docker-Concept.jpg](_srcFiles/Images/Docker-Concept.jpg "Docker-Concept.jpg")
 
-# 2. Network
+# 2. 🅰️ Network
 
 آی پی در کانتیرها تفاوت می‌کند و هربار آی پی ممکن است تغییر کند پس اگر بخواهیم با یک کانتینر ارتباط بگیریم توصیه می‌شود که از نام استفاده نماییم تغییرات آی پی سبب بروز اشکال نشود
 
@@ -65,7 +65,7 @@
 
 </div>
 
-# 3. Repository
+# 3. 🅰️ Repository
 
 نکته: عمل ارسال به ریپوزیتوری(پوش کردن) لایه لایه انجام می‌شود یعنی اگر تنها یک لایه تغییر نماید آنگاه تنها یک لایه ارسال می‌شود
 
@@ -79,16 +79,342 @@
     * docker pull docker/whalesay #دانلود ایمیج مدنظر با حجم تقریبا۷۰مگابایت
         * docker run docker/whalesay cowsay salam # ایجاد یک کانتینر از ایمیج موردنظر و اجرای دستور و پس از اتمام دستور کانتینر از بین می‌رود
 
-# 4. 4.Deployment:
+# 4. 🅰️ Deployment ► Concept
 
 * مجموعه فرآیند و اقداماتی که سبب استقرار ماشین‌های داکر می‌شود و در دو حالت استقرار تکی و کلاستر(اورکستریشن) صورت می‌پذیرد
-* در دو حالت استقرار بصورت تکی و بصورت کلاستر می‌باشد
+* در دو حالت استقرار به‌صورت تکی و به‌صورت کلاستر می‌باشد
 * در حالت استقرار کلاستر(Orchestration) شامل ابزارهایی نظیر **dockerSwarm** یا **Kubernetes** می‌باشد
     * Docker Orchestration:فرآیند مدیریت و ایجاد هماهنگی چندین کانتینر داکر
     * فرآیند شامل استقرار، مقیاس‌گذاری، و مدیریت چرخه عمر کانتینرها در یک محیط توزیع‌شده و ...
 * در حالت استقرار تکی(SingleHost) نیز شامل ابزارهایی نظیر **Terraform** یا **dockerMachine** یا **ApacheMesos** می‌باشد
+* در پروژه‌های کوچک ممکن است واقعاً به هر ۶ فایل نیاز نداشته باشید. مثلاً یک پروژه کوچک می‌تواند فقط `local`، `test` و `prod` داشته باشد؛ اما در پروژه‌های سازمانی، جدا کردن `dev`، `staging` و `demo` می‌تواند مرزهای عملیاتی واضح‌تری ایجاد کند.
+  یک نکته بسیار مهم: Image را بین Environmentها Build نکنیم
 
-## 4.1. ✅️ dockerMachine
+# 5. 🅰️ Deployment ► SingleHost or ApplicationStack
+
+## 5.1. 🅱️ DockerCompose
+
+* داکر Compose بیشتر برای تعریف و اجرای چند کانتینر به‌صورت یک application stack است، نه Deployment به معنای production deployment.
+* اگر بخواهیم چندین سرویس همزمان در یک ایمیج قرار داده شود تا این سرویس‌ها یکدیگر را ببینند
+* باید docker-compose جداگانه نصب شود و پس از نصب می‌توان دستور docker-compose --version از صحت نصب مطلع شویم
+* برای اجرای داکر کامپوز باید به مسیری برویم که فایل YML در آن موجود است
+* فایل داکر کامپوز :‌همه کارها را به داکر کامپوز میدهیم و خودکار همه چیز بالا می‌آید و کاربر نقشی نخواهد داشت
+* فایل باید با پسوند yml یا yaml باشد و حروف کوچک باشد
+* برای هر سرویس باید داکر فایل مستقل داشت(ایمیج مستقل که در داکر فایل مختص همان سرویس مورد استفاده قرار بگیرد. یعنی دانلود کنیم یا خود داکر توسط کامپوزر دانلود نماید)
+
+* پسوند برخی فایل‌های داکر ved مخفف develop است که حاوی تنظیماتی برای توسعه (دیباگ، reload خودکار، ابزارهای توسعه) می‌باشد
+    *
+
+<div dir="ltr">
+
+
+
+**docker-compos COMMAND**
+
+* [up]: create and start containers اگر ایمیج نباشد میرود و دانلود میکند و اگر موجود باشد آن را استارت و دستورات را اجرا میکند
+    * docker-compose up
+* [--build]: Build images before starting containers
+* [-d]: اجرا کردن در وضعیت بک گراند
+* [down]: Stop and remove containers
+* [build]: Build or rebuild services
+* [--no-cache]: Do not use cache when building the image
+    * docker-compose build --no-cache
+* [--pull]: Always attempt to pull a newer version of the image
+* [-f]:‌تعیین فایل داکرکامپوز
+    * docker-compose -f docker-compose1.yaml build -d
+    * docker-compose -f docker-compose1.yaml up -d --build
+    * docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d # Override environment variable in prod file
+* [ps]: List containers
+    * docker-compose ps
+
+</div>
+
+### 5.1.1. ✅️ DockerCompose Files Type
+
+در Docker Compose، این نام‌گذاری‌ها معمولاً Convention پروژه هستند و خود Docker معنای رسمی و اجباری برای `dev`، `test`، `staging`، `prod`، `local` و `demo` تعریف نکرده است؛ تیم تعیین می‌کند هر فایل چه تفاوتی داشته باشد.
+
+```text
+      Local
+        │
+        ▼
+Developer(On Laptop)
+        │
+        ▼
+LOCAL Environment
+        │
+        │ git push
+        ▼
+DEV Environment
+        │
+        ▼
+Automated Tests
+        │
+        ▼
+TEST Environment
+        │
+        ▼
+STAGING Environment
+        │
+        ▼
+Production Approval
+        │               ┌─────────────┐
+        ▼               │    DEMO     │
+PROD Environment        │             │
+                        │ Presentation│
+                        └─────────────┘
+```
+
+| محیط      | هدف اصلی             | داده واقعی         | Debug    | مقیاس/شبکه       | ریسک تغییر |
+|-----------|----------------------|--------------------|----------|------------------|------------|
+| `local`   | توسعه روی لپ‌تاپ     | معمولاً خیر        | زیاد     | ساده             | پایین      |
+| `dev`     | توسعه مشترک تیم      | معمولاً Mock/تست   | زیاد     | متوسط            | پایین      |
+| `test`    | اجرای تست خودکار     | خیر                | متوسط    | شبیه CI          | پایین      |
+| `staging` | شبیه‌سازی Production | گاهی Sanitized     | کم       | بسیار شبیه Prod  | متوسط      |
+| `prod`    | سرویس واقعی کاربران  | بله                | بسیار کم | واقعی/مقیاس‌پذیر | بسیار بالا |
+| `demo`    | نمایش محصول          | معمولاً داده نمونه | متوسط    | کنترل‌شده        | متوسط      |
+
+```text
+project/
+├── src/                         # Source Code برنامه را نگه می‌دارد
+├── tests/                       # تست‌های پروژه را نگه می‌دارد
+├── nginx/                       # Configurationهای Nginx را نگه می‌دارد
+├── docker/                      # فایل‌ها و تنظیمات Docker را نگه می‌دارد
+├── Dockerfile                   # Image اصلی برنامه را تعریف می‌کند
+├── docker-compose.local.yml     # محیط شخصی Developer را تعریف می‌کند
+├── docker-compose.dev.yml       # محیط توسعه مشترک را تعریف می‌کند
+├── docker-compose.test.yml      # محیط تست خودکار را تعریف می‌کند
+├── docker-compose.demo.yml      # محیط Demo را تعریف می‌کند
+├── docker-compose.staging.yml   # محیط پیش‌تولید را تعریف می‌کند
+└── docker-compose.prod.yml      # محیط Production را تعریف می‌کند
+
+```
+
+| ویژگی         | Local            | Dev             | Test         | Demo         | Staging                  | Prod             |
+|---------------|------------------|-----------------|--------------|--------------|--------------------------|------------------|
+| هدف           | توسعه شخصی       | توسعه تیمی      | تست          | نمایش        | پیش‌تولید                | کاربران واقعی    |
+| محل اجرا      | Laptop           | Server/CI/Cloud | CI           | Server/Cloud | Server/Cloud             | Production Infra |
+| Debug         | زیاد             | زیاد            | متوسط        | کم/متوسط     | کم                       | خاموش            |
+| Hot Reload    | معمولاً بله      | ممکن است        | معمولاً خیر  | خیر          | خیر                      | خیر              |
+| Source Mount  | معمولاً بله      | گاهی            | معمولاً خیر  | خیر          | خیر                      | خیر              |
+| داده واقعی    | خیر              | خیر             | خیر          | خیر          | معمولاً خیر یا Sanitized | بله              |
+| Seed Data     | گاهی             | گاهی            | معمولاً بله  | بسیار مهم    | گاهی                     | خیر              |
+| Database      | Local            | Dev DB          | Ephemeral    | Demo DB      | Staging DB               | Production DB    |
+| Redis         | Local            | Dev             | Test         | Demo         | Staging                  | Production       |
+| SSL           | معمولاً خیر      | معمولاً خیر     | خیر          | ممکن است     | بله                      | بله              |
+| Domain        | localhost        | dev.example     | test         | demo.example | staging.example          | example.com      |
+| Secrets       | ساده             | Dev Secrets     | Test Secrets | Demo Secrets | Staging Secrets          | Secret Manager   |
+| Logging       | بسیار زیاد       | زیاد            | متوسط        | متوسط        | کنترل‌شده                | کنترل‌شده        |
+| Monitoring    | معمولاً خیر      | محدود           | CI logs      | محدود        | بله                      | کامل             |
+| Backup        | معمولاً خیر      | معمولاً خیر     | خیر          | معمولاً خیر  | بله/اختیاری              | ضروری            |
+| Availability  | مهم نیست         | متوسط           | مهم نیست     | متوسط        | بالا                     | بسیار بالا       |
+| تغییرات دستی  | آزاد             | نسبتاً آزاد     | خودکار       | کنترل‌شده    | محدود                    | بسیار محدود      |
+| Deployment    | دستی             | CI/CD           | CI           | CI/CD        | CI/CD                    | CI/CD            |
+| Lifecycle     | دائمی روی Laptop | دائمی           | موقت         | تا زمان Demo | دائمی                    | دائمی            |
+| سطح امنیت     | پایین‌تر         | متوسط           | متوسط        | متوسط        | بالا                     | بسیار بالا       |
+| شباهت به Prod | کم               | متوسط           | متوسط        | کم/متوسط     | بسیار زیاد               | مرجع اصلی        |
+
+#### 5.1.1.1. ❇️ Local ► استفاده محلی
+
+محیط local یعنی محیطی که معمولاً روی سیستم شخصی Developer اجرا می‌شود.
+
+* در این محیط Debug فعال است
+* در این محیط Source code به کانتینر mount می‌شود
+* در این محیط Hot reload وجود دارد
+* در این محیط Database محلی است
+* در این محیط Passwordها معمولاً ساده‌اند
+* در این محیط SSL معمولاً وجود ندارد
+* در این محیط Logging بسیار verbose است
+* در این محیط Performance و security در اولویت دوم هستند
+* نام فایل این محیط معمولا `docker-compose.local.yml` است
+* مثلاً با دستور زیر بلافاصله API و Database روی لپ‌تاپ لوکال developer اجرا می‌شوند
+    * `docker compose -f docker-compose.local.yml up
+
+```dockerfile
+NODE_ENV=development
+LOG_LEVEL=debug
+DATABASE_URL=postgresql://app:app@localhost:5432/app
+```
+
+#### 5.1.1.2. ❇️ Dev ► توسعه
+
+محیط dev معمولاً یک محیط توسعه مشترک‌تر و کنترل‌شده‌تر است.
+
+```text
+local = محیط شخصی Developer
+
+dev = محیط توسعه تیم
+
+Developer A ─┐
+Developer B ─┼──► Dev Environment
+Developer C ─┘
+
+```
+
+* در این محیط Debug هنوز ممکن است فعال باشد
+* در این محیط Logging نسبتاً زیاد است
+* در این محیط Database مشترک است
+* در این محیط Deployment ممکن است اتوماتیک باشد
+* در این محیط Configuration نسبت به Local واقعی‌تر است
+* هنگامی که تغییرات سریع و زیاد داریم دراین محیط اعمال می‌کنیم
+* محیط dev می‌تواند محیط مشترک تیم یا یک محیط توسعه روی سرور/CI باشد.
+* نام فایل این محیط معمولا `docker-compose.dev.yml` است
+* در این محیط سرویس‌های خارجی ممکن است Sandbox باشند
+
+```dockerfile
+NODE_ENV=development
+LOG_LEVEL=debug
+DATABASE_URL=postgresql://...
+
+```
+
+#### 5.1.1.3. ❇️ Test ► آزمایش خودکار
+
+هدف اصلی Test این است که آیا کدی که نوشته‌ایم درست کار می‌کند؟
+
+```text
+git push
+   ↓
+Build
+   ↓
+docker compose -f docker-compose.test.yml up
+   ↓
+Unit / Integration / E2E Tests
+   ↓
+PASS / FAIL
+   ↓
+Destroy
+```
+
+* در این محیط داده واقعی نداریم
+* در این محیط Database موقت است
+* این محیط بدلیل تست بودن باید قابل تکرار باشد
+* در این محیط تست‌ها باید deterministic باشند
+* در این محیط بعد از تست containerها حذف می‌شوند
+    * محیط Test برای قابل‌تکرار بودن تست‌هاست؛ بنابراین معمولاً سرویس‌هایی مثل PostgreSQL/Redis موقت بالا می‌آیند و بعد از تست حذف می‌شوند.
+* نام فایل این محیط معمولا `docker-compose.test.yml` است
+
+```dockerfile
+NODE_ENV=test
+LOG_LEVEL=error
+DATABASE_URL=postgresql://test:test@postgres:5432/test
+```
+
+#### 5.1.1.4. ❇️ Staging ► محیط آزمایش
+
+یک نسخه کنترل‌شده و تقریباً مشابه Production برای اینکه قبل از انتشار، رفتار سیستم را بررسی کنیم.محیط Staging باید تا حد امکان به Production نزدیک باشد.
+
+* محیط تست قبل از تولید
+* محیط Staging باید تا حد امکان از نظر image، configuration، network و dependency شبیه Production باشد، اما معمولاً با داده، secrets و دامنه‌های جدا.
+* نام فایل این محیط معمولا `docker-compose.staging.yml` است
+* اگر بخواهیم قبل از Production، سیستم را تقریباً در شرایط واقعی امتحان کنیم
+
+```dockerfile
+NODE_ENV=production
+LOG_LEVEL=info
+DATABASE_URL=<staging database>
+```
+
+#### 5.1.1.5. ❇️ Production(Prod) ► محیط تولید
+
+محیط Production که به اختصار prod هم معروف است محیطی است که کاربران واقعی از آن استفاده می‌کنند. در این محیط هدف شامل Availability و Security و Reliabilityو Backup و Monitoring و Logging و Recovery و Scalability و Zero/Low Downtime Deployment است
+
+*     در Production معمولاً نباید Secrets را مستقیماً داخل docker-compose.prod.yml قرار دهیم.
+* حاوی تنظیماتی برای محیط تولید (بهینه‌سازی، امنیت، لاگینگ) می‌باشد
+* در انین محیط برای سرویس نهایی تدابیر لازمه را درنظر می‌گیرند
+* محیط کاربران واقعی
+* `docker-compose.prod.yml` or `config.prod.json`
+    * به‌طور مثال فایل `.env.prod` حاوی متغیرهای محیطی یا همان Environment در محیط پروداکشن است
+* بهتر است Secret از Secret Manager یا CI/CD یا Environment امن یا مکانیزم مناسب زیرساخت دریافت شود.
+* در سیستم‌های بزرگ معمولاً Database را هم داخل Compose نگه نمی‌دارند و از سرویس‌هایی مانند: Managed PostgreSQL یا Managed Redis یا Managed Kafka یا Cloud Load Balancer یا Kubernetes یا ECS یا Nomad استفاده می‌کنند.
+* در داخل docker-compose.prod.yml نباید Password وجود داشته باشد و مقدار را از سیستم امن دریافت کنیم. زیرا ممکن است فایل وارد Git شود.
+    * در معماری بزرگ‌تر اطلاعات امن DockerCompose اطلاعات نظیر `Database Password` و `JWT Secret` و  `API Key` و  `Encryption Key`  را از SecretManager دریافت می‌کند
+
+```dockerfile
+NODE_ENV=production
+LOG_LEVEL=warn
+DATABASE_URL=<productionDatabase>
+POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+```
+
+#### 5.1.1.6. ❇️ Demo ► نمایشی
+
+محیط demo با staging یکی نیست. محیط Demo معمولاً برای موارد زیر استفاده می‌شود
+
+* محصول به مشتری نمایش داده شود
+* ویژگی‌های جدید یا همان Feature های جدید در آن present گردد
+* تیم بازرگانی معمولا به آن متصل می‌گردد
+* چیزی که در جلسات دمو از آن استفاده می‌گردد
+* این محیط باید برای هر نوع پرزنت قابلیت ریست داشته باشد که در محل های متفاوت قابل ارائه باشد
+
+
+* محیط نمایش سیستم برای کلاینت‌ها
+* `docker-compose.demo.yml`
+*
+
+### 5.1.2. ✅️ Contents
+
+یک داکر کامپوز شامل موارد زیر است
+
+* اولین خط همواره باید ورژن باشد و عدد آن باید مطابق با ورژن «Docker Engine» باشد که مثلا در ورژن‌های داکر بالاتر از 19.03 می‌توان ورژن را ۳.۸ قرار داد
+* هرکدام از سرویس‌ها یک سرور با آی‌پی مستقل خواهند بود یعنی اگر داخل هرکدام دیگری را پینگ کنیم پاسخ را خواهیم گرفت(دستور پینگ و نام هاست را نام سرویس می‌گذاریم یعین ping web)
+
+<div dir="ltr">
+
+* version: # اولین خط همیشه باید تعیین ورژن باشد
+    * ورژن رو باید با توجه به نسخه داکر هاست تعیین کنین که در سایت داکر نیز آمده است
+* services: هرکدام از سرویس‌های دلخواه که بخواهیم بالا بیاوریم
+* serviceName: هر نام دلخواه می‌توان قرار داد
+    * در مثال زیر کلمه دلخواه «وِب» برای «فرانت‌اِند» انتخاب کردیم و «اِی‌پی‌آی» برای «بَک‌اِند» و کلمه دلخواه «دی‌بی» برای دیتابیس است
+* build: تعیین مسیر داکرفایل مختص سرویس برای بیلد کردن
+* context:‌وقتی بخواهیم در بیلد یک داکر فایل خاص استفاده نماییم باید مسیر را توسط این عبارت به همراه کلیدواژه «داکرفایل»با مقدار «نام فایل» مشخص نماییم
+* image: استفاده از ایمیج خاص و عدم بیلد کردن و استفاده از کانتینر
+* environment #تعریف متغیرهای محلی در ایمیج
+*
+    - DB_URL=mongodb://db/mydb #هردو شکل صحیح است
+* DB_URL: mongodb://db/mydb
+* volumes #اتصال مسیر خاصی از سیستم لینوکس اصلی به کانتینر
+* `- ./DireName:/app` #در مسیر کنونی با نام خاص را به مسیر «اَپ» در درون کانتینر متصل می‌کند
+* command: اجرای یک دستور در کانتینر
+    * میتوان همه کارها را درون یک شل ایجاد کرد و فقط به دستور بگوییم آن شل را اجرا بکند
+* restart #وقتی یک کانتینر کرش می‌کند چه اتفاقی رخ دهد
+    * always: همواره هنگام کرش کردن ریست کند
+    * no: هنگام کرش کردن ریست نکند
+    * unless-stopped: ریست هنگام استاپ کردن سرویس
+
+### 5.1.3. ✅️ Example
+
+```dockerfile
+version: "3.8"
+services:
+    web:
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile.prod
+        ports:a
+            - 3000:3001
+    api:
+        build:./backend
+        ports:
+            -  3001:3001
+        environment:
+            - DB_URL2=mongodb://db/mydb
+        volumes:
+            - ./DireName:/app
+        command: ./MyScript.sh
+    db:
+        image: mongo:4.0-xenial
+        ports:
+            - 27017:27017
+        volumes:
+            - mydb:/data/db
+volumes:
+    mydb:
+```
+
+![Docker-compose.jpg](_srcFiles/Images/Docker-compose.jpg "Docker-compose.jpg")
+</div>
+
+## 5.2. 🅱️ dockerMachine
 
 * یکی ابزارهای نصب و مدیریت داکر درهاست‌های مجازی ریموت[می‌تواند لوکال باشد یا ریموت یا کلود]
 * ابزارهای دیگر نظیر terraform هم هست که این کار را می‌کند
@@ -115,7 +441,7 @@
 
 </div>
 
-## 4.2. ✅️ terraform
+## 5.3. 🅱️ terraform
 
 * ابزار متن‌باز برای مدیریت زیرساخت به عنوان کد.
 * ابزارهای دیگر نظیر DockerMachine هم هست که این کار را می‌کند
@@ -128,19 +454,60 @@
 * از زبان HCL (HashiCorp Configuration Language) برای تعریف زیرساخت‌ها استفاده می‌کند
 * می‌تواند با ارائه‌دهندگان مختلف ابری (مانند AWS، Azure، Google Cloud) و همچنین منابع محلی کار کند.
 
-## 4.3. ✅️ dockerSwarm
+# 6. 🅰️ Deployment ► Orchestration or Cluster
+
+```text
+                 SOURCE CODE
+                      │
+                      ▼
+                 Docker Build
+                      │
+                      ▼
+                Docker Image
+                      │
+     ┌────────────────┼────────────────┐
+     │                │                │
+     ▼                ▼                ▼
+  LOCAL              DEV             TEST
+     │                │                │
+     │                │                │
+     └────────────────┼────────────────┘
+                      │
+                      ▼
+                   STAGING
+                      │
+             ┌────────┴────────┐
+             │                 │
+             ▼                 ▼
+           Check            FinalTest
+             │                 │
+             └────────┬────────┘
+                      │
+                      ▼
+                    PROD                       ┌─────────────────┐
+                      │                        │      DEMO       │
+                      ▼                        │                 │
+                  Real Users                   │ Customer / Sales│
+                                               │ Presentation    │
+                                               └─────────────────┘
+
+
+Order: Local ► Dev ► Test ► Demo ► Staging ► Prod
+```
+
+## 6.1. 🅱️ dockerSwarm
 
 * فراهم سازی امکان مدیریت و استقرار کلاستر
 * شرکت داکر برای استقرار این نسخه را توصیه می‌نماید زیرا ابزار Orchestration شرکت داکر است
 
-## 4.4. ✅️ Kubernetes
+## 6.2. 🅱️ Kubernetes
 
 * پیاده سازی شده توسط شرکت گوگل
 * متن‌باز یا همان OpenSource
 * استفاده گسترده‌ در صنعتIT
 * امکانات پیشرفته‌تر نسبت به Docker Swarm
 
-# 5. Dockerfile
+# 7. 🅰️ Dockerfile
 
 * یک فایل متنی بر پایه سینتکس خاص که در آن دستورالعمل می‌نویسیم
 * نام پیش‌فرض داکر فایل Dockerfile است که اگر فایل را به این نام ساختیم و اگر در آن مسیر باشیم خودکار این فایل شناخته می‌شود
@@ -154,7 +521,7 @@
 
 ![Docker-DockerFile.jpg](_srcFiles/Images/Docker-DockerFile.jpg "Docker-DockerFile.jpg")
 
-## 5.1. 🔎️Contents
+## 7.1. 🅱️ Contents
 
 یک داکر فایل شامل موارد زیر است
 
@@ -213,7 +580,7 @@
 * MAINTAINER: نام سازنده و اطلاعات
     * MAINTAINER "behroozmn@chmail.ir"
 
-## 5.2. 💡️Example
+## 7.2. 🅱️ Example
 
 ```dockerfile
 1-CreateDockerFile
@@ -229,104 +596,7 @@
 
 </div>
 
-# 6. DockerCompose
-
-* اگر بخواهیم چندین سرویس همزمان در یک ایمیج قرار داده شود تا این سرویس‌ها یکدیگر را ببینند
-* باید docker-compose جداگانه نصب شود و پس از نصب می‌توان دستور docker-compose --version از صحت نصب مطلع شویم
-* برای اجرای داکر کامپوز باید به مسیری برویم که فایل YML در آن موجود است
-* فایل داکر کامپوز :‌همه کارها را به داکر کامپوز میدهیم و خودکار همه چیز بالا می‌آید و کاربر نقشی نخواهد داشت
-* فایل باید با پسوند yml یا yaml باشد و حروف کوچک باشد
-* برای هر سرویس باید داکر فایل مستقل داشت(ایمیج مستقل که در داکر فایل مختص همان سرویس مورد استفاده قرار بگیرد. یعنی دانلود کنیم یا خود داکر توسط کامپوزر دانلود نماید)
-*
-
-<div dir="ltr">
-
-
-
-**docker-compos COMMAND**
-
-* [up]: create and start containers اگر ایمیج نباشد میرود و دانلود میکند و اگر موجود باشد آن را استارت و دستورات را اجرا میکند
-    * docker-compose up
-* [--build]: Build images before starting containers
-* [-d]: اجرا کردن در وضعیت بک گراند
-* [down]: Stop and remove containers
-* [build]: Build or rebuild services
-* [--no-cache]: Do not use cache when building the image
-    * docker-compose build --no-cache
-* [--pull]: Always attempt to pull a newer version of the image
-* [-f]:‌تعیین فایل داکرکامپوز
-    * docker-compose -f docker-compose1.yaml build -d
-    * docker-compose -f docker-compose1.yaml up -d --build
-* [ps]: List containers
-    * docker-compose ps
-
-</div>
-
-## 6.1. 🔎️Contents
-
-یک داکر کامپوز شامل موارد زیر است
-
-* اولین خط همواره باید ورژن باشد و عدد آن باید مطابق با ورژن «Docker Engine» باشد که مثلا در ورژن‌های داکر بالاتر از 19.03 می‌توان ورژن را ۳.۸ قرار داد
-* هرکدام از سرویس‌ها یک سرور با آی‌پی مستقل خواهند بود یعنی اگر داخل هرکدام دیگری را پینگ کنیم پاسخ را خواهیم گرفت(دستور پینگ و نام هاست را نام سرویس می‌گذاریم یعین ping web)
-
-<div dir="ltr">
-
-* version: # اولین خط همیشه باید تعیین ورژن باشد
-    * ورژن رو باید با توجه به نسخه داکر هاست تعیین کنین که در سایت داکر نیز آمده است
-* services: هرکدام از سرویس‌های دلخواه که بخواهیم بالا بیاوریم
-* serviceName: هر نام دلخواه می‌توان قرار داد
-    * در مثال زیر کلمه دلخواه «وِب» برای «فرانت‌اِند» انتخاب کردیم و «اِی‌پی‌آی» برای «بَک‌اِند» و کلمه دلخواه «دی‌بی» برای دیتابیس است
-* build: تعیین مسیر داکرفایل مختص سرویس برای بیلد کردن
-* context:‌وقتی بخواهیم در بیلد یک داکر فایل خاص استفاده نماییم باید مسیر را توسط این عبارت به همراه کلیدواژه «داکرفایل»با مقدار «نام فایل» مشخص نماییم
-* image: استفاده از ایمیج خاص و عدم بیلد کردن و استفاده از کانتینر
-* environment #تعریف متغیرهای محلی در ایمیج
-*
-    - DB_URL=mongodb://db/mydb #هردو شکل صحیح است
-* DB_URL: mongodb://db/mydb
-* volumes #اتصال مسیر خاصی از سیستم لینوکس اصلی به کانتینر
-* `- ./DireName:/app` #در مسیر کنونی با نام خاص را به مسیر «اَپ» در درون کانتینر متصل می‌کند
-* command: اجرای یک دستور در کانتینر
-    * میتوان همه کارها را درون یک شل ایجاد کرد و فقط به دستور بگوییم آن شل را اجرا بکند
-* restart #وقتی یک کانتینر کرش می‌کند چه اتفاقی رخ دهد
-    * always: همواره هنگام کرش کردن ریست کند
-    * no: هنگام کرش کردن ریست نکند
-    * unless-stopped: ریست هنگام استاپ کردن سرویس
-
-## 6.2. 💡️Example
-
-```dockerfile
-[docker composer-yaml]
-version: "3.8"
-services:
-    web:
-        build:
-            context: ./frontend
-            dockerfile: Dockerfile.prod
-        ports:a
-            - 3000:3001
-    api:
-        build:./backend
-        ports:
-            -  3001:3001
-        environment:
-            - DB_URL2=mongodb://db/mydb
-        volumes:
-            - ./DireName:/app
-        command: ./MyScript.sh
-    db:
-        image: mongo:4.0-xenial
-        ports:
-            - 27017:27017
-        volumes:
-            - mydb:/data/db
-volumes:
-    mydb:
-```
-
-![Docker-compose.jpg](_srcFiles/Images/Docker-compose.jpg "Docker-compose.jpg")
-</div>
-
-# 7. dockerignore
+# 8. 🅰️ dockerignore
 
 * فایل sockerignore که شروع آن با یک نقطه است(برای شناساندن به سیستم‌عامل‌ها که این فایل از نوع مخفی است) برای نادیده گرفتن فایل‌ها و دایرکتوری‌ها می‌باشد.
 * مثال: هنگام کپی تمام محتوی یک دایرکتوری که ذیل آن یک دایرکتوری ignore شده وجود دارد، دراین حالت پوشه ignore شده کپی نمی‌شود
@@ -335,9 +605,9 @@ volumes:
 Diretory/ #نادیده گرفتن یک دایرکتوری
 ```
 
-# 8. COMMANDs
+# 9. 🅰️ COMMANDs
 
-## 8.1. 📍️docker run
+## 9.1. 📍️docker run
 
 * اجرای یک دستور بر پایه یک ایمیج که سبب تولید یک کانتینر می‌شود و هرگاه دستور تمام شود آنگاه کانتینر ازبین می‌رود
 * نکته۱:کانتینرها درواقع پروسس هستند که در قالب ایمیج ایجاد می‌شوند و پس از اجرا تمام و از بین می‌روند
@@ -391,7 +661,7 @@ docker run -d --name <N> -e APP_PORT=7070 -p 8081:7070 <Image>
 docker  run --rm ..........  # run after kill after delete
 ```
 
-## 8.2. 📍️docker stop
+## 9.2. 📍️docker stop
 
 ```shell
 docker stop Name #استاپ کردن یک کانتینر
@@ -400,7 +670,7 @@ docker container prune #  اگر کانتینرهای استاپ شده زیاد
 
 ```
 
-## 8.3. 📍️docker save
+## 9.3. 📍️docker save
 
 ذخیره یک ایمیج
 
@@ -408,7 +678,7 @@ docker container prune #  اگر کانتینرهای استاپ شده زیاد
 docker save -o <Name>.tar.gz Repository:Tag
 ```
 
-## 8.4. 📍️docker exec
+## 9.4. 📍️docker exec
 
 اجرای یک دستور جدید در یک کانتینر موجود که هم‌اکنون درحال اجرای دستور است
 
@@ -417,7 +687,7 @@ docker exec -it <NameContiner> <Commnads>
 docker exec -it <NameContiner> /bin/bash
 ```
 
-## 8.5. 📍️docker cp
+## 9.5. 📍️docker cp
 
 کپی اطلاعات کانتینر درحال اجرا برروی سیستم فیزیکی ولوکال خودمان و برعکس
 
@@ -427,7 +697,7 @@ docker cp f39a65:/app/My_file.txt /home/user/Document
 docker cp <localHostSystem> <ContainerID>:fullFileName #کپی از سیستم به کانتینر
 ```
 
-## 8.6. 📍️docker commit
+## 9.6. 📍️docker commit
 
 ذخیره اطلاعات یک کانتینر و تبدیل به یک ایمیج
 
@@ -435,7 +705,7 @@ docker cp <localHostSystem> <ContainerID>:fullFileName #کپی از سیستم �
 docker commit <ContainerID> <repository:[Tag]>
 ```
 
-## 8.7. 📍️docker volume
+## 9.7. 📍️docker volume
 
 MountPoint:‌مسیری که در دستورinspect نمایش داده می‌شود و نشان می‌دهد که والیوم در کدام مسیر لینوکس اصلی قرار دارد
 
@@ -454,7 +724,7 @@ MountPoint:‌مسیری که در دستورinspect نمایش داده می‌
 
 </div>
 
-## 8.8. 📍️docker load
+## 9.8. 📍️docker load
 
 دریافت ورودی و یک ایمیج را در ایمیج های داکر لود میکند
 
@@ -462,13 +732,13 @@ MountPoint:‌مسیری که در دستورinspect نمایش داده می‌
 docker load -i <PATH.tar.gz>
 ```
 
-## 8.9. 📍️docker rmi
+## 9.9. 📍️docker rmi
 
 ```shell
 docker rmi [<Container ID>|<NAME>]
 ```
 
-## 8.10. 📍️docekr ps
+## 9.10. 📍️docekr ps
 
 * نمایش کانینرهای درحال اجرای دستور در سیستم عامل کنونی را نشان می‌دهد که درحال اجرای چه دستوری است
 * نکته۱:کانتینرها درواقع پروسس هستند که در قالب ایمیج اجرا می‌شوند و پس از اجرا تمام و از بین می‌روند
@@ -482,7 +752,7 @@ docker rmi [<Container ID>|<NAME>]
 
 </div>
 
-## 8.11. 📍️docker build
+## 9.11. 📍️docker build
 
 * برای build کردن نیاز به یک داکرفایل است
 * تمام Step های ران شده در build یک ایمج کش می‌شود تا در نوبت بعدی از این استفاده شود
@@ -500,7 +770,7 @@ docker rmi [<Container ID>|<NAME>]
 
 </div>
 
-## 8.12. 📍️docker Container
+## 9.12. 📍️docker Container
 
 نکته: در توزیع لینوکس alpine دستور apt نداریم بلکه معادل آن apk است
 
@@ -519,7 +789,7 @@ docker rmi [<Container ID>|<NAME>]
 
 </div>
 
-## 8.13. 📍️docker docker-machin
+## 9.13. 📍️docker docker-machin
 
 ```shell
 docker-machine ls
@@ -527,7 +797,7 @@ docker-machine ssh default <Command>
 docker-machine ip <ContainerName>
 ```
 
-## 8.14. 📍️docker volume
+## 9.14. 📍️docker volume
 
 ```shell
 docker volume create --name Behrooz
@@ -535,20 +805,20 @@ docker volume ls
 docker volume inspect behrooz
 ```
 
-## 8.15. 📍️docker history
+## 9.15. 📍️docker history
 
 ```shell
 docker history [ImageName] #نمایش تاریخچه دستورات
 ```
 
-## 8.16. 📍️docker inspect|info
+## 9.16. 📍️docker inspect|info
 
 ```shell
 docker info # show environments
 docker inspect <CoutainerID|Name>
 ```
 
-## 8.17. 📍️docker logs
+## 9.17. 📍️docker logs
 
 <div dir="ltr">
 
@@ -565,7 +835,7 @@ docker logs [ContainerID | NAME] #Fetch the logs of a container منظور خط�
 
 </div>
 
-## 8.18. 📍️docker image
+## 9.18. 📍️docker image
 
 * برای تولید یک ایمیج Custom باید ابتدا یک DockerFile ایجاد کنیم و دستورالعمل‌هایمان را داخل آن قرار دهیم. سپس داکر فایل را بیلد نماییم یعنی داکر فایل خط به خط خوانده شود و پس از اتمام آن خروجی حاصله را توسط دستور build به یک ایمیج تبدیل کنیم
 * نکته: توزیع alpine یک توزیع بسیار سبک از لینوکس است که بجای دانلود ایمیج لینوکس با حجم زیاد بهتر است این را استفاده نمایید
