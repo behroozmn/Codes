@@ -524,14 +524,53 @@ EXPOSE 7000-8000
 
 * مجموعه فرآیند و اقداماتی که سبب استقرار ماشین‌های داکر می‌شود و در دو حالت استقرار تکی و کلاستر(اورکستریشن) صورت می‌پذیرد
 * در دو حالت استقرار به‌صورت تکی و به‌صورت کلاستر می‌باشد
-* در حالت استقرار کلاستر(Orchestration) شامل ابزارهایی نظیر **dockerSwarm** یا **Kubernetes** می‌باشد
+* در حالت استقرار کلاستر(Orchestration or Cluster)) شامل ابزارهایی نظیر **dockerSwarm** یا **Kubernetes** می‌باشد
     * Docker Orchestration:فرآیند مدیریت و ایجاد هماهنگی چندین کانتینر داکر
     * فرآیند شامل استقرار، مقیاس‌گذاری، و مدیریت چرخه عمر کانتینرها در یک محیط توزیع‌شده و ...
-* در حالت استقرار تکی(SingleHost) نیز شامل ابزارهایی نظیر **Terraform** یا **dockerMachine** یا **ApacheMesos** می‌باشد
+* در حالت استقرار تکی(SingleHost or ApplicationStack) نیز شامل ابزارهایی نظیر **Terraform** یا **dockerMachine** یا **ApacheMesos** می‌باشد
 * در پروژه‌های کوچک ممکن است واقعاً به هر ۶ فایل نیاز نداشته باشید. مثلاً یک پروژه کوچک می‌تواند فقط `local`، `test` و `prod` داشته باشد؛ اما در پروژه‌های سازمانی، جدا کردن `dev`، `staging` و `demo` می‌تواند مرزهای عملیاتی واضح‌تری ایجاد کند.
   یک نکته بسیار مهم: Image را بین Environmentها Build نکنیم
 
-# 8. 🅰️ Deployment ► SingleHost or ApplicationStack
+```text
+                 SOURCE CODE
+                      │
+                      ▼
+                 Docker Build
+                      │
+                      ▼
+                Docker Image
+                      │
+     ┌────────────────┼────────────────┐
+     │                │                │
+     ▼                ▼                ▼
+  LOCAL              DEV             TEST
+     │                │                │
+     │                │                │
+     └────────────────┼────────────────┘
+                      │
+                      ▼
+                   STAGING
+                      │
+             ┌────────┴────────┐
+             │                 │
+             ▼                 ▼
+           Check            FinalTest
+             │                 │
+             └────────┬────────┘
+                      │
+                      ▼
+                    PROD                       ┌─────────────────┐
+                      │                        │      DEMO       │
+                      ▼                        │                 │
+                  Real Users                   │ Customer / Sales│
+                                               │ Presentation    │
+                                               └─────────────────┘
+
+
+Order: Local ► Dev ► Test ► Demo ► Staging ► Prod
+```
+
+# 8. 🅰️ Deployment
 
 ## 8.1. 🅱️ DockerCompose
 
@@ -896,60 +935,19 @@ volumes:
 * از زبان HCL (HashiCorp Configuration Language) برای تعریف زیرساخت‌ها استفاده می‌کند
 * می‌تواند با ارائه‌دهندگان مختلف ابری (مانند AWS، Azure، Google Cloud) و همچنین منابع محلی کار کند.
 
-# 9. 🅰️ Deployment ► Orchestration or Cluster
-
-```text
-                 SOURCE CODE
-                      │
-                      ▼
-                 Docker Build
-                      │
-                      ▼
-                Docker Image
-                      │
-     ┌────────────────┼────────────────┐
-     │                │                │
-     ▼                ▼                ▼
-  LOCAL              DEV             TEST
-     │                │                │
-     │                │                │
-     └────────────────┼────────────────┘
-                      │
-                      ▼
-                   STAGING
-                      │
-             ┌────────┴────────┐
-             │                 │
-             ▼                 ▼
-           Check            FinalTest
-             │                 │
-             └────────┬────────┘
-                      │
-                      ▼
-                    PROD                       ┌─────────────────┐
-                      │                        │      DEMO       │
-                      ▼                        │                 │
-                  Real Users                   │ Customer / Sales│
-                                               │ Presentation    │
-                                               └─────────────────┘
-
-
-Order: Local ► Dev ► Test ► Demo ► Staging ► Prod
-```
-
-## 9.1. 🅱️ dockerSwarm
+## 8.4. 🅱️ dockerSwarm
 
 * فراهم سازی امکان مدیریت و استقرار کلاستر
 * شرکت داکر برای استقرار این نسخه را توصیه می‌نماید زیرا ابزار Orchestration شرکت داکر است
 
-## 9.2. 🅱️ Kubernetes
+## 8.5. 🅱️ Kubernetes
 
 * پیاده سازی شده توسط شرکت گوگل
 * متن‌باز یا همان OpenSource
 * استفاده گسترده‌ در صنعتIT
 * امکانات پیشرفته‌تر نسبت به Docker Swarm
 
-# 10. 🅰️ dockerignore
+# 9. 🅰️ dockerignore
 
 * فایل sockerignore که شروع آن با یک نقطه است(برای شناساندن به سیستم‌عامل‌ها که این فایل از نوع مخفی است) برای نادیده گرفتن فایل‌ها و دایرکتوری‌ها می‌باشد.
 * مثال: هنگام کپی تمام محتوی یک دایرکتوری که ذیل آن یک دایرکتوری ignore شده وجود دارد، دراین حالت پوشه ignore شده کپی نمی‌شود
