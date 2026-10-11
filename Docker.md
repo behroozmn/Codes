@@ -20,6 +20,8 @@
 ## 2.1. 📍️ Options
 
 * [-it]: Interactive --> اجازه استفاده مستقیم و تعاملی به ایمیج می‌دهد. گویا پشت کانتینر نشسته ایم و کامند وارد می‌کنیم
+    * [-i]: open stdin as interactive connection
+    * [-t]: define new TTY as Terminal
 * [-p]: <portOnLocalHost>:<portOnImage>مَپ کردن پورت داخلی یک ایمیج روی سیستم لوکال
 * [-d]: اجرای ایمیج در بک‌گراند
 * [-e]: define a new EnvironmentVariable
@@ -99,32 +101,16 @@ docker -H=ssh://user@192.168.1.50 ps # اتصال امن از پروتکل ssh
 * نکته۵(خیلی‌مهم): وظیفه‌ی کانتینرها اجرای «دستور» یا «جاب» یا «محاسبه» یا ا«جرای‌یک‌پردازه» و از این قبیل است و هنگامی که پردازش آنها تمام شد، بطور خودکار از بین می‌شوند
 * نکته۶: به ازای هر کانتینر که برای اجرای یک دستور خاص توسط «داکر ران» ایجاد می‌شود یک محیط ایزوله و مستقل است و درصورت اجرای مجدد همان دستور یک کانتینر در محیط ایزوله و مستقل و با آی‌دی دیگر برایش ایجاد خواهد شد
 * HotFix: همزمان که در سیستم خودتان درحال اصلاح کد هستید این تغییرات در داخل کانتینر هم لحاظ بشود. اگر چه این فایل‌ها در لایه readonlyداکر فایل(در وضعیت غیرقابل تغییر) قرار گرفته باشد
+* برای ایمیج‌های رایج که شل پیشفرض دارند مثل ubuntu بصورت پیش‌فرض از دستور `/bin/bash` استفاده می‌شود زیرا در داکر فایل رسمی آن `CMD ["/bin/bash"]` آمده است. یعنی اگر دستوری نزنید این دستور به اجرا در میاید ولی اگر دستوری بزنین دستور نادیده گرفته می‌شود
 
 ```shell
-# Docker run [ImageName] [Commands] # Run a command in a new container
-```
-
-```shell
-docker run ubuntu
-```
-
-اجرای دستور «هیچی» روی ایمیج اوبونتو(بدون دستور و آرگومان) و جون کامند ندادیم پس کاری انجام نمی‌شود و خودکار بسته می‌شود
-
-```shell
-docker run ubuntu sleep ۱۰
-```
-
-به کانتینر بالا آمده از ایمیج اوبونتو می‌گوید که دستور توقف زمانی۱۰ثانه را در بش اجرا کن و پس ازاتمام کانتینر را از بین ببر-یعنی اگر در مدت ۱۰ثانیه در ترمینال دیگر دستور «داکر پی‌‌اِس» را بزنیم کانتینر را خواهیم دید
-
-```shell
-docker run mongodb
-```
-
-جستجو در ایمیح‌های داکرهاست(سیستم‌لوکال) و درصورت عدم وجود، جستجو در ریپوزیتوری پیش‌فرض(داکرهاب) و سپس دانلود و نهایتا استفاده از آن
-
-```shell
+Docker run <IMAGE> [Commands]        # Run a command in a new container
+docker run <IMAGE> # اجرای دستور «هیچی» روی ایمیج اوبونتو(بدون دستور و آرگومان) و جون کامند ندادیم پس کاری انجام نمی‌شود و خودکار بسته می‌شود
+docker run <IMAGE> sleep ۱۰ # به کانتینر بالا آمده از ایمیج اوبونتو می‌گوید که دستور توقف زمانی۱۰ثانه را در بش اجرا کن و پس ازاتمام کانتینر را از بین ببر-یعنی اگر در مدت ۱۰ثانیه در ترمینال دیگر دستور «داکر پی‌‌اِس» را بزنیم کانتینر را خواهیم دید
+docker run <IMAGE> # جستجو در ایمیح‌های داکرهاست(سیستم‌لوکال) و درصورت عدم وجود، جستجو در ریپوزیتوری پیش‌فرض(داکرهاب) و سپس دانلود و نهایتا استفاده از آن
 docker run -it node:16.5.0-alpine3.14    # ورود به کنسول ریَکت
-docker run -it node:16.5.0-alpine3.14 sh # ورود به شل ایمیج
+docker run -it <Repo:Tag>                # ورود به کنسول ریَکت
+docker run -it   node:16.5.0-alpine3.14 sh # ورود به شل ایمیج
 docker run -it ubuntu bash # خط فرمان بش داخل ایمیج را در بصورت اینتراکتیو در اختیار کاربر قرار میدهد و صفحه ترمینال سیستم‌عامل لوکال به بش داخل ایمیج تغییر می‌کند
 docker run -p 5001:5000 <IMAGE> # 5001(PhysicalServer or Localhost) TO 5000(virtual container)
 docker run <IMAGE> -p 5001:5000 # ❌️  غلط است
@@ -133,7 +119,8 @@ docker run -d --name <NAME> <IMAGE>
 docker run -it -u root face4 sh
 docker run -d -p 3001:3000 -v myShareVolume:/Dir1/subdir imageName
 
-docker run -i -t <Repo:Tag> #run and go to bash of OS
+docker run -i -t <Repo:Tag> #run and go to bash of OS(if shell exist)
+docker run -it   <Repo:Tag> #run and go to bash of OS(if shell exist)
 docker run -i -t --name <NAME> <Repo:Tag>   #run and go to bash of OS 
 docker run -d    --name <NAME> -v <VolumeName>:Path <Image>
 docker run       --name <NAME> -v BehroozData:/data/db -p 28001:27017 -d <Image>
@@ -187,22 +174,16 @@ docker commit <ContainerID> <repository:[Tag]>
 
 ## 2.9. 📍️docker volume
 
-MountPoint:‌مسیری که در دستورinspect نمایش داده می‌شود و نشان می‌دهد که والیوم در کدام مسیر لینوکس اصلی قرار دارد
+**MountPoint**: ‌مسیری که در دستور inspect نمایش داده می‌شود و نشان می‌دهد که والیوم در کدام مسیر لینوکس اصلی قرار دارد
 
-<div dir="ltr">
-
-* docker volume COMMAND
-* create: Create a volume
-    * docker volume create myShareVolume #ایجاد یک والیوم جدید
-* inspect: Display detailed information on one or more volumes
-    * docker volume inspec myShareVolume #نمایش جزییات والیوم ساخته شده از قبل
-* ls: List volumes
-* prune: Remove unused local volumes
-* rm: Remove one or more volumes
-    * docker volume rm volumeName
-* update: Update a volume (cluster volumes only)
-
-</div>
+```shell
+docker volume create <VolumeName>     #ایجاد یک والیوم جدید
+docker volume rm     <VolumeName>     # Remove one or more volumes
+docker volume prune                   # Remove unused local volumes
+docker volume ls                      # List   volumes
+docker volume inspec <VolumeName>     # Display detailed information on one or more volumes ---> نمایش جزییات والیوم ساخته شده از قبل
+docker volume update                  # Update a volume (cluster volumes only)
+```
 
 ## 2.10. 📍️docker load
 
@@ -933,8 +914,8 @@ POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
 
 ### 8.1.3. ✅️ Commands
 
-```dockerfile
-
+```shell
+docker-compose -f docker-compose_prod.yaml build
 ```
 
 ### 8.1.4. ✅️ Example
