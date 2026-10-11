@@ -17,7 +17,79 @@
 
 # 2. 🅰️ Docker CLI
 
-## 2.1. 📍️docker run
+## 2.1. 📍️ Options
+
+* [-it]: Interactive --> اجازه استفاده مستقیم و تعاملی به ایمیج می‌دهد. گویا پشت کانتینر نشسته ایم و کامند وارد می‌کنیم
+* [-p]: <portOnLocalHost>:<portOnImage>مَپ کردن پورت داخلی یک ایمیج روی سیستم لوکال
+* [-d]: اجرای ایمیج در بک‌گراند
+* [-e]: define a new EnvironmentVariable
+* [-H]:ریموت روی سرور داکر در آی‌پی خاص و اجرای دستور
+* [-u userName]: تعیین نام یوزر برای اجرای دستور
+* [--name NAME]: دادن نام خاص به کانتینر بجای نام تصادفی
+* [-v VolumeName:DirectoryOnContainer]
+    * نکته:اگر از قبل توسط دستور داکر والیوم ایجاد نکرده باشیم، به محض قرار دادن نام جدید بعنوان والیوم در دستور «داکر ران» آن را میسازد
+    * نکته۲:مسیر داده شده در کانتینر که قرار است به والیوم متصل شود خودکار ایجاد می‌شود ونیاز به از قبل ساخته شدن نیست
+* HotFix[توجه به توضیحات]
+    * docker run ... -v DirOnLocal:DirOnContainer imageName
+    * مثال۱: docker run -d -p 3001:3000 -v $(pwd):/app imageName
+
+## 2.2. 📍️docker
+
+اجرای دستور در سرور ریموت
+
+```shell
+docker -H=<RemoteIP>:2222 <COMMAND> <OPTIONS> <ARGS> # connect to «DockerDaemon» on remote
+docker -H=10.10.0.10:2222 run <IMAGE>
+docker -H=tcp://<RemoteIP>:2222
+docker -H=ssh://user@<RemoteIP>:2222
+docker -H=192.168.1.50:2222            ps       # لیست کانتینرهای در حال اجرا روی سرور راه دور
+docker -H=tcp://192.168.1.50:2222      ps       # over TCP
+docker -H=ssh://user@192.168.1.50:2222 ps       # over SSH
+docker -H=192.168.1.50:2222            images   # لیست همه ایمیج‌ها روی سرور راه دور
+docker -H=192.168.1.50:2222 \
+        run -d --name web -p 8080:80 nginx      # اجرای یک کانتینر روی سرور راه دور
+docker -H=192.168.1.50:2222            logs web # دیدن لاگ‌های یک کانتینر روی سرور راه دور
+docker -H=192.168.1.50:2222            stop web # توقف یک کانتینر روی سرور راه دور
+docker -H=192.168.1.50:2222 \
+       -H=192.168.1.60:2222            ps       # Multiple Host ---> در این حالت داکر دستور را روی هر دو سرور اجرا می‌کند
+```
+
+#### 2.2.1. ❇️ Set Default Host
+
+تنظیم Host پیش‌فرض: اگر مدام می‌خواهید به یک سرور راه دور وصل شوید، می‌توانید متغیر محیطی تنظیم کنید تا هر بار -H ننویسید:
+
+```shell
+export DOCKER_HOST=tcp://192.168.1.50:2222
+docker ps          # خودکار به سرور راه دور وصل می‌شود
+unset DOCKER_HOST  # برگشتن به حالت عادی
+```
+
+#### 2.2.2. ❇️ open Remotes port
+
+داکر Daemon روی سرور راه دور باید TCP را گوش دهد.به طور پیش‌فرض، داکر فقط روی Unix socket محلی (/var/run/docker.sock) گوش می‌دهد. برای اتصال راه دور باید روی سرور مقصد در فایل /etc/docker/daemon.json تنظیم کنید:
+
+```json
+{
+  "hosts": [
+    "tcp://0.0.0.0:2222",
+    "unix:///var/run/docker.sock"
+  ]
+}
+```
+
+سپس ریستارت
+
+```shell
+sudo systemctl restart docker
+sudo ufw allow 2222/tcp
+```
+
+```shell
+docker --tlsverify --tlscacert=ca.pem --tlscert=cert.pem --tlskey=key.pem -H=192.168.1.50:2222 ps # اتصال امن از پروتکل TLS
+docker -H=ssh://user@192.168.1.50 ps # اتصال امن از پروتکل ssh
+```
+
+## 2.3. 📍️docker run
 
 * اجرای یک دستور بر پایه یک ایمیج که سبب تولید یک کانتینر می‌شود و هرگاه دستور تمام شود آنگاه کانتینر ازبین می‌رود
 * نکته۱:کانتینرها درواقع پروسس هستند که در قالب ایمیج ایجاد می‌شوند و پس از اجرا تمام و از بین می‌روند
@@ -28,50 +100,48 @@
 * نکته۶: به ازای هر کانتینر که برای اجرای یک دستور خاص توسط «داکر ران» ایجاد می‌شود یک محیط ایزوله و مستقل است و درصورت اجرای مجدد همان دستور یک کانتینر در محیط ایزوله و مستقل و با آی‌دی دیگر برایش ایجاد خواهد شد
 * HotFix: همزمان که در سیستم خودتان درحال اصلاح کد هستید این تغییرات در داخل کانتینر هم لحاظ بشود. اگر چه این فایل‌ها در لایه readonlyداکر فایل(در وضعیت غیرقابل تغییر) قرار گرفته باشد
 
-<div dir="ltr">
-
-* [docker run]: Run a command in a new container
-    * Docker run [ImageName] [Commands]#
-    * docker run ubuntu # ایمیج اوبونتو مورد استفاده قرار می‌گیرد تا یک دستور را اجرا نماید و چون در این دستور آرگومانی که کامند را مشخص کند ندادیم پس کاری انجام نمی‌دهد و خودکار بسته می‌شود
-    * docker run ubuntu sleep ۱۰ #به کانتینر اوبونتو می‌گوید که دستور توقف زمانی۱۰ثانه را در بش اجرا کن و پس ازاتمام کانتینر را از بین ببر یعنی اگر در مدت ۱۰ثانیه در ترمینال دیگر دستور «داکر پی‌‌اِس» را بزنیم کانتینر را خواهیم دید
-    * docker run mongodb #جستجو در ایمیح‌های داکرهاست(سیستم‌لوکال) و درصورت عدم وجود، جستجو در ریپوزیتوری پیش‌فرض(داکرهاب) و سپس دانلود و نهایتا استفاده از آن
-    * docker run -it node:16.5.0-alpine3.14 #ورود به کنسول ریَکت
-    * docker run -it node:16.5.0-alpine3.14 sh #ورود به شل ایمیج
-* [-it]: abbrivationOf Interactive اجازه استفاده مستقیم به ایمیج می‌دهد
-    * docker run -it ubuntu bash #خط فرمان بش داخل ایمیج را در بصورت اینتراکتیو در اختیار کاربر قرار میدهد و صفحه ترمینال سیستم‌عامل لوکال به بش داخل ایمیج تغییر می‌کند
-* [-p <portOnLocalHost>:<portOnImage>] #مَپ کردن پورت داخلی یک ایمیج روی سیستم لوکال
-    * docker run -p 5001:5000  [نام‌ایمیج] #پورت۵۰۰۱ سرور اصلی(فیزیکی) را به ۵۰۰۰ ایمیج(کانتینر) وصل می‌کند
-    * نکته(بهروز باید بعدا بررسی کند): این سوییچ باید بعد از دستور سوییچ دی اجرا شود
-* [-d]: اجرای ایمیج در بک‌گراند
-    * docker run -d [Image]   # یک کانینر را در بک‌گراند بالا می‌آورد و هش آن را نمایش می‌دهد
-    * docker run -d --name نام‌برای‌کانتینر ImageName
-* [-e]: define a new EnvironmentVariable
-* [-H]:ریموت روی سرور داکر در آی‌پی خاص و اجرای دستور
-    * Docker -H=RemoteIP:2222 Command
-    * docker -H=10.10.0.10:2222 run ImageName
-* [-u userName]: تعیین نام یوزر برای اجرای دستور
-    * docker run -it -u root face4 sh
-* [--name NAME]: دادن نام خاص به کانتینر
-* [-v VolumeName:DirectoryOnContainer]
-    * docker rin -d -p 3001:3000 -v myShareVolume:/Dire1/subdir imageName
-    * نکته:اگر از قبل توسط دستور داکر والیوم ایجاد نکرده باشیم، به محض قرار دادن نام جدید بعنوان والیوم آن را میسازد
-    * نکته۲:مسیر داده شده در کانتینر که قرار است به والیوم متصل شود خودکار ایجاد می‌شود ونیاز به از قبل ساخته شدن نیست
-* HotFix[توجه به توضیحات]
-    * docker run ... -v DirOnLocal:DirOnContainer imageName
-    * مثال۱: docker run -d -p 3001:3000 -v $(pwd):/app imageName
-
-</div>
-
 ```shell
-docker run -i -t Repo:Tag #run and go to bash of OS
-docker run -i -t --name <NAME> <Repo:Tag> #run and go to bash of OS 
-docker run -d --name <N> -v <VolumeName>:Path <Image>
-docker run ---name  <N> -v BehroozData:/data/db -p 28001:27017 -d <Image>
-docker run -d --name <N> -e APP_PORT=7070 -p 8081:7070 <Image>
-docker  run --rm ..........  # run after kill after delete
+# Docker run [ImageName] [Commands] # Run a command in a new container
 ```
 
-## 2.2. 📍️docker stop
+```shell
+docker run ubuntu
+```
+
+اجرای دستور «هیچی» روی ایمیج اوبونتو(بدون دستور و آرگومان) و جون کامند ندادیم پس کاری انجام نمی‌شود و خودکار بسته می‌شود
+
+```shell
+docker run ubuntu sleep ۱۰
+```
+
+به کانتینر بالا آمده از ایمیج اوبونتو می‌گوید که دستور توقف زمانی۱۰ثانه را در بش اجرا کن و پس ازاتمام کانتینر را از بین ببر-یعنی اگر در مدت ۱۰ثانیه در ترمینال دیگر دستور «داکر پی‌‌اِس» را بزنیم کانتینر را خواهیم دید
+
+```shell
+docker run mongodb
+```
+
+جستجو در ایمیح‌های داکرهاست(سیستم‌لوکال) و درصورت عدم وجود، جستجو در ریپوزیتوری پیش‌فرض(داکرهاب) و سپس دانلود و نهایتا استفاده از آن
+
+```shell
+docker run -it node:16.5.0-alpine3.14    # ورود به کنسول ریَکت
+docker run -it node:16.5.0-alpine3.14 sh # ورود به شل ایمیج
+docker run -it ubuntu bash # خط فرمان بش داخل ایمیج را در بصورت اینتراکتیو در اختیار کاربر قرار میدهد و صفحه ترمینال سیستم‌عامل لوکال به بش داخل ایمیج تغییر می‌کند
+docker run -p 5001:5000 <IMAGE> # 5001(PhysicalServer or Localhost) TO 5000(virtual container)
+docker run <IMAGE> -p 5001:5000 # ❌️  غلط است
+docker run -d <IMAGE>   # یک کانینر را در بک‌گراند بالا می‌آورد و هش آن را نمایش می‌دهد
+docker run -d --name <NAME> <IMAGE>
+docker run -it -u root face4 sh
+docker run -d -p 3001:3000 -v myShareVolume:/Dir1/subdir imageName
+
+docker run -i -t <Repo:Tag> #run and go to bash of OS
+docker run -i -t --name <NAME> <Repo:Tag>   #run and go to bash of OS 
+docker run -d    --name <NAME> -v <VolumeName>:Path <Image>
+docker run       --name <NAME> -v BehroozData:/data/db -p 28001:27017 -d <Image>
+docker run -d    --name <NAME> -e APP_PORT=7070 -p 8081:7070 <Image>
+docker run --rm ...   # run after kill after delete
+```
+
+## 2.4. 📍️docker stop
 
 ```shell
 docker stop Name #استاپ کردن یک کانتینر
@@ -80,7 +150,7 @@ docker container prune #  اگر کانتینرهای استاپ شده زیاد
 
 ```
 
-## 2.3. 📍️docker save
+## 2.5. 📍️docker save
 
 ذخیره یک ایمیج
 
@@ -88,7 +158,7 @@ docker container prune #  اگر کانتینرهای استاپ شده زیاد
 docker save -o <Name>.tar.gz Repository:Tag
 ```
 
-## 2.4. 📍️docker exec
+## 2.6. 📍️docker exec
 
 اجرای یک دستور جدید در یک کانتینر موجود که هم‌اکنون درحال اجرای دستور است
 
@@ -97,7 +167,7 @@ docker exec -it <NameContiner> <Commnads>
 docker exec -it <NameContiner> /bin/bash
 ```
 
-## 2.5. 📍️docker cp
+## 2.7. 📍️docker cp
 
 کپی اطلاعات کانتینر درحال اجرا برروی سیستم فیزیکی ولوکال خودمان و برعکس
 
@@ -107,7 +177,7 @@ docker cp f39a65:/app/My_file.txt /home/user/Document
 docker cp <localHostSystem> <ContainerID>:fullFileName #کپی از سیستم به کانتینر
 ```
 
-## 2.6. 📍️docker commit
+## 2.8. 📍️docker commit
 
 ذخیره اطلاعات یک کانتینر و تبدیل به یک ایمیج
 
@@ -115,7 +185,7 @@ docker cp <localHostSystem> <ContainerID>:fullFileName #کپی از سیستم �
 docker commit <ContainerID> <repository:[Tag]>
 ```
 
-## 2.7. 📍️docker volume
+## 2.9. 📍️docker volume
 
 MountPoint:‌مسیری که در دستورinspect نمایش داده می‌شود و نشان می‌دهد که والیوم در کدام مسیر لینوکس اصلی قرار دارد
 
@@ -134,7 +204,7 @@ MountPoint:‌مسیری که در دستورinspect نمایش داده می‌
 
 </div>
 
-## 2.8. 📍️docker load
+## 2.10. 📍️docker load
 
 دریافت ورودی و یک ایمیج را در ایمیج های داکر لود میکند
 
@@ -142,13 +212,13 @@ MountPoint:‌مسیری که در دستورinspect نمایش داده می‌
 docker load -i <PATH.tar.gz>
 ```
 
-## 2.9. 📍️docker rmi
+## 2.11. 📍️docker rmi
 
 ```shell
 docker rmi [<Container ID>|<NAME>]
 ```
 
-## 2.10. 📍️docekr ps
+## 2.12. 📍️docekr ps
 
 * نمایش کانینرهای درحال اجرای دستور در سیستم عامل کنونی را نشان می‌دهد که درحال اجرای چه دستوری است
 * نکته۱:کانتینرها درواقع پروسس هستند که در قالب ایمیج اجرا می‌شوند و پس از اجرا تمام و از بین می‌روند
@@ -162,7 +232,7 @@ docker rmi [<Container ID>|<NAME>]
 
 </div>
 
-## 2.11. 📍️docker build
+## 2.13. 📍️docker build
 
 * برای build کردن نیاز به یک داکرفایل است
 * تمام Step های ران شده در build یک ایمج کش می‌شود تا در نوبت بعدی از این استفاده شود
@@ -180,7 +250,7 @@ docker rmi [<Container ID>|<NAME>]
 
 </div>
 
-## 2.12. 📍️docker Container
+## 2.14. 📍️docker Container
 
 نکته: در توزیع لینوکس alpine دستور apt نداریم بلکه معادل آن apk است
 
@@ -199,7 +269,7 @@ docker rmi [<Container ID>|<NAME>]
 
 </div>
 
-## 2.13. 📍️docker docker-machin
+## 2.15. 📍️docker docker-machin
 
 ```shell
 docker-machine ls
@@ -207,7 +277,7 @@ docker-machine ssh default <Command>
 docker-machine ip <ContainerName>
 ```
 
-## 2.14. 📍️docker volume
+## 2.16. 📍️docker volume
 
 ```shell
 docker volume create --name Behrooz
@@ -215,20 +285,20 @@ docker volume ls
 docker volume inspect behrooz
 ```
 
-## 2.15. 📍️docker history
+## 2.17. 📍️docker history
 
 ```shell
 docker history [ImageName] #نمایش تاریخچه دستورات
 ```
 
-## 2.16. 📍️docker inspect|info
+## 2.18. 📍️docker inspect|info
 
 ```shell
 docker info # show environments
 docker inspect <CoutainerID|Name>
 ```
 
-## 2.17. 📍️docker logs
+## 2.19. 📍️docker logs
 
 <div dir="ltr">
 
@@ -245,7 +315,7 @@ docker logs [ContainerID | NAME] #Fetch the logs of a container منظور خط�
 
 </div>
 
-## 2.18. 📍️docker image
+## 2.20. 📍️docker image
 
 * برای تولید یک ایمیج Custom باید ابتدا یک DockerFile ایجاد کنیم و دستورالعمل‌هایمان را داخل آن قرار دهیم. سپس داکر فایل را بیلد نماییم یعنی داکر فایل خط به خط خوانده شود و پس از اتمام آن خروجی حاصله را توسط دستور build به یک ایمیج تبدیل کنیم
 * نکته: توزیع alpine یک توزیع بسیار سبک از لینوکس است که بجای دانلود ایمیج لینوکس با حجم زیاد بهتر است این را استفاده نمایید
@@ -798,7 +868,7 @@ DATABASE_URL=<staging database>
 
 محیط Production که به اختصار prod هم معروف است محیطی است که کاربران واقعی از آن استفاده می‌کنند. در این محیط هدف شامل Availability و Security و Reliabilityو Backup و Monitoring و Logging و Recovery و Scalability و Zero/Low Downtime Deployment است
 
-*     در Production معمولاً نباید Secrets را مستقیماً داخل docker-compose.prod.yml قرار دهیم.
+* در Production معمولاً نباید Secrets را مستقیماً داخل docker-compose.prod.yml قرار دهیم.
 * حاوی تنظیماتی برای محیط تولید (بهینه‌سازی، امنیت، لاگینگ) می‌باشد
 * در انین محیط برای سرویس نهایی تدابیر لازمه را درنظر می‌گیرند
 * محیط کاربران واقعی
@@ -831,7 +901,7 @@ POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
 * `docker-compose.demo.yml`
 *
 
-### 8.1.2. ✅️ Contents
+### 8.1.2. ✅️ Concent
 
 یک داکر کامپوز شامل موارد زیر است
 
@@ -861,7 +931,13 @@ POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     * no: هنگام کرش کردن ریست نکند
     * unless-stopped: ریست هنگام استاپ کردن سرویس
 
-### 8.1.3. ✅️ Example
+### 8.1.3. ✅️ Commands
+
+```dockerfile
+
+```
+
+### 8.1.4. ✅️ Example
 
 ```dockerfile
 version: "3.8"
