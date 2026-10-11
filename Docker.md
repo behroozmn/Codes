@@ -235,20 +235,13 @@ docker rmi [<Container ID>|<NAME>]
 
 نکته: در توزیع لینوکس alpine دستور apt نداریم بلکه معادل آن apk است
 
-<div dir="ltr">
-
-* [ls] #مشاهده لیست کانیتنرهای درحال اجرا
-* [-a]: تاریخچه اجرای دستورات در کانتینرها را میدهد
-    * docker container ls -a
-* [exec] : اجرای دستور در یک کانتینر موجود
-    * docker container exec -it <ExistContainerID> bash
-* [stop]: از بین بردن کانتینر در حال اجرا
-    * docker container stop <ExistContainerID>
-* [prune]: حذف کانتینرهای اضافی که مثلا لایه‌های آنها کش شده است
-    * docker container prune #همواره ابتدا کانتینر رو هرس کنید و سپس ایمیج‌ها را هرس کنید
-*
-
-</div>
+```shell
+docker container exec -it <ExistContainerID> bash # اجرای دستور در یک کانتینر موجود
+docker container ls -a # show Execute commands history on containers
+docker container ls    # list running containers
+docker container stop <ExistContainerID>
+docker container prune #حذف کانتینرهای اضافی که مثلا لایه‌های آنها کش شده است. همواره ابتدا کانتینر رو هرس کنید و سپس ایمیج‌ها را هرس کنید
+```
 
 ## 2.15. 📍️docker docker-machin
 
@@ -302,36 +295,24 @@ docker logs [ContainerID | NAME] #Fetch the logs of a container منظور خط�
 * نکته: توزیع alpine یک توزیع بسیار سبک از لینوکس است که بجای دانلود ایمیج لینوکس با حجم زیاد بهتر است این را استفاده نمایید
 * نکته۲: نمونه ایمیج‌های مفید و stable را می‌توان از مسیر URL استخراج کرد که ایمیج هر برنامه بصورت تفکیک شده موجود است
 * نکته۳: وقتی یک ایمیج رو اکسپورت می‌کنیم و سپس در سیستم دوم ایمپورت می‌کنیم باید آی دی تغییر نکرده باشد
-
-<div dir="ltr">
-
-* [docker images]: نمایش ایمیج‌ها
-    * docker images
-* [ls]: list images [نمایش لیست ایمیج‌های داکرهاست(سیستم‌لوکال)خود]
-* [build]
-    * [-f] تعیین نام داکرفایل
-    * [-t] نام ایمیج جدیدی که قرار است ساخته شود
-        * docker image build -t [NewName] .
-            * اگر دستور داکر ایمج رو بزنیم نام جدید را در ستور ریپوزیتوری مشاهده خواهیم کرد
-* [rm]: حذف یک ایمیج و به تَبَع آن تمام کانتینرهای آن نیز پاک خواهند شد
-    * [-f]: تمام کانتینرهای مشتق شده از ایمیج(مثلا در ریپوزیتوری) را نیز پاک کن
-    * docker image rm <ImageID> #آی‌دی ایمیج را توسط دستر «داکر ایمیج» می‌توان استخراج کرد
 * [prune]: (Remove unused images) هرس و حذف اضافات یا اصطلاحاً «کلین‌آپ» کردن
     * هرس کردن و حذف ایمیج‌های که با ایمیج اصلی ارتباط ندارند و اضافی یا خطرناک هستند مثل لایه‌های کش شده
     * مثلا مواردی که در دستور «لیست ایمیج‌ها»ستون ریپوزیتوری یا ستون تگ در آن عبارت «نان» درج شده است
-    * docker image prune
-* [rm]|[remove] : Remove one or more images
-    * docker images rm
-    * [-f]: اگر وابستگی بین ایمیج‌ها باشد خطا میدهد و باید از این سوییچ استفاده شود
-* [tag]: Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE
-    * docker image tag ExistName:ExistTag newName:NewTag #ایجاد یک ایمیج جدید با نام و تگ جدید اما با هش کد مشابه
-    * نکته: اگر نام موجود باشد «اُوِررایت» می‌شود
-* [save]: ذخیره ایمیج در قالب فایل برای انتقال به سیستم دوم جهت استفاده مجدد
-    * docker image save -o [outputFile] [imageName]
-* [load]: Load an image from a tar archive or STDIN اگر بخواهیم دستی یه ایمیج رو به سیستم خود اضافه کنیم
-    * docker image load -i [imageFile]
+* [rm]: حذف یک ایمیج و به تَبَع آن تمام کانتینرهای آن نیز پاک خواهند شد
+    * [-f]: تمام کانتینرهای مشتق شده از ایمیج(مثلا در ریپوزیتوری) را نیز پاک کن
 
-</div>
+```shell
+docker images     # show images list
+docker images ls  # show images list
+docker image build -f <DockerFile> -t <NewName>            # ساخت ایمیج جدید
+docker image build                 -t <NewName> .          # ساخت ایمیج جدید
+docker image tag <ExistName>:<ExistTag> <NewName>:<NewTag> # Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE ---> ایجاد یک ایمیج جدید با نام و تگ جدید اما با هش کد مشابه اگر نام موجود باشد «اُوِررایت» می‌شود
+docker image save -o <FullFileName> <IMAGE>                # ذخیره ایمیج در قالب فایل برای انتقال به سیستم دوم جهت استفاده مجدد
+docker image load -i <ImageFile>                           # Load an image from a tar archive or STDIN ---->  اگر بخواهیم دستی یه ایمیج رو به سیستم خود اضافه کنیم
+docker images rm     <ImageID>
+docker images rm -f  <ImageID>
+docker image prune
+```
 
 # 3. 🅰️ Images
 
