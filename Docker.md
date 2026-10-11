@@ -91,7 +91,22 @@ docker --tlsverify --tlscacert=ca.pem --tlscert=cert.pem --tlskey=key.pem -H=192
 docker -H=ssh://user@192.168.1.50 ps # اتصال امن از پروتکل ssh
 ```
 
-## 2.3. 📍️docker run
+## 2.3. 📍️docker build
+
+* برای build کردن نیاز به یک داکرفایل است
+* تمام Step های ران شده در build یک ایمج کش می‌شود تا در نوبت بعدی از این استفاده شود
+* پس از اتمام بیلد بعنوان گزارش پارامتر Build context یک معیار خوب برای فهم کارایی ایمیج هست که حجم آن چقدر شده است
+* در محیط عملیاتی هنگامی که بخواهیم یک ایمیج را ورژن بدهیم از تگ استفاده می‌کنیم که معمولاً عدد استفاده می‌شود(مدیریت نسخه‌ها) و برای اینکار باید در سوییچ«تی» که نام ایمیج را مشخص می‌کنیم سپس دو نقطه بگذاریم و شماره نسخه را بدهیم
+*
+
+
+* [-t]: تعیین نام برای ایمیج جدید حاصله از داکر فایل
+    * نکته: اگر اسم داکرفایل را پیشفرض بگذاریم نیاز به تعیین نام نیست و نام پیش‌فرض Dockerfile است
+    * docker build -t <ImageName> <Dir>
+* [--no-cache=true|false]
+    * docker build --no-cache=true -t <TagName> <Dir>
+
+## 2.4. 📍️docker run
 
 * اجرای یک دستور بر پایه یک ایمیج که سبب تولید یک کانتینر می‌شود و هرگاه دستور تمام شود آنگاه کانتینر ازبین می‌رود
 * نکته۱:کانتینرها درواقع پروسس هستند که در قالب ایمیج ایجاد می‌شوند و پس از اجرا تمام و از بین می‌روند
@@ -128,7 +143,7 @@ docker run -d    --name <NAME> -e APP_PORT=7070 -p 8081:7070 <Image>
 docker run --rm ...   # run after kill after delete
 ```
 
-## 2.4. 📍️docker stop
+## 2.5. 📍️docker stop
 
 ```shell
 docker stop Name #استاپ کردن یک کانتینر
@@ -137,7 +152,7 @@ docker container prune #  اگر کانتینرهای استاپ شده زیاد
 
 ```
 
-## 2.5. 📍️docker save
+## 2.6. 📍️docker save
 
 ذخیره یک ایمیج
 
@@ -145,7 +160,7 @@ docker container prune #  اگر کانتینرهای استاپ شده زیاد
 docker save -o <Name>.tar.gz Repository:Tag
 ```
 
-## 2.6. 📍️docker exec
+## 2.7. 📍️docker exec
 
 اجرای یک دستور جدید در یک کانتینر موجود که هم‌اکنون درحال اجرای دستور است
 
@@ -154,7 +169,7 @@ docker exec -it <NameContiner> <Commnads>
 docker exec -it <NameContiner> /bin/bash
 ```
 
-## 2.7. 📍️docker cp
+## 2.8. 📍️docker cp
 
 کپی اطلاعات کانتینر درحال اجرا برروی سیستم فیزیکی ولوکال خودمان و برعکس
 
@@ -164,7 +179,7 @@ docker cp f39a65:/app/My_file.txt /home/user/Document
 docker cp <localHostSystem> <ContainerID>:fullFileName #کپی از سیستم به کانتینر
 ```
 
-## 2.8. 📍️docker commit
+## 2.9. 📍️docker commit
 
 ذخیره اطلاعات یک کانتینر و تبدیل به یک ایمیج
 
@@ -172,7 +187,7 @@ docker cp <localHostSystem> <ContainerID>:fullFileName #کپی از سیستم �
 docker commit <ContainerID> <repository:[Tag]>
 ```
 
-## 2.9. 📍️docker volume
+## 2.10. 📍️docker volume
 
 **MountPoint**: ‌مسیری که در دستور inspect نمایش داده می‌شود و نشان می‌دهد که والیوم در کدام مسیر لینوکس اصلی قرار دارد
 
@@ -185,7 +200,7 @@ docker volume inspec <VolumeName>     # Display detailed information on one or m
 docker volume update                  # Update a volume (cluster volumes only)
 ```
 
-## 2.10. 📍️docker load
+## 2.11. 📍️docker load
 
 دریافت ورودی و یک ایمیج را در ایمیج های داکر لود میکند
 
@@ -193,43 +208,22 @@ docker volume update                  # Update a volume (cluster volumes only)
 docker load -i <PATH.tar.gz>
 ```
 
-## 2.11. 📍️docker rmi
+## 2.12. 📍️docker rmi
 
 ```shell
 docker rmi [<Container ID>|<NAME>]
 ```
 
-## 2.12. 📍️docekr ps
+## 2.13. 📍️docekr ps
 
 * نمایش کانینرهای درحال اجرای دستور در سیستم عامل کنونی را نشان می‌دهد که درحال اجرای چه دستوری است
 * نکته۱:کانتینرها درواقع پروسس هستند که در قالب ایمیج اجرا می‌شوند و پس از اجرا تمام و از بین می‌روند
 
-<div dir="ltr">
 
 * [-a]: تاریخچه دستورات و وضعیت کانتینرهای فعال و غیرفعال
     * doccker ps -a
 * [-q]
     * docker ps -a -q #show ContainerID of all containers
-
-</div>
-
-## 2.13. 📍️docker build
-
-* برای build کردن نیاز به یک داکرفایل است
-* تمام Step های ران شده در build یک ایمج کش می‌شود تا در نوبت بعدی از این استفاده شود
-* پس از اتمام بیلد بعنوان گزارش پارامتر Build context یک معیار خوب برای فهم کارایی ایمیج هست که حجم آن چقدر شده است
-* در محیط عملیاتی هنگامی که بخواهیم یک ایمیج را ورژن بدهیم از تگ استفاده می‌کنیم که معمولاً عدد استفاده می‌شود(مدیریت نسخه‌ها) و برای اینکار باید در سوییچ«تی» که نام ایمیج را مشخص می‌کنیم سپس دو نقطه بگذاریم و شماره نسخه را بدهیم
-*
-
-<div dir="ltr">
-
-* [-t]: تعیین نام برای ایمیج جدید حاصله از داکر فایل
-    * نکته: اگر اسم داکرفایل را پیشفرض بگذاریم نیاز به تعیین نام نیست و نام پیش‌فرض Dockerfile است
-    * docker build -t <ImageName> <Dir>
-* [--no-cache=true|false]
-    * docker build --no-cache=true -t <TagName> <Dir>
-
-</div>
 
 ## 2.14. 📍️docker Container
 
@@ -243,15 +237,7 @@ docker container stop <ExistContainerID>
 docker container prune #حذف کانتینرهای اضافی که مثلا لایه‌های آنها کش شده است. همواره ابتدا کانتینر رو هرس کنید و سپس ایمیج‌ها را هرس کنید
 ```
 
-## 2.15. 📍️docker docker-machin
-
-```shell
-docker-machine ls
-docker-machine ssh default <Command>
-docker-machine ip <ContainerName>
-```
-
-## 2.16. 📍️docker volume
+## 2.15. 📍️docker volume
 
 ```shell
 docker volume create --name Behrooz
@@ -259,22 +245,20 @@ docker volume ls
 docker volume inspect behrooz
 ```
 
-## 2.17. 📍️docker history
+## 2.16. 📍️docker history
 
 ```shell
 docker history [ImageName] #نمایش تاریخچه دستورات
 ```
 
-## 2.18. 📍️docker inspect|info
+## 2.17. 📍️docker inspect|info
 
 ```shell
 docker info # show environments
 docker inspect <CoutainerID|Name>
 ```
 
-## 2.19. 📍️docker logs
-
-<div dir="ltr">
+## 2.18. 📍️docker logs
 
 ```shell
 docker logs [ContainerID | NAME] #Fetch the logs of a container منظور خطوط خروجی دستورات داکر است اگر در حالت بک‌گراند اجرا بگیریم
@@ -287,9 +271,7 @@ docker logs [ContainerID | NAME] #Fetch the logs of a container منظور خط�
 * [-t]: نمایش تایم برای هر خط
     * docker logs -t -n 100 ImageName # نمایش صد خط از خروجی دستورات داکر به همراه نمایش تایم آن دستورات که به اجرا درآمده است
 
-</div>
-
-## 2.20. 📍️docker image
+## 2.19. 📍️docker image
 
 * برای تولید یک ایمیج Custom باید ابتدا یک DockerFile ایجاد کنیم و دستورالعمل‌هایمان را داخل آن قرار دهیم. سپس داکر فایل را بیلد نماییم یعنی داکر فایل خط به خط خوانده شود و پس از اتمام آن خروجی حاصله را توسط دستور build به یک ایمیج تبدیل کنیم
 * نکته: توزیع alpine یک توزیع بسیار سبک از لینوکس است که بجای دانلود ایمیج لینوکس با حجم زیاد بهتر است این را استفاده نمایید
@@ -523,7 +505,6 @@ EXPOSE 7000-8000
 * Host: پورت باز دقیقا روی هاست فیزیکی باز می‌شود و در سرور فیزیکی درحال لیستِن می باشد
     * docker run myImage --network=host
 
-<div dir="ltr">
 
 * [ls]: List networks
     * docker network ls
@@ -535,8 +516,6 @@ EXPOSE 7000-8000
     * docker network inspect bridge
 * [prune]: Remove all unused networks
 * [rm]: Remove one or more networks
-
-</div>
 
 # 6. 🅰️ Repository
 
@@ -602,9 +581,7 @@ EXPOSE 7000-8000
 Order: Local ► Dev ► Test ► Demo ► Staging ► Prod
 ```
 
-# 8. 🅰️ Deployment
-
-## 8.1. 🅱️ DockerCompose
+## 7.1. 🅱️ DockerCompose
 
 * داکر Compose بیشتر برای تعریف و اجرای چند کانتینر به‌صورت یک application stack است، نه Deployment به معنای production deployment.
 * اگر بخواهیم چندین سرویس همزمان در یک ایمیج قرار داده شود تا این سرویس‌ها یکدیگر را ببینند
@@ -616,10 +593,6 @@ Order: Local ► Dev ► Test ► Demo ► Staging ► Prod
 
 * پسوند برخی فایل‌های داکر ved مخفف develop است که حاوی تنظیماتی برای توسعه (دیباگ، reload خودکار، ابزارهای توسعه) می‌باشد
     *
-
-<div dir="ltr">
-
-
 
 **docker-compos COMMAND**
 
@@ -639,9 +612,7 @@ Order: Local ► Dev ► Test ► Demo ► Staging ► Prod
 * [ps]: List containers
     * docker-compose ps
 
-</div>
-
-### 8.1.1. ✅️ DockerCompose Files Type
+### 7.1.1. ✅️ DockerCompose Files Type
 
 در Docker Compose، این نام‌گذاری‌ها معمولاً Convention پروژه هستند و خود Docker معنای رسمی و اجباری برای `dev`، `test`، `staging`، `prod`، `local` و `demo` تعریف نکرده است؛ تیم تعیین می‌کند هر فایل چه تفاوتی داشته باشد.
 
@@ -725,7 +696,7 @@ project/
 | سطح امنیت     | پایین‌تر         | متوسط           | متوسط        | متوسط        | بالا                     | بسیار بالا       |
 | شباهت به Prod | کم               | متوسط           | متوسط        | کم/متوسط     | بسیار زیاد               | مرجع اصلی        |
 
-#### 8.1.1.1. ❇️ Local ► استفاده محلی
+#### 7.1.1.1. ❇️ Local ► استفاده محلی
 
 محیط local یعنی محیطی که معمولاً روی سیستم شخصی Developer اجرا می‌شود.
 
@@ -747,7 +718,7 @@ LOG_LEVEL=debug
 DATABASE_URL=postgresql://app:app@localhost:5432/app
 ```
 
-#### 8.1.1.2. ❇️ Dev ► توسعه
+#### 7.1.1.2. ❇️ Dev ► توسعه
 
 محیط dev معمولاً یک محیط توسعه مشترک‌تر و کنترل‌شده‌تر است.
 
@@ -779,7 +750,7 @@ DATABASE_URL=postgresql://...
 
 ```
 
-#### 8.1.1.3. ❇️ Test ► آزمایش خودکار
+#### 7.1.1.3. ❇️ Test ► آزمایش خودکار
 
 هدف اصلی Test این است که آیا کدی که نوشته‌ایم درست کار می‌کند؟
 
@@ -811,7 +782,7 @@ LOG_LEVEL=error
 DATABASE_URL=postgresql://test:test@postgres:5432/test
 ```
 
-#### 8.1.1.4. ❇️ Staging ► محیط آزمایش
+#### 7.1.1.4. ❇️ Staging ► محیط آزمایش
 
 یک نسخه کنترل‌شده و تقریباً مشابه Production برای اینکه قبل از انتشار، رفتار سیستم را بررسی کنیم.محیط Staging باید تا حد امکان به Production نزدیک باشد.
 
@@ -826,7 +797,7 @@ LOG_LEVEL=info
 DATABASE_URL=<staging database>
 ```
 
-#### 8.1.1.5. ❇️ Production(Prod) ► محیط تولید
+#### 7.1.1.5. ❇️ Production(Prod) ► محیط تولید
 
 محیط Production که به اختصار prod هم معروف است محیطی است که کاربران واقعی از آن استفاده می‌کنند. در این محیط هدف شامل Availability و Security و Reliabilityو Backup و Monitoring و Logging و Recovery و Scalability و Zero/Low Downtime Deployment است
 
@@ -848,7 +819,7 @@ DATABASE_URL=<productionDatabase>
 POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
 ```
 
-#### 8.1.1.6. ❇️ Demo ► نمایشی
+#### 7.1.1.6. ❇️ Demo ► نمایشی
 
 محیط demo با staging یکی نیست. محیط Demo معمولاً برای موارد زیر استفاده می‌شود
 
@@ -863,14 +834,13 @@ POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
 * `docker-compose.demo.yml`
 *
 
-### 8.1.2. ✅️ Concent
+### 7.1.2. ✅️ Concent
 
 یک داکر کامپوز شامل موارد زیر است
 
 * اولین خط همواره باید ورژن باشد و عدد آن باید مطابق با ورژن «Docker Engine» باشد که مثلا در ورژن‌های داکر بالاتر از 19.03 می‌توان ورژن را ۳.۸ قرار داد
 * هرکدام از سرویس‌ها یک سرور با آی‌پی مستقل خواهند بود یعنی اگر داخل هرکدام دیگری را پینگ کنیم پاسخ را خواهیم گرفت(دستور پینگ و نام هاست را نام سرویس می‌گذاریم یعین ping web)
 
-<div dir="ltr">
 
 * version: # اولین خط همیشه باید تعیین ورژن باشد
     * ورژن رو باید با توجه به نسخه داکر هاست تعیین کنین که در سایت داکر نیز آمده است
@@ -893,13 +863,13 @@ POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     * no: هنگام کرش کردن ریست نکند
     * unless-stopped: ریست هنگام استاپ کردن سرویس
 
-### 8.1.3. ✅️ Commands
+### 7.1.3. ✅️ Commands
 
 ```shell
 docker-compose -f docker-compose_prod.yaml build
 ```
 
-### 8.1.4. ✅️ Example
+### 7.1.4. ✅️ Example
 
 ```dockerfile
 version: "3.8"
@@ -931,36 +901,95 @@ volumes:
 
 ![Docker-compose.jpg](_srcFiles/Images/Docker-compose.jpg "Docker-compose.jpg")
 
-</div>
+## 7.2. 🅱️ dockerMachine(منسوخ شده)
 
-## 8.2. 🅱️ dockerMachine
+* لایه اجرایی آن قابلیت اجرای دستور docker در هاست‌های ریموت می‌دهد
+* منطق لایه زیرساختی داکر ماشین به شکل زیر است
+    * 1️⃣️ سیستم میزبان (Host): کامپیوتر فیزیکی شما با ویندوز، مک یا لینوکس.
+    * 2️⃣️ مجازی‌ساز (Hypervisor): نرم‌افزاری که قبلاً باید نصب شده باشد، مانند VirtualBox، VMware یا Hyper-V. این لایه مسئول مدیریت منابع سخت‌افزاری و ساخت ماشین‌های مجازی است
+    * 3️⃣️ Docker Machine: یک ابزار خط فرمان (CLI) که روی سیستم میزبان نصب می‌شود. این ابزار از طریق درایورهایش (مثل virtualbox، hyperv) به مجازی‌ساز دستور می‌دهد تا یک ماشین مجازی بسازد، یک سیستم‌عامل کوچک لینوکسی (boot2docker) روی آن نصب کند و داخل آن Docker Daemon را راه‌اندازی کند
+    * 4️⃣️ Docker Daemon داخل VM: این دقیقاً همان چیزی است که به آن "Docker Machine" می‌گویند؛ یعنی یک محیط Docker که جدا از Docker محلی روی سیستم میزبان شماست.
+* اگر می‌خواهید از Docker Machine استفاده کنید، ابتدا باید VirtualBox، Hyper-V یا VMware را نصب کنید.سپس Docker Machine را نصب کرده و با دستور docker-machine create ماشین مجازی مورد نظر را بسازید
+* وقتی برای اولین بار Docker Machine را نصب و راه‌اندازی می‌کنید این ابزار به طور خودکار یک ماشین مجازی می‌سازد و نام آن را default می‌گذارد.(پس اگر نام default را برای ماشین دیدید بدانید یک کلمه رزرو شده نیست)
 
-* یکی ابزارهای نصب و مدیریت داکر درهاست‌های مجازی ریموت[می‌تواند لوکال باشد یا ریموت یا کلود]
+```text
+┌────────────────────────────────────────────────────────────────────────────────────┐
+│   Layyer1: Hardware(CPU, RAM, Disk)                                                │
+├────────────────────────────────────────────────────────────────────────────────────┤
+│   Layyer2: Local OS(Windows / macOS / Linux)                                       │
+├────────────────────────────────────────────────────────────────────────────────────┤
+│   Layyer3: Hypervisor (VirtualBox | Hyper-V | VMware )                             │
+│                                                                                    │
+│    Docker                               VirtualBox                                 │
+│   ┌──────────────────────────────┐   ┌──────────────────────────────────────────┐  │
+│   │  Docker Daemon localhost     │   │  Linux: boot2docker                      │  │
+│   │                              │   │  ┌────────────────────────────────────┐  │  │
+│   │   ┌───────┐    ┌──────────┐  │   │  │   VM: default                      │  │  │
+│   │   │  C1   │    │    C2    │  │   │  │  ┌──────────────────────────────┐  │  │  │
+│   │   │ nginx │    │ Database │  │   │  │  │  DockerDaemon(DockerMachine) │  │  │  │
+│   │   └───────┘    └──────────┘  │   │  │  │                              │  │  │  │
+│   │                              │   │  │  │  ┌───────┐ ┌───────┐         │  │  │  │
+│   │   ┌───────┐    ┌───────┐     │   │  │  │  │  X1   │ │  X2   │         │  │  │  │
+│   │   │  C3   │    │  C4   │     │   │  │  │  │ mysql │ │ mongo │         │  │  │  │
+│   │   │ kafka │    │  App  │     │   │  │  │  └───────┘ └───────┘         │  │  │  │
+│   │   └───────┘    └───────┘     │   │  │  └──────────────────────────────┘  │  │  │
+│   │                              │   │  └────────────────────────────────────┘  │  │
+│   └──────────────────────────────┘   └──────────────────────────────────────────┘  │
+│                                                                                    │
+├────────────────────────────────────────────────────────────────────────────────────┤
+│                    ┌──────► docker                                                 │
+│   Layyer4: CLI  ───┤                                                               │
+│                    └──────► docker-machine                                         │
+└────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+* از سال ۲۰۱۲ به بعد منسوخ شده است و دیگر پشتیبانی نمی‌شود
+* یکی ابزارهای نصب و مدیریت داکر درهاست‌های مجازی ریموت(می‌تواند لوکال باشد یا ریموت یا کلود باشد)
+* با دستور `docker-machine` می‌توان در سرور ریموت کارهایی نظیر استارت و استاپ و بررسی سرویس بروزرسانی سرویس و تنظیمات داکر را انجام داد
 * ابزارهای دیگر نظیر terraform هم هست که این کار را می‌کند
-* با دستور docker-machine می‌توان در سرور ریموت کارهایی نظیر استارت و استاپ و بررسی سرویس بروزرسانی سرویس و تنظیمات داکر را انجام داد
-* قابلیت اجرای دستور docker در هاست‌های ریموت می‌دهد
 * در بستر اینترنت شرکت یا سایت digitalOcean و AWS که مخفف Amazon Web Services است ماشین مجازی ارائه می‌دهند
 * در digitalOcean به ماشین مجازی droplet می‌گویند که حاوی رم و سی پی یو و جزییات دیگر است که هنگام ساخته شدن باید تعریف شود
 * برای ارتباط گرفتن با شرکت های ارائه دهنده خدمات کلود(مثلا ماشین مجازی) توسط کامندلاین باید در چهار چوب API ارائه شده توسط این سایت‌ها اقدام نماییم و برای ارتباط حتما باید token ایجاد نماییم و توسط آن توکن دستورات را به شرکت میزبان ارائه دهنده ماشین مجازی کلود بدهیم(معمولا در منوی API دنبال ایجاد توکن ساختن بگردید)
 * توسط دستور docker-machine می‌توان یک ماشین مجازی توسط کامند لاین در سایت دیجیتال اوشن ساخت که به اصطلاح می‌گویند ماشین مجازی provision می‌کنیم
 
-<div dir="ltr">
+```shell
+docker-machine ls
+docker-machine ssh default <Command>
+docker-machine ip <ContainerName>
+docker-machine --version #Current version is 19.03.9
+docker-machine rm machineName -f #حذف یک ماشین ساخته شده
+docker-machine create --driver digitalocean --digitalocean-access-token TokenID --digitalocean-image ubuntu-18-04-x64 --engine-install-url "https://release.rancher.com/install-docker/19.03.9.sh" ServerName
+docker-machine ls
+docker-machine ssh MachineName #اتصال به یوزر روت ماشین مجازی کلود موجود در دیجیتال اوشن
+```
 
-* docker-machine --version #Current version is 19.03.9
-* docker-machine rm machineName -f #حذف یک ماشین ساخته شده
-* docker-machine create --driver digitalocean --digitalocean-access-token TokenID --digitalocean-image ubuntu-18-04-x64 --engine-install-url "https://release.rancher.com/install-docker/19.03.9.sh" ServerName
-* docker-machine ls
-* docker-machine ssh MachineName #اتصال به یوزر روت ماشین مجازی کلود موجود در دیجیتال اوشن
-* docker-machine env MachineName #نمایش متغیرهای محلی ماشین مدنظر که اگر بخواهید به آن ماشین متصل بشوید باید آن را در سیستم خودتان تنظیم نمایید
-    * با تنظیم متغیردستور داکر را اگر بزنید آن دستور گویی در سرور ریموت دارد انجام می‌شود
-        * eval $(docker-machine env machineName) #بجای تنظیم تک تک متغیرها با دستورمقابل همه موارد خودکار لحاظ می‌شود ازین پس هر دستور بزنیم(مثلا دستور داکر ایمیج) در ریموت اجرا می‌شود
-        * docker-compose -f docker-compose1.yaml build -d # مثلا بعد از زدن دستور بالا دستور جاری درریموت اجرا خواهد شد
+### ✅️ DockerMachine Environments
+
+1️⃣️ این دستور را در داخل bash لوکال خود اجرا کنید تا متغیرهای محلی داکر ماشین(نصب شده در داخل سیستم خودمان) را نمایش دهد.سپس باتنظیم آن در bash خود(بعنوان Environment Variable) می‌توانیم به docker-machine لوکال سیستم خود متصل شویم
+
+```shell
+docker-machine env <MachineName> # show environments variable
+```
+
+2️⃣️ تنظیم متغیرهای محلی در شل سیستم خود
+
+```shell
+eval $(docker-machine env machineName)
+
+#                       ┌───► eval $(docker-machine env -u)           
+# unset Environments ───┤                         
+#                       └───► unset DOCKER_TLS_VERIFY DOCKER_HOST DOCKER_CERT_PATH DOCKER_MACHINE_NAME   
+```
+
+3️⃣️ از این پس هر دستوری بزنیم گویا در داخل دکر ماشین میزنیم. به‌طور مثال دستور زیر در داخل داکر ماشین اجرا میشود و نه داکر localhost خودمان
+
+```shell
+docker-compose -f docker-compose1.yaml build -d
+```
 
 ![dockerMachine01.jpg](_srcFiles/Images/dockerMachine01.jpg "dockerMachine01.jpg")
 
-</div>
-
-## 8.3. 🅱️ terraform
+## 7.3. 🅱️ terraform
 
 * ابزار متن‌باز برای مدیریت زیرساخت به عنوان کد.
 * ابزارهای دیگر نظیر DockerMachine هم هست که این کار را می‌کند
@@ -973,19 +1002,19 @@ volumes:
 * از زبان HCL (HashiCorp Configuration Language) برای تعریف زیرساخت‌ها استفاده می‌کند
 * می‌تواند با ارائه‌دهندگان مختلف ابری (مانند AWS، Azure، Google Cloud) و همچنین منابع محلی کار کند.
 
-## 8.4. 🅱️ dockerSwarm
+## 7.4. 🅱️ dockerSwarm
 
 * فراهم سازی امکان مدیریت و استقرار کلاستر
 * شرکت داکر برای استقرار این نسخه را توصیه می‌نماید زیرا ابزار Orchestration شرکت داکر است
 
-## 8.5. 🅱️ Kubernetes
+## 7.5. 🅱️ Kubernetes
 
 * پیاده سازی شده توسط شرکت گوگل
 * متن‌باز یا همان OpenSource
 * استفاده گسترده‌ در صنعتIT
 * امکانات پیشرفته‌تر نسبت به Docker Swarm
 
-# 9. 🅰️ dockerignore
+# 8. 🅰️ dockerignore
 
 * فایل sockerignore که شروع آن با یک نقطه است(برای شناساندن به سیستم‌عامل‌ها که این فایل از نوع مخفی است) برای نادیده گرفتن فایل‌ها و دایرکتوری‌ها می‌باشد.
 * مثال: هنگام کپی تمام محتوی یک دایرکتوری که ذیل آن یک دایرکتوری ignore شده وجود دارد، دراین حالت پوشه ignore شده کپی نمی‌شود
