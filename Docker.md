@@ -106,6 +106,97 @@ docker -H=ssh://user@192.168.1.50 ps # اتصال امن از پروتکل ssh
 * [--no-cache=true|false]
     * docker build --no-cache=true -t <TagName> <Dir>
 
+## 2.9. 📍️docker commit
+
+ذخیره اطلاعات یک کانتینر و تبدیل به یک ایمیج
+
+```shell
+docker commit <ContainerID> <repository:[Tag]>
+```
+
+## 2.14. 📍️docker Container
+
+نکته: در توزیع لینوکس alpine دستور apt نداریم بلکه معادل آن apk است
+
+```shell
+docker container exec -it <ExistContainerID> bash # اجرای دستور در یک کانتینر موجود
+docker container ls -a # show Execute commands history on containers
+docker container ls    # list running containers
+docker container stop <ExistContainerID>
+docker container prune #حذف کانتینرهای اضافی که مثلا لایه‌های آنها کش شده است. همواره ابتدا کانتینر رو هرس کنید و سپس ایمیج‌ها را هرس کنید
+```
+
+## 2.8. 📍️docker cp
+
+کپی اطلاعات کانتینر درحال اجرا برروی سیستم فیزیکی ولوکال خودمان و برعکس
+
+```shell
+docker cp <ContainerID>:fullFileName <localHostSystem> #کپی از کانتینر به سیستم
+docker cp f39a65:/app/My_file.txt /home/user/Document
+docker cp <localHostSystem> <ContainerID>:fullFileName #کپی از سیستم به کانتینر
+```
+
+## 2.7. 📍️docker exec
+
+اجرای یک دستور جدید در یک کانتینر موجود که هم‌اکنون درحال اجرای دستور است
+
+```shell
+docker exec -it <NameContiner> <Commnads>
+docker exec -it <NameContiner> /bin/bash
+```
+
+## 2.16. 📍️docker history
+
+```shell
+docker history [ImageName] #نمایش تاریخچه دستورات
+```
+
+## 2.17. 📍️docker inspect|info
+
+```shell
+docker info # show environments
+docker inspect <CoutainerID|Name>
+```
+
+## 2.20. 📍️docker image
+
+* برای تولید یک ایمیج Custom باید ابتدا یک DockerFile ایجاد کنیم و دستورالعمل‌هایمان را داخل آن قرار دهیم. سپس داکر فایل را بیلد نماییم یعنی داکر فایل خط به خط خوانده شود و پس از اتمام آن خروجی حاصله را توسط دستور build به یک ایمیج تبدیل کنیم
+* نکته: توزیع alpine یک توزیع بسیار سبک از لینوکس است که بجای دانلود ایمیج لینوکس با حجم زیاد بهتر است این را استفاده نمایید
+* نکته۲: نمونه ایمیج‌های مفید و stable را می‌توان از مسیر URL استخراج کرد که ایمیج هر برنامه بصورت تفکیک شده موجود است
+* نکته۳: وقتی یک ایمیج رو اکسپورت می‌کنیم و سپس در سیستم دوم ایمپورت می‌کنیم باید آی دی تغییر نکرده باشد
+* [prune]: (Remove unused images) هرس و حذف اضافات یا اصطلاحاً «کلین‌آپ» کردن
+    * هرس کردن و حذف ایمیج‌های که با ایمیج اصلی ارتباط ندارند و اضافی یا خطرناک هستند مثل لایه‌های کش شده
+    * مثلا مواردی که در دستور «لیست ایمیج‌ها»ستون ریپوزیتوری یا ستون تگ در آن عبارت «نان» درج شده است
+* [rm]: حذف یک ایمیج و به تَبَع آن تمام کانتینرهای آن نیز پاک خواهند شد
+    * [-f]: تمام کانتینرهای مشتق شده از ایمیج(مثلا در ریپوزیتوری) را نیز پاک کن
+
+```shell
+docker images     # show images list
+docker images ls  # show images list
+docker image build -f <DockerFile> -t <NewName>            # ساخت ایمیج جدید
+docker image build                 -t <NewName> .          # ساخت ایمیج جدید
+docker image tag <ExistName>:<ExistTag> <NewName>:<NewTag> # Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE ---> ایجاد یک ایمیج جدید با نام و تگ جدید اما با هش کد مشابه اگر نام موجود باشد «اُوِررایت» می‌شود
+docker image save -o <FullFileName> <IMAGE>                # ذخیره ایمیج در قالب فایل برای انتقال به سیستم دوم جهت استفاده مجدد
+docker image load -i <ImageFile>                           # Load an image from a tar archive or STDIN ---->  اگر بخواهیم دستی یه ایمیج رو به سیستم خود اضافه کنیم
+docker images rm     <ImageID>
+docker images rm -f  <ImageID>
+docker image prune
+```
+
+## 2.11. 📍️docker load
+
+دریافت ورودی و یک ایمیج را در ایمیج های داکر لود میکند
+
+```shell
+docker load -i <PATH.tar.gz>
+```
+
+## 2.12. 📍️docker rmi
+
+```shell
+docker rmi [<Container ID>|<NAME>]
+```
+
 ## 2.4. 📍️docker run
 
 * اجرای یک دستور بر پایه یک ایمیج که سبب تولید یک کانتینر می‌شود و هرگاه دستور تمام شود آنگاه کانتینر ازبین می‌رود
@@ -160,33 +251,6 @@ docker container prune #  اگر کانتینرهای استاپ شده زیاد
 docker save -o <Name>.tar.gz Repository:Tag
 ```
 
-## 2.7. 📍️docker exec
-
-اجرای یک دستور جدید در یک کانتینر موجود که هم‌اکنون درحال اجرای دستور است
-
-```shell
-docker exec -it <NameContiner> <Commnads>
-docker exec -it <NameContiner> /bin/bash
-```
-
-## 2.8. 📍️docker cp
-
-کپی اطلاعات کانتینر درحال اجرا برروی سیستم فیزیکی ولوکال خودمان و برعکس
-
-```shell
-docker cp <ContainerID>:fullFileName <localHostSystem> #کپی از کانتینر به سیستم
-docker cp f39a65:/app/My_file.txt /home/user/Document
-docker cp <localHostSystem> <ContainerID>:fullFileName #کپی از سیستم به کانتینر
-```
-
-## 2.9. 📍️docker commit
-
-ذخیره اطلاعات یک کانتینر و تبدیل به یک ایمیج
-
-```shell
-docker commit <ContainerID> <repository:[Tag]>
-```
-
 ## 2.10. 📍️docker volume
 
 **MountPoint**: ‌مسیری که در دستور inspect نمایش داده می‌شود و نشان می‌دهد که والیوم در کدام مسیر لینوکس اصلی قرار دارد
@@ -200,20 +264,6 @@ docker volume inspec <VolumeName>     # Display detailed information on one or m
 docker volume update                  # Update a volume (cluster volumes only)
 ```
 
-## 2.11. 📍️docker load
-
-دریافت ورودی و یک ایمیج را در ایمیج های داکر لود میکند
-
-```shell
-docker load -i <PATH.tar.gz>
-```
-
-## 2.12. 📍️docker rmi
-
-```shell
-docker rmi [<Container ID>|<NAME>]
-```
-
 ## 2.13. 📍️docekr ps
 
 * نمایش کانینرهای درحال اجرای دستور در سیستم عامل کنونی را نشان می‌دهد که درحال اجرای چه دستوری است
@@ -225,37 +275,12 @@ docker rmi [<Container ID>|<NAME>]
 * [-q]
     * docker ps -a -q #show ContainerID of all containers
 
-## 2.14. 📍️docker Container
-
-نکته: در توزیع لینوکس alpine دستور apt نداریم بلکه معادل آن apk است
-
-```shell
-docker container exec -it <ExistContainerID> bash # اجرای دستور در یک کانتینر موجود
-docker container ls -a # show Execute commands history on containers
-docker container ls    # list running containers
-docker container stop <ExistContainerID>
-docker container prune #حذف کانتینرهای اضافی که مثلا لایه‌های آنها کش شده است. همواره ابتدا کانتینر رو هرس کنید و سپس ایمیج‌ها را هرس کنید
-```
-
 ## 2.15. 📍️docker volume
 
 ```shell
 docker volume create --name Behrooz
 docker volume ls
 docker volume inspect behrooz
-```
-
-## 2.16. 📍️docker history
-
-```shell
-docker history [ImageName] #نمایش تاریخچه دستورات
-```
-
-## 2.17. 📍️docker inspect|info
-
-```shell
-docker info # show environments
-docker inspect <CoutainerID|Name>
 ```
 
 ## 2.18. 📍️docker logs
@@ -271,29 +296,31 @@ docker logs [ContainerID | NAME] #Fetch the logs of a container منظور خط�
 * [-t]: نمایش تایم برای هر خط
     * docker logs -t -n 100 ImageName # نمایش صد خط از خروجی دستورات داکر به همراه نمایش تایم آن دستورات که به اجرا درآمده است
 
-## 2.19. 📍️docker image
 
-* برای تولید یک ایمیج Custom باید ابتدا یک DockerFile ایجاد کنیم و دستورالعمل‌هایمان را داخل آن قرار دهیم. سپس داکر فایل را بیلد نماییم یعنی داکر فایل خط به خط خوانده شود و پس از اتمام آن خروجی حاصله را توسط دستور build به یک ایمیج تبدیل کنیم
-* نکته: توزیع alpine یک توزیع بسیار سبک از لینوکس است که بجای دانلود ایمیج لینوکس با حجم زیاد بهتر است این را استفاده نمایید
-* نکته۲: نمونه ایمیج‌های مفید و stable را می‌توان از مسیر URL استخراج کرد که ایمیج هر برنامه بصورت تفکیک شده موجود است
-* نکته۳: وقتی یک ایمیج رو اکسپورت می‌کنیم و سپس در سیستم دوم ایمپورت می‌کنیم باید آی دی تغییر نکرده باشد
-* [prune]: (Remove unused images) هرس و حذف اضافات یا اصطلاحاً «کلین‌آپ» کردن
-    * هرس کردن و حذف ایمیج‌های که با ایمیج اصلی ارتباط ندارند و اضافی یا خطرناک هستند مثل لایه‌های کش شده
-    * مثلا مواردی که در دستور «لیست ایمیج‌ها»ستون ریپوزیتوری یا ستون تگ در آن عبارت «نان» درج شده است
-* [rm]: حذف یک ایمیج و به تَبَع آن تمام کانتینرهای آن نیز پاک خواهند شد
-    * [-f]: تمام کانتینرهای مشتق شده از ایمیج(مثلا در ریپوزیتوری) را نیز پاک کن
+
+
+## 2.19. 📍️docker tag
+
+یک نام یا برچسب اضافی (alias) به یک ایمیج موجود اختصاص می‌دهد. این دستور ایمیج جدید نمی‌سازد و کپی هم نمی‌کند — فقط یک ارجاع (reference) جدید به همان لایه‌های ایمیج اضافه می‌کند. یعنی بعد از اجرا، دو نام مختلف دارید که هر دو به یک ایمیج یکسان (با همان IMAGE ID) اشاره می‌کنند.اگر تگ را ننویسید، به طور پیش‌فرض latest در نظر گرفته می‌شود.
+
+* docker tag ایمیج جدید نمی‌سازد — فقط یک نام جدید اضافه می‌کند. اگر می‌خواهید ایمیج جدید بسازید، از docker build یا docker commit استفاده کنید.
+* حذف یک تگ، ایمیج را حذف نمی‌کند — اگر ایمیجی چند تگ داشته باشد، با `docker rmi tag` فقط همان تگ حذف می‌شود. ایمیج اصلی تا وقتی آخرین تگ حذف نشود، باقی می‌ماند:فقط تگ حذف می‌شود، nginx:latest باقی است
+    * `docker rmi my-nginx:v1`
+* تگ latest یک قرارداد است، نه یک قانون — داکر latest را به عنوان "آخرین نسخه" نمی‌شناسد؛ فقط یک تگ پیش‌فرض است. اگر تگ ننویسید، داکر latest را فرض می‌کند
 
 ```shell
-docker images     # show images list
-docker images ls  # show images list
-docker image build -f <DockerFile> -t <NewName>            # ساخت ایمیج جدید
-docker image build                 -t <NewName> .          # ساخت ایمیج جدید
-docker image tag <ExistName>:<ExistTag> <NewName>:<NewTag> # Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE ---> ایجاد یک ایمیج جدید با نام و تگ جدید اما با هش کد مشابه اگر نام موجود باشد «اُوِررایت» می‌شود
-docker image save -o <FullFileName> <IMAGE>                # ذخیره ایمیج در قالب فایل برای انتقال به سیستم دوم جهت استفاده مجدد
-docker image load -i <ImageFile>                           # Load an image from a tar archive or STDIN ---->  اگر بخواهیم دستی یه ایمیج رو به سیستم خود اضافه کنیم
-docker images rm     <ImageID>
-docker images rm -f  <ImageID>
-docker image prune
+docker tag SOURCE_IMAGE[:TAG] TARGET_IMAGE[:TAG]
+docker tag nginx:latest my-nginx:v1   # حالا my-nginx:v1 و nginx:latest هر دو به یک ایمیج اشاره می‌کنند (ایمیج آی دی یکسان).
+docker tag 174c8c134b2a my-app:prod   # اگر ایمیج آی دی را بدانید، می‌توانید مستقیماً از آن استفاده کنید (نیازی به نام فعلی نیست).
+
+# Versioning
+docker tag my-app:latest my-app:1.0.0
+docker tag my-app:latest my-app:1.0
+docker tag my-app:latest my-app:stable
+
+# تغییر نام یک ایمیج
+docker tag old-name:latest new-name:latest
+docker rmi old-name:latest
 ```
 
 # 3. 🅰️ Images
@@ -421,7 +448,7 @@ CMD ["app.py"]
 ```dockerfile
 COPY [LocalMachine] [ContainerDir]
 COPY /tmp/salam2 /salam2
-COPY *package* /[DirectoryInDockerImages]
+COPY *package* /<DirectoryInDockerImages>
 COPY . /[DirectoryInDockerImages]
 COPY /home/FIles/Data/salam.txt /[DirectoryInDockerImages]
 ```
@@ -519,17 +546,27 @@ EXPOSE 7000-8000
 
 # 6. 🅰️ Repository
 
-نکته: عمل ارسال به ریپوزیتوری(پوش کردن) لایه لایه انجام می‌شود یعنی اگر تنها یک لایه تغییر نماید آنگاه تنها یک لایه ارسال می‌شود
+نکته: عمل ارسال به ریپوزیتوری(پوش کردن) لایه به لایه انجام می‌شود یعنی اگر تنها یک لایه تغییر نماید آنگاه تنها یک لایه ارسال می‌شود
 
-* [login] #در خط فرمان به آی‌دی از قبل ساخته شده خودمان در سایت داکر هاب لاگین می‌کنیم
-    * docker login #enter user and password
-* [push]: ارسال ایمیج به داکرهاب
-    * docker tag imagNameOrID [IdOnDockerHub]/[NewNameForVisibleOnDockerHub]
-    * docker push [id]/[name]
-* [pull]: دریافت ایمیج از داکر هاب
-    * docker pull [NameOfImageOnDockerHub] #دانلود یک ایمیج داکر از روی داکرهاب
-    * docker pull docker/whalesay #دانلود ایمیج مدنظر با حجم تقریبا۷۰مگابایت
-        * docker run docker/whalesay cowsay salam # ایجاد یک کانتینر از ایمیج موردنظر و اجرای دستور و پس از اتمام دستور کانتینر از بین می‌رود
+* برای آپلود به Docker Hub، نام ایمیج باید با نام کاربری شما شروع شود. docker tag این کار را انجام می‌دهد.
+* برای رجیستری خصوصی، نام باید شامل آدرس رجیستری و پورت باشد.
+
+```shell
+docker login #enter user and password
+docker tag <ImagNameOrID> [IdOnDockerHub]/[NewNameForVisibleOnDockerHub] #
+docker push [id]/[name]
+docker pull [NameOfImageOnDockerHub] #دانلود یک ایمیج داکر از روی داکرهاب
+docker pull docker/whalesay #دانلود ایمیج مدنظر با حجم تقریبا۷۰مگابایت
+docker run docker/whalesay cowsay salam # 
+
+# آماده‌سازی برای push به Docker Hub
+docker tag my-app:latest yourusername/my-app:1.0
+docker push yourusername/my-app:1.0
+
+# آماده‌سازی برای push به رجیستری خصوصی
+docker tag my-app:latest registry.example.com:5000/my-app:v2
+docker push registry.example.com:5000/my-app:v2
+```
 
 # 7. 🅰️ Deployment
 
@@ -857,7 +894,7 @@ POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
 * volumes #اتصال مسیر خاصی از سیستم لینوکس اصلی به کانتینر
 * `- ./DireName:/app` #در مسیر کنونی با نام خاص را به مسیر «اَپ» در درون کانتینر متصل می‌کند
 * command: اجرای یک دستور در کانتینر
-    * میتوان همه کارها را درون یک شل ایجاد کرد و فقط به دستور بگوییم آن شل را اجرا بکند
+    * میتوا ن همه کارها را درون یک شل ایجاد کرد و فقط به دستور بگوییم آن شل را اجرا بکند
 * restart #وقتی یک کانتینر کرش می‌کند چه اتفاقی رخ دهد
     * always: همواره هنگام کرش کردن ریست کند
     * no: هنگام کرش کردن ریست نکند
@@ -866,7 +903,7 @@ POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
 ### 7.1.3. ✅️ Commands
 
 ```shell
-docker-compose -f docker-compose_prod.yaml build
+docker-compose -f docker-compose-prod.yaml build
 ```
 
 ### 7.1.4. ✅️ Example
@@ -963,7 +1000,7 @@ docker-machine ls
 docker-machine ssh MachineName #اتصال به یوزر روت ماشین مجازی کلود موجود در دیجیتال اوشن
 ```
 
-### ✅️ DockerMachine Environments
+### 7.2.1. ✅️ DockerMachine Environments
 
 1️⃣️ این دستور را در داخل bash لوکال خود اجرا کنید تا متغیرهای محلی داکر ماشین(نصب شده در داخل سیستم خودمان) را نمایش دهد.سپس باتنظیم آن در bash خود(بعنوان Environment Variable) می‌توانیم به docker-machine لوکال سیستم خود متصل شویم
 
@@ -989,7 +1026,101 @@ docker-compose -f docker-compose1.yaml build -d
 
 ![dockerMachine01.jpg](_srcFiles/Images/dockerMachine01.jpg "dockerMachine01.jpg")
 
-## 7.3. 🅱️ terraform
+## 7.3. 🅱️ swarm
+
+* محصول شرکت داکر است یا به عنوانی Orchestration Tools از شرکت داکر است
+
+```shell
+# [--advertise-addr string] # تعیین یک نود بعنوان مستر  
+docker swarm init 
+docker swarm init --advertise-addr 10.116.0.2 # PrivateIp_OfContainer_From_DigitalOcean #افزودن یک نود بعنوان گره اصلی
+docker swarm join --token SWMTKN-1-137q7uuogt4slnhar6b68nid7e33sgtkgkr 10.116.0.2:2377 # اضافه کردن گره اسلِیو به گره اصلی ایجاد شده
+       # هر نود که میخاهیم به کلاستر اضافه شود از این دستور استفاده می‌کنیم
+docker node ls #list nodes
+docker swarm join-token worker # نمایش دستوری که می‌توانیم با آن یک نود جدید به کلاستر اضافه کنیم(این دستور را باید در مستر بزنیم و دستور «جوین شدن» را باید در اسلیو بزنیم)
+
+```
+
+## 2.19. 📍️docker stack
+
+
+```shell
+# cat docker-compose.yml ┐
+#                        │
+#                        ▼
+# ╔═════════════════════════════════════════════╗
+# ║ version: "3.8"
+# ║ 
+# ║ services:
+# ║   web:
+# ║     image: dblearn/web
+# ║     ports:
+# ║       - 80:80
+# ║     restart: always
+# ║   api:
+# ║     image: dblearn/api
+# ║     ports:
+# ║       - 3001:3001
+# ║     environment:
+# ║       DB_URL: mongodb://db/mydb
+# ║     command: ./docker-entrypoint.sh
+# ║     restart: always
+# ║   db:
+# ║     image: mongo:4.0-xenial
+# ║     ports:
+# ║       - 27017:27017
+# ║     volumes:
+# ║       - mydb:/data/db
+# ║     restart: always
+# ║ volumes:
+# ║   mydb:
+# ╚═══════════════════════════════════════════╝
+
+docker stack deploy --compose-file <docker-compose.yml> MyApp # دستور استقرار استک در سوآرم
+docker stack services myapp # مشاهده سرویس‌های استک
+docker stack ps myapp #مشاهده وضعیت تسک‌ها
+docker stack rm myapp # حذف استک
+
+
+# ---------- مدیریت استک (Stack) ----------
+docker stack ls                                                        # لیست تمام استک‌های در حال اجرا
+docker stack deploy -c docker-compose.yml MyApp                        # استقرار استک با نام MyApp
+docker stack deploy -c docker-compose.yml --with-registry-auth MyApp   # استقرار با احراز هویت رجیستری
+docker stack deploy -c docker-compose.yml --prune MyApp                # حذف سرویس‌های قدیمی که در فایل نیستند
+docker stack deploy -c docker-compose.yml --resolve-image always MyApp # همیشه ایمیج را از رجیستری بگیر
+docker stack deploy -c docker-compose.yml --detach=false MyApp         # اجرا به صورت attached (نمایش لاگ)
+docker stack services MyApp                          # لیست سرویس‌های استک MyApp
+docker stack services MyApp --filter name=web        # فیلتر سرویس‌ها بر اساس نام
+docker stack ps MyApp                                # لیست تسک‌های استک MyApp
+docker stack ps MyApp --filter desired-state=running # فیلتر تسک‌های در حال اجرا
+docker stack ps MyApp --no-trunc                     # نمایش کامل اطلاعات تسک‌ها
+docker stack rm MyApp                                # حذف استک MyApp
+docker stack rm MyApp --detach=false                 # حذف با نمایش پیشرفت
+docker stack config -c docker-compose.yml            # نمایش کانفیگ نهایی استک
+
+# ---------- مدیریت سرویس‌ها (Service) ----------
+docker service ls                                    # لیست تمام سرویس‌ها
+docker service ps <service>                          # وضعیت تسک‌های یک سرویس
+docker service logs <service>                        # مشاهده لاگ‌های یک سرویس
+docker service scale <service>=<number>              # تغییر تعداد replicaهای یک سرویس
+docker service update <service>                      # به‌روزرسانی یک سرویس
+docker service rm <service>                          # حذف یک سرویس
+docker service inspect <service>                     # نمایش جزئیات کامل یک سرویس
+
+# ---------- مدیریت نودها و Swarm ----------
+docker swarm init                                    # راه‌اندازی Swarm روی این نود
+docker swarm join --token <token> <ip>:<port>        # پیوستن به Swarm موجود
+docker node ls                                       # لیست نودهای Swarm
+docker node ps                                       # لیست تسک‌های در حال اجرا روی نودها
+docker node inspect <node>                           # نمایش جزئیات یک نود
+docker node update --availability drain <node>       # تخلیه یک نود (خارج کردن از سرویس‌دهی)
+
+
+```
+
+
+
+## 7.4. 🅱️ terraform
 
 * ابزار متن‌باز برای مدیریت زیرساخت به عنوان کد.
 * ابزارهای دیگر نظیر DockerMachine هم هست که این کار را می‌کند
@@ -1002,12 +1133,12 @@ docker-compose -f docker-compose1.yaml build -d
 * از زبان HCL (HashiCorp Configuration Language) برای تعریف زیرساخت‌ها استفاده می‌کند
 * می‌تواند با ارائه‌دهندگان مختلف ابری (مانند AWS، Azure، Google Cloud) و همچنین منابع محلی کار کند.
 
-## 7.4. 🅱️ dockerSwarm
+## 7.5. 🅱️ dockerSwarm
 
 * فراهم سازی امکان مدیریت و استقرار کلاستر
 * شرکت داکر برای استقرار این نسخه را توصیه می‌نماید زیرا ابزار Orchestration شرکت داکر است
 
-## 7.5. 🅱️ Kubernetes
+## 7.6. 🅱️ Kubernetes
 
 * پیاده سازی شده توسط شرکت گوگل
 * متن‌باز یا همان OpenSource
@@ -1026,4 +1157,3 @@ Diretory/ #نادیده گرفتن یک دایرکتوری
 </div>
 
 
-[URL](https://docs.docker.com/reference/cli/docker/container/run/)
