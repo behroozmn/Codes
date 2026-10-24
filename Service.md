@@ -31,7 +31,7 @@
     * <after>: network.target #یعنی برای اینکه یونیت «اس‌اس‌اچ» بالا بیاید باید حتما سرویس نتورک فعال باشد
     * <wants>: XYZ #سرویس «اس‌اس‌اچ» برای بالا آمدن نیاز به داشتن این موارد است
 
-### 1.2.2. ✅️ Types
+### 1.2.1. ✅️ Types
 
 * service: مدیریت daemon ها
 * socket: مدیریت SocketActivation
@@ -47,63 +47,67 @@
 * masked: واحدهایی که به طور کامل غیرفعال شده‌اند و نمی‌توانند به هیچ شکلی اجرا شوند. این وضعیت معمولاً برای جلوگیری از راه‌اندازی یک واحد استفاده می‌شود
 * unmasked: واحدهایی که به حالت غیرفعال یعنی «مَسکِد» درآمده‌اند و اکنون می‌توانند دوباره فعال شوند.
 
+### 1.2.2. ✅️ journalctl
 
-* journalctl: لاگ‌های سیستم‌دی در این دستور نهفته است
-    * [-b]: نمایش تمام لاگ‌ها از زمان بوت سیستم تا اکنون
-    * [--since]: نمایش از زمان خاص
-        * `journalctl --since "1 hour ago"`
-        * `journalctl--since=today|yesterday`
-        * `journalctl --since "2024-02-05 14:08:01"`
-    * [--until]: نمایش تا یک زمان خاص
-        * `journalctl --until "2024-02-05 15:46:01"`
-    * [-f]: باز گذاشتن فایل برای لاگ‌های جدید
-    * [-k]: فقط نمایش پیام های کرنل
-    * [-u]: انحصار لاگ خروجی برای سرویس خاص البته درصورت استفاده از دو کانفیگ `StandardOutput=journal` و `StandardError=journal` در داخل یونیت سرویس مورد نظر
-        * `journalctl -u apache.service`
-        * ` journalctl -u Salam.service -f`
-    * [-p]: نمایش بر اساس اولویت بندی
-        * `journalctl -p err`
-    * [-n]: محدودیت برای نمایش تعداد خط
-        * `journalctl -n 20`
-    * [-r]: خروجی را معکوس کن، ابتدا جدیدترین ورودی‌ها را نشان بده
-        * `journalctl -r`
-    * [--no-pager]: در همین خروجی ترمینال نشان بده و وارد محیطی جدید مثل دستور لِس نشود
-        * `journalctl --no-pager -n 1000`
-* systemctl
-    * [daemon-reload] #لود مجدد تمامی سرویس‌ها درصورتی که سرویسی را پاک کردید و هنوز سیستم نفهمیده است
-    * [list-units] #مشاهده واحد‌های فعال و غیر فعال
-        * `systemctl list-units --all` #نمایش همه اعم از فعال و غیرفعال
-    * [--type] = service | socket | target | mount | automount | swap | timer | path | slice | scope | generator
-        * این دستور فقط فعال ها را نمایش میدهد و اگر بخواهید غیر فعال را نمایش دهد باید سوییچ «آل» را استفاده نمایید
-    * [list-unit-files] تمام واحدهای موجود
-    * [is-enabled]: output may be[enabled|disabled|static|masked]
-        * static:‌سرویس بصورت استاتیک پیکربندی شده یعنی نمی‌توان بصورت مستقیم فعال یا غیرفعال کرد. معمولاً برای سرویس‌هایی است که به دیگر واحدها وابسته هستند و به طور خودکار توسط آن‌ها فعال می‌شوند
-        * masked: سرویس بطور کامل غیرفعال شده و نمی‌تواند به هیچ شکلی اجرا شود. معمولاً برای جلوگیری از راه‌اندازی یک واحد استفاده می‌شود
-        * `sudo systemctl is-enabled ssh.service`
-    * [--failed]: such as [systemctl --state=failed]
-    * [get-default]: show current run level
-        * `sudo systemctl get-default` ----> graphical.target
-    * [status|stop|start|enable|disable|condrestart] ServiceOrUnitName
-        * [--now] #فعال کردن درعین حال استارت کردن
-        * `systemctl enable MyService --now`
-        * `systemctl status ssh.socket` #نمایش وضعیت سوکت
-    * [suspend]:  انتقال سیستم عامل به وضعیت StandBy یا همان استندبای
-        * `sudo systemctl suspend #`
+لاگ‌های سیستم‌دی در این دستور نهفته است
+
+* [-b]: نمایش تمام لاگ‌ها از زمان بوت سیستم تا اکنون
+* [--since]: نمایش از زمان خاص
+    * `journalctl --since "1 hour ago"`
+    * `journalctl--since=today|yesterday`
+    * `journalctl --since "2024-02-05 14:08:01"`
+* [--until]: نمایش تا یک زمان خاص
+    * `journalctl --until "2024-02-05 15:46:01"`
+* [-f]: باز گذاشتن فایل برای لاگ‌های جدید
+* [-k]: فقط نمایش پیام های کرنل
+* [-u]: انحصار لاگ خروجی برای سرویس خاص البته درصورت استفاده از دو کانفیگ `StandardOutput=journal` و `StandardError=journal` در داخل یونیت سرویس مورد نظر
+    * `journalctl -u apache.service`
+    * ` journalctl -u Salam.service -f`
+* [-p]: نمایش بر اساس اولویت بندی
+    * `journalctl -p err`
+* [-n]: محدودیت برای نمایش تعداد خط
+    * `journalctl -n 20`
+* [-r]: خروجی را معکوس کن، ابتدا جدیدترین ورودی‌ها را نشان بده
+    * `journalctl -r`
+* [--no-pager]: در همین خروجی ترمینال نشان بده و وارد محیطی جدید مثل دستور لِس نشود
+    * `journalctl --no-pager -n 1000`
+
+### 1.2.3. ✅️ systemctl
+
+* [daemon-reload] #لود مجدد تمامی سرویس‌ها درصورتی که سرویسی را پاک کردید و هنوز سیستم نفهمیده است
+* [list-units] #مشاهده واحد‌های فعال و غیر فعال
+    * `systemctl list-units --all` #نمایش همه اعم از فعال و غیرفعال
+* [--type] = service | socket | target | mount | automount | swap | timer | path | slice | scope | generator
+    * این دستور فقط فعال ها را نمایش میدهد و اگر بخواهید غیر فعال را نمایش دهد باید سوییچ «آل» را استفاده نمایید
+* [list-unit-files] تمام واحدهای موجود
+* [is-enabled]: output may be[enabled|disabled|static|masked]
+    * static:‌سرویس بصورت استاتیک پیکربندی شده یعنی نمی‌توان بصورت مستقیم فعال یا غیرفعال کرد. معمولاً برای سرویس‌هایی است که به دیگر واحدها وابسته هستند و به طور خودکار توسط آن‌ها فعال می‌شوند
+    * masked: سرویس بطور کامل غیرفعال شده و نمی‌تواند به هیچ شکلی اجرا شود. معمولاً برای جلوگیری از راه‌اندازی یک واحد استفاده می‌شود
+    * `sudo systemctl is-enabled ssh.service`
+* [--failed]: such as [systemctl --state=failed]
+* [get-default]: show current run level
+    * `sudo systemctl get-default` ----> graphical.target
+* [status|stop|start|enable|disable|condrestart] ServiceOrUnitName
+    * [--now] #فعال کردن درعین حال استارت کردن
+    * `systemctl enable MyService --now`
+    * `systemctl status ssh.socket` #نمایش وضعیت سوکت
+* [suspend]:  انتقال سیستم عامل به وضعیت StandBy یا همان استندبای
+    * `sudo systemctl suspend #`
 * sysctl: برای اصلاح تنظیمات کرنلی موجود در proc مورد استفاده قرار می‌گیرد
-    * [-a]: نمایش همه پارامترهای کرنلی
-        * `sysctl -a`
-    * [-n]:  نماشی یک پارامتر کرنلی
-        * `sysctl -n net.ipv4.ip_forward`
-    * [-w]: تغییر موقتی(تا قبل ریبوت) پارامتر کرنلی
-        * `sysctl -w net.ipv4.ip_forward=1` --> ایجاد قابلیت فوروارد نمودن یک بسته به یک ریموت هاست
-            * `echo 1 > /proc/sys/net/ipv4/ip_forward`  permanently enable IPv4 packet forwarding
-        * `sysctl -w net.ipv6.conf.all.forwarding=1`
-            * `echo 1 > /proc/sys/net/ipv6/conf/all/forwarding` ایجاد قابلیت فوروارد نمودن یک بسته به یک ریموت هاست
-    * [-p]: reload all configure even new custom configure /etc/sysctl.conf
-        * `sysctl -p`
-    * []:
+* [-a]: نمایش همه پارامترهای کرنلی
+    * `sysctl -a`
+* [-n]:  نماشی یک پارامتر کرنلی
+    * `sysctl -n net.ipv4.ip_forward`
+* [-w]: تغییر موقتی(تا قبل ریبوت) پارامتر کرنلی
+    * `sysctl -w net.ipv4.ip_forward=1` --> ایجاد قابلیت فوروارد نمودن یک بسته به یک ریموت هاست
+        * `echo 1 > /proc/sys/net/ipv4/ip_forward`  permanently enable IPv4 packet forwarding
+    * `sysctl -w net.ipv6.conf.all.forwarding=1`
+        * `echo 1 > /proc/sys/net/ipv6/conf/all/forwarding` ایجاد قابلیت فوروارد نمودن یک بسته به یک ریموت هاست
+* [-p]: reload all configure even new custom configure /etc/sysctl.conf
+    * `sysctl -p`
+* []:
 
-### 1.2.5. 📁️ /etc/sysctl.conf
+### 1.2.4. 📁️ /etc/sysctl.conf
 
 `fs.file-max = <new_limit> #حداکثر تعداد فایل‌هایی است که می‌توانند به طور همزمان در سیستم باز باشند`
 
