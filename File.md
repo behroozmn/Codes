@@ -311,7 +311,10 @@ sudo lnav -r /var/log /tmp/live_journal
 * /proc/mounts: list of all the filesystems currently mounted on the system
 * /proc/net/arp: This holds an ASCII readable dump of the kernel ARP table
 * /proc/swaps: Swap areas in use
-* /proc/sys/kernel/hostname]
+* /proc/sys/kernel/hostname
+* /proc/sys/kernel/domainname
+* /proc/sys/kernel/arch --> x86_64
+* /proc/sys/kernel/osrelease --> 6.12.101+deb13-amd64
 * /proc/sys/kernel/pty/nr: This read-only file indicates how many pseudoterminals are currently in use #نمایش تعداد ترمینال‌های باز
 * /proc/sys/kernel/pid_max: ماکزیمم تعداد پردازه قابل استفاده در لینوکس توسط این فایل معین شده است که نباید از آن فراتر رود
 * /proc/interrupts: show interrupt request on system
@@ -321,7 +324,9 @@ sudo lnav -r /var/log /tmp/live_journal
     * ls -l /proc/<PID>/fd | wc -l
 * /proc/<PID>/limits: مشاهده محدودیت‌های یک پردازه
 * /proc/sys/fs/file-max: # مشاهده محدودیت مجموع فایل‌های باز در سیستم یعنی حداکثر تعداد فایل‌هایی است که می‌توانند به طور همزمان در سیستم باز باشند
-
+* /proc/partitions
+* /proc/[PID]/io: آمار دقیق خواندن و نوشتن دیسک (به بایت) که توسط خود این پردازش انجام شده است
+* /proc/[PID]/status: خلاصه‌ای خوانا و دسته‌بندی‌شده از وضعیت پردازش
 # 9. 🅰️Command
 
 ## 9.1. 🅱️ fio

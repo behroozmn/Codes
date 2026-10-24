@@ -93,21 +93,30 @@
     * `systemctl status ssh.socket` #نمایش وضعیت سوکت
 * [suspend]:  انتقال سیستم عامل به وضعیت StandBy یا همان استندبای
     * `sudo systemctl suspend #`
-* sysctl: برای اصلاح تنظیمات کرنلی موجود در proc مورد استفاده قرار می‌گیرد
+
+### 1.2.4. ✅️ sysctl
+
+برای اصلاح تنظیمات کرنلی موجود در proc مورد استفاده قرار می‌گیرد
+
 * [-a]: نمایش همه پارامترهای کرنلی
-    * `sysctl -a`
-* [-n]:  نماشی یک پارامتر کرنلی
-    * `sysctl -n net.ipv4.ip_forward`
+    * `/sbin/sysctl -a`
+* [-n]: نماشی یک پارامتر کرنلی
+    * `/sbin/sysctl -n net.ipv4.ip_forward`
+    * `/sbin/sysctl -n kernel.hostname`
 * [-w]: تغییر موقتی(تا قبل ریبوت) پارامتر کرنلی
-    * `sysctl -w net.ipv4.ip_forward=1` --> ایجاد قابلیت فوروارد نمودن یک بسته به یک ریموت هاست
+    * `/sbin/sysctl -w net.ipv4.ip_forward=1` --> ایجاد قابلیت فوروارد نمودن یک بسته به یک ریموت هاست
         * `echo 1 > /proc/sys/net/ipv4/ip_forward`  permanently enable IPv4 packet forwarding
-    * `sysctl -w net.ipv6.conf.all.forwarding=1`
+    * `/sbin/sysctl -w net.ipv6.conf.all.forwarding=1`
         * `echo 1 > /proc/sys/net/ipv6/conf/all/forwarding` ایجاد قابلیت فوروارد نمودن یک بسته به یک ریموت هاست
 * [-p]: reload all configure even new custom configure /etc/sysctl.conf
-    * `sysctl -p`
+    * `/sbin/sysctl -p`
+* [--system]: Load settings from all system configuration files(apply sysctl params without reboot)
+  * `sudo /sbin/sysctl --system`
 * []:
 
-### 1.2.4. 📁️ /etc/sysctl.conf
+
+
+### 1.2.5. 📁️ /etc/sysctl.conf
 
 `fs.file-max = <new_limit> #حداکثر تعداد فایل‌هایی است که می‌توانند به طور همزمان در سیستم باز باشند`
 
