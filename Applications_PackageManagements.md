@@ -69,7 +69,7 @@ trans -e google -s ar -t fa -show-original n -show-original-phonetics n -show-tr
         * extensions.logging.enabled: فعال یا غیرفعال کردن لاگ‌گیری برای افزونه‌ها. اگر فعال باشد، اطلاعات بیشتری در
           مورد فعالیت‌های افزونه‌ها ثبت می‌شود
         *
-        extensions.webextensions.restrictedDomains: [تنظیمات مربوط به دامنه‌های محدود برای افزونه‌ها] [لیستی از دامنه‌هایی که افزونه‌ها نمی‌توانند به آن‌ها دسترسی پیدا کنند][این تنظیم به امنیت افزونه‌ها کمک می‌کند]
+      extensions.webextensions.restrictedDomains: [تنظیمات مربوط به دامنه‌های محدود برای افزونه‌ها] [لیستی از دامنه‌هایی که افزونه‌ها نمی‌توانند به آن‌ها دسترسی پیدا کنند][این تنظیم به امنیت افزونه‌ها کمک می‌کند]
         * extensions.webextensions.storage.enabled: فعال یا غیرفعال کردن ذخیره‌سازی محلی برای افزونه‌ها. اگر غیرفعال
           باشد، افزونه‌ها نمی‌توانند داده‌های محلی را ذخیره کنند
     * general
@@ -157,21 +157,21 @@ trans -e google -s ar -t fa -show-original n -show-original-phonetics n -show-tr
     * [ALT+Insert]:‌ autoGenerate[Getter , Setter,Tostring, ...]
     * [psvm]: تمام ساختار تابع مین را خوکار ایجاد میکند
 * theme
-  * Ayu Dark(Island): بهروز از این استفاده میکنه گاها
-  * dracula vscode
-  * night-owl-native
-  * vscode dark
-  * vscode dark modern
-  * one dark
+    * Ayu Dark(Island): بهروز از این استفاده میکنه گاها
+    * dracula vscode
+    * night-owl-native
+    * vscode dark
+    * vscode dark modern
+    * one dark
 * Plugins
-  * Markdown-index
-
+    * Markdown-index
 
 رفع مشکل کپی و چسباندن در layout فارسی در پای چارم ۲۰۲۵.۳ و دبیان۱۲
 
 ```python
-export GDK_BACKEND=wayland
-./pycharm.sh
+export
+GDK_BACKEND = wayland
+./ pycharm.sh
 ```
 
 ## 🅱️ VScode
@@ -268,18 +268,23 @@ gsettings get org.gnome.desktop.background picture-uri
 ## 🅱️ MPV
 
 * Shortcut
-  * [[]:Speed Decrease
-  * []]:Speed Increase
-  * [s]: ScreeanShot
-  * [/] or [9]: volume Decrease
-  * [*] or [0]: Volume Increase
-  * [p]: Pause
-  * [F]: fullscreen Toggle
-  * [Alt + 0]: Current-Screen: 0.5
-  * [Alt + 1]: Current-Screen: 1
-  * [Alt + 2]: Current-Screen: 2
-  * [.]: slow motion
-  * 
+    * [[]:Speed Decrease
+    * []]:Speed Increase
+    *
+
+  [s]: ScreeanShot
+    * [/] or [9]: volume Decrease
+    * [*] or [0]: Volume Increase
+    *
+
+  [p]: Pause
+    * [F]: fullscreen Toggle
+    * [Alt + 0]: Current-Screen: 0.5
+    * [Alt + 1]: Current-Screen: 1
+    * [Alt + 2]: Current-Screen: 2
+    * [.]: slow motion
+    *
+
 # 🅰️ group:PackageManagements
 
 ## 🅱️ Debian
@@ -300,6 +305,52 @@ part1 part2 part3 part4
 * part1
     * deb: دانلود فایل‌های اجرایی
     * deb-src: دانلود سورس پکیج‌شده که برای دِوِلُپ یا دیباگ استفاده می‌شود
+* part1 [Optional]
+    * [arch] or [Architectures]: تغیین معماری
+        * `deb [arch=amd64] <URL> bookworm stable`
+        * `deb [arch=amd64,i386] <URL> bookworm main`
+    * [lang] or [Languages]: تعیین زبان
+        * `deb [lang=en,fa]  ...`
+        * `deb [lang-=de]  ...` حذف زیان آلمانی از لیست پیش‌فرض
+    * [signed-by]: مخزن را ملزم می‌کند تا تأییدیه `apt-secure` را با مجموعه خاصی از کلیدها (نه همه کلیدهای مورد اعتماد) پاس کند.
+        * `deb [signed-by=/usr/share/keyrings/docker.gpg] ...`
+    * [trusted]: وضعیت اعتماد به مخزن را به صورت دستی تغییر می‌دهد
+        * `truested=yes` :همیشه مورد اعتماد است (حتی اگر تأییدیه را پاس نکند)
+        * `truested=no` : حتی اگر تأییدیه را پاس کند، غیرقابل اعتماد تلقی شود
+        * Default: `no`
+        * Example:
+    * [allow-insecure]: بخشی از بررسی‌های امنیتی apt-secure را دور می‌زند و به مخزن اجازه می‌دهد بدون تأییدیه معتبر کار کند
+        * Valid Value: `yes` or `no`
+        * Default: `no`
+    * [allow-weak]: اجازه می‌دهد از الگوریتم‌های امضای ضعیف (مانند SHA1) برای تأییدیه مخزن استفاده شود.
+        * Valid Value: `yes` or `no`
+        * Default: `no`
+    * [allow-downgrade-to-insecure]: اجازه می‌دهد تا به نسخه‌های قدیمی‌تر و ناامن‌تر بسته‌ها تنزل کند
+        * Valid Value: `yes` or `no`
+        * Default: `no`
+    * [check-valid-until]: کنترل می‌کند که آیا APT باید حملات Replay را با بررسی تاریخ انقضای فایل Release تشخیص دهد یا خیر
+        * Valid Value: `yes` or `no`
+    * [valid-until-min]: حداقل مدت زمان (به ثانیه) که داده‌های مخزن معتبر تلقی می‌شوند را افزایش می‌دهد. برای مخازن محلی که به‌ندرت به‌روز می‌شوند مفید است
+        * Valid Value: number(Second)
+    * [valid-until-max]: حداکثر مدت زمان (به ثانیه) اعتبار داده‌های مخزن را تعیین می‌کند.
+        * Valid Value: number(Second)
+        * اگر مخزن فیلد Valid-Until نداشته باشد، این مقدار جایگزین می‌شود.
+    * [check-date]: کنترل می‌کند که آیا APT باید تاریخ سیستم را برای انجام بررسی‌های مرتبط با زمان (مانند check-valid-until) صحیح فرض کند یا خیر
+        * Valid Value: `yes` or `no`
+    * [date-max-future]: حداکثر مدت زمانی (به ثانیه) که یک مخزن می‌تواند در آینده باشد را کنترل می‌کند. پیش‌فرض ۱۰ ثانیه است.
+        * Valid Value: number(Second)
+    * [inrelease-path]: مسیر فایل InRelease را نسبت به مکان معمول آن تغییر می‌دهد.
+        * Valid Value: مسیر نسبی
+    * [target]: مشخص می‌کند APT کدام اهداف دانلود (مانند Packages، Sources) را از این مخزن دریافت کند
+        * Valid Value: نام اهداف
+        * Example:
+            *
+    * [pdiffs]: کنترل می‌کند که APT از PDiff (فایل‌های تفاوت) برای به‌روزرسانی ایندکس‌های قدیمی استفاده کند یا کل ایندکس جدید را دانلود کند
+        * Valid Value: `yes` or `no`
+        * Example:
+            *
+    * [by-hash]:
+        * Valid Value: `yes` or `no` or `force`
 * part2
     * URL
 * part3
@@ -312,8 +363,7 @@ part1 part2 part3 part4
     * partner: [بهروز: باید بررسی شود]
     * می‌تواند چندین قسمت باشد یعنی هم شامل main و هم شامل Universe و هم شامل موارد دیگر باشد
 
-☑️ **Examples:**
-
+    
 ```shell
 # 1️⃣️ Debian11:
   cat /etc/apt/sources.list|grep -v -E '#|$^'|grep . 
@@ -333,6 +383,13 @@ part1 part2 part3 part4
   deb-src http://deb.debian.org/debian/ bullseye-updates main contrib
   deb http://security.debian.org/ bullseye-security main
 
+# ✅ Debian11: تحت استاندارد DEB822
+  Types: deb
+  URIs: https://download.docker.com/linux/debian
+  Suites: bookworm
+  Components: stable
+  Architectures: amd64
+  Signed-By: /usr/share/keyrings/docker.gpg
 ```
 
 ### ✅️apt

@@ -106,7 +106,7 @@ docker -H=ssh://user@192.168.1.50 ps # اتصال امن از پروتکل ssh
 * [--no-cache=true|false]
     * docker build --no-cache=true -t <TagName> <Dir>
 
-## 2.9. 📍️docker commit
+## 2.4. 📍️docker commit
 
 ذخیره اطلاعات یک کانتینر و تبدیل به یک ایمیج
 
@@ -114,7 +114,7 @@ docker -H=ssh://user@192.168.1.50 ps # اتصال امن از پروتکل ssh
 docker commit <ContainerID> <repository:[Tag]>
 ```
 
-## 2.14. 📍️docker Container
+## 2.5. 📍️docker Container
 
 نکته: در توزیع لینوکس alpine دستور apt نداریم بلکه معادل آن apk است
 
@@ -126,7 +126,7 @@ docker container stop <ExistContainerID>
 docker container prune #حذف کانتینرهای اضافی که مثلا لایه‌های آنها کش شده است. همواره ابتدا کانتینر رو هرس کنید و سپس ایمیج‌ها را هرس کنید
 ```
 
-## 2.8. 📍️docker cp
+## 2.6. 📍️docker cp
 
 کپی اطلاعات کانتینر درحال اجرا برروی سیستم فیزیکی ولوکال خودمان و برعکس
 
@@ -145,20 +145,20 @@ docker exec -it <NameContiner> <Commnads>
 docker exec -it <NameContiner> /bin/bash
 ```
 
-## 2.16. 📍️docker history
+## 2.8. 📍️docker history
 
 ```shell
 docker history [ImageName] #نمایش تاریخچه دستورات
 ```
 
-## 2.17. 📍️docker inspect|info
+## 2.9. 📍️docker inspect|info
 
 ```shell
 docker info # show environments
 docker inspect <CoutainerID|Name>
 ```
 
-## 2.20. 📍️docker image
+## 2.10. 📍️docker image
 
 * برای تولید یک ایمیج Custom باید ابتدا یک DockerFile ایجاد کنیم و دستورالعمل‌هایمان را داخل آن قرار دهیم. سپس داکر فایل را بیلد نماییم یعنی داکر فایل خط به خط خوانده شود و پس از اتمام آن خروجی حاصله را توسط دستور build به یک ایمیج تبدیل کنیم
 * نکته: توزیع alpine یک توزیع بسیار سبک از لینوکس است که بجای دانلود ایمیج لینوکس با حجم زیاد بهتر است این را استفاده نمایید
@@ -197,7 +197,7 @@ docker load -i <PATH.tar.gz>
 docker rmi [<Container ID>|<NAME>]
 ```
 
-## 2.4. 📍️docker run
+## 2.13. 📍️docker run
 
 * اجرای یک دستور بر پایه یک ایمیج که سبب تولید یک کانتینر می‌شود و هرگاه دستور تمام شود آنگاه کانتینر ازبین می‌رود
 * نکته۱:کانتینرها درواقع پروسس هستند که در قالب ایمیج ایجاد می‌شوند و پس از اجرا تمام و از بین می‌روند
@@ -234,7 +234,7 @@ docker run -d    --name <NAME> -e APP_PORT=7070 -p 8081:7070 <Image>
 docker run --rm ...   # run after kill after delete
 ```
 
-## 2.5. 📍️docker stop
+## 2.14. 📍️docker stop
 
 ```shell
 docker stop Name #استاپ کردن یک کانتینر
@@ -243,7 +243,7 @@ docker container prune #  اگر کانتینرهای استاپ شده زیاد
 
 ```
 
-## 2.6. 📍️docker save
+## 2.15. 📍️docker save
 
 ذخیره یک ایمیج
 
@@ -251,7 +251,7 @@ docker container prune #  اگر کانتینرهای استاپ شده زیاد
 docker save -o <Name>.tar.gz Repository:Tag
 ```
 
-## 2.10. 📍️docker volume
+## 2.16. 📍️docker volume
 
 **MountPoint**: ‌مسیری که در دستور inspect نمایش داده می‌شود و نشان می‌دهد که والیوم در کدام مسیر لینوکس اصلی قرار دارد
 
@@ -264,7 +264,7 @@ docker volume inspec <VolumeName>     # Display detailed information on one or m
 docker volume update                  # Update a volume (cluster volumes only)
 ```
 
-## 2.13. 📍️docekr ps
+## 2.17. 📍️docekr ps
 
 * نمایش کانینرهای درحال اجرای دستور در سیستم عامل کنونی را نشان می‌دهد که درحال اجرای چه دستوری است
 * نکته۱:کانتینرها درواقع پروسس هستند که در قالب ایمیج اجرا می‌شوند و پس از اجرا تمام و از بین می‌روند
@@ -275,7 +275,7 @@ docker volume update                  # Update a volume (cluster volumes only)
 * [-q]
     * docker ps -a -q #show ContainerID of all containers
 
-## 2.15. 📍️docker volume
+## 2.18. 📍️docker volume
 
 ```shell
 docker volume create --name Behrooz
@@ -283,7 +283,7 @@ docker volume ls
 docker volume inspect behrooz
 ```
 
-## 2.18. 📍️docker logs
+## 2.19. 📍️docker logs
 
 ```shell
 docker logs [ContainerID | NAME] #Fetch the logs of a container منظور خطوط خروجی دستورات داکر است اگر در حالت بک‌گراند اجرا بگیریم
@@ -296,10 +296,7 @@ docker logs [ContainerID | NAME] #Fetch the logs of a container منظور خط�
 * [-t]: نمایش تایم برای هر خط
     * docker logs -t -n 100 ImageName # نمایش صد خط از خروجی دستورات داکر به همراه نمایش تایم آن دستورات که به اجرا درآمده است
 
-
-
-
-## 2.19. 📍️docker tag
+## 2.20. 📍️docker tag
 
 یک نام یا برچسب اضافی (alias) به یک ایمیج موجود اختصاص می‌دهد. این دستور ایمیج جدید نمی‌سازد و کپی هم نمی‌کند — فقط یک ارجاع (reference) جدید به همان لایه‌های ایمیج اضافه می‌کند. یعنی بعد از اجرا، دو نام مختلف دارید که هر دو به یک ایمیج یکسان (با همان IMAGE ID) اشاره می‌کنند.اگر تگ را ننویسید، به طور پیش‌فرض latest در نظر گرفته می‌شود.
 
@@ -1041,8 +1038,7 @@ docker swarm join-token worker # نمایش دستوری که می‌توانی�
 
 ```
 
-## 2.19. 📍️docker stack
-
+## 7.4. 📍️docker stack
 
 ```shell
 # cat docker-compose.yml ┐
@@ -1118,9 +1114,7 @@ docker node update --availability drain <node>       # تخلیه یک نود (�
 
 ```
 
-
-
-## 7.4. 🅱️ terraform
+## 7.5. 🅱️ terraform
 
 * ابزار متن‌باز برای مدیریت زیرساخت به عنوان کد.
 * ابزارهای دیگر نظیر DockerMachine هم هست که این کار را می‌کند
@@ -1133,17 +1127,45 @@ docker node update --availability drain <node>       # تخلیه یک نود (�
 * از زبان HCL (HashiCorp Configuration Language) برای تعریف زیرساخت‌ها استفاده می‌کند
 * می‌تواند با ارائه‌دهندگان مختلف ابری (مانند AWS، Azure، Google Cloud) و همچنین منابع محلی کار کند.
 
-## 7.5. 🅱️ dockerSwarm
+## 7.6. 🅱️ dockerSwarm
 
 * فراهم سازی امکان مدیریت و استقرار کلاستر
 * شرکت داکر برای استقرار این نسخه را توصیه می‌نماید زیرا ابزار Orchestration شرکت داکر است
 
-## 7.6. 🅱️ Kubernetes
+## 7.7. 🅱️ Kubernetes
 
 * پیاده سازی شده توسط شرکت گوگل
 * متن‌باز یا همان OpenSource
 * استفاده گسترده‌ در صنعتIT
 * امکانات پیشرفته‌تر نسبت به Docker Swarm
+
+### 7.7.1. ✅️ kubelet
+
+کامپوننتی که وظیفه پول یا پوش کانتینترها
+
+* ارتباط با container runtime engin ها که این میتواند از طریق containerd باشد یا موارد دیگر
+* به نودهای slave در کلاستر عنوان worker نیز گفته میشود
+
+### 7.7.2. ✅️ kubeadm
+
+برای نصب Kubernetes مورد استفاده قرار میگیرد
+
+```shell
+kubeadm init # نصب کوبرنتیز: برای شروع راه‌اندازی کلاستر در مستر این دستور را میزنیم
+kubeadm join <ip>:<port> --token <token> --discovery-token-ca-cert-hash <sha256:...> # افزودن یک نود به کلاستر
+```
+
+### 7.7.3. ✅️ kubectl
+
+commandline tools of Kubernetes
+
+```shell
+kubectl get nodes # دریافت وضعیت نودها در کلاستر
+kubectl get pod # نمایش وضعیت پادها
+kubectl get pods # نمایش وضعیت پادها
+kubectl get pod -n kube-system # نمایش وضعیت پادها
+kubectl delete pod <PodName> # حذف یک پاد
+```
 
 # 8. 🅰️ dockerignore
 
