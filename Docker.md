@@ -339,6 +339,32 @@ docker rmi old-name:latest
 
 ![Docker-DockerFile.jpg](_srcFiles/Images/Docker-DockerFile.jpg "Docker-DockerFile.jpg")
 
+```shell
+#./Dockerfile:
+FROM nginx:alpine
+COPY website /website
+COPY nginx.conf /etc/nginx/nginx.conf # -------> ✅️ nginx.conf ──────────────┐
+EXPOSE 80                             #                                      │
+                                      #         ┌────────────────────────────┴─────────────────────────────────────────────────┐
+                                      #         │events {                                                                      │ 
+                                      #         │          worker_connections 1024;                                            │ 
+                                      #         │       }                                                                      │ 
+                                      #         │http {                                                                        │ 
+                                      #         │        add_header Cache-Conrol max-age=0,no-cache,no-store,must-revalid..... │ 
+                                      #         │        include mime.types;                                                   │ 
+                                      #         │        server {                                                              │ 
+                                      #         │                  listen         80;                                          │ 
+                                      #         │                  server_name    localhost;                                   │ 
+                                      #         │                  root           /website;                                    │ 
+                                      #         │                  index          index.html;                                  │ 
+                                      #         │                  location / {                                                │ 
+                                      #         │                                try_files $uri $uri/ =404;                    │ 
+                                      #         │                             }                                                │ 
+                                      #         │               }                                                              │ 
+                                      #         │      }                                                                       │ 
+                                      #         └──────────────────────────────────────────────────────────────────────────────┘                                    
+```
+
 ### 3.1.1. ✅️ FROM
 
 :تعیین ایمیج پایه که قرار است دستورها بر روی آن اجرا شود و باید اولین خط در داکرفایل باشد
