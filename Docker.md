@@ -340,29 +340,32 @@ docker rmi old-name:latest
 ![Docker-DockerFile.jpg](_srcFiles/Images/Docker-DockerFile.jpg "Docker-DockerFile.jpg")
 
 ```shell
-#./Dockerfile:
-FROM nginx:alpine
-COPY website /website
-COPY nginx.conf /etc/nginx/nginx.conf # -------> ✅️ nginx.conf ──────────────┐
-EXPOSE 80                             #                                      │
-                                      #         ┌────────────────────────────┴─────────────────────────────────────────────────┐
-                                      #         │events {                                                                      │ 
-                                      #         │          worker_connections 1024;                                            │ 
-                                      #         │       }                                                                      │ 
-                                      #         │http {                                                                        │ 
-                                      #         │        add_header Cache-Conrol max-age=0,no-cache,no-store,must-revalid..... │ 
-                                      #         │        include mime.types;                                                   │ 
-                                      #         │        server {                                                              │ 
-                                      #         │                  listen         80;                                          │ 
-                                      #         │                  server_name    localhost;                                   │ 
-                                      #         │                  root           /website;                                    │ 
-                                      #         │                  index          index.html;                                  │ 
-                                      #         │                  location / {                                                │ 
-                                      #         │                                try_files $uri $uri/ =404;                    │ 
-                                      #         │                             }                                                │ 
-                                      #         │               }                                                              │ 
-                                      #         │      }                                                                       │ 
-                                      #         └──────────────────────────────────────────────────────────────────────────────┘                                    
+# [docker build -t website] OR [docker build -f ./Docker-file -t website] OR [docker-compose up]
+   
+#./Dockerfile:                                       ✅️ nginx.conf:
+FROM nginx:alpine                     #              ┌──────────────────────────────────────────────────────────────────────────────┐     
+COPY website /website                 #              │events {                                                                      │    
+COPY nginx.conf /etc/nginx/nginx.conf #              │          worker_connections 1024;                                            │    
+EXPOSE 80 #                                          │       }                                                                      │    
+#                                                    │http {                                                                        │                                    
+#                                                    │        add_header Cache-Conrol max-age=0,no-cache,no-store,must-revalid..... │                                    
+#                                                    │        include mime.types;                                                   │                                    
+#                                                    │        server {                                                              │                                    
+#                                                    │                  listen         80;                                          │                                                       │                                     
+#       ✅️ docker-compose.yaml:                      │                  server_name    localhost;                                   │                                    
+#      ┌───────────────────────────────────────────┐ │                  root           /website;                                    │                                    
+#      │version: "3.8"                             │ │                  index          index.html;                                  │                                    
+#      │services:                                  │ │                  location / {                                                │                                   
+#      │   website:                                │ │                                try_files $uri $uri/ =404;                    │                                   
+#      │      build:                               │ │                             }                                                │                                   
+#      │         contex: .    # ---> ❗️Dockerfile  │ │               }                                                              │                                   
+#      │      ports:                               │ │      }                                                                       │                                   
+#      │         - 80:80                           │ └──────────────────────────────────────────────────────────────────────────────┘                   
+#      └───────────────────────────────────────────┘                                     
+#                                                                     
+#                                                                      
+#                                                                      
+#                                                                    
 ```
 
 ### 3.1.1. ✅️ FROM
