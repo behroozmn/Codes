@@ -680,7 +680,97 @@ Order: Local ► Dev ► Test ► Demo ► Staging ► Prod
 * [ps]: List containers
     * docker-compose ps
 
-### 7.1.1. ✅️ DockerCompose Files Type
+### 7.1.1. ✅️ Docker-compos.yaml
+
+* اولین خط همواره باید ورژن باشد و عدد آن باید مطابق با ورژن «Docker Engine» باشد که مثلا در ورژن‌های داکر بالاتر از 19.03 می‌توان ورژن را «3.8» قرار داد
+* هرکدام از سرویس‌ها یک سرور با آی‌پی مستقل خواهند بود یعنی اگر داخل هرکدام دیگری را پینگ کنیم پاسخ را خواهیم گرفت(دستور پینگ و نام هاست را نام سرویس می‌گذاریم یعین ping web)
+* میتوانیم درداخل هر سرویس یک داکر فایل ایجاد نماییم و در آخر به فایل `docker-compose` درداخل هر سرویس بگوییم که چگونگی رو از فایل داکر فایل بخونه
+    * یعنی در داخل کلید `build` بک Key یا عنوان `contex` که دارای value با مقدار dot یعنی نقطه است قرار بدهیم
+
+یک داکر کامپوز شامل موارد زیر است
+
+* version: # اولین خط همیشه باید تعیین ورژن باشد
+    * ورژن رو باید با توجه به نسخه داکر هاست تعیین کنین که در سایت داکر نیز آمده است
+* services: هرکدام از سرویس‌های دلخواه که بخواهیم بالا بیاوریم
+* serviceName: هر نام دلخواه می‌توان قرار داد
+    * در مثال زیر کلمه دلخواه «وِب» برای «فرانت‌اِند» انتخاب کردیم و «اِی‌پی‌آی» برای «بَک‌اِند» و کلمه دلخواه «دی‌بی» برای دیتابیس است
+* build: تعیین مسیر داکرفایل مختص سرویس برای بیلد کردن
+* context:‌وقتی بخواهیم در بیلد یک داکر فایل خاص استفاده نماییم باید مسیر را توسط این عبارت به همراه کلیدواژه «داکرفایل»با مقدار «نام فایل» مشخص نماییم
+* image: استفاده از ایمیج خاص و عدم بیلد کردن و استفاده از کانتینر
+  * در داخل فایل اگر ایمیج موجو بود از این کلید استفاده میکنیم و اگر موجود نبود باید از `build` استفاده نماییم
+* environment #تعریف متغیرهای محلی در ایمیج
+    * ` - DB_URL=mongodb://db/mydb` #هردو شکل صحیح است
+    * `DB_URL: mongodb://db/mydb`
+* volumes #اتصال مسیر خاصی از سیستم لینوکس اصلی به کانتینر
+* `- ./DireName:/app` #در مسیر کنونی با نام خاص را به مسیر «اَپ» در درون کانتینر متصل می‌کند
+* `- /tmp/salam:/var/salam` مپ کردن دو مسیردر سرور داخلی و لوکال‌هسات
+* command: اجرای یک دستور در کانتینر
+    * میتوا ن همه کارها را درون یک شل ایجاد کرد و فقط به دستور بگوییم آن شل را اجرا بکند
+* restart #وقتی یک کانتینر کرش می‌کند چه اتفاقی رخ دهد
+    * always: همواره هنگام کرش کردن ریست کند
+    * no: هنگام کرش کردن ریست نکند
+    * unless-stopped: ریست هنگام استاپ کردن سرویس
+
+```dockerfile
+version: "3.8"
+services:
+    web:
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile.prod
+        ports:a
+            - 3000:3001
+    api:
+        build:./backend
+        ports:
+            -  3001:3001
+        environment:
+            - DB_URL2=mongodb://db/mydb
+        volumes:
+            - ./DireName:/app
+        command: ./MyScript.sh
+    db:
+        image: mongo:4.0-xenial
+        ports:
+            - 27017:27017
+        volumes:
+            - mydb:/data/db
+volumes:
+    mydb:
+```
+
+![Docker-compose.jpg](_srcFiles/Images/Docker-compose.jpg "Docker-compose.jpg")
+
+### 7.1.2. ✅️ `Docker-compose` Commands
+
+زیردستورهای docker-compose به شرح زیر است
+
+* `run`: فقط یک کانتینر یک‌بارمصرف از یک سرویس تعریف‌شده در داخل فایل Compose-file.yaml اجرا می‌کند
+    * این کانتینرها پس از پایان کار متوقف می‌شود.
+    * اگر یک سرویس را بخواهیم با RUN بالا بیاوریم آنگاه بلوک `ports` رو نادیده میگیرد و نباید روی پورت حساب کنیم
+* `up`: همه سرویس‌ها را طبق تعریف اجرا می‌کند و کانتینرها بعد از پایان کار باقی می‌مانند(مگر با down پاک شوند)
+* `--rm`: بعد از پایان اجرا، کانتینر به طور خودکار حذف شود. یعنی کانتینر یک‌بارمصرف است و در لیست `docker ps -a` باقی نمی‌ماند.
+*
+
+```shell
+docker-compose -f docker-compose-prod.yaml build
+docker-compose run --rm <name> <command>
+docker-compose build <ServiceNameIn Docker-Compose file>
+```
+
+#### 7.1.2.1. ❇️  SubCommand `<Command>`
+
+اگر در اجرای دستور مشابه `docker-compose run <command>` داشته باشیم که مثلا بجای command کلمه salam بیاید `docker-compose run salam` آنگاه این آخرین بخش، دستوری است که داخل کانتینر اجرا می‌شود
+
+* حالت اول: اگر در داخل داکر فایل تنها CMD وجود داشته باشد یعنی در داخل داکرفایل دستور `CMD ["python", "app.py"]` وجود داشته باشد آنگاه این دستور با دستور cmd جایگزین میشود
+* حالت دوم: اگر در داخل داکر فایل تنها ENTRYPOINT وجود داشته باشد یعنی در داخل داکرفایل دستور `ENTRYPOINT ["python", "app.py"]` وجود داشته باشد آنگاه این دستور به ENTRYPOINT اضافه می‌شود یعنی به`ENTRYPOINT ["python", "app.py","salam"]`  تبدیل میشود
+* حالت سوم: اگر در داخل dockerfile هم CMD و هم ENTRYPOINT داشته باشیم یعنی ابتدا دستور `ENTRYPOINT ["docker-entrypoint.sh"]`  آمده و سپس دستور `CMD ["postgres"]` آمده است آنگاه به دستور  `docker-entrypoint.sh salam` تبدیل میشود
+
+
+
+
+
+### 7.1.3. ✅️ DockerCompose Files Type
 
 در Docker Compose، این نام‌گذاری‌ها معمولاً Convention پروژه هستند و خود Docker معنای رسمی و اجباری برای `dev`، `test`، `staging`، `prod`، `local` و `demo` تعریف نکرده است؛ تیم تعیین می‌کند هر فایل چه تفاوتی داشته باشد.
 
@@ -764,7 +854,7 @@ project/
 | سطح امنیت     | پایین‌تر         | متوسط           | متوسط        | متوسط        | بالا                     | بسیار بالا       |
 | شباهت به Prod | کم               | متوسط           | متوسط        | کم/متوسط     | بسیار زیاد               | مرجع اصلی        |
 
-#### 7.1.1.1. ❇️ Local ► استفاده محلی
+#### 7.1.3.1. ❇️ Local ► استفاده محلی
 
 محیط local یعنی محیطی که معمولاً روی سیستم شخصی Developer اجرا می‌شود.
 
@@ -786,7 +876,7 @@ LOG_LEVEL=debug
 DATABASE_URL=postgresql://app:app@localhost:5432/app
 ```
 
-#### 7.1.1.2. ❇️ Dev ► توسعه
+#### 7.1.3.2. ❇️ Dev ► توسعه
 
 محیط dev معمولاً یک محیط توسعه مشترک‌تر و کنترل‌شده‌تر است.
 
@@ -818,7 +908,7 @@ DATABASE_URL=postgresql://...
 
 ```
 
-#### 7.1.1.3. ❇️ Test ► آزمایش خودکار
+#### 7.1.3.3. ❇️ Test ► آزمایش خودکار
 
 هدف اصلی Test این است که آیا کدی که نوشته‌ایم درست کار می‌کند؟
 
@@ -850,7 +940,7 @@ LOG_LEVEL=error
 DATABASE_URL=postgresql://test:test@postgres:5432/test
 ```
 
-#### 7.1.1.4. ❇️ Staging ► محیط آزمایش
+#### 7.1.3.4. ❇️ Staging ► محیط آزمایش
 
 یک نسخه کنترل‌شده و تقریباً مشابه Production برای اینکه قبل از انتشار، رفتار سیستم را بررسی کنیم.محیط Staging باید تا حد امکان به Production نزدیک باشد.
 
@@ -865,7 +955,7 @@ LOG_LEVEL=info
 DATABASE_URL=<staging database>
 ```
 
-#### 7.1.1.5. ❇️ Production(Prod) ► محیط تولید
+#### 7.1.3.5. ❇️ Production(Prod) ► محیط تولید
 
 محیط Production که به اختصار prod هم معروف است محیطی است که کاربران واقعی از آن استفاده می‌کنند. در این محیط هدف شامل Availability و Security و Reliabilityو Backup و Monitoring و Logging و Recovery و Scalability و Zero/Low Downtime Deployment است
 
@@ -887,7 +977,7 @@ DATABASE_URL=<productionDatabase>
 POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
 ```
 
-#### 7.1.1.6. ❇️ Demo ► نمایشی
+#### 7.1.3.6. ❇️ Demo ► نمایشی
 
 محیط demo با staging یکی نیست. محیط Demo معمولاً برای موارد زیر استفاده می‌شود
 
@@ -902,88 +992,6 @@ POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
 * `docker-compose.demo.yml`
 *
 
-### 7.1.2. ✅️ Docker-compos.yaml
-
-* اولین خط همواره باید ورژن باشد و عدد آن باید مطابق با ورژن «Docker Engine» باشد که مثلا در ورژن‌های داکر بالاتر از 19.03 می‌توان ورژن را «3.8» قرار داد
-* هرکدام از سرویس‌ها یک سرور با آی‌پی مستقل خواهند بود یعنی اگر داخل هرکدام دیگری را پینگ کنیم پاسخ را خواهیم گرفت(دستور پینگ و نام هاست را نام سرویس می‌گذاریم یعین ping web)
-* میتوانیم درداخل هر سرویس یک داکر فایل ایجاد نماییم و در آخر به فایل `docker-compose` درداخل هر سرویس بگوییم که چگونگی رو از فایل داکر فایل بخونه
-    * یعنی در داخل کلید `build` بک Key یا عنوان `contex` که دارای value با مقدار dot یعنی نقطه است قرار بدهیم
-
-یک داکر کامپوز شامل موارد زیر است
-
-* version: # اولین خط همیشه باید تعیین ورژن باشد
-    * ورژن رو باید با توجه به نسخه داکر هاست تعیین کنین که در سایت داکر نیز آمده است
-* services: هرکدام از سرویس‌های دلخواه که بخواهیم بالا بیاوریم
-* serviceName: هر نام دلخواه می‌توان قرار داد
-    * در مثال زیر کلمه دلخواه «وِب» برای «فرانت‌اِند» انتخاب کردیم و «اِی‌پی‌آی» برای «بَک‌اِند» و کلمه دلخواه «دی‌بی» برای دیتابیس است
-* build: تعیین مسیر داکرفایل مختص سرویس برای بیلد کردن
-* context:‌وقتی بخواهیم در بیلد یک داکر فایل خاص استفاده نماییم باید مسیر را توسط این عبارت به همراه کلیدواژه «داکرفایل»با مقدار «نام فایل» مشخص نماییم
-* image: استفاده از ایمیج خاص و عدم بیلد کردن و استفاده از کانتینر
-* environment #تعریف متغیرهای محلی در ایمیج
-    * ` - DB_URL=mongodb://db/mydb` #هردو شکل صحیح است
-    * `DB_URL: mongodb://db/mydb`
-* volumes #اتصال مسیر خاصی از سیستم لینوکس اصلی به کانتینر
-* `- ./DireName:/app` #در مسیر کنونی با نام خاص را به مسیر «اَپ» در درون کانتینر متصل می‌کند
-* command: اجرای یک دستور در کانتینر
-    * میتوا ن همه کارها را درون یک شل ایجاد کرد و فقط به دستور بگوییم آن شل را اجرا بکند
-* restart #وقتی یک کانتینر کرش می‌کند چه اتفاقی رخ دهد
-    * always: همواره هنگام کرش کردن ریست کند
-    * no: هنگام کرش کردن ریست نکند
-    * unless-stopped: ریست هنگام استاپ کردن سرویس
-
-```dockerfile
-version: "3.8"
-services:
-    web:
-        build:
-            context: ./frontend
-            dockerfile: Dockerfile.prod
-        ports:a
-            - 3000:3001
-    api:
-        build:./backend
-        ports:
-            -  3001:3001
-        environment:
-            - DB_URL2=mongodb://db/mydb
-        volumes:
-            - ./DireName:/app
-        command: ./MyScript.sh
-    db:
-        image: mongo:4.0-xenial
-        ports:
-            - 27017:27017
-        volumes:
-            - mydb:/data/db
-volumes:
-    mydb:
-```
-
-![Docker-compose.jpg](_srcFiles/Images/Docker-compose.jpg "Docker-compose.jpg")
-
-### 7.1.3. ✅️ `Docker-compose` Commands
-
-زیردستورهای docker-compose به شرح زیر است
-
-* `run`: فقط یک کانتینر یک‌بارمصرف از یک سرویس تعریف‌شده در داخل فایل Compose-file.yaml اجرا می‌کند
-    * این کانتینرها پس از پایان کار متوقف می‌شود.
-* `up`: همه سرویس‌ها را طبق تعریف اجرا می‌کند و کانتینرها بعد از پایان کار باقی می‌مانند(مگر با down پاک شوند)
-* `--rm`: بعد از پایان اجرا، کانتینر به طور خودکار حذف شود. یعنی کانتینر یک‌بارمصرف است و در لیست `docker ps -a` باقی نمی‌ماند.
-*
-
-```shell
-docker-compose -f docker-compose-prod.yaml build
-docker-compose run --rm <name> <command>
-docker-compose build <ServiceNameIn Docker-Compose file>
-```
-
-#### ❇️  SubCommand `<Command>`
-
-اگر در اجرای دستور مشابه `docker-compose run <command>` داشته باشیم که مثلا بجای command کلمه salam بیاید `docker-compose run salam` آنگاه این آخرین بخش، دستوری است که داخل کانتینر اجرا می‌شود
-
-* حالت اول: اگر در داخل داکر فایل تنها CMD وجود داشته باشد یعنی در داخل داکرفایل دستور `CMD ["python", "app.py"]` وجود داشته باشد آنگاه این دستور با دستور cmd جایگزین میشود
-* حالت دوم: اگر در داخل داکر فایل تنها ENTRYPOINT وجود داشته باشد یعنی در داخل داکرفایل دستور `ENTRYPOINT ["python", "app.py"]` وجود داشته باشد آنگاه این دستور به ENTRYPOINT اضافه می‌شود یعنی به`ENTRYPOINT ["python", "app.py","salam"]`  تبدیل میشود
-* حالت سوم: اگر در داخل dockerfile هم CMD و هم ENTRYPOINT داشته باشیم یعنی ابتدا دستور `ENTRYPOINT ["docker-entrypoint.sh"]`  آمده و سپس دستور `CMD ["postgres"]` آمده است آنگاه به دستور  `docker-entrypoint.sh salam` تبدیل میشود
 
 ## 7.2. 🅱️ dockerMachine(منسوخ شده)
 
