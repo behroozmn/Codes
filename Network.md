@@ -190,21 +190,22 @@ traceroute google.com
         1. Static key encryption: هم سرور و هم کلاینت از یک کلید رمزنگاری مشابه استفاده می‌کنند
         2. Public key encryption: هم سرور و هم کلاینت برای خودشان کلید عمومی و خصوصی تولید میکنند و از آن طریق متصل می‌شوند
 * استفاده از روش Static key encryption در openVPN:
-  ```shell
-  openvpn—genkey—secret secret.key #run on server
-  openvpn—genkey—secret secret.key #run on client
-  
-  vim server.conf
-  dev tun
-  ifconfig 192.168.1.10 10.0.1.1
-  keepalive 10 60
-  ping-timer-rem
-  persist-tun
-  persist-key
-  secret secret.key
-  
-  sudo openvpn server.confsudo openvpn client.conf
-  ```
+
+```shell
+openvpn—genkey—secret secret.key #run on server
+openvpn—genkey—secret secret.key #run on client
+
+vim server.conf
+dev tun
+ifconfig 192.168.1.10 10.0.1.1
+keepalive 10 60
+ping-timer-rem
+persist-tun
+persist-key
+secret secret.key
+
+sudo openvpn server.confsudo openvpn client.conf
+```
 
 ![openvpn.png](./_srcFiles/Images/openvpn.png "openvpn.png")
 
