@@ -2,7 +2,164 @@
 
 # 1. 🅰️BasicRenderingMethods
 
-## 1.1. 🅱️django.http.HttpResponse
+## 1.1. 🅱️ CLI
+
+### 1.1.1. ✅️ `python3 manage.py`
+
+پروژه، اپ و اجرا
+
+| دستور          | کارکرد                                       | مثال                                       |
+|----------------|----------------------------------------------|--------------------------------------------|
+| `startproject` | ساخت اسکلت پروژه (معمولاً با `django-admin`) | `django-admin startproject config .`       |
+| `startapp`     | ساخت اپ جدید داخل پروژه                      | `python3 manage.py startapp users`         |
+| `runserver`    | اجرای سرور توسعه با reload خودکار            | `python3 manage.py runserver 0.0.0.0:8000` |
+| `check`        | بررسی صحت تنظیمات، مدل‌ها و امنیت            | `python3 manage.py check --deploy`         |
+| `diffsettings` | نمایش تنظیمات متفاوت با مقادیر پیش‌فرض جنگو  | `python3 manage.py diffsettings`           |
+| `help`         | لیست دستورات یا راهنمای یک دستور             | `python3 manage.py help migrate`           |
+| `version`      | نمایش نسخه جنگو                              | `python3 manage.py version`                |
+
+دیتابیس و مایگریشن
+
+| دستور                       | کارکرد                                             | مثال                                                 |
+|-----------------------------|----------------------------------------------------|------------------------------------------------------|
+| `makemigrations`            | ساخت فایل مهاجرت از تغییرات مدل                    | `python3 manage.py makemigrations users`             |
+| `migrate`                   | اعمال مهاجرت‌ها روی دیتابیس                        | `python3 manage.py migrate users 0003`               |
+| `showmigrations`            | نمایش وضعیت (اعمال‌شده/نشده) مهاجرت‌ها             | `python3 manage.py showmigrations --plan`            |
+| `sqlmigrate`                | نمایش SQL یک مهاجرت بدون اجرای آن                  | `python3 manage.py sqlmigrate users 0001`            |
+| `squashmigrations`          | ادغام چند مهاجرت در یک فایل                        | `python3 manage.py squashmigrations users 0001 0010` |
+| `optimizemigration`         | فشرده‌سازی و بهینه‌سازی عملیات یک مهاجرت           | `python3 manage.py optimizemigration users 0002`     |
+| `inspectdb`                 | تولید خودکار مدل از دیتابیس موجود (Legacy)         | `python3 manage.py inspectdb > models.py`            |
+| `dbshell`                   | ورود به شل خود دیتابیس (psql/mysql/sqlite)         | `python3 manage.py dbshell`                          |
+| `flush`                     | پاک‌کردن همه داده‌ها و بازگشت به حالت post-migrate | `python3 manage.py flush --no-input`                 |
+| `sqlflush`                  | نمایش SQL معادل دستور flush                        | `python3 manage.py sqlflush`                         |
+| `sqlsequencereset`          | SQL ریست شمارنده‌های AutoField جداول اپ            | `python3 manage.py sqlsequencereset users`           |
+| `createcachetable`          | ساخت جدول کش وقتی backend کش دیتابیسی است          | `python3 manage.py createcachetable`                 |
+| `remove_stale_contenttypes` | حذف ContentType مدل‌هایی که دیگر وجود ندارند       | `python3 manage.py remove_stale_contenttypes`        |
+
+داده (Fixture) و شل
+
+| دستور        | کارکرد                                              | مثال                                                        |
+|--------------|-----------------------------------------------------|-------------------------------------------------------------|
+| `shell`      | شل تعاملی با محیط کامل جنگو                         | `python3 manage.py shell -c "print(User.objects.count())"`  |
+| `dumpdata`   | خروجی گرفتن از داده‌ها به JSON/YAML                 | `python3 manage.py dumpdata users --indent 2 -o users.json` |
+| `loaddata`   | بارگذاری داده از fixture                            | `python3 manage.py loaddata users.json`                     |
+| `testserver` | اجرای سرور موقت با داده fixture (بدون دیتابیس اصلی) | `python3 manage.py testserver data.json`                    |
+
+تست
+
+| دستور  | کارکرد                                | مثال                                               |
+|--------|---------------------------------------|----------------------------------------------------|
+| `test` | اجرای تست‌ها روی دیتابیس تستی جداگانه | `python3 manage.py test users --keepdb --parallel` |
+
+فایل‌های استاتیک و ترجمه
+
+| دستور             | کارکرد                                                | مثال                                                |
+|-------------------|-------------------------------------------------------|-----------------------------------------------------|
+| `collectstatic`   | جمع‌آوری همه static ها در `STATIC_ROOT` برای پروداکشن | `python3 manage.py collectstatic --noinput --clear` |
+| `findstatic`      | نمایش مسیر واقعی یک فایل استاتیک                      | `python3 manage.py findstatic admin/css/base.css`   |
+| `makemessages`    | استخراج رشته‌های قابل ترجمه به فایل `.po`             | `python3 manage.py makemessages -l fa`              |
+| `compilemessages` | کامپایل `.po` به `.mo` برای استفاده gettext           | `python3 manage.py compilemessages`                 |
+
+کاربر و نگهداری
+
+| دستور             | کارکرد                                  | مثال                                                                 |
+|-------------------|-----------------------------------------|----------------------------------------------------------------------|
+| `createsuperuser` | ساخت کاربر ادمین                        | `python3 manage.py createsuperuser --username admin --email a@b.com` |
+| `changepassword`  | تغییر رمز یک کاربر از ترمینال           | `python3 manage.py changepassword admin`                             |
+| `clearsessions`   | حذف سشن‌های منقضی‌شده (مناسب cron)      | `python3 manage.py clearsessions`                                    |
+| `sendtestemail`   | تست تنظیمات SMTP با ارسال ایمیل آزمایشی | `python3 manage.py sendtestemail admin@example.com`                  |
+
+سوییچ‌های عمومی (روی همه دستورات)
+
+| سوییچ                          | کارکرد                                          | مثال                              |
+|--------------------------------|-------------------------------------------------|-----------------------------------|
+| `--settings`                   | انتخاب ماژول تنظیمات جایگزین                    | `--settings=config.settings.prod` |
+| `--pythonpath`                 | افزودن مسیر به `sys.path`                       | `--pythonpath=/opt/project`       |
+| `-v, --verbosity`              | سطح جزئیات خروجی (۰ تا ۳)                       | `-v 2`                            |
+| `--traceback`                  | نمایش Traceback کامل هنگام خطا                  | `--traceback`                     |
+| `--no-color` / `--force-color` | خاموش/روشن کردن رنگ خروجی                       | `--no-color`                      |
+| `--skip-checks`                | رد شدن از system check قبل از اجرا (سرعت بیشتر) | `--skip-checks`                   |
+| `--version`                    | نسخه جنگو                                       | `--version`                       |
+| `-h, --help`                   | راهنما                                          | `migrate --help`                  |
+
+فلگ‌های پرکاربرد دستورات مهم
+
+| دستور            | فلگ                                   | کارکرد                                                    |
+|------------------|---------------------------------------|-----------------------------------------------------------|
+| `runserver`      | `--noreload` / `--nothreading` / `-6` | غیرفعال‌کردن reload / تک‌نخی / IPv6                       |
+| `migrate`        | `--fake`                              | فقط ثبت مهاجرت بدون اجرای SQL                             |
+| `migrate`        | `--fake-initial`                      | رد کردن مهاجرت اولیه وقتی جداول از قبل هست                |
+| `migrate`        | `--plan` / `--prune`                  | نمایش نقشه اجرا / حذف فایل‌های مهاجرت squash‌شده          |
+| `makemigrations` | `--dry-run` / `--empty` / `--merge`   | فقط نمایش تغییرات / مهاجرت خالی / حل کانفلیکت             |
+| `test`           | `--keepdb` / `--failfast` / `-k`      | نگه‌داشتن دیتابیس تست / توقف در اولین خطا / فیلتر نام تست |
+| `shell`          | `-i ipython` / `-c`                   | انتخاب مفسر / اجرای یک دستور و خروج                       |
+| `collectstatic`  | `--dry-run` / `--clear`               | نمایش بدون کپی / پاک‌سازی مقصد قبل از کپی                 |
+| `dumpdata`       | `--exclude` / `--natural-foreign`     | حذف یک اپ از خروجی / کلید طبیعی برای FK                   |
+
+#### 1.1.1.1. ❇️ `check`
+
+کامند `python3 manage.py check` در وضعیت های متفاوت می‌تواند مورد استفاده قرار بگیرد
+
+| گزینه                                                               | کارکرد                                                                                  | مثال                                             |
+|---------------------------------------------------------------------|-----------------------------------------------------------------------------------------|--------------------------------------------------|
+| `app_label ...` (آرگومان موقعیتی)                                   | محدودکردن بررسی به یک یا چند اپ                                                         | `check users samba`                              |
+| `--deploy`                                                          | افزودن چک‌های امنیت/استقرار                                                             | `check --deploy`                                 |
+| `-t, --tag TAG`                                                     | اجرای فقط چک‌های یک تگ (قابل تکرار)                                                     | `check -t security -t models`                    |
+| `--list-tags`                                                       | نمایش فهرست تگ‌های موجود در نسخه شما                                                    | `check --list-tags`                              |
+| `--fail-level`                                                      | سطحی که باعث خروج با کد ۱ می‌شود؛ `CRITICAL/ERROR/WARNING/INFO/DEBUG` (پیش‌فرض `ERROR`) | `check --deploy --fail-level WARNING`            |
+| `--database`                                                        | اجرای چک‌های نیازمند اتصال دیتابیس روی کانکشن مشخص (قابل تکرار)                         | `check --database default`                       |
+| `--settings` / `--pythonpath` / `-v` / `--traceback` / `--no-color` | سوییچ‌های عمومی همه دستورات                                                             | `check --deploy --settings=config.settings.prod` |
+
+```shell
+python3 manage.py check                                    # بررسی سریع زمان توسعه
+python3 manage.py check --deploy                           # + چک‌های امنیتی و استقرار
+python3 manage.py check users samba                        # فقط دو اپ مشخص
+python3 manage.py check -t security                        # فقط چک‌های امنیتی
+python3 manage.py check --deploy --fail-level WARNING      # مناسب CI: هشدار = شکست
+python3 manage.py check --database default                 # چک‌های وابسته به دیتابیس
+python3 manage.py check --list-tags                        # دیدن تگ‌های نسخه فعلی
+```
+
+#### 1.1.1.2. ❇️ `--deploy`
+
+با سوییج `--deploy` در کامند `manage.py` موارد زیر بررسی می‌شود
+
+| مورد                                                     | مقدار مورد انتظار                                                          | دلیل                                          |
+|----------------------------------------------------------|----------------------------------------------------------------------------|-----------------------------------------------|
+| `DEBUG`                                                  | `False`                                                                    | جلوگیری از نشت traceback و تنظیمات            |
+| `ALLOWED_HOSTS`                                          | غیرخالی و مشخص                                                             | جلوگیری از حمله Host Header                   |
+| `SECRET_KEY`                                             | ≥۵۰ کاراکتر، ≥۵ کاراکتر یکتا، بدون پیشوند `django-insecure-`               | امنیت امضای سشن/توکن                          |
+| `MIDDLEWARE`                                             | وجود `SecurityMiddleware`، `CsrfViewMiddleware`، `XFrameOptionsMiddleware` | فعال‌شدن هدرهای امنیتی، CSRF، ضد Clickjacking |
+| `SECURE_SSL_REDIRECT`                                    | `True`                                                                     | اجبار HTTPS                                   |
+| `SECURE_HSTS_SECONDS`                                    | مثلاً `31536000`                                                           | اجبار HTTPS توسط مرورگر                       |
+| `SECURE_HSTS_INCLUDE_SUBDOMAINS` / `SECURE_HSTS_PRELOAD` | `True`                                                                     | پوشش ساب‌دامنه‌ها و preload                   |
+| `SECURE_CONTENT_TYPE_NOSNIFF`                            | `True`                                                                     | جلوگیری از MIME sniffing                      |
+| `SECURE_REFERRER_POLICY`                                 | مثلاً `same-origin`                                                        | کنترل هدر Referer                             |
+| `SESSION_COOKIE_SECURE` / `SESSION_COOKIE_HTTPONLY`      | `True`                                                                     | کوکی فقط روی HTTPS و دور از دسترس JS          |
+| `CSRF_COOKIE_SECURE`                                     | `True`                                                                     | 同上 برای کوکی CSRF                             |
+| `X_FRAME_OPTIONS`                                        | `DENY` یا `SAMEORIGIN`                                                     | جلوگیری از iframe شدن سایت                    |
+
+#### 1.1.1.3. ❇️ `python3 manage.py check --deploy`
+
+نمونه تنظیمات برای پاس‌شدن چک‌های استقرار:
+
+```shell
+# config/settings/prod.py
+DEBUG = False                                      # هرگز True در پروداکشن
+ALLOWED_HOSTS = ["example.com", "192.168.1.10"]    # دامنه/IP واقعی سرویس
+SECURE_SSL_REDIRECT = True                         # هدایت HTTP به HTTPS
+SECURE_HSTS_SECONDS = 31536000                     # یک سال HSTS
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True              # شامل ساب‌دامنه‌ها
+SECURE_HSTS_PRELOAD = True                         # امکان ثبت در لیست preload
+SECURE_CONTENT_TYPE_NOSNIFF = True                 # هدر X-Content-Type-Options
+SECURE_REFERRER_POLICY = "same-origin"             # کنترل Referer
+SESSION_COOKIE_SECURE = CSRF_COOKIE_SECURE = True  # کوکی‌ها فقط روی HTTPS
+SESSION_COOKIE_HTTPONLY = True                     # عدم دسترسی JS به سشن
+X_FRAME_OPTIONS = "DENY"                           # ضد Clickjacking
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")  # پشت nginx لازم است
+```
+
+## 1.2. 🅱️django.http.HttpResponse
 
 * نمایش صفحه `HTML` با تولید دستی رشته‌های `HTML` در کد پایتون
 * این روش هیچ تمپلیتی ندارد. شما کل `HTML` را به صورت رشته‌ای (string) در کد پایتون می‌نویسید و با `HttpResponse` آن را به مرورگر می‌فرستید.
@@ -29,7 +186,7 @@ def home_view(request):
     return HttpResponse(html)
 ```
 
-## 1.2. 🅱️HttpResponse+template(context)
+## 1.3. 🅱️HttpResponse+template(context)
 
 * نمایش صفحه با استفاده از فایل تمپلیت (.html) و پردازش دستی آن در پایتون
 * قبل از `render()` اولین روش صحیح برای نماش صفحات در جنگو بود
@@ -104,7 +261,7 @@ urlpatterns = [
 ]
 ```
 
-## 1.3. 🅱️django.shortcuts.render()
+## 1.4. 🅱️django.shortcuts.render()
 
 * render() یک تابع کمکی (helper function) است که در جنگو برای ساده‌سازی نمایش صفحات HTML طراحی شده است.
 
@@ -174,7 +331,7 @@ render(request, 'welcome.html', context=None)
 render(request, 'feed.xml', context, content_type='application/xml')
 ```
 
-## 1.4. 🅱️Http404
+## 1.5. 🅱️Http404
 
 ```python
 
@@ -4827,7 +4984,7 @@ Request:{"refresh":"<RefreshToken>"} ========> Response:{"refresh": "<Token>","a
 
 برای لاگ‌اوت، کافی است refresh token را blacklist کنی تا دیگر قابل استفاده نباشد.
 
-#### ❇️Enable blacklist in `setting.py`
+#### 11.3.3.1. ❇️Enable blacklist in `setting.py`
 
 مطمئن شوید که این دو گزینه در SIMPLE_JWT فعال باشند
 
@@ -4878,7 +5035,7 @@ Request:{"refresh": "refresh_token_دریافت_شده_در_هنگام_لاگی�
 * access token همچنان تا منقضی شدن معتبر است، اما نمی‌توان آن را تمدید کرد.
 * برای امنیت بیشتر، می‌توانی در فرانت‌اند access token را هم پاک کنی.
 
-### 11.3.3. ✅️Verification
+### 11.3.4. ✅️Verification
 
 ```
 POST: http://127.0.0.1:8000/api/auth/token/verify/

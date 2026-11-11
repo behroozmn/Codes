@@ -1,5 +1,3 @@
-<div dir="rtl">
-
 # 1. 🅰️ Concept
 
 ## 1.1. 🅱️ Name Conventions
@@ -531,97 +529,6 @@ sudo apt install python3-PackageName #نصب بسته در محدوده سیست
 pipdeptree | nl #نمایش وابستگی‌ها در فرمت فایل نیازمندی‌ها
 ```
 
-### 2.1.6. ✅️ `python3 manage.py`
-
-پروژه، اپ و اجرا
-
-| دستور          | کارکرد                                       | مثال                                       |
-|----------------|----------------------------------------------|--------------------------------------------|
-| `startproject` | ساخت اسکلت پروژه (معمولاً با `django-admin`) | `django-admin startproject config .`       |
-| `startapp`     | ساخت اپ جدید داخل پروژه                      | `python3 manage.py startapp users`         |
-| `runserver`    | اجرای سرور توسعه با reload خودکار            | `python3 manage.py runserver 0.0.0.0:8000` |
-| `check`        | بررسی صحت تنظیمات، مدل‌ها و امنیت            | `python3 manage.py check --deploy`         |
-| `diffsettings` | نمایش تنظیمات متفاوت با مقادیر پیش‌فرض جنگو  | `python3 manage.py diffsettings`           |
-| `help`         | لیست دستورات یا راهنمای یک دستور             | `python3 manage.py help migrate`           |
-| `version`      | نمایش نسخه جنگو                              | `python3 manage.py version`                |
-
-دیتابیس و مایگریشن
-
-| دستور                       | کارکرد                                             | مثال                                                 |
-|-----------------------------|----------------------------------------------------|------------------------------------------------------|
-| `makemigrations`            | ساخت فایل مهاجرت از تغییرات مدل                    | `python3 manage.py makemigrations users`             |
-| `migrate`                   | اعمال مهاجرت‌ها روی دیتابیس                        | `python3 manage.py migrate users 0003`               |
-| `showmigrations`            | نمایش وضعیت (اعمال‌شده/نشده) مهاجرت‌ها             | `python3 manage.py showmigrations --plan`            |
-| `sqlmigrate`                | نمایش SQL یک مهاجرت بدون اجرای آن                  | `python3 manage.py sqlmigrate users 0001`            |
-| `squashmigrations`          | ادغام چند مهاجرت در یک فایل                        | `python3 manage.py squashmigrations users 0001 0010` |
-| `optimizemigration`         | فشرده‌سازی و بهینه‌سازی عملیات یک مهاجرت           | `python3 manage.py optimizemigration users 0002`     |
-| `inspectdb`                 | تولید خودکار مدل از دیتابیس موجود (Legacy)         | `python3 manage.py inspectdb > models.py`            |
-| `dbshell`                   | ورود به شل خود دیتابیس (psql/mysql/sqlite)         | `python3 manage.py dbshell`                          |
-| `flush`                     | پاک‌کردن همه داده‌ها و بازگشت به حالت post-migrate | `python3 manage.py flush --no-input`                 |
-| `sqlflush`                  | نمایش SQL معادل دستور flush                        | `python3 manage.py sqlflush`                         |
-| `sqlsequencereset`          | SQL ریست شمارنده‌های AutoField جداول اپ            | `python3 manage.py sqlsequencereset users`           |
-| `createcachetable`          | ساخت جدول کش وقتی backend کش دیتابیسی است          | `python3 manage.py createcachetable`                 |
-| `remove_stale_contenttypes` | حذف ContentType مدل‌هایی که دیگر وجود ندارند       | `python3 manage.py remove_stale_contenttypes`        |
-
-داده (Fixture) و شل
-
-| دستور        | کارکرد                                              | مثال                                                        |
-|--------------|-----------------------------------------------------|-------------------------------------------------------------|
-| `shell`      | شل تعاملی با محیط کامل جنگو                         | `python3 manage.py shell -c "print(User.objects.count())"`  |
-| `dumpdata`   | خروجی گرفتن از داده‌ها به JSON/YAML                 | `python3 manage.py dumpdata users --indent 2 -o users.json` |
-| `loaddata`   | بارگذاری داده از fixture                            | `python3 manage.py loaddata users.json`                     |
-| `testserver` | اجرای سرور موقت با داده fixture (بدون دیتابیس اصلی) | `python3 manage.py testserver data.json`                    |
-
-تست
-
-| دستور  | کارکرد                                | مثال                                               |
-|--------|---------------------------------------|----------------------------------------------------|
-| `test` | اجرای تست‌ها روی دیتابیس تستی جداگانه | `python3 manage.py test users --keepdb --parallel` |
-
-فایل‌های استاتیک و ترجمه
-
-| دستور             | کارکرد                                                | مثال                                                |
-|-------------------|-------------------------------------------------------|-----------------------------------------------------|
-| `collectstatic`   | جمع‌آوری همه static ها در `STATIC_ROOT` برای پروداکشن | `python3 manage.py collectstatic --noinput --clear` |
-| `findstatic`      | نمایش مسیر واقعی یک فایل استاتیک                      | `python3 manage.py findstatic admin/css/base.css`   |
-| `makemessages`    | استخراج رشته‌های قابل ترجمه به فایل `.po`             | `python3 manage.py makemessages -l fa`              |
-| `compilemessages` | کامپایل `.po` به `.mo` برای استفاده gettext           | `python3 manage.py compilemessages`                 |
-
-کاربر و نگهداری
-
-| دستور             | کارکرد                                  | مثال                                                                 |
-|-------------------|-----------------------------------------|----------------------------------------------------------------------|
-| `createsuperuser` | ساخت کاربر ادمین                        | `python3 manage.py createsuperuser --username admin --email a@b.com` |
-| `changepassword`  | تغییر رمز یک کاربر از ترمینال           | `python3 manage.py changepassword admin`                             |
-| `clearsessions`   | حذف سشن‌های منقضی‌شده (مناسب cron)      | `python3 manage.py clearsessions`                                    |
-| `sendtestemail`   | تست تنظیمات SMTP با ارسال ایمیل آزمایشی | `python3 manage.py sendtestemail admin@example.com`                  |
-
-سوییچ‌های عمومی (روی همه دستورات)
-
-| سوییچ                          | کارکرد                                          | مثال                              |
-|--------------------------------|-------------------------------------------------|-----------------------------------|
-| `--settings`                   | انتخاب ماژول تنظیمات جایگزین                    | `--settings=config.settings.prod` |
-| `--pythonpath`                 | افزودن مسیر به `sys.path`                       | `--pythonpath=/opt/project`       |
-| `-v, --verbosity`              | سطح جزئیات خروجی (۰ تا ۳)                       | `-v 2`                            |
-| `--traceback`                  | نمایش Traceback کامل هنگام خطا                  | `--traceback`                     |
-| `--no-color` / `--force-color` | خاموش/روشن کردن رنگ خروجی                       | `--no-color`                      |
-| `--skip-checks`                | رد شدن از system check قبل از اجرا (سرعت بیشتر) | `--skip-checks`                   |
-| `--version`                    | نسخه جنگو                                       | `--version`                       |
-| `-h, --help`                   | راهنما                                          | `migrate --help`                  |
-
-فلگ‌های پرکاربرد دستورات مهم
-
-| دستور            | فلگ                                   | کارکرد                                                    |
-|------------------|---------------------------------------|-----------------------------------------------------------|
-| `runserver`      | `--noreload` / `--nothreading` / `-6` | غیرفعال‌کردن reload / تک‌نخی / IPv6                       |
-| `migrate`        | `--fake`                              | فقط ثبت مهاجرت بدون اجرای SQL                             |
-| `migrate`        | `--fake-initial`                      | رد کردن مهاجرت اولیه وقتی جداول از قبل هست                |
-| `migrate`        | `--plan` / `--prune`                  | نمایش نقشه اجرا / حذف فایل‌های مهاجرت squash‌شده          |
-| `makemigrations` | `--dry-run` / `--empty` / `--merge`   | فقط نمایش تغییرات / مهاجرت خالی / حل کانفلیکت             |
-| `test`           | `--keepdb` / `--failfast` / `-k`      | نگه‌داشتن دیتابیس تست / توقف در اولین خطا / فیلتر نام تست |
-| `shell`          | `-i ipython` / `-c`                   | انتخاب مفسر / اجرای یک دستور و خروج                       |
-| `collectstatic`  | `--dry-run` / `--clear`               | نمایش بدون کپی / پاک‌سازی مقصد قبل از کپی                 |
-| `dumpdata`       | `--exclude` / `--natural-foreign`     | حذف یک اپ از خروجی / کلید طبیعی برای FK                   |
 
 ## 2.2. 🅱️ VirtualEnvironment
 
@@ -8160,5 +8067,3 @@ print(calculate_discount.__doc__)
 ## --->       >>> calculate_discount(200, 25, 40)
 ## --->       160.0
 ```
-
-</div>
