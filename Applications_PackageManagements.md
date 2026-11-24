@@ -158,6 +158,7 @@ trans -e google -s ar -t fa -show-original n -show-original-phonetics n -show-tr
     * [psvm]: تمام ساختار تابع مین را خوکار ایجاد میکند
 * theme
     * Ayu Dark(Island): بهروز از این استفاده میکنه گاها
+    * night owl: بهروز از این استفاده میکنه گاها
     * dracula vscode
     * night-owl-native
     * vscode dark
