@@ -189,11 +189,83 @@ btrfs subvolume snapshot <From> <Directory>
 
 ### 4.1.4. ✅️[ZFS](https://parsdev.com/blog/what-is-zfs)
 
-* نوعی فایل سیستم بر پایه «Block storage»
-* اگر بخواهیم یک پول از چندین دیسک(حتی در سیستم‌های متفاوت یعنی jBod بسازیم) باید تنها روی یک سیستم عامل zfs نصب شود(اصطلاحا دو تا zfs همدیگر را نمی‌فهمند)Reliablity بالا
-* در zfs مکانیزم active/active پشتیبانی نمی‌شود
+* نوعی فایل سیستم بر پایه «Block storage» که قابلیت پشتیبانی از snapshot و فضای فایلی(فایل سیستم) و فضای بلاکی(volume) را می‌دهد
+* پشتیبانی از انواع Raid ها و حتی ترکیبی را فراهم می‌سازد
+* اگر بخواهیم یک پول از چندین دیسک(حتی در سیستم‌های متفاوت یعنی jBod بسازیم) باید تنها روی یک سیستم عامل zfs نصب شود(اصطلاحا دو تا zfs همدیگر را نمی‌فهمند)
 * به ازای هر داده جدید یک checksum جدید ایجاد کرده و هنگام خواندن دیتا هش آن دیتا بررسی می‌شود و درصورت عدم تطابق checksum آنگاه ZFS تشخیص خطا داده و سعی در تصحیح خطا می‌نماید
+* قابلیت فعال‌سازی deduplication در فایل سیستم وجود دارد که درصورت فعالسازی نیازمند ریسورس است.
+    * هش هر فایل در بدو ذخیره بررسی میشو دو اگر موجود بود فقط ارجاع به قبلی می‌شود
 * قابلیت مدیریت RaidZ بدون نیاز به نرم‌افزار و سخت‌افزار
+* قابلیت فعال سازی محدودیت quota وجود دارد
+
+#### 4.1.4.1. ❇️ Pool
+
+```shell
+sudo zpool status -x   # بررسی وضعیت کلی و خطاهای احتمالی استخر
+```
+
+#### 4.1.4.2. ❇️ Filesystem
+
+* `recordsize=<size>`: size of one block that is tablize for files ---> default: `recordsize=128K`
+    *
+    * اگر عدد زیاد تری در نظر بگیریم آنگاه مقدار متادیتای کمتری اشغال خواهد شد و اگر عدد آن را کم در نظر بگیریم مقدار متادیتای زیادی اشغال خواهد شد و درنتیحه حجم نهایی کاهش خواهد یافت
+
+#### 4.1.4.3. ❇️ volume
+
+#### 4.1.4.4. ❇️ Quota or Reserve
+
+* Quota: اعمال محدودیت در مثلا یک فایل سیستم
+* Reserve: جدا کردن مقدار فضا از پول برای مثلا یک فایل سیستم
+* مقدار Quota که در فایل سیستم فعال میشود نباید از ۱-حجم استفاده شده(Current Used) در فایل سیستم ۲-حجم رزروشده(Current Reserve) در پول، کمتر باشد
+    * اگر مقدار میزان Quota و Reserve را یکسان داده باشیم آنگاه اگر بخواهیم حجم فضای ذخیره‌سازی را زیاد کنیم(مقدار فضای بیشتر اختصاص بدهیم) باید ابتدا فضای Quota را زیاد کنیم و بعد Reserve را زیاد کنیم و در غیر این صورت به ارور مواجه می‌شویم
+    * اگر مقدار میزان Quota و Reserve را یکسان داده باشیم آنگاه اگر بخواهیم حجم فضای ذخیره‌سازی را کم کنیم(مقدار فضای کمتر اختصاص بدهیم) باید ابتدا فضای Reserve را کم کنیم و بعد Quota را کم کنیم و در غیر این صورت به ارور مواجه می‌شویم
+
+#### 4.1.4.5. ❇️ Raid
+
+* هنگام raid کردن فضای کل دیسک ها نباید مد نظر واقع شود و میزان حجم به نوع raid وابسته است
+* در هنگام Raid نمودن دستور `zpool list` برای نمایش مقدار حجم در دسترس یک پول‌ها کارایی درست ندارد و باید از دستور `zfs list` استفاده شود و حجم خالی پول از آن استخراج گردد
+* Raid5 --> raidz1
+
+#### 4.1.4.6. ❇️ compression
+
+* compressratio: نسبت فشرده‌سازی (مثلاً ۱.۵ ایکس یعنی ۱.۵ برابر فشرده شده)
+* `compression=on` در نسخه‌های جدید «زد اف اس» سیستم به صورت خودکار همان lz4 را انتخاب می‌کند
+* `compression=lz4`: تنظیم پراپرتی فشرده‌سازی روی الگوریتم lz4
+    * الگوریتم lz4 تعادل بی‌نظیری بین سرعت و میزان فشرده‌سازی دارد؛ فشار بسیار کمی به CPU می‌آورد و حتی در برخی شرایط (به دلیل کاهش عملیات I/O دیسک) باعث افزایش سرعت سیستم هم می‌شود.
+* `compression=gzip-9` or `compression=gzip-1` or `compression=gzip-6` or `compression=gzip`
+    * از الگوریتم‌هایی مثل gzip-9 به ندرت استفاده می‌شود چون فشار وحشتناکی به CPU می‌آورد و گلوگاه ایجاد می‌کند.
+* `compression=zle`: مناسب داده‌هایی که بلوک‌های صفرِ طولانی دارند
+
+```shell
+zfs create -o compression=<lz4|on|off|gzip|gzip|gzip1......9|zle|...> pool_name/dataset_name
+zfs get compression     pool_name/dataset_name # بررسی اینکه چه الگوریتمی فعال است
+zfs get compressratio   pool_name/dataset_name # بررسی نسبت فشرده‌سازی
+zfs set compression=lz4 pool_name/dataset_name # فشرده‌سازی روی فایل‌سیستم‌های از قبل ساخته شده
+```
+
+#### 4.1.4.7. ❇️ mount
+
+```shell
+sudo zfs unmount Poll1/FF3_Secure
+sudo zfs mount Poll1/FF3_Secure
+sudo zfs set canmount=off Pool1/FF3_Secure # جلوگیری قطعی از بارگذاری/مونت خودکار هنگام بوت
+sudo lsof +D /Poll1/FF3_Secure             # بررسی فایل‌های باز در مسیر مونت‌شده
+sudo fuser -vm /Poll1/FF3_Secure           # بررسی فایل‌های باز در مسیر مونت‌شده
+```
+
+#### 4.1.4.8. ❇️ Encryption(KEY)
+
+```bash 
+sudo zfs create -o encryption=on -o keyformat=passphrase -o keylocation=prompt  Poll1/FF3_Secure
+zfs list
+zfs list -o name,encryption,keystatus,encryptionroot,mountpoint,mounted,canmount
+zfs list -o name,encryption,keystatus,encryptionroot,mountpoint,mounted,canmount,type,keyformat,keylocation,pbkdf2iters,creation
+
+sudo zfs load-key   Poll1/FF3_Secure
+sudo zfs unload-key Poll1/FF3_Secure
+```
+
+#### 4.1.4.9. ❇️ Commands
 
 ```shell
 sudo zpool create -f -d -m none -o ashift=12 -O atime=off -o feature@lz4_compress=enabled backup /dev/xvdf1
@@ -659,17 +731,11 @@ sفیلدهای اضافی و پیشرفته
 | **CRYPT-NAME** | نام دستگاه رمزگذاری  | `crypt-root` |
 | **CRYPT-SIZE** | سایز دستگاه رمزگذاری | `500G`       |
 
-
 ## 7.2. 🅱️udevadm
 
 ```shell
 udevadm info --query=all --name=/dev/sda
 sudo udevadm info --query=all --name=/dev/sda --attribute-walk
 ```
-
-
-
-
-
 
 </div>
